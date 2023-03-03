@@ -14,11 +14,12 @@ export function LeftSidebarCollapsible() {
   const icon = isContentVisible ? '\u25BC' : '\u25B6'
 
   return (
-    <div>
+    <div className={styles.collapsible_container}>
       <CollapsibleButton onClick={handleClick}><span className={`${styles.icon}`}>{icon}</span> BUDGET <span className={styles.amount}>$300000</span></CollapsibleButton>
       {isContentVisible && (
         <div>
-          <p>lorem ipsum don't look behind you</p>
+          <p>Santander <span className={styles.amount}>$30000000</span><br />
+          </p>
         </div>
       )}
     </div>
