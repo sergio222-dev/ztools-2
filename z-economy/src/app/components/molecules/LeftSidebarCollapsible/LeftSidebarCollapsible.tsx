@@ -15,10 +15,11 @@ export function LeftSidebarCollapsible() {
 
   return (
     <div className={styles.collapsible_container}>
-      <CollapsibleButton onClick={handleClick}><span className={`${styles.icon}`}>{icon}</span> BUDGET <span className={styles.amount}>$300000</span></CollapsibleButton>
+      <CollapsibleButton onClick={handleClick}><span className={styles.icon}>{icon}</span> BUDGET <span className={styles.amount}>$300000</span></CollapsibleButton>
       {isContentVisible && (
         <div>
-          <p>Santander <span className={styles.amount}>$30000000</span><br />
+          <p><span className={styles.bank_name}>Santander</span> <span className={styles.amount}>$300000</span><br />
+          <span className={styles.bank_name}>Santaaaaander</span> <span className={styles.amount}>$300000</span><br />
           </p>
         </div>
       )}
