@@ -1,3 +1,4 @@
-export {ButtonSmall} from './ButtonSmall/ButtonSmall'
-export {Button} from './Button/Button'
-export {CollapsibleButton} from './CollapsibleButton/CollapsibleButton'
+export { Button } from './Button/Button';
+export { ButtonRound } from './Button/ButtonRound';
+export { Button2 } from './Button2/Button2';
+export { CollapsibleButton } from './CollapsibleButton/CollapsibleButton';

@@ -1,6 +1,6 @@
-import { Button, ButtonSmall } from '../../atoms';
-import {LeftSidebarCollapsible} from '../../molecules';
-import styles from './SideBar.module.scss'
+import { Button2, Button, ButtonRound } from '../../atoms';
+import { LeftSidebarCollapsible } from '../../molecules';
+import styles from './SideBar.module.scss';
 
 const handleAddAccountClick = () => {};
 
@@ -8,25 +8,27 @@ export function SideBar() {
   return (
     <div>
       <div className="side-button">
-        <Button>
+        <Button2>
           <span>&#9783;</span>Budget
-        </Button>
+        </Button2>
       </div>
       <div className="side-button">
-        <Button>
+        <Button2>
           <span>&#10064;</span>Reports
-        </Button>
+        </Button2>
       </div>
       <div className="side-button">
-        <Button>
+        <Button2>
           <span>&#9878;</span>All Accounts
-        </Button>
+        </Button2>
       </div>
-      <div><LeftSidebarCollapsible></LeftSidebarCollapsible></div>
       <div>
-        <ButtonSmall className="add-btn" onClick={handleAddAccountClick}>
-          <span className={styles.add_account_btn_icon}>&#43;</span>Add Account
-        </ButtonSmall>
+        <LeftSidebarCollapsible></LeftSidebarCollapsible>
+      </div>
+      <div>
+        <Button variant="primary" className="add-btn" onClick={handleAddAccountClick}>
+          Add Account
+        </Button>
       </div>
     </div>
   );

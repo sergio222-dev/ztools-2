@@ -1,37 +1,37 @@
 .z_button {
-    background-color: #244564;
-    color: white;
-    border: transparent;
-    border-radius: 6px;
-    padding-top: 12px;
-    padding-bottom: 11px;
-    padding-right: 155px;
-    padding-left: 20px;
-    min-width: 250px;
-    max-width: 250px;
-    white-space: nowrap;
-    margin-bottom: 1px;
-    outline: none;
-    &:focus-visible {
-        background-color: #244564;
-        box-shadow: 0px 0px 0px 1px #b3cfe6;
-        -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
-        -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
-    }
+  background-color: #45617b;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 8px;
+  outline: none;
+  //clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 
-    &:focus {
-        &:active{
-            background-color: #244564;
-            box-shadow: 0px 0px 0px 1px #b3cfe6;
-            -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
-            -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
-        }
-    }
+  &:focus-visible {
+    background-color: #45617b;
+    box-shadow: 0px 0px 0px 1px #a6bacd;
+    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
+    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+  }
+  &:active {
+    background-color: #45617b;
+    box-shadow: 0px 0px 0px 1px #a6bacd;
+    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
+    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+  }
+  &:hover {
+    background-color: #3674a7;
+    cursor: pointer;
+    // box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+}
 
-    &:hover {
-        background-color: #3674a7;
-        // box-shadow: 0px 0px 0px 1px #b3cfe6;
-        // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
-        // -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
-    }
+.z_button_primary {
+  @extend .z_button;
+}
+
+.z_button_round {
+  border-radius: 50%;
 }
