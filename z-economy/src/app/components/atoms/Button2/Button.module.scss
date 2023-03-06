@@ -1,0 +1,31 @@
+.z_button2 {
+  background-color: #244564;
+  color: white;
+  text-align: left;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  min-width: 250px;
+  max-width: 250px;
+  white-space: nowrap;
+  outline: none;
+
+  &:focus-visible {
+    background-color: #244564;
+    box-shadow: 0px 0px 0px 1px #b3cfe6;
+    -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
+    -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+  &:active {
+    background-color: #244564;
+    box-shadow: 0px 0px 0px 1px #b3cfe6;
+    -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
+    -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+  &:hover {
+    background-color: #3674a7;
+    // box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+}

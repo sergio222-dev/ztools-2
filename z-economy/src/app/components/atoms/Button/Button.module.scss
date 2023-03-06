@@ -1,0 +1,37 @@
+.z_button {
+  background-color: #45617b;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 8px;
+  outline: none;
+  //clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+
+  &:focus-visible {
+    background-color: #45617b;
+    box-shadow: 0px 0px 0px 1px #a6bacd;
+    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
+    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+  }
+  &:active {
+    background-color: #45617b;
+    box-shadow: 0px 0px 0px 1px #a6bacd;
+    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
+    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+  }
+  &:hover {
+    background-color: #3674a7;
+    cursor: pointer;
+    // box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
+    // -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+}
+
+.z_button_primary {
+  @extend .z_button;
+}
+
+.z_button_round {
+  border-radius: 50%;
+}
