@@ -8,10 +8,12 @@ import React from 'react';
 
 const handleAddAccountClick = () => {};
 
-export function SideBar() {
-  const [activeButton, setActiveButton] = useState('All Accounts');
+type SidebarActiveValues = 'All Accounts' | 'Budget' | 'Reports';
 
-  const handleButtonClick = (buttonName: any) => {
+export function SideBar() {
+  const [activeButton, setActiveButton] = useState<SidebarActiveValues>('Budget');
+
+  const handleButtonClick = (buttonName: SidebarActiveValues) => {
     setActiveButton(buttonName);
   };
 
@@ -32,12 +34,6 @@ export function SideBar() {
           onClick={() => handleButtonClick('All Accounts')}
         >
           All Accounts
-        </SidebarButton>
-        <SidebarButton active={activeButton === 'Graph'} onClick={() => handleButtonClick('Graph')}>
-          Graph
-        </SidebarButton>
-        <SidebarButton active={activeButton === 'Quesito'} onClick={() => handleButtonClick('Quesito')}>
-          Quesito
         </SidebarButton>
       </div>
       <div>
