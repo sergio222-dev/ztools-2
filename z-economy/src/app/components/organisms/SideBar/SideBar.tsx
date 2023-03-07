@@ -1,4 +1,3 @@
-import { Button } from '../../atoms';
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
