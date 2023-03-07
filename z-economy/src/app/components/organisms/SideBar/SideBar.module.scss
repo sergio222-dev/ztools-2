@@ -1,3 +1,16 @@
+@use '../../styles/constants.scss' as const;
+
+.side_bar {
+    background-color: const.$sidebarBackground;
+    width: 14vw;
+    padding: 8px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 .add_account_btn_icon {
     margin: 0px;
     padding: 0px;

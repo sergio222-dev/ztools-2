@@ -1,6 +1,8 @@
+@use '../../styles/constants.scss' as const;
+
 .z_button {
   background-color: #45617b;
-  color: white;
+  color: const.$secondaryTextColor;
   border-radius: 5px;
   border: none;
   padding: 8px;
@@ -8,19 +10,18 @@
   //clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 
   &:focus-visible {
-    background-color: #45617b;
-    box-shadow: 0px 0px 0px 1px #a6bacd;
-    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
-    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+    background-color: const.$darkPrimaryColor;
+    box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    -webkit-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    -moz-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
   }
   &:active {
-    background-color: #45617b;
-    box-shadow: 0px 0px 0px 1px #a6bacd;
-    -webkit-box-shadow: 0px 0px 0px 1px #a6bacd;
-    -moz-box-shadow: 0px 0px 0px 1px #a6bacd;
+    box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    -webkit-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    -moz-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
   }
   &:hover {
-    background-color: #3674a7;
+    background-color: const.$darkPrimaryColor;
     cursor: pointer;
     // box-shadow: 0px 0px 0px 1px #b3cfe6;
     // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;

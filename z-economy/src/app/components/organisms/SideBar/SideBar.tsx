@@ -6,7 +6,7 @@ const handleAddAccountClick = () => {};
 
 export function SideBar() {
   return (
-    <div>
+    <div className={styles.side_bar}>
       <div className="side-button">
         <Button2>
           <span>&#9783;</span>Budget

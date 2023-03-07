@@ -1,3 +1,5 @@
+ @use '../../styles/constants.scss' as const;
+
 .icon {
     font-size: 10px;
     margin-right: 1px;
@@ -8,6 +10,7 @@
 }
 
 .collapsible_container {
+    color: const.$secondaryTextColor;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 8px;
