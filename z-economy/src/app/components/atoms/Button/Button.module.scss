@@ -1,31 +1,56 @@
-@use '../../styles/constants.scss' as const;
+@use '../../styles/constants.scss' as Const;
+@use '../../styles/mixins' as Mixin;
+@use '../../styles/functions' as Function;
 
 .z_button {
-  background-color: #45617b;
-  color: const.$secondaryTextColor;
-  border-radius: 5px;
+  background-color: Const.$secondaryColor;
+  color: Const.$secondaryTextColor;
+  border-radius: Const.$radius;
   border: none;
-  padding: 8px;
+  padding: Function.spacing(1);
   outline: none;
   //clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 
   &:focus-visible {
-    background-color: const.$darkPrimaryColor;
-    box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
-    -webkit-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
-    -moz-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    background-color: Const.$darkPrimaryColor;
+    @include Mixin.box-shadow(Const.$lightPrimaryColor);
   }
   &:active {
-    box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
-    -webkit-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
-    -moz-box-shadow: 0px 0px 0px 1px const.$lightPrimaryColor;
+    @include Mixin.box-shadow(Const.$lightPrimaryColor);
   }
   &:hover {
-    background-color: const.$darkPrimaryColor;
+    background-color: Const.$darkPrimaryColor;
     cursor: pointer;
-    // box-shadow: 0px 0px 0px 1px #b3cfe6;
-    // -webkit-box-shadow: 0px 0px 0px 1px #b3cfe6;
-    // -moz-box-shadow: 0px 0px 0px 1px #b3cfe6;
+  }
+}
+
+.z_icon_button {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: Const.$darkSecondaryTextColor;
+  padding: Function.spacing(1);
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    color: Const.$secondaryTextColor;
+  }
+}
+
+.z_sidebar_button {
+  @include Mixin.remove-default-button;
+  background-color: transparent;
+  display: inline-flex;
+  justify-content: left;
+  color: Const.$secondaryTextColor;
+  width: 100%;
+  border-radius: Const.$radius;
+
+  &[data-active='true'] {
+    background-color: Const.$primaryColor;
   }
 }
 

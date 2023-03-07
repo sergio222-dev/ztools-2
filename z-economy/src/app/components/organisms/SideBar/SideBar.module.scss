@@ -1,18 +1,27 @@
-@use '../../styles/constants.scss' as const;
-
+@use '../../styles/constants' as Const;
+@use '../../styles/functions' as Functions;
+//
 .side_bar {
-    background-color: const.$sidebarBackground;
-    width: 14svw;
-    min-width: 150px;
-    padding: 8px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
+  background-color: Const.$sidebarBackground;
+  //width: 14svw;
+  min-width: 240px;
+  //min-width: 150px;
+  padding: Functions.spacing(1);
+  //position: fixed;
+  //top: 0;
+  //bottom: 0;
+  //left: 0;
+  //right: 0;
+  position: relative;
 
-.add_account_btn_icon {
-    margin: 0px;
-    padding: 0px;
+  .z_collapsable_button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 }
+//
+//.add_account_btn_icon {
+//    margin: 0px;
+//    padding: 0px;
+//}

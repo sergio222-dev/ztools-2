@@ -1,11 +1,16 @@
+$gridSize: 8;
+
 $primaryColor: #4495d7;
-$darkPrimaryColor: #3674a7;
+$darkPrimaryColor: #25384f;
 $lightPrimaryColor: #a8d8f0;
+
+$secondaryColor: rgba(255, 255, 255, 0.15);
 
 $boldTextColor: #383e41;
 $textColor: #636366;
 
 $secondaryTextColor: #ffff;
+$darkSecondaryTextColor: darken(#ffff, 20);
 
 $sidebarBackground: #244564;
 $darkSidebarBackground: #25384f;
@@ -13,3 +18,5 @@ $darkSidebarBackground: #25384f;
 $lightPositiveBackgroundColor: #cdea9f;
 $positiveBackgroundColor: #6d9f38;
 $darkPositiveBackgroundColor: #324412;
+
+$radius: 5px;

@@ -1,0 +1,5 @@
+@use 'constants' as Const;
+
+@function spacing($unit) {
+  @return #{$unit * Const.$gridSize}px;
+}
