@@ -1,17 +1,11 @@
 import { Button } from '../../atoms';
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
-import {
-  BsBank2,
-  IoMdCash,
-  RiArrowDownSLine,
-  RiBarChart2Fill,
-  TbLayoutSidebarLeftCollapse,
-} from 'react-icons/all';
+import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
-import { LeftSidebarCollapsible } from '../../molecules';
 
+import { LeftSidebarCollapsible } from '../../molecules';
 const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
 
 const SIDEBAR_BUTTON_ICONS = [
