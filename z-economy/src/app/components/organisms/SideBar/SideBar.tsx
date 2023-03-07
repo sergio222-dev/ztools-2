@@ -1,13 +1,9 @@
 import { Button } from '../../atoms';
-import { Button } from '../../atoms';
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
-import React from 'react';
-import { useState } from 'react';
-import React from 'react';
 
 const handleAddAccountClick = () => {};
 
