@@ -41,7 +41,6 @@ export function SideBar() {
         </Button>
       </div>
       <IconButton className={styles.z_collapsible_button}>
-      <IconButton className={styles.z_collapsible_button}>
         <TbLayoutSidebarLeftCollapse />
       </IconButton>
     </nav>
