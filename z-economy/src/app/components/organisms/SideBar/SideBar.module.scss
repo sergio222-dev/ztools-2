@@ -1,4 +1,27 @@
-.add_account_btn_icon {
-    margin: 0px;
-    padding: 0px;
+@use '../../styles/constants' as Const;
+@use '../../styles/functions' as Functions;
+//
+.side_bar {
+  background-color: Const.$sidebarBackground;
+  //width: 14svw;
+  min-width: 240px;
+  //min-width: 150px;
+  padding: Functions.spacing(1);
+  //position: fixed;
+  //top: 0;
+  //bottom: 0;
+  //left: 0;
+  //right: 0;
+  position: relative;
+
+  .z_collapsable_button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
 }
+//
+//.add_account_btn_icon {
+//    margin: 0px;
+//    padding: 0px;
+//}

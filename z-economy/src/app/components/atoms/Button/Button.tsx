@@ -22,3 +22,4 @@ export function Button(props: ButtonProps): JSX.Element {
     <button className={`${styles.z_button} ${className ? className : ''} ${variantClassName}`} {...rest} />
   );
 }
+

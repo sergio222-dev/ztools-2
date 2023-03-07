@@ -1,10 +1,8 @@
-import { SideBar } from "./app/components/organisms";
-
+import { SideBar } from './app/components/organisms';
+import { Home } from './app/page/Home';
 
 function App() {
-  return (
-    <SideBar />
-  );
+  return <Home />;
 }
 
 export default App;

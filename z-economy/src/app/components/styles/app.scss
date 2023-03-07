@@ -1,9 +1,11 @@
+@use './constants.scss' as const;
+
 html,
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
-  background-color: rgb(36, 69, 100);
-  color: white;
+  background-color: const.$boldTextColor;
+  color: const.$textColor;
 }
 
 * {

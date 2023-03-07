@@ -1,0 +1,13 @@
+@use 'functions' as Functions;
+
+@mixin box-shadow($color) {
+  box-shadow: 0 0 0 1px $color;
+  -webkit-box-shadow: 0 0 0 1px $color;
+  -moz-box-shadow: 0 0 0 1px $color;
+}
+
+@mixin remove-default-button {
+  outline: none;
+  border: none;
+  padding: Functions.spacing(1);
+}
