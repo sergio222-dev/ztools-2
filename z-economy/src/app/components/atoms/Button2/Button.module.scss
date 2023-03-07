@@ -1,13 +1,13 @@
 @use '../Button/Button.module.scss';
-@use '../../styles/constants.scss' as const;
+@use '../../styles/constants.scss' as Const;
+@use '../../styles/functions.scss' as Functions;
 
 .z_button2 {
   @extend .z_button;
-  background-color: const.$sidebarBackground;
-  text-align: left;
-  border-radius: 6px;
-  padding: 12px;
-  min-width: 250px;
-  max-width: 250px;
+  background-color: Const.$sidebarBackground;
+  border-radius: Const.$radius;
+  display: inline-flex;
+  width: 100%;
+  padding: Functions.spacing(2);
   white-space: nowrap;
 }

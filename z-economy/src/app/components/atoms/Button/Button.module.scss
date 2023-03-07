@@ -44,13 +44,29 @@
   @include Mixin.remove-default-button;
   background-color: transparent;
   display: inline-flex;
+  width: 100%;
   justify-content: left;
   color: Const.$secondaryTextColor;
-  width: 100%;
   border-radius: Const.$radius;
+  padding: Function.spacing(2);
 
   &[data-active='true'] {
     background-color: Const.$primaryColor;
+    &:hover {
+      background-color: Const.$primaryColor;
+      cursor: pointer;
+    }
+  }
+  &:focus-visible {
+    background-color: Const.$darkPrimaryColor;
+    @include Mixin.box-shadow(Const.$lightPrimaryColor);
+  }
+  &:active {
+    @include Mixin.box-shadow(Const.$lightPrimaryColor);
+  }
+  &:hover {
+    background-color: Const.$darkPrimaryColor;
+    cursor: pointer;
   }
 }
 
