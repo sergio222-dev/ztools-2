@@ -2,7 +2,8 @@
 
 .side_bar {
     background-color: const.$sidebarBackground;
-    width: 14vw;
+    width: 14svw;
+    min-width: 150px;
     padding: 8px;
     position: fixed;
     top: 0;
