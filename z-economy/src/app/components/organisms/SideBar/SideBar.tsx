@@ -1,8 +1,11 @@
 import { Button } from '../../atoms';
+import { Button } from '../../atoms';
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
+import { useState } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import React from 'react';
 
@@ -41,6 +44,7 @@ export function SideBar() {
           Add Account
         </Button>
       </div>
+      <IconButton className={styles.z_collapsible_button}>
       <IconButton className={styles.z_collapsible_button}>
         <TbLayoutSidebarLeftCollapse />
       </IconButton>
