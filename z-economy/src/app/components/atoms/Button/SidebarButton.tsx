@@ -20,7 +20,8 @@ export function SidebarButton({
       data-active={active}
       className={`${styles.z_sidebar_button} ${className ? className : ''}`}
     >
-      <div>{StartIcon}</div>
+      {/* conditional rendering bug in chrome and edge, generate a gap above and bellow this component*/}
+      {StartIcon && <div>{StartIcon}</div>}
       <div>{children}</div>
     </button>
   );
