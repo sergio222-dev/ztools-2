@@ -46,6 +46,9 @@ export function SideBar() {
           );
         })}
       </div>
+      {/* <div>
+          <LeftSidebarCollapsible></LeftSidebarCollapsible>
+      </div> */}
       <div>
         <LeftSidebarCollapsible
           accounts={[
