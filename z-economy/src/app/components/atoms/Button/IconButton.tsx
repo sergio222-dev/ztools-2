@@ -1,4 +1,4 @@
-import React, { HtmlHTMLAttributes } from 'react';
+import { HtmlHTMLAttributes } from 'react';
 import styles from './Button.module.scss';
 
 interface IconButtonProps extends HtmlHTMLAttributes<HTMLButtonElement> {}

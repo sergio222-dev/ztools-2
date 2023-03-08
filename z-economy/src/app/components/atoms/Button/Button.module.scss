@@ -57,6 +57,7 @@
       cursor: pointer;
     }
   }
+
   &:focus-visible {
     background-color: Const.$darkPrimaryColor;
     @include Mixin.box-shadow(Const.$lightPrimaryColor);
