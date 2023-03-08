@@ -4,10 +4,13 @@ import { IconButton } from '../../atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
+import { LeftSidebarCollapsible } from '../../molecules';
 
 const handleAddAccountClick = () => {};
 
-type SidebarActiveValues = 'All Accounts' | 'Budget' | 'Reports';
+const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
+
+type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
 export function SideBar() {
   const [activeButton, setActiveButton] = useState<SidebarActiveValues>('Budget');
@@ -18,23 +21,24 @@ export function SideBar() {
 
   return (
     <nav className={styles.side_bar}>
-      {/*<div>*/}
-      {/*  <LeftSidebarCollapsible></LeftSidebarCollapsible>*/}
-      {/*</div>*/}
       <div>
-        <SidebarButton active={activeButton === 'Budget'} onClick={() => handleButtonClick('Budget')}>
-          Budget
-        </SidebarButton>
-        <SidebarButton active={activeButton === 'Reports'} onClick={() => handleButtonClick('Reports')}>
-          Reports
-        </SidebarButton>
-        <SidebarButton
-          active={activeButton === 'All Accounts'}
-          onClick={() => handleButtonClick('All Accounts')}
-        >
-          All Accounts
-        </SidebarButton>
+        {SIDEBAR_BUTTON_NAMES.map(
+          (name) => {
+            return (
+              <SidebarButton
+                key={name}
+                active={activeButton === name}
+                onClick={() => handleButtonClick(name)}
+              >
+                {name}
+              </SidebarButton>
+            )
+          }
+        )}
       </div>
+      {/* <div>
+          <LeftSidebarCollapsible></LeftSidebarCollapsible>
+      </div> */}
       <div>
         <Button variant="primary" className="add-btn" onClick={handleAddAccountClick}>
           Add Account
