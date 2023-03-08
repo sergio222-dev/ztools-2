@@ -56,6 +56,10 @@
       background-color: Const.$primaryColor;
       cursor: pointer;
     }
+    &:focus-visible {
+      background-color: Const.$primaryColor;
+      @include Mixin.box-shadow(Const.$lightPrimaryColor);
+    }
   }
 
   &:focus-visible {
