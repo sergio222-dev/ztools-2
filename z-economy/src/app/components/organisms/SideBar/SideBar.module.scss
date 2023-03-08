@@ -33,7 +33,7 @@
   .z_collapsible_button {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scaleX(-1);
     bottom: 0;
   }
 
