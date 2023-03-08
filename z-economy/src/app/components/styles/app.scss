@@ -2,6 +2,7 @@
 
 html,
 body {
+  min-width: 180px;
   font-family: 'Roboto', sans-serif;
   font-weight: 300;
   background-color: const.$boldTextColor;
@@ -14,4 +15,9 @@ body {
 
 .side-button span {
   padding-right: 10px;
+}
+
+input,
+button {
+  min-height: 2.2rem;
 }

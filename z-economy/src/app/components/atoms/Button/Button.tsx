@@ -1,13 +1,14 @@
 import styles from './Button.module.scss';
 import { HtmlHTMLAttributes, ReactNode } from 'react';
+import cls from 'classnames';
 
 export interface ButtonProps extends HtmlHTMLAttributes<HTMLButtonElement> {
-  Icon?: ReactNode;
   variant?: 'primary' | 'secondary' | 'tertiary';
+  StartIcon?: ReactNode | undefined;
 }
 
 export function Button(props: ButtonProps): JSX.Element {
-  const { className, variant, ...rest } = props;
+  const { className, variant, children, StartIcon, ...rest } = props;
   let variantClassName;
 
   switch (variant) {
@@ -19,7 +20,10 @@ export function Button(props: ButtonProps): JSX.Element {
   }
 
   return (
-    <button className={`${styles.z_button} ${className ? className : ''} ${variantClassName}`} {...rest} />
+    <button className={cls(styles.z_button, className)} {...rest}>
+      {/* conditional rendering bug in chrome and edge, generate a gap above and bellow this component*/}
+      {StartIcon && <div style={{ display: 'flex' }}>{StartIcon}</div>}
+      {children && <div>{children}</div>}
+    </button>
   );
 }
-

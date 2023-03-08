@@ -45,10 +45,12 @@
   background-color: transparent;
   display: inline-flex;
   width: 100%;
+  column-gap: Function.spacing(1);
   justify-content: left;
+  align-items: center;
   color: Const.$secondaryTextColor;
   border-radius: Const.$radius;
-  padding: Function.spacing(2);
+  padding: Function.spacing(1);
 
   &[data-active='true'] {
     background-color: Const.$primaryColor;
@@ -71,7 +73,6 @@
   }
   &:hover {
     background-color: Const.$darkPrimaryColor;
-    cursor: pointer;
   }
 }
 

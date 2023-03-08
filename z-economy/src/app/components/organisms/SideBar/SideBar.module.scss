@@ -1,11 +1,26 @@
 @use '../../styles/constants' as Const;
 @use '../../styles/functions' as Functions;
-//
+@use '../../styles/mixins' as Mixins;
+
+// it should be lower than width in sm device
+$startingHidingWidth: 150px;
+
 .side_bar {
+  container: sidebar / size;
   background-color: Const.$sidebarBackground;
-  min-width: 240px;
+  width: 100%;
   padding: Functions.spacing(1);
   position: relative;
+  transition: width 300ms ease-in-out;
+  overflow: hidden;
+
+  @include Mixins.media-breakpoint-up('sm') {
+    width: 240px;
+  }
+
+  @include Mixins.media-breakpoint-up('md') {
+    width: 400px;
+  }
 
   .z_collapsible_button {
     position: absolute;
@@ -16,35 +31,38 @@
   .side_bar_button_icon {
     margin-right: Functions.spacing(1);
   }
-}
 
-.side_bar_contracted {
-  background-color: Const.$sidebarBackground;
-  padding: Functions.spacing(1);
-  min-width: 70px;
-  width: 0;
-  overflow: hidden;
-  position: relative;
-  
-  .side_bar_button_label {
-    display: none;
-  }
+  .menu_button_container {
+    .menu_button {
+      @container sidebar (max-width: #{$startingHidingWidth}) {
+        & > *:last-child {
+          display: none;
+        }
+      }
+    }
 
-  .z_collapsible_button {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%) scaleX(-1);
-    -webkit-transform: translateX(-50%) scaleX(-1);
-    -moz-transform: translateX(-50%) scaleX(-1);
-    bottom: 0;
+    margin-bottom: Functions.spacing(1);
+
+    & > * {
+      margin-bottom: Functions.spacing(1);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .add_btn {
-    display: none;
+    @container sidebar (max-width: #{$startingHidingWidth}) {
+      display: none;
+    }
   }
+}
 
-  .z_sidebar_button_contracted {
-    justify-content: center;
+.side_bar_contracted {
+  width: 48px;
+
+  .z_collapsible_button {
+    transform: rotate(180deg);
   }
-
 }

@@ -1,4 +1,5 @@
 @use 'functions' as Functions;
+@use 'constants' as Const;
 
 @mixin box-shadow($color) {
   box-shadow: 0 0 0 1px $color;
@@ -10,4 +11,16 @@
   outline: none;
   border: none;
   padding: Functions.spacing(1);
+  cursor: pointer;
+}
+
+@mixin media-breakpoint-up($name, $breakpoints: Const.$grid-breakpoints) {
+  $min: Functions.breakpoint-min($name, $breakpoints);
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
 }
