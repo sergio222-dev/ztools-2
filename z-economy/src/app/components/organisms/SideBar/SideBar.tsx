@@ -1,6 +1,6 @@
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
-import { TbLayoutSidebarLeftCollapse } from 'react-icons/all';
+import { TbLayoutSidebarLeftCollapse, BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
 
