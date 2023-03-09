@@ -83,3 +83,14 @@
 .z_button_round {
   border-radius: 50%;
 }
+
+.collapsible_main_button {
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  color: white;
+  text-align: left;
+  &:hover {
+    cursor: pointer;
+  }
+}

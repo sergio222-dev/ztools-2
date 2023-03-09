@@ -1,8 +1,13 @@
 import styles from './LeftSidebarCollapsible.module.scss';
 import { CollapsibleButton } from '../../atoms';
-import { useState } from 'react';
-
-export function LeftSidebarCollapsible() {
+import {ReactNode, useState} from 'react';
+import { SidebarButton } from "../../atoms/Button/SidebarButton";
+import cls from "classnames";
+interface Collapsible {
+  className?: string | undefined;
+  Icon?: ReactNode | undefined;
+}
+export function LeftSidebarCollapsible({className, Icon}: Collapsible) {
   const [isContentVisible, setIsContentVisible] = useState(true);
   const [isActive, setIsActive] = useState('active')
 
@@ -11,16 +16,17 @@ export function LeftSidebarCollapsible() {
     setIsActive(!(isActive === 'active') ? 'active' : '' )
   }
   
-  const icon = isContentVisible ? '\u25BC' : '\u25B6'
+  const containerClassname = isContentVisible ? styles.collapsible_container : styles.collapsible_container_contracted;
 
   return (
-    <div className={styles.collapsible_container}>
-      <CollapsibleButton onClick={handleClick}><span className={styles.icon}>{icon}</span> BUDGET <span className={styles.amount}>$300000</span></CollapsibleButton>
+    <div className={cls(containerClassname, className)}>
+      <CollapsibleButton onClick={handleClick}><span className={styles.icon}>{Icon}</span> BUDGET <span className={styles.amount}>$300,000.00</span></CollapsibleButton>
       {isContentVisible && (
         <div>
-          <p><span className={styles.bank_name}>Santander</span> <span className={styles.amount}>$300000</span><br />
-          <span className={styles.bank_name}>Santaaaaander</span> <span className={styles.amount}>$300000</span><br />
-          </p>
+          <SidebarButton className={styles.collapsible_inside_button}><span className={styles.bank_name}>Santander</span> <span className={styles.amount}>$300,000.00</span>
+          </SidebarButton>
+          <SidebarButton className={styles.collapsible_inside_button}><span className={styles.bank_name}>Santander</span> <span className={styles.amount}>$300,000.00</span>
+          </SidebarButton>
         </div>
       )}
     </div>

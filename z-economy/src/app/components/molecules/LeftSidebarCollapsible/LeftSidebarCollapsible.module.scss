@@ -1,25 +1,36 @@
  @use '../../styles/constants.scss' as const;
+ @use '../../styles/functions' as Functions;
 
 .icon {
-    font-size: 10px;
+    font-size: 14px;
     margin-right: 1px;
 }
 
-.amount {
-    margin-left: 70px;
+.collapsible_container {
+  position: relative;
+    .bank_name {
+        //margin-left: 25px;
+        //margin-right: -32px;
+        margin: Functions.spacing(3);
+    }
+
+    .amount {
+      position: absolute;
+      right: Functions.spacing(3);
+      margin-right: Functions.spacing(1);
+    }
+    .icon {
+      transform: rotate(180deg);
+    }
 }
 
-.collapsible_container {
-    color: const.$secondaryTextColor;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 8px;
-    .bank_name {
-        margin-left: 25px;
-        margin-right: -32px;
-    }
-    p {
-        max-width: 205px;
-        white-space: nowrap;
-    }
+.collapsible_container_contracted {
+  @extend .collapsible_container;
+  & svg {
+    transform: rotate(-90deg);
+  }
 }
+
+ .collapsible_inside_button {
+     font-size: 15px;
+ }

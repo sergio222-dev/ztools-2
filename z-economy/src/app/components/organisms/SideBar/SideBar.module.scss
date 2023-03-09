@@ -22,7 +22,7 @@ $startingHidingWidth: 150px;
     width: 400px;
   }
 
-  .z_collapsible_button {
+  .z_collapsible_icon_button {
     position: absolute;
     bottom: 0;
     right: 0;
@@ -57,12 +57,21 @@ $startingHidingWidth: 150px;
       display: none;
     }
   }
+  .side_bar_collapsible_container {
+    @container sidebar (max-width: #{$startingHidingWidth}) {
+      display: none;
+    }
+    &:last-child {
+      margin-bottom: Functions.spacing(1);
+    }
+  }
 }
 
 .side_bar_contracted {
   width: 48px;
 
-  .z_collapsible_button {
+  .z_collapsible_icon_button {
     transform: rotate(180deg);
   }
 }
+
