@@ -1,8 +1,8 @@
 import styles from './Button.module.scss';
-import { Button, ButtonProps } from './Button';
+import {Button, ButtonProperties} from './Button';
 import cls from 'classnames';
 
-interface SidebarButtonProps extends ButtonProps {
+interface SidebarButtonProps extends ButtonProperties {
   active?: boolean;
 }
 
