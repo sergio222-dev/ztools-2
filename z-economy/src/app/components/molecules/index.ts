@@ -1,1 +1,1 @@
-export {LeftSidebarCollapsible} from './LeftSidebarCollapsible/LeftSidebarCollapsible'
+export { LeftSidebarCollapsible } from './LeftSidebarCollapsible/LeftSidebarCollapsible'

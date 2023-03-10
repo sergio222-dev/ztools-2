@@ -1,15 +1,15 @@
 @use '../../styles/constants' as Const;
-@use '../../styles/functions' as Functions;
+@use '../../styles/functions' as functions;
 @use '../../styles/mixins' as Mixins;
 
 // it should be lower than width in sm device
-$startingHidingWidth: 150px;
+$starting-hiding-width: 150px;
 
 .side_bar {
   container: sidebar / size;
-  background-color: Const.$sidebarBackground;
+  background-color: Const.$sidebar-background;
   width: 100%;
-  padding: Functions.spacing(1);
+  padding: functions.spacing(1);
   position: relative;
   transition: width 300ms ease-in-out;
   overflow: hidden;
@@ -29,22 +29,22 @@ $startingHidingWidth: 150px;
   }
 
   .side_bar_button_icon {
-    margin-right: Functions.spacing(1);
+    margin-right: functions.spacing(1);
   }
 
   .menu_button_container {
     .menu_button {
-      @container sidebar (max-width: #{$startingHidingWidth}) {
+      @container sidebar (max-width: #{$starting-hiding-width}) {
         & > *:last-child {
           display: none;
         }
       }
     }
 
-    margin-bottom: Functions.spacing(1);
+    margin-bottom: functions.spacing(1);
 
     & > * {
-      margin-bottom: Functions.spacing(1);
+      margin-bottom: functions.spacing(1);
 
       &:last-child {
         margin-bottom: 0;
@@ -53,16 +53,18 @@ $startingHidingWidth: 150px;
   }
 
   .add_btn {
-    @container sidebar (max-width: #{$startingHidingWidth}) {
+    @container sidebar (max-width: #{$starting-hiding-width}) {
       display: none;
     }
   }
+
   .side_bar_collapsible_container {
-    @container sidebar (max-width: #{$startingHidingWidth}) {
+    @container sidebar (max-width: #{$starting-hiding-width}) {
       display: none;
     }
+
     &:last-child {
-      margin-bottom: Functions.spacing(1);
+      margin-bottom: functions.spacing(1);
     }
   }
 }

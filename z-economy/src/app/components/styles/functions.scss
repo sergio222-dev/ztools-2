@@ -1,10 +1,11 @@
 @use 'constants' as Const;
 
 @function spacing($unit) {
-  @return #{$unit * Const.$gridSize}px;
+  @return #{$unit * Const.$grid-size}px;
 }
 
 @function breakpoint-min($name, $breakpoints: Const.$grid-breakpoints) {
   $min: map-get($breakpoints, $name);
+
   @return if($min != 0, $min, null);
 }

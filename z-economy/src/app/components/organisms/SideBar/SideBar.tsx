@@ -14,7 +14,7 @@ import { LeftSidebarCollapsible } from '../../molecules';
 
 const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
 
-const SIDEBAR_BUTTON_ICONS = [<IoMdCash />, <RiBarChart2Fill />, <BsBank2 />];
+const SIDEBAR_BUTTON_ICONS = [<IoMdCash key="icon1"/>, <RiBarChart2Fill key="icon2"/>, <BsBank2 key="icon3"/>];
 
 type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
@@ -26,7 +26,7 @@ export function SideBar() {
     setActiveButton(buttonName);
   };
 
-  const handleAddAccountClick = () => {};
+  // const handleAddAccountClick = () => {};
 
   const handleSidebarCollapsibleClick = () => {
     setToggleSidebar(!toggleSidebar);
@@ -56,7 +56,7 @@ export function SideBar() {
         />
       </div>
       <div>
-        <Button variant="primary" className={styles.add_btn} onClick={handleAddAccountClick}>
+        <Button className={styles.add_btn}>
           Add Account
         </Button>
       </div>

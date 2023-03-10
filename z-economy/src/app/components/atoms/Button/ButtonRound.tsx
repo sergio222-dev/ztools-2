@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, ButtonProperties } from './Button';
 import styles from './Button.module.scss';
 
