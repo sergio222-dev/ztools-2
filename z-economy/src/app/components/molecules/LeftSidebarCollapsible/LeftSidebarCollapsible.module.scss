@@ -1,40 +1,40 @@
 @use '../../styles/functions' as functions;
-
-.icon {
-    font-size: 14px;
-    margin-right: 1px;
-}
+@use '../../styles/constants' as constants;
 
 %collapsible-container {
   position: relative;
+  container: collapsible-container / inline-size;
 
-    .bank_name {
-        margin: functions.spacing(3);
-    }
+  .bank_name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: max-content;
+  }
 
-    .amount {
-      position: absolute;
-      right: functions.spacing(3);
-      margin-right: functions.spacing(1);
-    }
-
-    .icon {
-      transform: rotate(180deg);
-    }
+  .amount {
+    flex: 1;
+    text-align: right;
+    padding-right: functions.spacing(2);
+  }
 }
 
 .collapsible_container {
   @extend %collapsible-container;
+
+  .icon {
+    transform: rotate(0);
+  }
 }
 
 .collapsible_container_contracted {
   @extend %collapsible-container;
 
-  & svg {
+  .icon {
     transform: rotate(-90deg);
   }
 }
 
- .collapsible_inside_button {
-     font-size: 15px;
- }
+.collapsible_inside_button {
+  font-size: 0.9rem;
+}

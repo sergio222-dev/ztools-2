@@ -4,18 +4,25 @@ import { ReactNode, useState } from 'react';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import cls from 'classnames';
 
+type AccountType = {
+  name: string;
+  total: number;
+};
+
 interface Collapsible {
   className?: string | undefined;
   Icon?: ReactNode | undefined;
+  accounts: AccountType[];
 }
 
-export function LeftSidebarCollapsible({ className, Icon }: Collapsible) {
+export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsible) {
   const [isContentVisible, setIsContentVisible] = useState(true);
-  const [isActive, setIsActive] = useState('active');
+  const total = accounts.reduce((a, c) => {
+    return a + c.total;
+  }, 0);
 
-  const handleClick = () => {
+  const handleContentVisible = () => {
     setIsContentVisible(!isContentVisible);
-    setIsActive(isActive === 'active' ? '' : 'active');
   };
 
   const containerClassname = isContentVisible
@@ -24,19 +31,28 @@ export function LeftSidebarCollapsible({ className, Icon }: Collapsible) {
 
   return (
     <div className={cls(containerClassname, className)}>
-      <CollapsibleButton onClick={handleClick}>
-        <span className={styles.icon}>{Icon}</span> BUDGET <span className={styles.amount}>$300,000.00</span>
+      <CollapsibleButton onClick={handleContentVisible}>
+        <div className="z_flex z_flex_ai_center z_col_gap_1">
+          <span className={cls('z_flex_inline', styles.icon)}>{Icon}</span>
+          <span>BUDGET</span>
+          <span className={styles.amount}>{total}</span>
+        </div>
       </CollapsibleButton>
       {isContentVisible && (
         <div>
-          <SidebarButton className={styles.collapsible_inside_button}>
-            <span className={styles.bank_name}>Santander</span>
-            <span className={styles.amount}>$300,000.00</span>
-          </SidebarButton>
-          <SidebarButton className={styles.collapsible_inside_button}>
-            <span className={styles.bank_name}>Santander</span>{' '}
-            <span className={styles.amount}>$300,000.00</span>
-          </SidebarButton>
+          {accounts.map(a => (
+            <SidebarButton
+              key={a.name}
+              className={cls(
+                styles.collapsible_inside_button,
+                'z_stack_margin_bottom_item_1',
+                'z_padding_left_5',
+              )}
+            >
+              <span className={styles.bank_name}>{a.name}</span>
+              <span className={styles.amount}>{a.total}</span>
+            </SidebarButton>
+          ))}
         </div>
       )}
     </div>

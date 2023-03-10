@@ -14,7 +14,11 @@ import { LeftSidebarCollapsible } from '../../molecules';
 
 const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
 
-const SIDEBAR_BUTTON_ICONS = [<IoMdCash key="icon1"/>, <RiBarChart2Fill key="icon2"/>, <BsBank2 key="icon3"/>];
+const SIDEBAR_BUTTON_ICONS = [
+  <IoMdCash key="icon1" />,
+  <RiBarChart2Fill key="icon2" />,
+  <BsBank2 key="icon3" />,
+];
 
 type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
@@ -44,21 +48,29 @@ export function SideBar() {
               StartIcon={SIDEBAR_BUTTON_ICONS[index]}
               className={styles.menu_button}
             >
-              <span>{name}</span>
+              <span className="z_text_a_left">{name}</span>
             </SidebarButton>
           );
         })}
       </div>
       <div>
         <LeftSidebarCollapsible
+          accounts={[
+            {
+              name: 'Santander el mejor banco du mundo',
+              total: 300_000,
+            },
+            {
+              name: 'BBVA',
+              total: 125_000,
+            },
+          ]}
           className={styles.side_bar_collapsible_container}
           Icon={<RiArrowDownSLine />}
         />
       </div>
       <div>
-        <Button className={styles.add_btn}>
-          Add Account
-        </Button>
+        <Button className={styles.add_btn}>Add Account</Button>
       </div>
       <IconButton className={styles.z_collapsible_icon_button} onClick={handleSidebarCollapsibleClick}>
         <TbLayoutSidebarLeftCollapse />

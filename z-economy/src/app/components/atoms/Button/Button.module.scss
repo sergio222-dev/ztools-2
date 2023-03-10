@@ -86,7 +86,7 @@
 }
 
 .z_button {
-  @extend %z-button
+  @extend %z-button;
 }
 
 .z_button_primary {
@@ -98,6 +98,8 @@
 }
 
 .collapsible_main_button {
+  @include Mixin.remove-default-button;
+
   background-color: transparent;
   width: 100%;
   border: none;

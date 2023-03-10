@@ -15,7 +15,7 @@ $starting-hiding-width: 150px;
   overflow: hidden;
 
   @include Mixins.media-breakpoint-up('sm') {
-    width: 240px;
+    width: 320px;
   }
 
   @include Mixins.media-breakpoint-up('md') {
@@ -76,4 +76,3 @@ $starting-hiding-width: 150px;
     transform: rotate(180deg);
   }
 }
-

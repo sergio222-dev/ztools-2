@@ -1,8 +1,9 @@
+@forward 'utils';
 @use './constants.scss' as const;
 
 html,
 body {
-  min-width: 180px;
+  min-width: 320px;
   font-family: Roboto, sans-serif;
   font-weight: 300;
   background-color: const.$bold-text-color;
