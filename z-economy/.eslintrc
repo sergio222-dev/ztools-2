@@ -13,7 +13,31 @@
   "plugins": ["@typescript-eslint"],
   "rules": {
     //    "prettier/prettier": "error",
-    "linebreak-style": ["error", "windows"]
+    "linebreak-style": ["error", "windows"],
+    "object-curly-spacing": ["error", "always"],
+    "unicorn/prevent-abbreviations": [
+      "error",
+      {
+        "allowList": {
+          "props": true
+        },
+        "ignore": [
+          // When checking filenames, only the basename is tested. For example, with a file named foo.e2e.js, ignore: [/\.e2e$/] would pass and ignore: [/\.e2e\.js/] would fail.
+          // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
+          "\\.d$"
+        ]
+      }
+    ],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": {
+          "camelCase": true,
+          "pascalCase": true
+        },
+        "ignore": ["\\.d\\.ts$"]
+      }
+    ]
   },
   "settings": {
     "import/parsers": {
