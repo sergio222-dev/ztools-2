@@ -7,3 +7,8 @@
 # are committed. The command is defined in common/config/rush/command-line.json
 # and uses the "rush-prettier" autoinstaller.
 node common/scripts/install-run-rush.js prettier || exit $?
+if [ `cat $1 | wc -w` -lt 3 ]; then
+  echo ""
+  echo "Invalid commit message: The message must contain at least 3 words."
+	exit 1
+fi

@@ -1,10 +1,16 @@
 import { Button } from '../../atoms';
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
-import { BsBank2, IoMdCash, RiBarChart2Fill, TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
+import {
+  BsBank2,
+  IoMdCash,
+  RiArrowDownSLine,
+  RiBarChart2Fill,
+  TbLayoutSidebarLeftCollapse,
+} from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
-import {LeftSidebarCollapsible} from "../../molecules";
+import { LeftSidebarCollapsible } from '../../molecules';
 
 const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
 
@@ -25,11 +31,7 @@ export function SideBar() {
   const handleSidebarCollapsibleClick = () => {
     setToggleSidebar(!toggleSidebar);
   };
-
-  // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
-    return (
+  return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
       <div className={styles.menu_button_container}>
         {SIDEBAR_BUTTON_NAMES.map((name, index) => {
@@ -47,9 +49,12 @@ export function SideBar() {
           );
         })}
       </div>
-        <div>
-            <LeftSidebarCollapsible className={styles.side_bar_collapsible_container} Icon={<RiArrowDownSLine />}/>
-        </div>
+      <div>
+        <LeftSidebarCollapsible
+          className={styles.side_bar_collapsible_container}
+          Icon={<RiArrowDownSLine />}
+        />
+      </div>
       <div>
         <Button variant="primary" className={styles.add_btn} onClick={handleAddAccountClick}>
           Add Account
