@@ -1,22 +1,24 @@
-import styles from './Button.module.scss';
+import styles from './button.module.scss';
 import { HtmlHTMLAttributes, ReactNode } from 'react';
 import cls from 'classnames';
 
-export interface ButtonProps extends HtmlHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProperties extends HtmlHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'tertiary';
   StartIcon?: ReactNode | undefined;
 }
 
-export function Button(props: ButtonProps): JSX.Element {
-  const { className, variant, children, StartIcon, ...rest } = props;
+export function Button(properties: ButtonProperties): JSX.Element {
+  const { className, variant, children, StartIcon, ...rest } = properties;
   let variantClassName;
 
   switch (variant) {
-    case 'primary':
+    case 'primary': {
       variantClassName = '';
       break;
-    default:
+    }
+    default: {
       variantClassName = '';
+    }
   }
 
   return (

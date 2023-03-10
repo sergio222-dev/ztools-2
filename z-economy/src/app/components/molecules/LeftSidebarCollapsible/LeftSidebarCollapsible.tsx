@@ -15,7 +15,7 @@ export function LeftSidebarCollapsible({ className, Icon }: Collapsible) {
 
   const handleClick = () => {
     setIsContentVisible(!isContentVisible);
-    setIsActive(!(isActive === 'active') ? 'active' : '');
+    setIsActive(isActive === 'active' ? '' : 'active');
   };
 
   const containerClassname = isContentVisible
