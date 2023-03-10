@@ -1,25 +1,27 @@
 @use '../../styles/constants.scss' as Const;
 @use '../../styles/mixins' as Mixin;
-@use '../../styles/functions' as Function;
+@use '../../styles/functions' as functions;
 
-.z_button {
-  background-color: Const.$secondaryColor;
-  color: Const.$secondaryTextColor;
+%z-button {
+  background-color: Const.$secondary-color;
+  color: Const.$secondary-text-color;
   border-radius: Const.$radius;
   border: none;
-  padding: Function.spacing(1);
+  padding: functions.spacing(1);
   outline: none;
-  //clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 
   &:focus-visible {
-    background-color: Const.$darkPrimaryColor;
-    @include Mixin.box-shadow(Const.$lightPrimaryColor);
+    background-color: Const.$dark-primary-color;
+
+    @include Mixin.box-shadow(Const.$light_primary_color);
   }
+
   &:active {
-    @include Mixin.box-shadow(Const.$lightPrimaryColor);
+    @include Mixin.box-shadow(Const.$light-primary-color);
   }
+
   &:hover {
-    background-color: Const.$darkPrimaryColor;
+    background-color: Const.$dark-primary-color;
     cursor: pointer;
   }
 }
@@ -29,35 +31,82 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  color: Const.$darkSecondaryTextColor;
-  padding: Function.spacing(1);
+  color: Const.$dark-secondary-text-color;
+  padding: functions.spacing(1);
   font-size: 2rem;
   display: inline-flex;
   align-items: center;
 
   &:hover {
-    color: Const.$secondaryTextColor;
+    color: Const.$secondary-text-color;
   }
 }
 
 .z_sidebar_button {
   @include Mixin.remove-default-button;
+
   background-color: transparent;
   display: inline-flex;
-  justify-content: left;
-  color: Const.$secondaryTextColor;
   width: 100%;
+  column-gap: functions.spacing(1);
+  justify-content: left;
+  align-items: center;
+  color: Const.$secondary-text-color;
   border-radius: Const.$radius;
+  padding: functions.spacing(1);
 
   &[data-active='true'] {
-    background-color: Const.$primaryColor;
+    background-color: Const.$primary-color;
+
+    &:hover {
+      background-color: Const.$primary-color;
+      cursor: pointer;
+    }
+
+    &:focus-visible {
+      background-color: Const.$primary-color;
+
+      @include Mixin.box-shadow(Const.$light-primary-color);
+    }
+  }
+
+  &:focus-visible {
+    background-color: Const.$dark-primary-color;
+
+    @include Mixin.box-shadow(Const.$light-primary-color);
+  }
+
+  &:active {
+    @include Mixin.box-shadow(Const.$light-primary-color);
+  }
+
+  &:hover {
+    background-color: Const.$dark-primary-color;
   }
 }
 
+.z_button {
+  @extend %z-button;
+}
+
 .z_button_primary {
-  @extend .z_button;
+  @extend %z-button;
 }
 
 .z_button_round {
   border-radius: 50%;
+}
+
+.collapsible_main_button {
+  @include Mixin.remove-default-button;
+
+  background-color: transparent;
+  width: 100%;
+  border: none;
+  color: white;
+  text-align: left;
+
+  &:hover {
+    cursor: pointer;
+  }
 }

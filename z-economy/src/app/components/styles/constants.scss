@@ -1,22 +1,28 @@
-$gridSize: 8;
+@use 'sass:color';
 
-$primaryColor: #4495d7;
-$darkPrimaryColor: #25384f;
-$lightPrimaryColor: #a8d8f0;
-
-$secondaryColor: rgba(255, 255, 255, 0.15);
-
-$boldTextColor: #383e41;
-$textColor: #636366;
-
-$secondaryTextColor: #ffff;
-$darkSecondaryTextColor: darken(#ffff, 20);
-
-$sidebarBackground: #244564;
-$darkSidebarBackground: #25384f;
-
-$lightPositiveBackgroundColor: #cdea9f;
-$positiveBackgroundColor: #6d9f38;
-$darkPositiveBackgroundColor: #324412;
-
+$grid-size: 8;
+$primary-color: #4495d7;
+$dark-primary-color: #25384f;
+$light-primary-color: #a8d8f0;
+$secondary-color: rgb(255 255 255 / 15%);
+$bold-text-color: #383e41;
+$text-color: #636366;
+$secondary-text-color: #ffff;
+$dark-secondary-text-color: color.adjust($secondary-text-color, $lightness: -20%);
+$sidebar-background: #244564;
+$dark-sidebar-background: #25384f;
+$light-positive-background-color: #cdea9f;
+$positive-background-color: #6d9f38;
+$dark-positive-background-color: #324412;
 $radius: 5px;
+
+// breakpoints
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);

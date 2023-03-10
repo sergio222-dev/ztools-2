@@ -1,27 +1,78 @@
 @use '../../styles/constants' as Const;
-@use '../../styles/functions' as Functions;
-//
-.side_bar {
-  background-color: Const.$sidebarBackground;
-  //width: 14svw;
-  min-width: 240px;
-  //min-width: 150px;
-  padding: Functions.spacing(1);
-  //position: fixed;
-  //top: 0;
-  //bottom: 0;
-  //left: 0;
-  //right: 0;
-  position: relative;
+@use '../../styles/functions' as functions;
+@use '../../styles/mixins' as Mixins;
 
-  .z_collapsable_button {
+// it should be lower than width in sm device
+$starting-hiding-width: 150px;
+
+.side_bar {
+  container: sidebar / size;
+  background-color: Const.$sidebar-background;
+  width: 100%;
+  padding: functions.spacing(1);
+  position: relative;
+  transition: width 300ms ease-in-out;
+  overflow: hidden;
+
+  @include Mixins.media-breakpoint-up('sm') {
+    width: 320px;
+  }
+
+  @include Mixins.media-breakpoint-up('md') {
+    width: 400px;
+  }
+
+  .z_collapsible_icon_button {
     position: absolute;
     bottom: 0;
     right: 0;
   }
+
+  .side_bar_button_icon {
+    margin-right: functions.spacing(1);
+  }
+
+  .menu_button_container {
+    .menu_button {
+      @container sidebar (max-width: #{$starting-hiding-width}) {
+        & > *:last-child {
+          display: none;
+        }
+      }
+    }
+
+    margin-bottom: functions.spacing(1);
+
+    & > * {
+      margin-bottom: functions.spacing(1);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .add_btn {
+    @container sidebar (max-width: #{$starting-hiding-width}) {
+      display: none;
+    }
+  }
+
+  .side_bar_collapsible_container {
+    @container sidebar (max-width: #{$starting-hiding-width}) {
+      display: none;
+    }
+
+    &:last-child {
+      margin-bottom: functions.spacing(1);
+    }
+  }
 }
-//
-//.add_account_btn_icon {
-//    margin: 0px;
-//    padding: 0px;
-//}
+
+.side_bar_contracted {
+  width: 48px;
+
+  .z_collapsible_icon_button {
+    transform: rotate(180deg);
+  }
+}

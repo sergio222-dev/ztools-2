@@ -1,25 +1,40 @@
- @use '../../styles/constants.scss' as const;
+@use '../../styles/functions' as functions;
+@use '../../styles/constants' as constants;
 
-.icon {
-    font-size: 10px;
-    margin-right: 1px;
-}
+%collapsible-container {
+  position: relative;
+  container: collapsible-container / inline-size;
 
-.amount {
-    margin-left: 70px;
+  .bank_name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: max-content;
+  }
+
+  .amount {
+    flex: 1;
+    text-align: right;
+    padding-right: functions.spacing(2);
+  }
 }
 
 .collapsible_container {
-    color: const.$secondaryTextColor;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 8px;
-    .bank_name {
-        margin-left: 25px;
-        margin-right: -32px;
-    }
-    p {
-        max-width: 205px;
-        white-space: nowrap;
-    }
+  @extend %collapsible-container;
+
+  .icon {
+    transform: rotate(0);
+  }
+}
+
+.collapsible_container_contracted {
+  @extend %collapsible-container;
+
+  .icon {
+    transform: rotate(-90deg);
+  }
+}
+
+.collapsible_inside_button {
+  font-size: 0.9rem;
 }
