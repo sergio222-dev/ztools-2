@@ -1,0 +1,25 @@
+@use 'functions' as functions;
+@use 'constants' as Const;
+
+@mixin box-shadow($color) {
+  box-shadow: 0 0 0 1px $color;
+}
+
+@mixin remove-default-button {
+  outline: none;
+  border: none;
+  padding: functions.spacing(1);
+  cursor: pointer;
+}
+
+@mixin media-breakpoint-up($name, $breakpoints: Const.$grid-breakpoints) {
+  $min: functions.breakpoint-min($name, $breakpoints);
+
+  @if $min {
+    @media (min-width: $min) {
+      @content;
+    }
+  } @else {
+    @content;
+  }
+}

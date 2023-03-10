@@ -1,0 +1,49 @@
+@use 'functions';
+
+.z_flex {
+  display: flex;
+}
+
+.z_flex_inline {
+  display: inline-flex;
+}
+
+.z_flex_ai_center {
+  align-items: center;
+}
+
+.z_flex_jc_center {
+  justify-content: center;
+}
+
+.z_text_a_left {
+  text-align: left;
+}
+
+@for $i from 1 through 10 {
+  .z_flex_grow_#{$i} {
+    flex-grow: $i;
+  }
+}
+
+@for $i from 1 through 4 {
+  .z_stack_margin_bottom_item_#{$i} {
+    margin-bottom: functions.spacing($i);
+
+    &:last-child {
+      margin-bottom: inherit;
+    }
+  }
+}
+
+@for $i from 1 through 10 {
+  .z_padding_left_#{$i} {
+    padding-left: functions.spacing($i);
+  }
+}
+
+@for $i from 1 through 4 {
+  .z_col_gap_#{$i} {
+    column-gap: functions.spacing($i);
+  }
+}

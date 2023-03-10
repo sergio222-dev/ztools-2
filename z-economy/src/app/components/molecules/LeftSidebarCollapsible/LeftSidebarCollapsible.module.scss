@@ -1,0 +1,40 @@
+@use '../../styles/functions' as functions;
+@use '../../styles/constants' as constants;
+
+%collapsible-container {
+  position: relative;
+  container: collapsible-container / inline-size;
+
+  .bank_name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: max-content;
+  }
+
+  .amount {
+    flex: 1;
+    text-align: right;
+    padding-right: functions.spacing(2);
+  }
+}
+
+.collapsible_container {
+  @extend %collapsible-container;
+
+  .icon {
+    transform: rotate(0);
+  }
+}
+
+.collapsible_container_contracted {
+  @extend %collapsible-container;
+
+  .icon {
+    transform: rotate(-90deg);
+  }
+}
+
+.collapsible_inside_button {
+  font-size: 0.9rem;
+}

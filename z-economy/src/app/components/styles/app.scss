@@ -1,0 +1,24 @@
+@forward 'utils';
+@use './constants.scss' as const;
+
+html,
+body {
+  min-width: 320px;
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  background-color: const.$bold-text-color;
+  color: const.$text-color;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.side-button span {
+  padding-right: 10px;
+}
+
+input,
+button {
+  min-height: 2.2rem;
+}
