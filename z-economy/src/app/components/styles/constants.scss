@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $grid-size: 8;
 $primary-color: #4495d7;
 $dark-primary-color: #25384f;
@@ -6,7 +8,7 @@ $secondary-color: rgb(255 255 255 / 15%);
 $bold-text-color: #383e41;
 $text-color: #636366;
 $secondary-text-color: #ffff;
-$dark-secondary-text-color: adjust-color($secondary-text-color, $lightness: -20%);
+$dark-secondary-text-color: color.adjust($secondary-text-color, $lightness: -20);
 $sidebar-background: #244564;
 $dark-sidebar-background: #25384f;
 $light-positive-background-color: #cdea9f;
@@ -15,6 +17,7 @@ $dark-positive-background-color: #324412;
 $radius: 5px;
 
 // breakpoints
+
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
