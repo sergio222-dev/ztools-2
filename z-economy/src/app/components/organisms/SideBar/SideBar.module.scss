@@ -13,6 +13,7 @@ $starting-hiding-width: 150px;
   position: relative;
   transition: width 300ms ease-in-out;
   overflow: hidden;
+  flex-shrink: 0;
 
   @include Mixins.media-breakpoint-up('sm') {
     width: 320px;
