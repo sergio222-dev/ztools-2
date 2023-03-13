@@ -2,7 +2,7 @@ import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack
 import { useMemo } from 'react';
 
 interface TransactionTableProperties<T> {
-  columns: ColumnDef<T, any>[];
+  columns: ColumnDef<T, string>[];
   data: Array<T>;
 }
 
