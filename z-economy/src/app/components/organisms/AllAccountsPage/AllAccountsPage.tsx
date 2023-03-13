@@ -1,21 +1,22 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper, DeepKeys } from '@tanstack/react-table';
 import { useMemo } from 'react';
+import { TransactionTable } from '../../molecules/TransactionTable/TransactionTable';
 
 type BalanceData = {
-  id: number;
+  id: string;
   name: string;
-  balance: number;
+  balance: string;
 };
 
 const originalData: Array<BalanceData> = [];
 
 for (let index = 0; index < 100; index++) {
   originalData.push({
-    id: index + 1,
+    id: (index + 1).toString(),
     name: `Account ${index + 1}`,
-    balance: Math.floor(Math.random() * 10_000),
+    balance: Math.floor(Math.random() * 10_000).toString(),
   });
 }
 export function AllAccountsPage() {
@@ -23,7 +24,7 @@ export function AllAccountsPage() {
 
   const columnHelper = createColumnHelper<BalanceData>();
 
-  const columns = [
+  const columns: ColumnDef<BalanceData, string>[] = [
     columnHelper.accessor('id', {
       header: () => 'ID',
       cell: info => info.renderValue(),
@@ -39,12 +40,6 @@ export function AllAccountsPage() {
       footer: info => info.column.id,
     }),
   ];
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   //????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
 
@@ -76,44 +71,7 @@ export function AllAccountsPage() {
       </section>
       <section className={cls('z_flex', styles.all_accounts_table)}>
         <div className={styles.table}>
-          Aca hay tabla
-          <table>
-            <thead>
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? undefined
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map(row => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => (
-                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              {table.getFooterGroups().map(footerGroup => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map(header => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? undefined
-                        : flexRender(header.column.columnDef.footer, header.getContext())}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </tfoot>
-          </table>
+          <TransactionTable<BalanceData> columns={columns} data={data} />
         </div>
       </section>
     </div>
