@@ -9,11 +9,12 @@ $starting-hiding-width: 150px;
   container: sidebar / size;
   background-color: Const.$sidebar-background;
   width: 100%;
+  flex-shrink: 0;
   padding: functions.spacing(1);
   position: relative;
   transition: width 300ms ease-in-out;
   overflow: hidden;
-  flex-shrink: 0;
+  height: 100vh;
 
   @include Mixins.media-breakpoint-up('sm') {
     width: 320px;
@@ -72,6 +73,7 @@ $starting-hiding-width: 150px;
 
 .side_bar_contracted {
   width: 48px;
+  min-width: 48px;
 
   .z_collapsible_icon_button {
     transform: rotate(180deg);
