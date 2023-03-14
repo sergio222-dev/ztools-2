@@ -5,9 +5,9 @@ import { TransactionTable } from '../../molecules/TransactionTable/TransactionTa
 import { useMemo } from "react";
 import { AiFillCopyrightCircle } from 'react-icons/ai';
 import { ImBookmark } from 'react-icons/im';
+import { IndeterminateCheckbox } from '../../molecules';
 
 type TransactionTableData = {
-  checkbox: JSX.Element;
   flagMark: JSX.Element;
   date: string;
   payee: string;
@@ -22,7 +22,6 @@ const originalData: Array<TransactionTableData> = [];
 
 for (let index = 0; index < 100; index++) {
   originalData.push({
-    checkbox: <input type="checkbox" />,
     flagMark: <ImBookmark />,
     date: `19/07/190${index}`,
     payee: `Person ${index}`,
@@ -40,14 +39,30 @@ export function AllAccountsPage() {
   const columnHelper = createColumnHelper<TransactionTableData>();
 
   const columns: ColumnDef<TransactionTableData, any >[] = [
-    columnHelper.accessor('checkbox', {
-      id: 'checkbox',
-      header:() => <input type="checkbox" />,
-      cell: () => <input type="checkbox" />,
-      meta: {
-        type: 'other',
-      }
-    }),
+    {
+      id: 'select',
+      header: ({ table }) => (
+          <div className="z_flex z_flex_jc_center"><IndeterminateCheckbox
+              {...{
+                checked: table.getIsAllRowsSelected(),
+                indeterminate: table.getIsSomeRowsSelected(),
+                onChange: table.getToggleAllRowsSelectedHandler(),
+              }}
+          /></div>
+      ),
+      cell: ({ row }) => (
+          <div className="z_flex z_flex_jc_center">
+            <IndeterminateCheckbox
+                {...{
+                  checked: row.getIsSelected(),
+                  disabled: !row.getCanSelect(),
+                  indeterminate: row.getIsSomeSelected(),
+                  onChange: row.getToggleSelectedHandler(),
+                }}
+            />
+          </div>
+      ),
+    },
     columnHelper.accessor('flagMark', {
       id: 'flagMark',
       header: () => <ImBookmark />,

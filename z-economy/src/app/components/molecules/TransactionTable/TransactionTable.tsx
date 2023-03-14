@@ -37,7 +37,7 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr key={row.id} className = {styles.z_table_row}>
+          <tr key={row.id} className={styles.z_table_row}>
             {row.getVisibleCells().map(cell => (
               <td
                 className = {styles.z_table_cell}

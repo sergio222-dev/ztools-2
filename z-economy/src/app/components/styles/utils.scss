@@ -24,6 +24,10 @@
   display: block;
 }
 
+.z_cursor_pointer {
+  cursor: pointer;
+}
+
 @for $i from 1 through 10 {
   .z_flex_grow_#{$i} {
     flex-grow: $i;

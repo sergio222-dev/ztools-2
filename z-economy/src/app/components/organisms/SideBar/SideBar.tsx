@@ -9,9 +9,9 @@ import {
 } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { useState } from 'react';
-
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
+
 const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
 
 const SIDEBAR_BUTTON_ICONS = [
