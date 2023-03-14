@@ -1,6 +1,6 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
-import { ColumnDef, createColumnHelper, DeepKeys } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { TransactionTable } from '../../molecules/TransactionTable/TransactionTable';
 
@@ -28,16 +28,16 @@ export function AllAccountsPage() {
     columnHelper.accessor('id', {
       header: () => 'ID',
       cell: info => info.renderValue(),
-      footer: info => info.column.id,
     }),
     columnHelper.accessor('name', {
       cell: info => info.getValue(),
-      footer: info => info.column.id,
     }),
     columnHelper.accessor('balance', {
       header: () => 'Balance',
       cell: info => info.renderValue(),
-      footer: info => info.column.id,
+      meta: {
+        type: 'numeric',
+      },
     }),
   ];
 
@@ -69,10 +69,10 @@ export function AllAccountsPage() {
           <span className={styles.balance_text}>Working Balance</span>
         </div>
       </section>
-      <section className={cls('z_flex', styles.all_accounts_table)}>
-        <div className={styles.table}>
-          <TransactionTable<BalanceData> columns={columns} data={data} />
-        </div>
+      <section>
+        {/*<div className={styles.table}>*/}
+        <TransactionTable<BalanceData> columns={columns} data={data} />
+        {/*</div>*/}
       </section>
     </div>
   );

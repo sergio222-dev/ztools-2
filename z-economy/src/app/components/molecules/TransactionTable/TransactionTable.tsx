@@ -1,5 +1,6 @@
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import { useMemo } from 'react';
+import styles from './Table.module.scss';
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, string>[];
@@ -9,19 +10,26 @@ interface TransactionTableProperties<T> {
 export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, []);
 
-  const table = useReactTable<T>({
+  const table = useReactTable({
     columns,
     data: memoData,
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <table>
+    <table className={styles.z_table} style={{ width: '100%' }}>
       <thead>
         {table.getHeaderGroups().map(headerGroup => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map(header => (
-              <th key={header.id}>
+              <th
+                className={styles.z_table_head}
+                key={header.id}
+                data-type={header.column.columnDef.meta?.type ?? 'text'}
+                style={{
+                  textAlign: header.column.columnDef.meta?.type === 'numeric' ? 'right' : 'left',
+                }}
+              >
                 {header.isPlaceholder
                   ? undefined
                   : flexRender(header.column.columnDef.header, header.getContext())}
@@ -34,7 +42,14 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
         {table.getRowModel().rows.map(row => (
           <tr key={row.id}>
             {row.getVisibleCells().map(cell => (
-              <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+              <td
+                style={{
+                  textAlign: cell.column.columnDef.meta?.type === 'numeric' ? 'right' : 'left',
+                }}
+                key={cell.id}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
             ))}
           </tr>
         ))}
