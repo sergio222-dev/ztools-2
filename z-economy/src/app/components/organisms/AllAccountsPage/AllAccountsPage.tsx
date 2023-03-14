@@ -13,8 +13,8 @@ type TransactionTableData = {
   payee: string;
   category: string;
   memo: string;
-  outflow: string;
-  inflow: string;
+  outflow: number;
+  inflow: number;
   creditIcon: JSX.Element;
 };
 
@@ -27,8 +27,8 @@ for (let index = 0; index < 100; index++) {
     payee: `Person ${index}`,
     category: `Category ${index}`,
     memo: `Random words ${index}`,
-    outflow: `$100${index}`,
-    inflow: `$1000${index}`,
+    outflow: 10+index,
+    inflow: 100+index,
     creditIcon: <AiFillCopyrightCircle />,
   });
 }
@@ -65,7 +65,7 @@ export function AllAccountsPage() {
     },
     columnHelper.accessor('flagMark', {
       id: 'flagMark',
-      header: () => <ImBookmark />,
+      header: () => <ImBookmark className={styles.flag_mark}/>,
       cell: info => info.renderValue(),
       meta: {
         type: 'other',

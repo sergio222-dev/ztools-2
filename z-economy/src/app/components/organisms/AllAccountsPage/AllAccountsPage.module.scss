@@ -55,4 +55,8 @@
     box-shadow: 0 0 0 1px const.$page-light-border-color;
     margin: 1px 0;
   }
+
+  .flag_mark {
+    transform: rotate(270deg);
+  }
 }
