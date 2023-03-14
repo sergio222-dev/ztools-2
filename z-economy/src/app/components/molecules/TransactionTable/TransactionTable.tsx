@@ -1,6 +1,14 @@
-import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import {
+    useReactTable,
+    ColumnDef,
+    getCoreRowModel,
+    flexRender,
+    SortingState,
+    getSortedRowModel
+} from '@tanstack/react-table';
+import { useMemo, useState } from 'react';
 import styles from './Table.module.scss';
+import { BsFillArrowUpSquareFill, BsFillArrowDownSquareFill } from 'react-icons/bs'
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, any>[];
@@ -9,11 +17,17 @@ interface TransactionTableProperties<T> {
 
 export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, []);
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     columns,
     data: memoData,
+    state: {
+        sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -29,7 +43,25 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
                           >
                               {header.isPlaceholder
                                   ? undefined
-                                  : flexRender(header.column.columnDef.header, header.getContext())}
+                                  : (
+                                      <div
+                                          {...{
+                                              className: header.column.getCanSort()
+                                                  ? 'z_cursor_pointer z_select_none'
+                                                  : '',
+                                              onClick: header.column.getToggleSortingHandler(),
+                                          }}
+                                      >
+                                          {flexRender(
+                                              header.column.columnDef.header,
+                                              header.getContext()
+                                          )}
+                                          {{
+                                              asc: <BsFillArrowUpSquareFill className={styles.z_sorting_icon}/>,
+                                              desc: <BsFillArrowDownSquareFill />,
+                                          }[header.column.getIsSorted() as string] ?? null}
+                                      </div>
+                                  )}
                           </th>
                       ))}
                   </tr>
