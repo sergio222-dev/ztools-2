@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import styles from './Table.module.scss';
-import { BsFillArrowUpSquareFill, BsFillArrowDownSquareFill } from 'react-icons/bs'
+import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai'
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, any>[];
@@ -57,8 +57,8 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
                                               header.getContext()
                                           )}
                                           {{
-                                              asc: <BsFillArrowUpSquareFill className={styles.z_sorting_icon}/>,
-                                              desc: <BsFillArrowDownSquareFill />,
+                                              asc: <AiFillCaretUp className={styles.z_sorting_icon}/>,
+                                              desc: <AiFillCaretDown className={styles.z_sorting_icon}/>,
                                           }[header.column.getIsSorted() as string] ?? null}
                                       </div>
                                   )}
