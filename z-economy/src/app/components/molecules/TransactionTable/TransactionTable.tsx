@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import styles from './Table.module.scss';
 
 interface TransactionTableProperties<T> {
-  columns: ColumnDef<T, string>[];
+  columns: ColumnDef<T, any>[];
   data: Array<T>;
 }
 
@@ -17,18 +17,15 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
   });
 
   return (
-    <table className={styles.z_table} style={{ width: '100%' }}>
+    <table className={styles.z_table}>
       <thead>
         {table.getHeaderGroups().map(headerGroup => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map(header => (
               <th
-                className={styles.z_table_head}
-                key={header.id}
-                data-type={header.column.columnDef.meta?.type ?? 'text'}
-                style={{
-                  textAlign: header.column.columnDef.meta?.type === 'numeric' ? 'right' : 'left',
-                }}
+                className = {styles.z_table_head}
+                key = {header.id}
+                data-type = {header.column.columnDef.meta?.type === 'other' ? 'other' : header.column.columnDef.meta?.type ?? 'text'}
               >
                 {header.isPlaceholder
                   ? undefined
@@ -40,12 +37,11 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr key={row.id}>
+          <tr key={row.id} className = {styles.z_table_row}>
             {row.getVisibleCells().map(cell => (
               <td
-                style={{
-                  textAlign: cell.column.columnDef.meta?.type === 'numeric' ? 'right' : 'left',
-                }}
+                className = {styles.z_table_cell}
+                data-type = {cell.column.columnDef.meta?.type === 'other' ? 'other' : cell.column.columnDef.meta?.type ?? 'text'}
                 key={cell.id}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}

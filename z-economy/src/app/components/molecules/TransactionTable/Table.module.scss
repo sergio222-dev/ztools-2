@@ -1,17 +1,19 @@
-@use '../../styles/constants';
+@use '../../styles/constants' as const;
 @use '../../styles/functions';
 
 .z_table {
   width: 100%;
   border-spacing: 0;
+  font-size: 0.6rem;
 
   .z_table_head {
     text-transform: uppercase;
     font-weight: unset;
     text-align: left;
-    border: 1px solid constants.$dark-primary-color;
-    padding: functions.spacing(1);
+    border: 1px solid const.$page-light-border-color;
+    padding: 0 functions.spacing(1);
     border-left: none;
+    border-top: none;
 
     &:last-child {
       border-right: none;
@@ -20,5 +22,30 @@
     &[data-type='numeric'] {
       text-align: right;
     }
+
+    &[data-type='other'] {
+        text-align: center;
+    }
+  }
+
+  .z_table_cell {
+    border: 1px solid const.$page-light-border-color;
+    padding: 0 functions.spacing(1);
+    border-left: none;
+    border-top: none;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &[data-type='numeric'] {
+      text-align: right;
+    }
+
+    &[data-type='other'] {
+      text-align: center;
+      width: functions.spacing(5);
+    }
   }
 }
+

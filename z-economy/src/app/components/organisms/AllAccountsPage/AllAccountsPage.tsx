@@ -1,49 +1,107 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { useMemo } from 'react';
 import { TransactionTable } from '../../molecules/TransactionTable/TransactionTable';
+import { useMemo } from "react";
+import { AiFillCopyrightCircle } from 'react-icons/ai';
+import { ImBookmark } from 'react-icons/im';
 
-type BalanceData = {
-  id: string;
-  name: string;
-  balance: string;
+type TransactionTableData = {
+  checkbox: JSX.Element;
+  flagMark: JSX.Element;
+  date: string;
+  payee: string;
+  category: string;
+  memo: string;
+  outflow: string;
+  inflow: string;
+  creditIcon: JSX.Element;
 };
 
-const originalData: Array<BalanceData> = [];
+const originalData: Array<TransactionTableData> = [];
 
 for (let index = 0; index < 100; index++) {
   originalData.push({
-    id: (index + 1).toString(),
-    name: `Account ${index + 1}`,
-    balance: Math.floor(Math.random() * 10_000).toString(),
+    checkbox: <input type="checkbox" />,
+    flagMark: <ImBookmark />,
+    date: `19/07/190${index}`,
+    payee: `Person ${index}`,
+    category: `Category ${index}`,
+    memo: `Random words ${index}`,
+    outflow: `$100${index}`,
+    inflow: `$1000${index}`,
+    creditIcon: <AiFillCopyrightCircle />,
   });
 }
+
 export function AllAccountsPage() {
   const data = useMemo(() => originalData, []);
 
-  const columnHelper = createColumnHelper<BalanceData>();
+  const columnHelper = createColumnHelper<TransactionTableData>();
 
-  const columns: ColumnDef<BalanceData, string>[] = [
-    columnHelper.accessor('id', {
-      header: () => 'ID',
-      cell: info => info.renderValue(),
+  const columns: ColumnDef<TransactionTableData, any >[] = [
+    columnHelper.accessor('checkbox', {
+      id: 'checkbox',
+      header:() => <input type="checkbox" />,
+      cell: () => <input type="checkbox" />,
+      meta: {
+        type: 'other',
+      }
     }),
-    columnHelper.accessor('name', {
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor('balance', {
-      header: () => 'Balance',
+    columnHelper.accessor('flagMark', {
+      id: 'flagMark',
+      header: () => <ImBookmark />,
       cell: info => info.renderValue(),
       meta: {
-        type: 'numeric',
-      },
+        type: 'other',
+      }
     }),
+    columnHelper.accessor('date', {
+      id: 'date',
+      header: () => 'DATE',
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor('payee', {
+      id: 'payee',
+      header: () => 'PAYEE',
+      cell: info => info.renderValue(),
+    }),
+    columnHelper.accessor('category', {
+      id: 'category',
+      header: () => 'CATEGORY',
+      cell: info => info.renderValue(),
+    }),
+    columnHelper.accessor('memo', {
+      id: 'memo',
+      header: () => 'MEMO',
+      cell: info => info.renderValue(),
+    }),
+    columnHelper.accessor('outflow', {
+      id: 'outflow',
+      header: () => 'OUTFLOW',
+      cell: info => info.renderValue(),
+      meta: {
+          type: 'numeric',
+      }
+    }),
+    columnHelper.accessor('inflow', {
+      id: 'inflow',
+      header: () => 'INFLOW',
+      cell: info => info.renderValue(),
+      meta: {
+          type: 'numeric',
+      }
+    }),
+    columnHelper.accessor('creditIcon', {
+      id: 'creditIcon',
+      header: () => <AiFillCopyrightCircle />,
+      cell: info => info.renderValue(),
+      meta: {
+        type: 'other',
+      }
+    })
   ];
 
-  //????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
-
-  console.log(data);
   return (
     <div className={cls(styles.all_accounts_page)}>
       <section className={cls('z_flex', styles.all_accounts_page_title)}>
@@ -55,14 +113,14 @@ export function AllAccountsPage() {
           <span className={styles.balance_text}>Cleared Balance</span>
         </div>
         <div className={styles.balances_contents}>
-          <h3 className={styles.balances_h3}>+</h3>
+          <span className={styles.balances_symbol}>+</span>
         </div>
         <div className={styles.balances_contents}>
           <span className={styles.amount}>$0.00</span>
           <span className={styles.balance_text}>Uncleared Balance</span>
         </div>
         <div className={styles.balances_contents}>
-          <h3 className={styles.balances_h3}>=</h3>
+          <span className={styles.balances_symbol}>=</span>
         </div>
         <div className={styles.balances_contents}>
           <span className={styles.amount}>$299,000.00</span>
@@ -71,7 +129,7 @@ export function AllAccountsPage() {
       </section>
       <section>
         {/*<div className={styles.table}>*/}
-        <TransactionTable<BalanceData> columns={columns} data={data} />
+        <TransactionTable<TransactionTableData> columns={columns} data={data} />
         {/*</div>*/}
       </section>
     </div>
