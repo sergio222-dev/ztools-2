@@ -5,11 +5,13 @@
   background-color: const.$page-light-background-color;
   width: 100%;
   flex: 1;
+
   .balances {
     background-color: const.$page-darker-background-color;
     justify-items: left;
     padding: functions.spacing(2);
   }
+
   .balances_contents {
     display: flex;
     flex-direction: column;
@@ -20,27 +22,32 @@
       padding: functions.spacing(2);
       text-align: center;
     }
+
     .amount {
       color: const.$positive-background-color;
       font-weight: bold;
       font-size: 1.1rem;
       padding-bottom: functions.spacing(0.5);
     }
+
     .balance_text {
       font-size: 0.8rem;
     }
   }
+
   .all_accounts_page_title {
     background-color: const.$page-darker-background-color;
     padding: 0 functions.spacing(2);
   }
 
   .all_accounts_table {
-    //padding: functions.spacing(2);
+    // padding: functions.spacing(2);
   }
 
-  //section bottom borders
-  .all_accounts_page_title, .balances {
+  // section bottom borders
+
+  .all_accounts_page_title,
+  .balances {
     box-shadow: 0 0 0 1px const.$page-light-border-color;
     margin: 1px 0;
   }
