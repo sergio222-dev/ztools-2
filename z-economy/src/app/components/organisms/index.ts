@@ -1,2 +1,2 @@
-export { SideBar } from "./SideBar/SideBar";
-export { AllAccountsPage } from "./AllAccountsPage/AllAccountsPage";
+export { SideBar } from './SideBar/SideBar';
+export { AllAccountsPageView } from './AllAccountsPage/AllAccountsPage.view';

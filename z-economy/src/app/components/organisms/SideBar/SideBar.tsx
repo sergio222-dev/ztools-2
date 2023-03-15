@@ -30,8 +30,6 @@ export function SideBar() {
     setActiveButton(buttonName);
   };
 
-  // const handleAddAccountClick = () => {};
-
   const handleSidebarCollapsibleClick = () => {
     setToggleSidebar(!toggleSidebar);
   };

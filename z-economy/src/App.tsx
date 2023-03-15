@@ -1,7 +1,12 @@
 import { Home } from './app/page/Home';
+import { ErrorBoundary } from './app/components/organisms/ErrorBoundary/ErrorBoundary';
 
 function App() {
-  return <Home />;
+  return (
+    <ErrorBoundary>
+      <Home />
+    </ErrorBoundary>
+  );
 }
 
 export default App;
