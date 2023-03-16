@@ -10,9 +10,14 @@
     //    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react-hooks"],
+  "plugins": ["@typescript-eslint", "react-hooks", "jest"],
   "rules": {
     //    "prettier/prettier": "error",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error",
     "linebreak-style": ["error", "windows"],
     "object-curly-spacing": ["error", "always"],
     "react-hooks/rules-of-hooks": "error",

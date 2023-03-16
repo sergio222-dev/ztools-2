@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { TransactionTable } from '../../molecules/TransactionTable/TransactionTable';
 import { TransactionTableData, useAllAccountPagePresenter } from './AllAccountPage.presenter';
 
-export function AllAccountsPageView() {
+export function AllAccountsPage() {
   const [model] = useAllAccountPagePresenter();
 
   const { columns, data } = model;
