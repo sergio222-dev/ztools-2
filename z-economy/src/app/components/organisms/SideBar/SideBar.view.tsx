@@ -1,26 +1,17 @@
 import styles from './SideBar.module.scss';
 import { IconButton } from '../../atoms/Button/IconButton';
-import {
-  TbLayoutSidebarLeftCollapse,
-  RiArrowDownSLine,
-} from 'react-icons/all';
+import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '../../atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
-import { useSideBarPresenter } from "./SideBar.presenter";
+import { useSideBarPresenter } from './SideBar.presenter';
 
 export function SideBarView() {
+  const [model, operators] = useSideBarPresenter();
 
-    const [model] = useSideBarPresenter()
+  const { SIDEBAR_BUTTON_NAMES, SIDEBAR_BUTTON_ICONS, activeButton, toggleSidebar } = model;
 
-    const {
-        SIDEBAR_BUTTON_NAMES,
-        SIDEBAR_BUTTON_ICONS,
-        activeButton,
-        toggleSidebar,
-        handleSidebarButtonClick,
-        handleSidebarCollapsibleClick,
-    } = model;
+  const { handleSidebarButtonClick, handleSidebarCollapsibleClick } = operators;
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
