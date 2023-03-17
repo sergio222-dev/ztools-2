@@ -6,10 +6,15 @@
   &.variant_info {
     color: blue;
 
-    @include mixins.font-size-variant(0.7);
+    @include mixins.font-size-variant(1);
   }
 
   &.variant_normal {
-    @include mixins.font-size-variant(1.1);
+    @include mixins.font-size-variant(1);
   }
+
+  &.variant_title {
+    @include mixins.font-size-variant(1);
+  }
+
 }
