@@ -17,7 +17,18 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vitest/globals", "jest", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "jest", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@organisms/*": ["src/app/components/organisms/*"],
+      "@atoms/*": ["src/app/components/atoms/*"],
+      "@molecules/*": ["src/app/components/molecules/*"],
+      "@styles/*": ["src/app/components/styles/*"],
+      "@page/*": ["src/app/page/*"],
+      "@templates/*": ["src/app/templates/*"],
+      "@utils/*": ["src/app/utils/*"],
+      "@core/*": ["src/core/*"]
+    }
   },
   "include": ["src", "test"],
   "references": [{ "path": "./tsconfig.node.json" }]

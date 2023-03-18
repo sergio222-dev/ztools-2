@@ -10,7 +10,7 @@ import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 
 interface TransactionTableProperties<T> {
-  columns: ColumnDef<T>[];
+  columns: ColumnDef<T, unknown>[];
   data: Array<T>;
 }
 

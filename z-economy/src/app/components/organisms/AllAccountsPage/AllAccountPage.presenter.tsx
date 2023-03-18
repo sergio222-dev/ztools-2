@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
-import { IndeterminateCheckbox } from '../../molecules';
-import { NumericTextType, OtherTextType } from '../../../utils/table/types';
+import { IndeterminateCheckbox } from '@molecules/index';
+import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { ImBookmark } from 'react-icons/im';
-import styles from './AllAccountsPage.module.scss';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
-import { Labels } from '../../../utils/Labels';
+import { Labels } from '@utils/Labels';
+import styles from './AllAccountsPage.module.scss';
 
 export type TransactionTableData = {
   flagMark: Labels | undefined;
@@ -34,7 +34,7 @@ for (let index = 0; index < 100; index++) {
 }
 
 interface AllAccountPageModel {
-  columns: ColumnDef<TransactionTableData>[];
+  columns: ColumnDef<TransactionTableData, any>[];
   data: TransactionTableData[];
 }
 
@@ -43,7 +43,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
   const data = useMemo(() => originalData, []);
 
   const columnHelper = createColumnHelper<TransactionTableData>();
-  const columns: ColumnDef<TransactionTableData>[] = [
+  const columns: ColumnDef<TransactionTableData, any>[] = [
     {
       id: 'select',
       header: ({ table }: { table: Table<TransactionTableData> }) => (
