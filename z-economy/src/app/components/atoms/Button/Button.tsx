@@ -3,7 +3,6 @@ import { HtmlHTMLAttributes, ReactNode } from 'react';
 import cls from 'classnames';
 
 export interface ButtonProperties extends HtmlHTMLAttributes<HTMLButtonElement> {
-  // variant?: 'primary' | 'secondary' | 'tertiary';
   StartIcon?: ReactNode | undefined;
 }
 

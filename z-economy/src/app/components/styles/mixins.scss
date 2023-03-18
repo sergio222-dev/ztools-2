@@ -1,5 +1,5 @@
-@use 'functions' as functions;
-@use 'constants' as Const;
+@use 'functions';
+@use 'constants';
 
 @mixin box-shadow($color) {
   box-shadow: 0 0 0 1px $color;
@@ -12,7 +12,7 @@
   cursor: pointer;
 }
 
-@mixin media-breakpoint-up($name, $breakpoints: Const.$grid-breakpoints) {
+@mixin media-breakpoint-up($name, $breakpoints: constants.$grid-breakpoints) {
   $min: functions.breakpoint-min($name, $breakpoints);
 
   @if $min {
@@ -21,5 +21,19 @@
     }
   } @else {
     @content;
+  }
+}
+
+@mixin font-size-variant($coefficient) {
+  &.small {
+    font-size: #{$coefficient * 0.8}rem;
+  }
+
+  &.normal {
+    font-size: #{$coefficient}rem;
+  }
+
+  &.large {
+    font-size: #{$coefficient * 1.3}rem;
   }
 }

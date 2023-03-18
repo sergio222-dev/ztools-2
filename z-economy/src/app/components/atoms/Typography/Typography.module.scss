@@ -1,0 +1,15 @@
+@use '../../styles/mixins';
+
+.typography {
+  margin: 0;
+
+  &.variant_info {
+    color: blue;
+
+    @include mixins.font-size-variant(0.7);
+  }
+
+  &.variant_normal {
+    @include mixins.font-size-variant(1.1);
+  }
+}
