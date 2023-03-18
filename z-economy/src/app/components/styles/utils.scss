@@ -20,6 +20,18 @@
   text-align: left;
 }
 
+.z_block {
+  display: block;
+}
+
+.z_cursor_pointer {
+  cursor: pointer;
+}
+
+.z_select_none {
+  user-select: none;
+}
+
 @for $i from 1 through 10 {
   .z_flex_grow_#{$i} {
     flex-grow: $i;

@@ -1,4 +1,10 @@
 .z_main_layout {
   display: flex;
   height: 100vh;
+
+  .z_table {
+    flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: auto;
+  }
 }
