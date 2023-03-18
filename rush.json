@@ -424,10 +424,15 @@
     //   "tags": [ "tools" ]
     // }
 
+    // {
+    //   "packageName": "z-economy",
+    //   "projectFolder": "z-economy",
+    //   "tags": ["frontend", "jr-devs", "react"]
+    // }
     {
-      "packageName": "z-economy",
-      "projectFolder": "z-economy",
-      "tags": ["frontend", "jr-devs", "react"]
+      "packageName": "budget-servers",
+      "projectFolder": "budget-servers",
+      "tags": ["backend", "nestjs"]
     }
   ]
 }
