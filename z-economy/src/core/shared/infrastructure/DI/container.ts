@@ -1,8 +1,14 @@
 import { container } from 'tsyringe';
-import { TransactionGet } from '../../../TableData/application/useCase/TransactionGet';
+import * as axios from 'axios';
+import { AxiosInstance } from '@core/shared/infrastructure/Axios/instance';
+import { registerTransactions } from '@core/transactions/infrastructure/DI/registry';
 
 export function buildContainer() {
-  container.register<TransactionGet>(TransactionGet, {
-    useClass: TransactionGet,
+  // repository
+  container.register<axios.AxiosInstance>('AxiosInstance', {
+    useValue: AxiosInstance,
   });
+
+  // Transactions
+  registerTransactions();
 }

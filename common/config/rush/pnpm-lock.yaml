@@ -7,6 +7,7 @@ importers:
 
   ../../budget-servers:
     specifiers:
+      '@faker-js/faker': ~7.6.0
       '@nestjs/cli': ^9.0.0
       '@nestjs/common': ^9.0.0
       '@nestjs/core': ^9.0.0
@@ -43,6 +44,7 @@ importers:
       reflect-metadata: 0.1.13
       rxjs: 7.8.0
     devDependencies:
+      '@faker-js/faker': 7.6.0
       '@nestjs/cli': 9.3.0
       '@nestjs/schematics': 9.0.4_typescript@4.9.5
       '@nestjs/swagger': 6.2.1_5f3e2d7a34935da6e69a1a3e3c49cea9
@@ -550,6 +552,11 @@ packages:
   /@eslint/js/8.36.0:
     resolution: {integrity: sha512-lxJ9R5ygVm8ZWgYdUweoq5ownDlJ4upvoWmO4eLxBYHdMo+vZ/Rx0EN6MbKWDJOSUGrqJy2Gt+Dyv/VKml0fjg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@faker-js/faker/7.6.0:
+    resolution: {integrity: sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==}
+    engines: {node: '>=14.0.0', npm: '>=6.0.0'}
     dev: true
 
   /@humanwhocodes/config-array/0.11.8:

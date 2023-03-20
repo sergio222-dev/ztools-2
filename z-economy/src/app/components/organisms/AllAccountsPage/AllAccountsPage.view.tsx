@@ -1,7 +1,7 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
-import { TransactionTable } from '../../molecules/TransactionTable/TransactionTable';
-import { TransactionTableData, useAllAccountPagePresenter } from './AllAccountPage.presenter';
+import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
+import { TransactionTableData, useAllAccountPagePresenter } from './AllAccountPage.hooks';
 
 export function AllAccountsPage() {
   const [model] = useAllAccountPagePresenter();
