@@ -2,6 +2,7 @@ import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
 import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
 import { TransactionTableData, useAllAccountPagePresenter } from './AllAccountPage.hooks';
+import { Typography } from "@atoms/Typography/Typography";
 
 export function AllAccountsPage() {
   const [model] = useAllAccountPagePresenter();
@@ -11,26 +12,53 @@ export function AllAccountsPage() {
   return (
     <div className={cls(styles.all_accounts_page)}>
       <section className={cls('z_flex', styles.all_accounts_page_title)}>
-        <h2>All Accounts</h2>
+        <Typography variant="title" size='normal' Component='h2'>
+          All Accounts
+        </Typography>
       </section>
       <section className={cls('z_flex', styles.balances)}>
-        <div className={styles.balances_contents}>
-          <span className={styles.amount}>$299,000.00</span>
-          <span className={styles.balance_text}>Cleared Balance</span>
+        <div className={styles.balance_contents}>
+          <div className={styles.amount}>
+            <Typography variant='balance' size='normal'>
+                $299,000.00
+            </Typography>
+          </div>
+          <div className={styles.balance_text}>
+            <Typography variant='info' size='small'>
+              Cleared Balance
+            </Typography>
+          </div>
         </div>
-        <div className={styles.balances_contents}>
-          <span className={styles.balances_symbol}>+</span>
+        <div className={styles.balance_contents}>
+          <div className={styles.balance_symbol}>+
+          </div>
         </div>
-        <div className={styles.balances_contents}>
-          <span className={styles.amount}>$0.00</span>
-          <span className={styles.balance_text}>Uncleared Balance</span>
+        <div className={styles.balance_contents}>
+          <div className={styles.amount}>
+            <Typography variant='balance' size='normal'>
+                $0.00
+            </Typography>
+          </div>
+          <div className={styles.balance_text}>
+            <Typography variant='info' size='small'>
+              Uncleared Balance
+            </Typography>
+          </div>
         </div>
-        <div className={styles.balances_contents}>
-          <span className={styles.balances_symbol}>=</span>
+        <div className={styles.balance_contents}>
+          <div className={styles.balance_symbol}>=</div>
         </div>
-        <div className={styles.balances_contents}>
-          <span className={styles.amount}>$299,000.00</span>
-          <span className={styles.balance_text}>Working Balance</span>
+        <div className={styles.balance_contents}>
+          <div className={styles.amount}>
+            <Typography variant='balance' size='normal' Component='p'>
+                $299,000.00
+            </Typography>
+          </div>
+          <div className={styles.balance_text}>
+            <Typography variant='info' size='small'>
+              Working Balance
+            </Typography>
+          </div>
         </div>
       </section>
       <section>
