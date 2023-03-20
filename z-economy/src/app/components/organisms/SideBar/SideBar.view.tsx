@@ -1,7 +1,7 @@
 import styles from './SideBar.module.scss';
-import { IconButton } from '../../atoms/Button/IconButton';
+import { IconButton } from '@atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
-import { SidebarButton } from '../../atoms/Button/SidebarButton';
+import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
 import { useSideBarPresenter } from './SideBar.presenter';

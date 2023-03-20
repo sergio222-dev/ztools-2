@@ -1,7 +1,7 @@
 import styles from './LeftSidebarCollapsible.module.scss';
 import { CollapsibleButton } from '../../atoms';
 import { ReactNode, useState } from 'react';
-import { SidebarButton } from '../../atoms/Button/SidebarButton';
+import { SidebarButton } from '@atoms/Button/SidebarButton';
 import cls from 'classnames';
 import {Typography} from "@atoms/Typography/Typography";
 
