@@ -6,7 +6,7 @@ import { ImBookmark } from 'react-icons/im';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
 import { Labels } from '@utils/Labels';
 import styles from './AllAccountsPage.module.scss';
-import { useTransaction } from '@core/transactions/application/adapters/useTransaction';
+import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 
 export type TransactionTableData = {
   flagMark: Labels | undefined;

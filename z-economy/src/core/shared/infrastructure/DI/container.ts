@@ -1,7 +1,8 @@
-import { container } from 'tsyringe';
 import * as axios from 'axios';
+import { container } from 'tsyringe';
 import { AxiosInstance } from '@core/shared/infrastructure/Axios/instance';
-import { registerTransactions } from '@core/transactions/infrastructure/DI/registry';
+import { registerTransactions } from '@core/budget/transactions/infrastructure/DI/registry';
+import { registerBudget } from '@core/budget/budget/infrastructure/DI/registry';
 
 export function buildContainer() {
   // repository
@@ -11,4 +12,7 @@ export function buildContainer() {
 
   // Transactions
   registerTransactions();
+
+  // Budget
+  registerBudget();
 }

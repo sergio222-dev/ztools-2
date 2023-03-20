@@ -1,5 +1,5 @@
-import { TransactionRepository } from '@core/transactions/domain/TransactionRepository';
-import { Transaction } from '@core/transactions/domain/Transaction';
+import { TransactionRepository } from '@core/budget/transactions/domain/TransactionRepository';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 import { inject, injectable } from 'tsyringe';
 import * as axios_1 from 'axios';
 

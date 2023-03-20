@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { container } from 'tsyringe';
-import { TransactionGetAll } from '@core/transactions/application/useCase/TransactionGetAll';
+import { TransactionGetAll } from '@core/budget/transactions/application/useCase/TransactionGetAll';
 
 export const useTransaction = () => {
   const transactionGetAll = container.resolve(TransactionGetAll);

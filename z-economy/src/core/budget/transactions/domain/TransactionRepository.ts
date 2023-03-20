@@ -1,4 +1,4 @@
-import { Transaction } from '@core/transactions/domain/Transaction';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 export interface TransactionRepository {
   getAll(): Promise<Transaction[]>;
