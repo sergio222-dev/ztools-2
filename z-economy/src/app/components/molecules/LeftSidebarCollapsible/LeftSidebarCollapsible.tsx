@@ -55,12 +55,12 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
               className='z_stack_margin_bottom_item_1 z_padding_left_5'
             >
               <span className={styles.bank_name}>
-                <Typography size='normal'>
+                <Typography>
                   {a.name}
                 </Typography>
               </span>
               <span className={styles.amount}>
-                <Typography size='normal'>
+                <Typography>
                   {a.total}
                 </Typography>
               </span>

@@ -50,7 +50,7 @@ export function SideBarView() {
       </div>
       <div>
         <Button className={styles.add_btn}>
-            <Typography size='normal'>
+            <Typography>
                 Add Account
             </Typography>
         </Button>
