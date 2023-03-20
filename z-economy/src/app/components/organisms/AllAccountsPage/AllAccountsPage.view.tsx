@@ -12,14 +12,14 @@ export function AllAccountsPage() {
   return (
     <div className={cls(styles.all_accounts_page)}>
       <section className={cls('z_flex', styles.all_accounts_page_title)}>
-        <Typography variant="title" size='normal' Component='h2'>
+        <Typography variant="title" Component='h2'>
           All Accounts
         </Typography>
       </section>
       <section className={cls('z_flex', styles.balances)}>
         <div className={styles.balance_contents}>
           <div className={styles.amount}>
-            <Typography variant='balance' size='normal'>
+            <Typography variant='balance'>
                 $299,000.00
             </Typography>
           </div>
@@ -35,7 +35,7 @@ export function AllAccountsPage() {
         </div>
         <div className={styles.balance_contents}>
           <div className={styles.amount}>
-            <Typography variant='balance' size='normal'>
+            <Typography variant='balance'>
                 $0.00
             </Typography>
           </div>
@@ -50,7 +50,7 @@ export function AllAccountsPage() {
         </div>
         <div className={styles.balance_contents}>
           <div className={styles.amount}>
-            <Typography variant='balance' size='normal' Component='p'>
+            <Typography variant='balance' Component='p'>
                 $299,000.00
             </Typography>
           </div>
