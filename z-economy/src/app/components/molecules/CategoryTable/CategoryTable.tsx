@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   ColumnDef,
   ExpandedState,
@@ -8,162 +8,27 @@ import {
   getFilteredRowModel,
   getExpandedRowModel,
   flexRender,
-  createColumnHelper,
 } from '@tanstack/react-table';
-import { IndeterminateCheckbox } from '../index';
-import { NumericTextType } from '@utils/table/types';
-import { AiFillCaretRight, AiFillCaretDown } from 'react-icons/ai';
 import styles from './CategoryTable.module.scss';
+import { Typography } from '@atoms/Typography/Typography';
 
-export type Category = {
-  category: string;
-  assigned: string;
-  activity: string;
-  available: string;
-  subRows?: SubRowData[];
-};
-
-export type SubRowData = {
-  category: string;
-  assigned: string;
-  activity: string;
-  available: string;
-};
-
-const range = (length: number) => {
-  const array = [];
-  for (let index = 0; index < length; index++) {
-    array.push(index);
-  }
-  return array;
-};
-
-const newCategory = (): Category => {
-  return {
-    category: 'Bills',
-    assigned: '$100.000',
-    activity: '$0.00',
-    available: '$0.00',
-  };
-};
-
-export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Category[] => {
-    const length = lens[depth]!;
-    return range(length).map((): Category => {
-      return {
-        ...newCategory(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      };
-    });
-  };
-
-  return makeDataLevel();
+interface CategoryTableProperties<T> {
+  columns: ColumnDef<T, unknown>[];
+  data: Array<T>;
 }
 
-//----------------------------------------------------------------------------------------
-
-export function CategoryTable() {
-  const data = makeData(5, 3);
-  const memoData = useMemo(() => data, []);
-  const columnHelper = createColumnHelper<Category>();
-  const columns: ColumnDef<Category, any>[] = [
-    {
-      accessorKey: 'category',
-      header: ({ table }) => (
-        <div className="z_flex z_flex_jc_left z_flex_ai_center">
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-          />
-          <button
-            {...{
-              onClick: table.getToggleAllRowsExpandedHandler(),
-              className: styles.category_expand_button,
-            }}
-          >
-            {table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-          </button>
-          <span className="z_flex z_flex_ai_center">CATEGORY</span>
-        </div>
-      ),
-      cell: ({ row, getValue }) => (
-        <div
-          // style={{
-          //   // Since rows are flattened by default,
-          //   // we can use the row.depth property
-          //   // and paddingLeft to visually indicate the depth
-          //   // of the row
-          //   paddingLeft: `${row.depth * 2}rem`,
-          // }}
-          className="z_flex z_flex_jc_left z_flex_ai_center"
-        >
-          <>
-            <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
-              }}
-            />
-            {row.getCanExpand() && (
-              <button
-                {...{
-                  onClick: row.getToggleExpandedHandler(),
-                  className: styles.category_expand_button,
-                }}
-              >
-                {row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-              </button>
-            )}
-            <span
-              className={row.getCanExpand() ? styles.z_table_expansible_row_name : styles.z_table_cell_text}
-            >
-              {getValue()}
-            </span>
-          </>
-        </div>
-      ),
-      // footer: props => props.column.id,
-    },
-    columnHelper.accessor('assigned', {
-      id: 'assigned',
-      header: () => 'ASSIGNED',
-      cell: info => info.getValue(),
-      meta: {
-        type: new NumericTextType(),
-      },
-    }),
-    columnHelper.accessor('activity', {
-      id: 'activity',
-      header: () => 'ACTIVITY',
-      cell: info => info.getValue(),
-      meta: {
-        type: new NumericTextType(),
-      },
-    }),
-    columnHelper.accessor('available', {
-      id: 'available',
-      header: () => 'AVAILABLE',
-      cell: info => info.getValue(),
-      meta: {
-        type: new NumericTextType(),
-      },
-    }),
-  ];
-
+export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
-  const table = useReactTable<Category>({
+  const table = useReactTable<T>({
     columns,
-    data: memoData,
+    data: data,
     state: {
       expanded,
     },
     onExpandedChange: setExpanded,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -189,7 +54,9 @@ export function CategoryTable() {
                   >
                     {header.isPlaceholder ? undefined : (
                       <div>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        <Typography size="small">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                        </Typography>
                         {/*{header.column.getCanFilter() ? (*/}
                         {/*    <div>*/}
                         {/*        <Filter column={header.column} table={table} />*/}
@@ -217,7 +84,9 @@ export function CategoryTable() {
                       data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                       className={styles.z_table_cell}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <Typography size="large">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </Typography>
                     </td>
                   );
                 })}

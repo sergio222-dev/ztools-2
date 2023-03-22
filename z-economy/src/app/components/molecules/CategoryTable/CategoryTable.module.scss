@@ -5,8 +5,8 @@
 .z_table {
   width: 100%;
   border-spacing: 0;
-  font-size: 0.8rem;
-  font-weight: 400;
+  //font-size: 0.8rem;
+  //font-weight: 400;
 
   .z_table_head {
     text-transform: uppercase;
@@ -38,23 +38,5 @@
       text-align: center;
       width: functions.spacing(5);
     }
-
-    .z_table_cell_text {
-      padding-left: functions.spacing(3.6);
-    }
   }
-
-  .z_table_expansible_row {
-    background-color: const.$page-darker-background-color;
-  }
-
-  .z_table_expansible_row_name {
-    font-weight: bold;
-  }
-}
-
-
-.category_expand_button {
-  @include mixins.remove-default-button;
-  background: none;
 }
