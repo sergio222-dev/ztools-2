@@ -20,7 +20,14 @@ export type Category = {
   assigned: string;
   activity: string;
   available: string;
-  subRows?: Category[];
+  subRows?: SubRowData[];
+};
+
+export type SubRowData = {
+  category: string;
+  assigned: string;
+  activity: string;
+  available: string;
 };
 
 const range = (length: number) => {
