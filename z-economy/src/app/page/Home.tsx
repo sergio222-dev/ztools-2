@@ -5,8 +5,8 @@ import { BudgetPage } from '@organisms/BudgetPage/BudgetPage';
 export const Home = () => {
   return (
     <div className={styles.z_table}>
-      <AllAccountsPage />
-      {/*<BudgetPage />*/}
+      {/*<AllAccountsPage />*/}
+      <BudgetPage />
     </div>
   );
 };

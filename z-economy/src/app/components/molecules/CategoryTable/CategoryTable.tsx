@@ -58,7 +58,7 @@ export function makeData(...lens: number[]) {
 
 export function CategoryTable() {
   const data = makeData(5, 3);
-  const memoData = useMemo(() => data, [data]);
+  const memoData = useMemo(() => data, []);
   const columnHelper = createColumnHelper<Category>();
   const columns: ColumnDef<Category, any>[] = [
     {
