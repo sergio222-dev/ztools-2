@@ -22,6 +22,7 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
     data: memoData,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
   });
 
   return (

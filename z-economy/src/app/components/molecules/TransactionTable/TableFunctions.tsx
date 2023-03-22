@@ -1,6 +1,5 @@
 import { HTMLProps, useEffect, useRef } from 'react';
 import { Column, Table } from '@tanstack/react-table';
-
 export function IndeterminateCheckbox({
   indeterminate,
   className = '',
