@@ -14,7 +14,6 @@ import { IndeterminateCheckbox } from '../index';
 import { NumericTextType } from '@utils/table/types';
 import { AiFillCaretRight, AiFillCaretDown } from 'react-icons/ai';
 import styles from './CategoryTable.module.scss';
-import cls from 'classnames';
 
 export type Category = {
   category: string;
@@ -44,7 +43,7 @@ const newCategory = (): Category => {
 export function makeData(...lens: number[]) {
   const makeDataLevel = (depth = 0): Category[] => {
     const length = lens[depth]!;
-    return range(length).map((d): Category => {
+    return range(length).map((): Category => {
       return {
         ...newCategory(),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
@@ -59,7 +58,7 @@ export function makeData(...lens: number[]) {
 
 export function CategoryTable() {
   const data = makeData(5, 3);
-  const memoData = useMemo(() => data, []);
+  const memoData = useMemo(() => data, [data]);
   const columnHelper = createColumnHelper<Category>();
   const columns: ColumnDef<Category, any>[] = [
     {

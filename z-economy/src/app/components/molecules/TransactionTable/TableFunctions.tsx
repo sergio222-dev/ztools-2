@@ -33,13 +33,13 @@ export function Filter({ column, table }: { column: Column<any, any>; table: Tab
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={e => column.setFilterValue((old: any) => [e.target.value, old?.[1]])}
+        onChange={element => column.setFilterValue((old: any) => [element.target.value, old?.[1]])}
         placeholder={`Min`}
       />
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={e => column.setFilterValue((old: any) => [old?.[0], e.target.value])}
+        onChange={element => column.setFilterValue((old: any) => [old?.[0], element.target.value])}
         placeholder={`Max`}
       />
     </div>
@@ -47,7 +47,7 @@ export function Filter({ column, table }: { column: Column<any, any>; table: Tab
     <input
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={element => column.setFilterValue(element.target.value)}
       placeholder={`Search...`}
     />
   );

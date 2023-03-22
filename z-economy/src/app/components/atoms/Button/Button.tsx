@@ -4,11 +4,10 @@ import cls from 'classnames';
 
 export interface ButtonProperties extends HtmlHTMLAttributes<HTMLButtonElement> {
   StartIcon?: ReactNode | undefined;
-  size?: 'small' | 'normal' | 'large';
 }
 
 export function Button(properties: ButtonProperties): JSX.Element {
-  const { className, children, StartIcon, size, ...rest } = properties;
+  const { className, children, StartIcon, ...rest } = properties;
 
   return (
     <button className={cls(styles.z_button, className)} {...rest}>
