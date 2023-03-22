@@ -2,10 +2,6 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
 
-.z_table_expansible_row {
-  background-color: const.$page-darker-background-color;
-}
-
 .z_table_expansible_row_name {
   font-weight: bold;
 }
