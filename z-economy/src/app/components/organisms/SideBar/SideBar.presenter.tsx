@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
+import { useNavigate } from 'react-router';
 
 type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
@@ -29,7 +30,6 @@ export function useSideBarPresenter(): [SideBarModel, SideBarOperators] {
   const [toggleSidebar, setToggleSidebar] = useState(true);
 
   // OPERATORS
-
   const handleSidebarButtonClick = (buttonName: SidebarActiveValues) => {
     setActiveButton(buttonName);
   };

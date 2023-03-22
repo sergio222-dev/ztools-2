@@ -82,9 +82,11 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
           >
             {table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
           </button>
-          <span className="z_flex z_flex_ai_center">
-            <Typography size="small">CATEGORY</Typography>
-          </span>
+          <div className="z_flex z_flex_ai_center">
+            <Typography size="small" Component="span">
+              CATEGORY
+            </Typography>
+          </div>
         </div>
       ),
       cell: ({ row, getValue }) => (
@@ -116,11 +118,13 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
                 {row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
               </button>
             )}
-            <span
+            <div
               className={row.getCanExpand() ? styles.z_table_expansible_row_name : styles.z_table_cell_text}
             >
-              <Typography size="large">{getValue()}</Typography>
-            </span>
+              <Typography size="large" Component="span">
+                {getValue()}
+              </Typography>
+            </div>
           </>
         </div>
       ),

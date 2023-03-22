@@ -54,7 +54,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
                   >
                     {header.isPlaceholder ? undefined : (
                       <div>
-                        <Typography size="small">
+                        <Typography size="small" Component="span">
                           {flexRender(header.column.columnDef.header, header.getContext())}
                         </Typography>
                         {/*{header.column.getCanFilter() ? (*/}
@@ -84,7 +84,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
                       data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                       className={styles.z_table_cell}
                     >
-                      <Typography size="large">
+                      <Typography size="large" Component="span">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </Typography>
                     </td>

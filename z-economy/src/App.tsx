@@ -1,7 +1,7 @@
-import { ErrorBoundary } from './app/components/organisms/ErrorBoundary/ErrorBoundary';
-import { MainLayout } from './app/page/MainLayout';
+import { ErrorBoundary } from '@organisms/ErrorBoundary/ErrorBoundary';
+import { MainLayout } from '@page/MainLayout';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { routes } from './app/page/routes';
+import { routes } from '@page/routes';
 
 const router = createBrowserRouter(routes);
 
