@@ -6,7 +6,7 @@ export interface TextTypeInterface {
 
 export class NumericTextType implements TextTypeInterface {
   getType(): TextType {
-    return 'text';
+    return 'numeric';
   }
 }
 
