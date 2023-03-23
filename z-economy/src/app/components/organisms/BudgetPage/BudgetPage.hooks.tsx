@@ -5,6 +5,7 @@ import styles from './BudgetPage.module.scss';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
+import { Button } from '@atoms/Button/Button';
 
 export type Category = {
   category: string;
@@ -58,10 +59,12 @@ interface CategoryTableModel {
   data: Category[];
 }
 
-export function useBudgetPagePresenter(): [CategoryTableModel, object] {
+export function useBudgetPageHooks(): [CategoryTableModel, object] {
+  // MODEL
   const originalData = makeData(5, 3);
   const data = useMemo(() => originalData, []);
   const columnHelper = createColumnHelper<Category>();
+
   const columns: ColumnDef<Category, any>[] = [
     {
       accessorKey: 'category',
@@ -74,14 +77,13 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
               onChange: table.getToggleAllRowsSelectedHandler(),
             }}
           />
-          <button
-            {...{
-              onClick: table.getToggleAllRowsExpandedHandler(),
-              className: styles.category_expand_button_header,
-            }}
+          <Button
+            variant="icon"
+            onClick={table.getToggleAllRowsExpandedHandler()}
+            StartIcon={table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
           >
-            {table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-          </button>
+            {/*{table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}*/}
+          </Button>
           <div className="z_flex z_flex_ai_center">
             <Typography size="small" Component="span">
               CATEGORY
@@ -90,16 +92,7 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
         </div>
       ),
       cell: ({ row, getValue }) => (
-        <div
-          // style={{
-          //   // Since rows are flattened by default,
-          //   // we can use the row.depth property
-          //   // and paddingLeft to visually indicate the depth
-          //   // of the row
-          //   paddingLeft: `${row.depth * 2}rem`,
-          // }}
-          className="z_flex z_flex_jc_left z_flex_ai_center"
-        >
+        <div className="z_flex z_flex_jc_left z_flex_ai_center">
           <>
             <IndeterminateCheckbox
               {...{
@@ -109,21 +102,17 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
               }}
             />
             {row.getCanExpand() && (
-              <button
-                {...{
-                  onClick: row.getToggleExpandedHandler(),
-                  className: styles.category_expand_button_row,
-                }}
-              >
-                {row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-              </button>
+              <Button
+                onClick={row.getToggleExpandedHandler()}
+                variant="icon"
+                StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
+              />
             )}
+            {/* //TODO cambiar este div por un typography o ajustarlo de alguna manera para como conditional rendering  */}
             <div
               className={row.getCanExpand() ? styles.z_table_expansible_row_name : styles.z_table_cell_text}
             >
-              <Typography size="large" Component="span">
-                {getValue()}
-              </Typography>
+              {getValue()}
             </div>
           </>
         </div>
@@ -132,7 +121,7 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
     },
     columnHelper.accessor('assigned', {
       id: 'assigned',
-      header: () => 'ASSIGNED',
+      header: () => <Typography size="small">ASSIGNED</Typography>,
       cell: info => info.getValue(),
       meta: {
         type: new NumericTextType(),
@@ -140,7 +129,7 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
     }),
     columnHelper.accessor('activity', {
       id: 'activity',
-      header: () => 'ACTIVITY',
+      header: () => <Typography size="small">ACTIVITY</Typography>,
       cell: info => info.getValue(),
       meta: {
         type: new NumericTextType(),
@@ -148,7 +137,7 @@ export function useBudgetPagePresenter(): [CategoryTableModel, object] {
     }),
     columnHelper.accessor('available', {
       id: 'available',
-      header: () => 'AVAILABLE',
+      header: () => <Typography size="small">AVAILABLE</Typography>,
       cell: info => info.getValue(),
       meta: {
         type: new NumericTextType(),

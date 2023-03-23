@@ -1,8 +1,8 @@
 import { CategoryTable } from '../../molecules/index';
-import { Category, useBudgetPagePresenter } from './BudgetPage.presenter';
+import { Category, useBudgetPageHooks } from './BudgetPage.hooks';
 
 export function BudgetPageView() {
-  const [model] = useBudgetPagePresenter();
+  const [model] = useBudgetPageHooks();
   const { columns, data } = model;
 
   return (

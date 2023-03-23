@@ -2,15 +2,12 @@ import { useState } from 'react';
 import {
   ColumnDef,
   ExpandedState,
-  getPaginationRowModel,
   getCoreRowModel,
   useReactTable,
-  getFilteredRowModel,
   getExpandedRowModel,
   flexRender,
 } from '@tanstack/react-table';
 import styles from './CategoryTable.module.scss';
-import { Typography } from '@atoms/Typography/Typography';
 
 interface CategoryTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
@@ -31,8 +28,6 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
     // @ts-ignore
     getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     debugTable: true,
   });
@@ -53,16 +48,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
                     data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
                   >
                     {header.isPlaceholder ? undefined : (
-                      <div>
-                        <Typography size="small" Component="span">
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                        </Typography>
-                        {/*{header.column.getCanFilter() ? (*/}
-                        {/*    <div>*/}
-                        {/*        <Filter column={header.column} table={table} />*/}
-                        {/*    </div>*/}
-                        {/*) : null}*/}
-                      </div>
+                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
                     )}
                   </th>
                 );
@@ -84,9 +70,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
                       data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                       className={styles.z_table_cell}
                     >
-                      <Typography size="large" Component="span">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </Typography>
+                      <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
                     </td>
                   );
                 })}
