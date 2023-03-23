@@ -1,9 +1,0 @@
-dist
-out
-coverage
-node_modules
-pnpm-lock.yaml
-.yalc
-.netlify
-.husky
-*.d.ts
