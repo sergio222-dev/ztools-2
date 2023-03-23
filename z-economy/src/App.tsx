@@ -1,16 +1,13 @@
 import { ErrorBoundary } from '@organisms/ErrorBoundary/ErrorBoundary';
-import { MainLayout } from '@page/MainLayout';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { routes } from '@page/routes';
+import { routes, withLayout } from '@page/routes';
 
-const router = createBrowserRouter(routes);
+const router = createBrowserRouter(withLayout(routes));
 
 function App() {
   return (
     <ErrorBoundary>
-      <MainLayout>
-        <RouterProvider router={router} />
-      </MainLayout>
+      <RouterProvider router={router} />
     </ErrorBoundary>
   );
 }

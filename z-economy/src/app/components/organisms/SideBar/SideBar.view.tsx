@@ -4,12 +4,11 @@ import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
-import { useSideBarPresenter } from './SideBar.presenter';
+import { useSideBarHooks } from './SideBar.hooks';
 import { Typography } from '@atoms/Typography/Typography';
-import { useNavigate } from 'react-router';
 
 export function SideBarView() {
-  const [model, operators] = useSideBarPresenter();
+  const [model, operators] = useSideBarHooks();
 
   const { SIDEBAR_BUTTON_NAMES, SIDEBAR_BUTTON_ICONS, activeButton, toggleSidebar } = model;
 
