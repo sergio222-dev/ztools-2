@@ -29,7 +29,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
     getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    debugTable: true,
+    // debugTable: true,
   });
 
   return (
