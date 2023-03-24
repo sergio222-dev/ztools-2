@@ -1,4 +1,4 @@
-import { AllAccountsPage } from '../components/organisms/AllAccountsPage/AllAccountsPage.view';
+import { AllAccountsPage } from '@organisms/AllAccountsPage/AllAccountsPage.view';
 import styles from '../templates/main_layout.module.scss';
 
 export const AllAccounts = () => {
