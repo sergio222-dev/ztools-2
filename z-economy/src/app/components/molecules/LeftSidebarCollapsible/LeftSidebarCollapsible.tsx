@@ -39,7 +39,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
             <Typography size="large">BUDGET</Typography>
           </div>
           <div className={styles.amount}>
-            <Typography size="large">{total}</Typography>
+            <Typography size="large">${total}</Typography>
           </div>
         </div>
       </CollapsibleButton>
@@ -55,7 +55,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
                 <Typography>{a.name}</Typography>
               </span>
               <span className={styles.amount}>
-                <Typography>{a.total}</Typography>
+                <Typography>${a.total}</Typography>
               </span>
             </SidebarButton>
           ))}
