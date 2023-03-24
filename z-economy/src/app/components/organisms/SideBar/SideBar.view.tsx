@@ -28,6 +28,7 @@ export function SideBarView() {
               }}
               StartIcon={SIDEBAR_BUTTON_ICONS[index]}
               className={styles.menu_button}
+              variant="base"
             >
               <div className="z_text_a_left">
                 <Typography size="large">{name}</Typography>

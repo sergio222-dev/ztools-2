@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
+import { useNavigate } from 'react-router';
 
 type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
@@ -22,14 +23,27 @@ interface SideBarOperators {
   handleSidebarButtonClick: (buttonName: SidebarActiveValues) => void;
   handleSidebarCollapsibleClick: () => void;
 }
+
+function toKebabCase(buttonName: SidebarActiveValues) {
+  return buttonName
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .toLowerCase();
+}
 export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
   // MODEL
   const [activeButton, setActiveButton] = useState<SidebarActiveValues>('Budget');
   const [toggleSidebar, setToggleSidebar] = useState(true);
+  const navigate = useNavigate();
 
   // OPERATORS
   const handleSidebarButtonClick = (buttonName: SidebarActiveValues) => {
     setActiveButton(buttonName);
+    if (buttonName === 'Budget') {
+      navigate('/');
+    } else {
+      navigate(`/${toKebabCase(buttonName)}`);
+    }
   };
 
   const handleSidebarCollapsibleClick = () => {

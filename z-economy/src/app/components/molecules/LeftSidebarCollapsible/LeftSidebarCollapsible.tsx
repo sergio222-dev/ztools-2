@@ -46,7 +46,11 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
       {isContentVisible && (
         <div>
           {accounts.map(a => (
-            <SidebarButton key={a.name} className="z_stack_margin_bottom_item_1 z_padding_left_5">
+            <SidebarButton
+              key={a.name}
+              className="z_stack_margin_bottom_item_1 z_padding_left_5"
+              variant="base"
+            >
               <span className={styles.bank_name}>
                 <Typography>{a.name}</Typography>
               </span>
