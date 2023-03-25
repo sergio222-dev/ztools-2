@@ -5,10 +5,9 @@ import budget from '@budget/index';
 const mongoSchemasModule = MongooseModule.forFeature(budget.schemas);
 
 const mongoConnectionModule = MongooseModule.forRoot(
-  // TODO should be a env var
-  'mongodb://root:example@localhost:27017/?authSource=admin',
+  `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_SERVER}:${process.env.MONGO_PORT}/?authSource=${process.env.MONGO_AUTH_SOURCE}`,
   {
-    dbName: 'ztools',
+    dbName: process.env.MONGO_INITDB_DATABASE,
   },
 );
 
