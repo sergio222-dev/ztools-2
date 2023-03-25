@@ -1,23 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TransactionSchema } from '@budget/transactions/infrastructure/mongo/schema';
-import { MongoTransactionRepository } from '@budget/transactions/infrastructure/repository/MongoTransaction.repository';
+import budget from '@budget/index';
 
-const repositories = [
-  {
-    provide: 'TransactionRepository',
-    useClass: MongoTransactionRepository,
-  },
-];
-
-const schemas = [
-  {
-    name: 'Transaction',
-    schema: TransactionSchema,
-  },
-];
-
-const mongoSchemasModule = MongooseModule.forFeature(schemas);
+const mongoSchemasModule = MongooseModule.forFeature(budget.schemas);
 
 const mongoConnectionModule = MongooseModule.forRoot(
   // TODO should be a env var
@@ -33,8 +18,8 @@ export class MongoModule {
     return {
       module: MongoModule,
       imports: [mongoConnectionModule, mongoSchemasModule],
-      providers: [...repositories],
-      exports: [...repositories],
+      providers: [...budget.mongoRepositories],
+      exports: [...budget.mongoRepositories],
     };
   }
 }
