@@ -13,7 +13,7 @@ services:
   mongo:
     image: mongo
     ports:
-      - '27017:27017'
+      - '${MONGO_PORT}:${MONGO_PORT}'
     volumes:
       - './scripts/db/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
     environment:
