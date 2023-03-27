@@ -431,7 +431,7 @@
     // }
     {
       "packageName": "budget-servers",
-      "projectFolder": "budget-servers",
+      "projectFolder": "apps/budget-servers",
       "tags": ["backend", "nestjs"]
     }
   ]

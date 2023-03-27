@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
@@ -12,13 +12,16 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "target": "ES2017",
+    "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "incremental": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "@budget/*": ["src/budget/*"]
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "backend/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -17,9 +17,10 @@ async function bootstrap() {
 
   SwaggerModule.setup('api', app, document);
 
-  // TODO hardcoded port
-  await app.listen(3000);
+  await app.listen(process.env.BUDGET_SERVER_PORT as string);
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
-bootstrap();
+bootstrap().then(() => {
+  console.log(`Server Started on port ${process.env.BUDGET_SERVER_PORT}`);
+});

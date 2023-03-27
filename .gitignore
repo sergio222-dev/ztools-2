@@ -106,7 +106,10 @@ dist
 # idea
 .idea
 
-# rush
-common/temp
-.rush
+# Rush temporary files
+common/deploy/
+common/temp/
+common/autoinstallers/*/.npmrc
+**/.rush/temp/
+
 z-economy/image.png
