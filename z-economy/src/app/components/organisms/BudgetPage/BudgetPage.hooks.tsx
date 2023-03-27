@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/TransactionTable/TableFunctions';
-import styles from './BudgetPage.module.scss';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
@@ -81,9 +80,7 @@ export function useBudgetPageHooks(): [CategoryTableModel, object] {
             variant="icon"
             onClick={table.getToggleAllRowsExpandedHandler()}
             StartIcon={table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-          >
-            {/*{table.getIsAllRowsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}*/}
-          </Button>
+          ></Button>
           <div className="z_flex z_flex_ai_center">
             <Typography size="small" Component="span">
               CATEGORY
@@ -108,12 +105,15 @@ export function useBudgetPageHooks(): [CategoryTableModel, object] {
                 StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
               />
             )}
-            {/* //TODO cambiar este div por un typography o ajustarlo de alguna manera para como conditional rendering  */}
-            <div
-              className={row.getCanExpand() ? styles.z_table_expansible_row_name : styles.z_table_cell_text}
-            >
-              {getValue()}
-            </div>
+            {row.getCanExpand() ? (
+              <Typography size="large" variant="bold">
+                {getValue()}
+              </Typography>
+            ) : (
+              <div className="z_padding_left_4">
+                <Typography size="large">{getValue()}</Typography>
+              </div>
+            )}
           </>
         </div>
       ),

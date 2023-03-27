@@ -2,10 +2,6 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
 
-.z_table_expansible_row_name {
-  font-weight: bold;
-}
-
 %category_expand_button {
   @include mixins.remove-default-button;
   background: none;
@@ -20,6 +16,3 @@
   @extend %category_expand_button;
 }
 
-.z_table_cell_text {
-  padding-left: functions.spacing(4);
-}
