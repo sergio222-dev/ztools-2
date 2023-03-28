@@ -6,8 +6,16 @@ import { BudgetModule } from '../src/budget.module';
 
 const controllers = [TransactionsController];
 
+const environmentFileName = `.${process.env.NODE_ENV || 'development'}.env`;
+
 @Module({
-  imports: [ConfigModule.forRoot(), CqrsModule, BudgetModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: environmentFileName,
+    }),
+    CqrsModule,
+    BudgetModule,
+  ],
   controllers: [...controllers],
 })
 export class AppModule {}

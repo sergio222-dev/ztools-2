@@ -10,6 +10,7 @@ export class TransactionsController {
 
   @Get('all')
   async findAll(): Promise<Transaction[]> {
+    console.log(process.env.asd);
     return await this.queryBus.execute<TransactionFindAllQuery, Transaction[]>(new TransactionFindAllQuery());
   }
 }
