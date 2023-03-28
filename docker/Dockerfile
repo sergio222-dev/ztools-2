@@ -18,4 +18,4 @@ WORKDIR /app
 
 COPY --from=builder /app/common/deploy/ .
 
-CMD ["node", "./apps/budget-servers/dist/main.js"]
+CMD ["node", "./apps/budget-servers/dist/backend/main.js"]
