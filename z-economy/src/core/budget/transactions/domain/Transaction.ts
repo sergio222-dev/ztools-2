@@ -1,6 +1,6 @@
 export class Transaction {
   private constructor(
-    readonly date: Date,
+    readonly date: string,
     readonly payee: string,
     readonly category: string,
     readonly memo: string,
@@ -10,7 +10,7 @@ export class Transaction {
   ) {}
 
   static CREATE(
-    date: Date,
+    date: string,
     payee: string,
     category: string,
     memo: string,

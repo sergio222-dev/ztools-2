@@ -16,7 +16,7 @@ interface TransactionTableProperties<T> {
 }
 
 export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
-  const memoData = useMemo(() => data, []);
+  const memoData = useMemo(() => data, [data]);
 
   const table = useReactTable<T>({
     columns,

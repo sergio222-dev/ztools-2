@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
@@ -8,6 +7,7 @@ import { NumericTextType, OtherTextType } from '@utils/table/types';
 // import styles from './AllAccountsPage.module.scss';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { format } from 'date-fns';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
@@ -39,8 +39,8 @@ import { Transaction } from '@core/budget/transactions/domain/Transaction';
 // }
 
 interface AllAccountPageModel {
-  columns: ColumnDef<Transaction[] | undefined, any>[];
-  memoData: Transaction[] | undefined;
+  columns: ColumnDef<Transaction, any>[];
+  loadedData: Transaction[];
   error: any;
 }
 
@@ -51,15 +51,14 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
 
   // MODEL
 
-  const { data, error } = useTransaction();
+  const { data, error, isLoading } = useTransaction();
+  const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
-  const memoData = useMemo(() => data, []);
-
-  const columnHelper = createColumnHelper<Transaction | undefined>();
-  const columns: ColumnDef<Transaction | undefined, any>[] = [
+  const columnHelper = createColumnHelper<Transaction>();
+  const columns: ColumnDef<Transaction, any>[] = [
     {
       id: 'select',
-      header: ({ table }: { table: Table<Transaction | undefined> }) => (
+      header: ({ table }: { table: Table<Transaction> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -70,7 +69,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
           />
         </div>
       ),
-      cell: ({ row }: { row: Row<Transaction | undefined> }) => (
+      cell: ({ row }: { row: Row<Transaction> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -94,42 +93,42 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     //     type: new OtherTextType(),
     //   },
     // }),
-    // columnHelper.accessor('date', {
-    //   id: 'date',
-    //   header: () => 'DATE',
-    //   cell: info => info.getValue(),
-    // }),
+    columnHelper.accessor('date', {
+      id: 'date',
+      header: () => 'DATE',
+      cell: info => format(new Date(info.getValue()), 'dd/MM/yyyy'),
+    }),
     columnHelper.accessor('payee', {
       id: 'payee',
       header: () => 'PAYEE',
       cell: info => info.renderValue(),
     }),
-    columnHelper.accessor('category', {
-      id: 'category',
-      header: () => 'CATEGORY',
+    // columnHelper.accessor('category', {
+    //   id: 'category',
+    //   header: () => 'CATEGORY',
+    //   cell: info => info.renderValue(),
+    // }),
+    columnHelper.accessor('memo', {
+      id: 'memo',
+      header: () => 'MEMO',
       cell: info => info.renderValue(),
     }),
-    // columnHelper.accessor('memo', {
-    //   id: 'memo',
-    //   header: () => 'MEMO',
-    //   cell: info => info.renderValue(),
-    // }),
-    // columnHelper.accessor('outflow', {
-    //   id: 'outflow',
-    //   header: () => 'OUTFLOW',
-    //   cell: info => info.renderValue(),
-    //   meta: {
-    //     type: new NumericTextType(),
-    //   },
-    // }),
-    // columnHelper.accessor('inflow', {
-    //   id: 'inflow',
-    //   header: () => 'INFLOW',
-    //   cell: info => info.renderValue(),
-    //   meta: {
-    //     type: new NumericTextType(),
-    //   },
-    // }),
+    columnHelper.accessor('outflow', {
+      id: 'outflow',
+      header: () => 'OUTFLOW',
+      cell: info => info.renderValue(),
+      meta: {
+        type: new NumericTextType(),
+      },
+    }),
+    columnHelper.accessor('inflow', {
+      id: 'inflow',
+      header: () => 'INFLOW',
+      cell: info => info.renderValue(),
+      meta: {
+        type: new NumericTextType(),
+      },
+    }),
     // columnHelper.accessor('creditIcon', {
     //   id: 'creditIcon',
     //   header: () => <AiFillCopyrightCircle />,
@@ -145,7 +144,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
   return [
     {
       columns,
-      memoData,
+      loadedData,
       error,
     },
     {},
