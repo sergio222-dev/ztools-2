@@ -2,48 +2,53 @@ import { useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
 
-type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
+// type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
-const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
+// const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
+//
+// const SIDEBAR_BUTTON_ROUTES: Array<SidebarRoutes> = ['/', '/reports', '/all-accounts'];
 
-const SIDEBAR_BUTTON_ICONS = [
-  <IoMdCash key="icon1" />,
-  <RiBarChart2Fill key="icon2" />,
-  <BsBank2 key="icon3" />,
+const SIDEBAR_BUTTONS = [
+  {
+    name: 'Budget',
+    route: '/',
+    icon: <IoMdCash key="icon1" />,
+  },
+  {
+    name: 'Reports',
+    route: '/reports',
+    icon: <RiBarChart2Fill key="icon2" />,
+  },
+  {
+    name: 'All Accounts',
+    route: '/all-accounts',
+    icon: <BsBank2 key="icon3" />,
+  },
 ];
 
 interface SideBarModel {
-  SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues>;
-  SIDEBAR_BUTTON_ICONS: Array<JSX.Element>;
-  activeButton: SidebarActiveValues;
+  SIDEBAR_BUTTONS: Array<{
+    name: string;
+    route: string;
+    icon: JSX.Element;
+  }>;
+  activeButton: string;
   toggleSidebar: boolean;
 }
 
 interface SideBarOperators {
-  handleSidebarButtonClick: (buttonName: SidebarActiveValues) => void;
+  handleSidebarButtonClick: (buttonRoute: string) => void;
   handleSidebarCollapsibleClick: () => void;
-}
-
-function toKebabCase(buttonName: SidebarActiveValues) {
-  return buttonName
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/\s+/g, '-')
-    .toLowerCase();
 }
 export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
   // MODEL
-  const [activeButton, setActiveButton] = useState<SidebarActiveValues>('Budget');
+  const [activeButton, setActiveButton] = useState<string>(location.pathname);
   const [toggleSidebar, setToggleSidebar] = useState(true);
   const navigate = useNavigate();
 
-  // OPERATORS
-  const handleSidebarButtonClick = (buttonName: SidebarActiveValues) => {
-    setActiveButton(buttonName);
-    if (buttonName === 'Budget') {
-      navigate('/');
-    } else {
-      navigate(`/${toKebabCase(buttonName)}`);
-    }
+  const handleSidebarButtonClick = (buttonRoute: string) => {
+    navigate(buttonRoute);
+    setActiveButton(buttonRoute);
   };
 
   const handleSidebarCollapsibleClick = () => {
@@ -52,8 +57,7 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
 
   return [
     {
-      SIDEBAR_BUTTON_NAMES,
-      SIDEBAR_BUTTON_ICONS,
+      SIDEBAR_BUTTONS,
       activeButton,
       toggleSidebar,
     },

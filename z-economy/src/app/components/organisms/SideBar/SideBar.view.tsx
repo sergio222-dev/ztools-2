@@ -10,28 +10,28 @@ import { Typography } from '@atoms/Typography/Typography';
 export function SideBarView() {
   const [model, operators] = useSideBarHooks();
 
-  const { SIDEBAR_BUTTON_NAMES, SIDEBAR_BUTTON_ICONS, activeButton, toggleSidebar } = model;
+  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar } = model;
 
   const { handleSidebarButtonClick, handleSidebarCollapsibleClick } = operators;
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
       <div className={styles.menu_button_container}>
-        {SIDEBAR_BUTTON_NAMES.map((name, index) => {
+        {SIDEBAR_BUTTONS.map((button, index) => {
           return (
             <SidebarButton
-              key={name}
-              aria-selected={activeButton === name}
-              active={activeButton === name}
+              key={button.name}
+              aria-selected={activeButton === button.route}
+              active={activeButton === button.route}
               onClick={() => {
-                handleSidebarButtonClick(name);
+                handleSidebarButtonClick(button.route);
               }}
-              StartIcon={SIDEBAR_BUTTON_ICONS[index]}
+              StartIcon={button.icon}
               className={styles.menu_button}
               variant="base"
             >
               <div className="z_text_a_left">
-                <Typography size="large">{name}</Typography>
+                <Typography size="large">{button.name}</Typography>
               </div>
             </SidebarButton>
           );
