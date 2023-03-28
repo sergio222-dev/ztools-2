@@ -3,57 +3,63 @@ import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
 // import { ImBookmark } from 'react-icons/im';
-import { AiFillCopyrightCircle } from 'react-icons/ai';
+// import { AiFillCopyrightCircle } from 'react-icons/ai';
 // import { Labels } from '@utils/Labels';
 // import styles from './AllAccountsPage.module.scss';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
-export type TransactionTableData = {
-  // flagMark: Labels | undefined;
-  date: string;
-  payee: string;
-  category: string;
-  memo: string;
-  outflow: string;
-  inflow: string;
-  creditIcon: boolean;
-};
+// export type TransactionTableData = {
+//   // flagMark: Labels | undefined;
+//   _id: string;
+//   date: string;
+//   payee: string;
+//   category: string;
+//   memo: string;
+//   outflow: string;
+//   inflow: string;
+//   // creditIcon: boolean;
+// };
 
-const originalData: Array<TransactionTableData> = [];
+// const originalData: TransactionTableData[] = [];
 
-for (let index = 0; index < 100; index++) {
-  originalData.push({
-    // flagMark: undefined,
-    date: `19/07/190${index}`,
-    payee: `Person ${index}`,
-    category: `Category ${index}`,
-    memo: `Random words ${index}`,
-    outflow: (10 + index).toString(),
-    inflow: (100 + index).toString(),
-    creditIcon: false,
-  });
-}
+// for (let index = 0; index < 7; index++) {
+//   originalData.push({
+//     // flagMark: undefined,
+//     date: `19/07/190${index}`,
+//     payee: `Person ${index}`,
+//     category: `Category ${index}`,
+//     memo: `Random words ${index}`,
+//     outflow: (10 + index).toString(),
+//     inflow: (100 + index).toString(),
+//     // creditIcon: false,
+//   });
+// }
 
 interface AllAccountPageModel {
-  columns: ColumnDef<TransactionTableData, any>[];
-  data: TransactionTableData[];
+  columns: ColumnDef<Transaction[] | undefined, any>[];
+  memoData: Transaction[] | undefined;
+  error: any;
 }
 
 export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
-  const { data: data2 } = useTransaction();
-
-  console.log(data2);
+  // const { data: data2 } = useTransaction();
+  //
+  // console.log(data2);
 
   // MODEL
-  const data = useMemo(() => originalData, []);
 
-  const columnHelper = createColumnHelper<TransactionTableData>();
-  const columns: ColumnDef<TransactionTableData, any>[] = [
+  const { data, error } = useTransaction();
+
+  const memoData = useMemo(() => data, []);
+
+  const columnHelper = createColumnHelper<Transaction | undefined>();
+  const columns: ColumnDef<Transaction | undefined, any>[] = [
     {
       id: 'select',
-      header: ({ table }: { table: Table<TransactionTableData> }) => (
+      header: ({ table }: { table: Table<Transaction | undefined> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -64,7 +70,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
           />
         </div>
       ),
-      cell: ({ row }: { row: Row<TransactionTableData> }) => (
+      cell: ({ row }: { row: Row<Transaction | undefined> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -88,11 +94,11 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     //     type: new OtherTextType(),
     //   },
     // }),
-    columnHelper.accessor('date', {
-      id: 'date',
-      header: () => 'DATE',
-      cell: info => info.getValue(),
-    }),
+    // columnHelper.accessor('date', {
+    //   id: 'date',
+    //   header: () => 'DATE',
+    //   cell: info => info.getValue(),
+    // }),
     columnHelper.accessor('payee', {
       id: 'payee',
       header: () => 'PAYEE',
@@ -103,35 +109,35 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
       header: () => 'CATEGORY',
       cell: info => info.renderValue(),
     }),
-    columnHelper.accessor('memo', {
-      id: 'memo',
-      header: () => 'MEMO',
-      cell: info => info.renderValue(),
-    }),
-    columnHelper.accessor('outflow', {
-      id: 'outflow',
-      header: () => 'OUTFLOW',
-      cell: info => info.renderValue(),
-      meta: {
-        type: new NumericTextType(),
-      },
-    }),
-    columnHelper.accessor('inflow', {
-      id: 'inflow',
-      header: () => 'INFLOW',
-      cell: info => info.renderValue(),
-      meta: {
-        type: new NumericTextType(),
-      },
-    }),
-    columnHelper.accessor('creditIcon', {
-      id: 'creditIcon',
-      header: () => <AiFillCopyrightCircle />,
-      cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
-      meta: {
-        type: new OtherTextType(),
-      },
-    }),
+    // columnHelper.accessor('memo', {
+    //   id: 'memo',
+    //   header: () => 'MEMO',
+    //   cell: info => info.renderValue(),
+    // }),
+    // columnHelper.accessor('outflow', {
+    //   id: 'outflow',
+    //   header: () => 'OUTFLOW',
+    //   cell: info => info.renderValue(),
+    //   meta: {
+    //     type: new NumericTextType(),
+    //   },
+    // }),
+    // columnHelper.accessor('inflow', {
+    //   id: 'inflow',
+    //   header: () => 'INFLOW',
+    //   cell: info => info.renderValue(),
+    //   meta: {
+    //     type: new NumericTextType(),
+    //   },
+    // }),
+    // columnHelper.accessor('creditIcon', {
+    //   id: 'creditIcon',
+    //   header: () => <AiFillCopyrightCircle />,
+    //   cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
+    //   meta: {
+    //     type: new OtherTextType(),
+    //   },
+    // }),
   ];
 
   // OPERATORS
@@ -139,7 +145,8 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
   return [
     {
       columns,
-      data,
+      memoData,
+      error,
     },
     {},
   ];

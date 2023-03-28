@@ -11,11 +11,12 @@ import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
+  // data: Array<T>;
   data: Array<T>;
 }
 
 export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
-  const memoData = useMemo(() => data, [data]);
+  const memoData = useMemo(() => data, []);
 
   const table = useReactTable<T>({
     columns,
