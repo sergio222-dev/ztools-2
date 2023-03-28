@@ -26,6 +26,7 @@ specifiers:
   babel-loader: ^8.3.0
   classnames: ^2.3.2
   currency.js: ^2.0.4
+  date-fns: ^2.29.3
   eslint: ^8.35.0
   eslint-config-prettier: ^8.7.0
   eslint-import-resolver-typescript: ^3.5.3
@@ -57,6 +58,7 @@ dependencies:
   '@abraham/reflection': 0.12.0
   '@tanstack/react-table': 8.7.9_biqbaboplfbrettd7655fr4n2y
   axios: 1.3.4
+  date-fns: 2.29.3
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router: 6.9.0_react@18.2.0
@@ -6102,6 +6104,11 @@ packages:
       whatwg-mimetype: 3.0.0
       whatwg-url: 12.0.1
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
