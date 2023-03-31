@@ -1,59 +1,39 @@
-import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
 // import { ImBookmark } from 'react-icons/im';
-import { AiFillCopyrightCircle } from 'react-icons/ai';
+// import { AiFillCopyrightCircle } from 'react-icons/ai';
 // import { Labels } from '@utils/Labels';
 // import styles from './AllAccountsPage.module.scss';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
-export type TransactionTableData = {
-  // flagMark: Labels | undefined;
-  date: string;
-  payee: string;
-  category: string;
-  memo: string;
-  outflow: string;
-  inflow: string;
-  creditIcon: boolean;
-};
-
-const originalData: Array<TransactionTableData> = [];
-
-for (let index = 0; index < 100; index++) {
-  originalData.push({
-    // flagMark: undefined,
-    date: `19/07/190${index}`,
-    payee: `Person ${index}`,
-    category: `Category ${index}`,
-    memo: `Random words ${index}`,
-    outflow: (10 + index).toString(),
-    inflow: (100 + index).toString(),
-    creditIcon: false,
-  });
-}
-
 interface AllAccountPageModel {
-  columns: ColumnDef<TransactionTableData, any>[];
-  data: TransactionTableData[];
+  columns: ColumnDef<Transaction, any>[];
+  loadedData: Transaction[];
+  error: any;
 }
 
-export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
-  const { data: data2 } = useTransaction();
+interface AllAccountPageOperators {
+  isInEditMode: boolean;
+  setIsInEditMode: (isInEditMode: boolean) => void;
+}
 
-  console.log(data2);
-
+export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
-  const data = useMemo(() => originalData, []);
+  const [isInEditMode, setIsInEditMode] = useState(false);
+  const { data, error, isLoading } = useTransaction();
+  const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
-  const columnHelper = createColumnHelper<TransactionTableData>();
-  const columns: ColumnDef<TransactionTableData, any>[] = [
+  const columnHelper = createColumnHelper<Transaction>();
+  const columns: ColumnDef<Transaction, any>[] = [
     {
       id: 'select',
-      header: ({ table }: { table: Table<TransactionTableData> }) => (
+      header: ({ table }: { table: Table<Transaction> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -64,7 +44,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
           />
         </div>
       ),
-      cell: ({ row }: { row: Row<TransactionTableData> }) => (
+      cell: ({ row }: { row: Row<Transaction> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -91,27 +71,72 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     columnHelper.accessor('date', {
       id: 'date',
       header: () => 'DATE',
-      cell: info => info.getValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
+          ) : (
+            format(new Date(info.getValue()), 'dd/MM/yyyy')
+          )
+        ) : (
+          format(new Date(info.getValue()), 'dd/MM/yyyy')
+        ),
     }),
     columnHelper.accessor('payee', {
       id: 'payee',
       header: () => 'PAYEE',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('category', {
       id: 'category',
       header: () => 'CATEGORY',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('memo', {
       id: 'memo',
       header: () => 'MEMO',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('outflow', {
       id: 'outflow',
       header: () => 'OUTFLOW',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
       meta: {
         type: new NumericTextType(),
       },
@@ -119,19 +144,28 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     columnHelper.accessor('inflow', {
       id: 'inflow',
       header: () => 'INFLOW',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
       meta: {
         type: new NumericTextType(),
       },
     }),
-    columnHelper.accessor('creditIcon', {
-      id: 'creditIcon',
-      header: () => <AiFillCopyrightCircle />,
-      cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
-      meta: {
-        type: new OtherTextType(),
-      },
-    }),
+    // columnHelper.accessor('creditIcon', {
+    //   id: 'creditIcon',
+    //   header: () => <AiFillCopyrightCircle />,
+    //   cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
+    //   meta: {
+    //     type: new OtherTextType(),
+    //   },
+    // }),
   ];
 
   // OPERATORS
@@ -139,8 +173,12 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
   return [
     {
       columns,
-      data,
+      loadedData,
+      error,
     },
-    {},
+    {
+      isInEditMode,
+      setIsInEditMode,
+    },
   ];
 }

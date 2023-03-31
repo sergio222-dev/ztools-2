@@ -11,15 +11,28 @@ import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
+  // data: Array<T>;
   data: Array<T>;
+
+  operators: any;
 }
 
-export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
+export function TransactionTable<T>({ columns, data, operators }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
+  const { isInEditMode, setIsInEditMode } = operators;
+  const handleRowClick = (row: any) => {
+    if (row.getIsSelected()) {
+      setIsInEditMode(true);
+    } else {
+      row.getToggleSelectedHandler()(row);
+      setIsInEditMode(false);
+    }
+  };
 
   const table = useReactTable<T>({
-    columns,
     data: memoData,
+    columns,
+    enableMultiRowSelection: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     // debugTable: true,
@@ -47,6 +60,7 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
                     {{
                       asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
                       desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
+                      // eslint-disable-next-line unicorn/no-null
                     }[header.column.getIsSorted() as string] ?? null}
                   </div>
                 )}
@@ -57,7 +71,13 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr key={row.id} className={styles.z_table_row}>
+          <tr
+            key={row.id}
+            className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
+            onClick={() => {
+              handleRowClick(row);
+            }}
+          >
             {row.getVisibleCells().map(cell => (
               <td
                 className={styles.z_table_cell}
