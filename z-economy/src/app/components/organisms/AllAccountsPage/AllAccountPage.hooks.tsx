@@ -18,13 +18,14 @@ interface AllAccountPageModel {
   error: any;
 }
 
-export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
-  // const { data: data2 } = useTransaction();
-  //
-  // console.log(data2);
+interface AllAccountPageOperators {
+  isInEditMode: boolean;
+  setIsInEditMode: (isInEditMode: boolean) => void;
+}
 
+export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
-
+  const [isInEditMode, setIsInEditMode] = useState(false);
   const { data, error, isLoading } = useTransaction();
   const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
@@ -70,27 +71,72 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     columnHelper.accessor('date', {
       id: 'date',
       header: () => 'DATE',
-      cell: info => format(new Date(info.getValue()), 'dd/MM/yyyy'),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
+          ) : (
+            format(new Date(info.getValue()), 'dd/MM/yyyy')
+          )
+        ) : (
+          format(new Date(info.getValue()), 'dd/MM/yyyy')
+        ),
     }),
     columnHelper.accessor('payee', {
       id: 'payee',
       header: () => 'PAYEE',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('category', {
       id: 'category',
       header: () => 'CATEGORY',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('memo', {
       id: 'memo',
       header: () => 'MEMO',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
     }),
     columnHelper.accessor('outflow', {
       id: 'outflow',
       header: () => 'OUTFLOW',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
       meta: {
         type: new NumericTextType(),
       },
@@ -98,7 +144,16 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
     columnHelper.accessor('inflow', {
       id: 'inflow',
       header: () => 'INFLOW',
-      cell: info => info.renderValue(),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          isInEditMode ? (
+            <input type="text" value={info.renderValue()} />
+          ) : (
+            info.renderValue()
+          )
+        ) : (
+          info.renderValue()
+        ),
       meta: {
         type: new NumericTextType(),
       },
@@ -121,6 +176,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
       loadedData,
       error,
     },
-    {},
+    {
+      isInEditMode,
+      setIsInEditMode,
+    },
   ];
 }

@@ -6,7 +6,7 @@ import { Typography } from '@atoms/Typography/Typography';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 export function AllAccountsPage() {
-  const [model] = useAllAccountPagePresenter();
+  const [model, operators] = useAllAccountPagePresenter();
 
   const { columns, loadedData } = model;
 
@@ -58,7 +58,7 @@ export function AllAccountsPage() {
         </div>
       </section>
       <section>
-        <TransactionTable<Transaction> columns={columns} data={loadedData} />
+        <TransactionTable<Transaction> columns={columns} data={loadedData} operators={operators} />
       </section>
     </div>
   );

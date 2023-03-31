@@ -4,29 +4,35 @@ import {
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
-  RowData,
 } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
+
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
   // data: Array<T>;
   data: Array<T>;
+
+  operators: any;
 }
 
-declare module '@tanstack/react-table' {
-  interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
-  }
-}
-
-export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
+export function TransactionTable<T>({ columns, data, operators }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
+  const { isInEditMode, setIsInEditMode } = operators;
+  const handleRowClick = (row: any) => {
+    if (row.getIsSelected()) {
+      setIsInEditMode(true);
+    } else {
+      row.getToggleSelectedHandler()(row);
+      setIsInEditMode(false);
+    }
+  };
 
   const table = useReactTable<T>({
     data: memoData,
     columns,
+    enableMultiRowSelection: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     // debugTable: true,
@@ -54,6 +60,7 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
                     {{
                       asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
                       desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
+                      // eslint-disable-next-line unicorn/no-null
                     }[header.column.getIsSorted() as string] ?? null}
                   </div>
                 )}
@@ -67,7 +74,9 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
           <tr
             key={row.id}
             className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
-            onClick={row.getToggleSelectedHandler()}
+            onClick={() => {
+              handleRowClick(row);
+            }}
           >
             {row.getVisibleCells().map(cell => (
               <td
