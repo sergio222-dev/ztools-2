@@ -1,5 +1,6 @@
-import { HTMLProps, useEffect, useRef } from 'react';
-import { Column, Table } from '@tanstack/react-table';
+import { HTMLProps, useCallback, useEffect, useRef, useState } from 'react';
+import { Column, ColumnDef, Table } from '@tanstack/react-table';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 export function IndeterminateCheckbox({
   indeterminate,
   className = '',
@@ -14,15 +15,7 @@ export function IndeterminateCheckbox({
     }
   }, [indeterminate, checked]);
 
-  return (
-    <input
-      type="checkbox"
-      ref={reference}
-      checked={checked}
-      className={className + 'z_cursor_pointer'}
-      {...rest}
-    />
-  );
+  return <input type="checkbox" ref={reference} checked={checked} className={className} {...rest} />;
 }
 
 export function Filter({ column, table }: { column: Column<any, any>; table: Table<any> }) {

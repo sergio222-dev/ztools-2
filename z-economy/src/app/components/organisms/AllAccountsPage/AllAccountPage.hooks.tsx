@@ -8,35 +8,9 @@ import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 import { format } from 'date-fns';
+import { useEffect, useState } from 'react';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
-
-// export type TransactionTableData = {
-//   // flagMark: Labels | undefined;
-//   _id: string;
-//   date: string;
-//   payee: string;
-//   category: string;
-//   memo: string;
-//   outflow: string;
-//   inflow: string;
-//   // creditIcon: boolean;
-// };
-
-// const originalData: TransactionTableData[] = [];
-
-// for (let index = 0; index < 7; index++) {
-//   originalData.push({
-//     // flagMark: undefined,
-//     date: `19/07/190${index}`,
-//     payee: `Person ${index}`,
-//     category: `Category ${index}`,
-//     memo: `Random words ${index}`,
-//     outflow: (10 + index).toString(),
-//     inflow: (100 + index).toString(),
-//     // creditIcon: false,
-//   });
-// }
 
 interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
@@ -103,11 +77,11 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
       header: () => 'PAYEE',
       cell: info => info.renderValue(),
     }),
-    // columnHelper.accessor('category', {
-    //   id: 'category',
-    //   header: () => 'CATEGORY',
-    //   cell: info => info.renderValue(),
-    // }),
+    columnHelper.accessor('category', {
+      id: 'category',
+      header: () => 'CATEGORY',
+      cell: info => info.renderValue(),
+    }),
     columnHelper.accessor('memo', {
       id: 'memo',
       header: () => 'MEMO',

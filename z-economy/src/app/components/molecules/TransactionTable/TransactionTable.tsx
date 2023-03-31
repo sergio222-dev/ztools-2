@@ -4,23 +4,29 @@ import {
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
+  RowData,
 } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
   // data: Array<T>;
   data: Array<T>;
 }
 
+declare module '@tanstack/react-table' {
+  interface TableMeta<TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  }
+}
+
 export function TransactionTable<T>({ columns, data }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
 
   const table = useReactTable<T>({
-    columns,
     data: memoData,
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     // debugTable: true,
@@ -58,7 +64,11 @@ export function TransactionTable<T>({ columns, data }: TransactionTablePropertie
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr key={row.id} className={styles.z_table_row}>
+          <tr
+            key={row.id}
+            className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
+            onClick={row.getToggleSelectedHandler()}
+          >
             {row.getVisibleCells().map(cell => (
               <td
                 className={styles.z_table_cell}
