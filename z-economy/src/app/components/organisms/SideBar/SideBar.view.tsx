@@ -4,11 +4,11 @@ import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
-import { useSideBarPresenter } from './SideBar.presenter';
-import { Typography } from "@atoms/Typography/Typography";
+import { useSideBarHooks } from './SideBar.hooks';
+import { Typography } from '@atoms/Typography/Typography';
 
 export function SideBarView() {
-  const [model, operators] = useSideBarPresenter();
+  const [model, operators] = useSideBarHooks();
 
   const { SIDEBAR_BUTTON_NAMES, SIDEBAR_BUTTON_ICONS, activeButton, toggleSidebar } = model;
 
@@ -23,11 +23,16 @@ export function SideBarView() {
               key={name}
               aria-selected={activeButton === name}
               active={activeButton === name}
-              onClick={() => handleSidebarButtonClick(name)}
+              onClick={() => {
+                handleSidebarButtonClick(name);
+              }}
               StartIcon={SIDEBAR_BUTTON_ICONS[index]}
               className={styles.menu_button}
+              variant="base"
             >
-              <div className="z_text_a_left"><Typography size='large'>{name}</Typography></div>
+              <div className="z_text_a_left">
+                <Typography size="large">{name}</Typography>
+              </div>
             </SidebarButton>
           );
         })}
@@ -50,9 +55,7 @@ export function SideBarView() {
       </div>
       <div>
         <Button className={styles.add_btn}>
-            <Typography>
-                Add Account
-            </Typography>
+          <Typography>Add Account</Typography>
         </Button>
       </div>
       <IconButton className={styles.z_collapsible_icon_button} onClick={handleSidebarCollapsibleClick}>

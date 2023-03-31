@@ -3,26 +3,36 @@
 @use '../../styles/functions' as functions;
 
 %z-button {
-  background-color: Const.$secondary-color;
-  color: Const.$secondary-text-color;
-  border-radius: Const.$radius;
   border: none;
-  padding: functions.spacing(1);
   outline: none;
-
-  &:focus-visible {
-    background-color: Const.$dark-primary-color;
-
-    @include Mixin.box-shadow(Const.$light_primary_color);
-  }
-
-  &:active {
-    @include Mixin.box-shadow(Const.$light-primary-color);
-  }
+  padding: functions.spacing(1);
 
   &:hover {
-    background-color: Const.$dark-primary-color;
     cursor: pointer;
+  }
+
+  &.variant_icon {
+    background: none;
+  }
+
+  &.variant_primary {
+    background-color: Const.$secondary-color;
+    color: Const.$secondary-text-color;
+    border-radius: Const.$radius;
+
+    &:focus-visible {
+      background-color: Const.$dark-primary-color;
+
+      @include Mixin.box-shadow(Const.$light_primary_color);
+    }
+
+    &:active {
+      @include Mixin.box-shadow(Const.$light-primary-color);
+    }
+
+    &:hover {
+      background-color: Const.$dark-primary-color;
+    }
   }
 }
 

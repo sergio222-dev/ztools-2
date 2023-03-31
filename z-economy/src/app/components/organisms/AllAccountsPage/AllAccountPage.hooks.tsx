@@ -2,14 +2,16 @@ import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
-import { ImBookmark } from 'react-icons/im';
+// import { ImBookmark } from 'react-icons/im';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
-import { Labels } from '@utils/Labels';
-import styles from './AllAccountsPage.module.scss';
+// import { Labels } from '@utils/Labels';
+// import styles from './AllAccountsPage.module.scss';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 
+// hardcodear category y traer el resto de la data del bakckend con useTransaction().
+
 export type TransactionTableData = {
-  flagMark: Labels | undefined;
+  // flagMark: Labels | undefined;
   date: string;
   payee: string;
   category: string;
@@ -23,7 +25,7 @@ const originalData: Array<TransactionTableData> = [];
 
 for (let index = 0; index < 100; index++) {
   originalData.push({
-    flagMark: undefined,
+    // flagMark: undefined,
     date: `19/07/190${index}`,
     payee: `Person ${index}`,
     category: `Category ${index}`,
@@ -78,14 +80,14 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, object] {
         type: new OtherTextType(),
       },
     },
-    columnHelper.accessor('flagMark', {
-      id: 'flagMark',
-      header: () => <ImBookmark className={styles.flag_mark} />,
-      cell: () => <ImBookmark />,
-      meta: {
-        type: new OtherTextType(),
-      },
-    }),
+    // columnHelper.accessor('flagMark', {
+    //   id: 'flagMark',
+    //   header: () => <ImBookmark className={styles.flag_mark} />,
+    //   cell: () => <ImBookmark />,
+    //   meta: {
+    //     type: new OtherTextType(),
+    //   },
+    // }),
     columnHelper.accessor('date', {
       id: 'date',
       header: () => 'DATE',

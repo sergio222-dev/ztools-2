@@ -12,6 +12,11 @@
     @include mixins.font-size-variant(0.9);
   }
 
+  &.variant_bold {
+    @include mixins.font-size-variant(0.9);
+    font-weight: bold;
+  }
+
   &.variant_title {
     @include mixins.font-size-variant(1.25);
   }

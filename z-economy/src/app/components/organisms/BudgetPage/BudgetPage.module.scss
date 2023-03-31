@@ -1,0 +1,18 @@
+@use '../../styles/mixins';
+@use '../../styles/constants' as const;
+@use '../../styles/functions';
+
+%category_expand_button {
+  @include mixins.remove-default-button;
+  background: none;
+}
+
+.category_expand_button_header {
+  @extend %category_expand_button;
+  font-size: 1rem;
+}
+
+.category_expand_button_row{
+  @extend %category_expand_button;
+}
+
