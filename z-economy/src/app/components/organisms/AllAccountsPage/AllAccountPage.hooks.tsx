@@ -8,7 +8,8 @@ import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Input } from '../../atoms';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
@@ -33,8 +34,12 @@ function EditableCell({ getValue, row: { index }, column: { id }, table }) {
   const [value, setValue] = useState(initialValue);
 
   // When the input is blurred, we'll call our table meta's updateData function
-  const onBlur = () => {
+  const handleOnBlur = () => {
     table.options.meta?.updateData(index, id, value);
+  };
+
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
   };
 
   // If the initialValue is changed external, sync it up with our state
@@ -42,7 +47,7 @@ function EditableCell({ getValue, row: { index }, column: { id }, table }) {
     setValue(initialValue);
   }, [initialValue]);
 
-  return <input value={value as string} onChange={event => setValue(event.target.value)} onBlur={onBlur} />;
+  return <Input defaultValue={value} onChange={handleOnChange} onBlur={handleOnBlur} />;
 }
 
 const renderSubComponent = (
