@@ -1,18 +1,21 @@
-export enum Labels {
+export const enum Labels {
   PRIORITY,
   LOW_COST,
 }
 
+type LabelNames = Record<Labels, string>;
+
+export const labelNames: LabelNames = {
+  [Labels.LOW_COST]: 'Costo Bajo',
+  [Labels.PRIORITY]: 'Prioritario',
+};
+
 export function getLabelName(labelId: Labels) {
-  switch (labelId) {
-    case Labels.LOW_COST: {
-      return 'Costo Bajo';
-    }
-    case Labels.PRIORITY: {
-      return 'Prioritario';
-    }
-    default: {
-      throw new Error('No existe ese label');
-    }
+  const labelName = labelNames[labelId];
+
+  if (!labelName) {
+    throw new Error('No existe ese label');
   }
+
+  return labelName;
 }
