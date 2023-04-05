@@ -1,5 +1,5 @@
 import styles from './Input.module.scss';
-import { HtmlHTMLAttributes } from 'react';
+import { forwardRef, HtmlHTMLAttributes, Ref } from 'react';
 import cls from 'classnames';
 
 export function Input(properties: HtmlHTMLAttributes<HTMLInputElement>): JSX.Element {

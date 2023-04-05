@@ -8,8 +8,10 @@ import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 import { format } from 'date-fns';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 import { Input } from '../../atoms';
+import { EditableCell2 } from '@molecules/EditableCell/EditableCell';
+import { useOutsideClick } from '@utils/mouseUtils';
 
 // hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
@@ -17,6 +19,8 @@ interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
   loadedData: Transaction[];
   error: any;
+  reference: RefObject<HTMLElement>;
+  tableReference: MutableRefObject<Table<Transaction> | undefined>;
   renderSubComponent: (
     { row }: { row: Row<Transaction> },
     subComponentClickHandler: (argument0: Row<Transaction>) => void,
@@ -28,6 +32,9 @@ interface AllAccountPageOperators {
   subComponentClickHandler: (row: Row<Transaction>) => void;
 }
 
+// eslint-disable-next-line react/prop-types,@typescript-eslint/ban-ts-comment
+// @ts-ignore
+// eslint-disable-next-line react/prop-types
 function EditableCell({ getValue, row: { index }, column: { id }, table }) {
   const initialValue = getValue;
   // We need to keep and update the state of the cell normally
@@ -35,6 +42,7 @@ function EditableCell({ getValue, row: { index }, column: { id }, table }) {
 
   // When the input is blurred, we'll call our table meta's updateData function
   const handleOnBlur = () => {
+    // eslint-disable-next-line react/prop-types
     table.options.meta?.updateData(index, id, value);
   };
 
@@ -67,7 +75,14 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   // MODEL
   const [isInEditMode, setIsInEditMode] = useState(false);
   const { data, error, isLoading } = useTransaction();
+  const reference = useRef<HTMLElement>(null);
+  const tableReference = useRef<Table<Transaction>>();
   const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
+
+  useOutsideClick(reference, () => {
+    setIsInEditMode(false);
+    tableReference.current && tableReference.current.toggleAllRowsExpanded(false);
+  });
 
   const columnHelper = createColumnHelper<Transaction>();
   const columns: ColumnDef<Transaction, any>[] = [
@@ -259,6 +274,8 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       loadedData,
       error,
       renderSubComponent,
+      reference,
+      tableReference,
     },
     {
       handleRowClick,

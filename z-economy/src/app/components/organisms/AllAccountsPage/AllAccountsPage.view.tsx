@@ -8,7 +8,7 @@ import { Transaction } from '@core/budget/transactions/domain/Transaction';
 export function AllAccountsPage() {
   const [model, operators] = useAllAccountPagePresenter();
 
-  const { columns, loadedData, renderSubComponent } = model;
+  const { columns, loadedData, renderSubComponent, reference, tableReference } = model;
 
   return (
     <div className={cls(styles.all_accounts_page)}>
@@ -57,7 +57,7 @@ export function AllAccountsPage() {
           </div>
         </div>
       </section>
-      <section>
+      <section ref={reference}>
         <TransactionTable<Transaction>
           columns={columns}
           data={loadedData}
