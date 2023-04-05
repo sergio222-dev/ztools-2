@@ -4,20 +4,30 @@ import {
   getCoreRowModel,
   flexRender,
   getSortedRowModel,
+  getExpandedRowModel,
+  Row,
 } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 interface TransactionTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
-  // data: Array<T>;
   data: Array<T>;
-
   operators: any;
+  renderSubComponent: (
+    { row }: { row: Row<T> },
+    subComponentClickHandler: (argument0: Row<Transaction>) => void,
+  ) => JSX.Element;
 }
 
-export function TransactionTable<T>({ columns, data, operators }: TransactionTableProperties<T>) {
+export function TransactionTable<T>({
+  columns,
+  data,
+  operators,
+  renderSubComponent,
+}: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
 
@@ -31,8 +41,11 @@ export function TransactionTable<T>({ columns, data, operators }: TransactionTab
     data: tableData,
     columns,
     enableMultiRowSelection: true,
+    // getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getRowCanExpand: () => true,
     meta: {
       updateData: (rowIndex: number, columnId: any, value: any) => {
         setTableData(old =>
@@ -70,11 +83,13 @@ export function TransactionTable<T>({ columns, data, operators }: TransactionTab
                     }}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
-                    {{
-                      asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
-                      desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
-                      // eslint-disable-next-line unicorn/no-null
-                    }[header.column.getIsSorted() as string] ?? null}
+                    {header.id.includes('checkbox')
+                      ? undefined
+                      : {
+                          asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
+                          desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
+                          // eslint-disable-next-line unicorn/no-null
+                        }[header.column.getIsSorted() as string] ?? null}
                   </div>
                 )}
               </th>
@@ -84,23 +99,33 @@ export function TransactionTable<T>({ columns, data, operators }: TransactionTab
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <tr
-            key={row.id}
-            className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
-          >
-            {row.getVisibleCells().map(cell => (
-              <td
-                className={styles.z_table_cell}
-                data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
-                key={cell.id}
-                onClick={() => {
-                  handleRowClick(row, table, cell);
-                }}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
+          <>
+            <tr
+              key={row.id}
+              className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
+            >
+              {row.getVisibleCells().map(cell => (
+                <td
+                  className={styles.z_table_cell}
+                  data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
+                  key={cell.id}
+                  onClick={() => {
+                    handleRowClick(row, table, cell);
+                  }}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+            {row.getIsExpanded() && (
+              <tr>
+                {/* 2nd row is a custom 1 cell row */}
+                <td colSpan={row.getVisibleCells().length}>
+                  {renderSubComponent({ row }, operators.subComponentClickHandler)}
+                </td>
+              </tr>
+            )}
+          </>
         ))}
       </tbody>
       <tfoot>

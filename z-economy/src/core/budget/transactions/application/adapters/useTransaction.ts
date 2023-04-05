@@ -5,7 +5,7 @@ import { TransactionGetAll } from '@core/budget/transactions/application/useCase
 export const useTransaction = () => {
   const transactionGetAll = container.resolve(TransactionGetAll);
   const { data, error, isLoading } = useSWR(['transactions', {}], () => transactionGetAll.execute());
-  console.log('render', data);
+  // console.log('render', data);
   return {
     data,
     error,

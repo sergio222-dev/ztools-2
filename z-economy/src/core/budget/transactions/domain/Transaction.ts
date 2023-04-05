@@ -1,5 +1,5 @@
 export class Transaction {
-  private constructor(
+  constructor(
     readonly date: string,
     readonly payee: string,
     readonly category: string,
