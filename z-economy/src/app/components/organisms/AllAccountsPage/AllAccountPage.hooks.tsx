@@ -219,7 +219,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
 
   // OPERATORS
 
-  const handleRowClick = (row: Row<Transaction>, table: any, cell: { id: string }) => {
+  const handleRowClick = (row: Row<Transaction>, table: Table<Transaction>, cell: { id: string }) => {
     if (cell.id.includes('checkbox')) {
       setIsInEditMode(false);
       table.toggleAllRowsExpanded(false);
