@@ -2,7 +2,12 @@ import styles from './Input.module.scss';
 import { forwardRef, HtmlHTMLAttributes, Ref } from 'react';
 import cls from 'classnames';
 
-export function Input(properties: HtmlHTMLAttributes<HTMLInputElement>): JSX.Element {
+function InputBase(
+  properties: HtmlHTMLAttributes<HTMLInputElement>,
+  reference: Ref<HTMLInputElement>,
+): JSX.Element {
   const { className, ...rest } = properties;
-  return <input className={cls(styles.z_input, className)} {...rest} />;
+  return <input ref={reference} className={cls(styles.z_input, className)} {...rest} />;
 }
+
+export const Input = forwardRef(InputBase);

@@ -156,13 +156,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'PAYEE',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
-          ) : (
-            info.getValue()
-          )
+          <EditableCell2 isEditable={isInEditMode} defaultValue={info.getValue()} />
         ) : (
-          info.getValue()
+          <EditableCell2 isEditable={false} defaultValue={info.getValue()} />
         ),
     }),
     columnHelper.accessor('category', {
@@ -240,24 +236,22 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   // OPERATORS
 
   const handleRowClick = (row: Row<Transaction>, table: Table<Transaction>, cell: { id: string }) => {
+    table.toggleAllRowsSelected(false);
+
     if (cell.id.includes('checkbox')) {
       setIsInEditMode(false);
-      table.toggleAllRowsExpanded(false);
       row.toggleSelected();
     } else if (row.getIsSelected() && !isInEditMode) {
-      table.toggleAllRowsSelected(false);
       setTimeout(() => {
         row.toggleSelected();
       }, 1);
       setIsInEditMode(true);
       row.toggleExpanded(true);
     } else if (isInEditMode && !row.getIsSelected()) {
-      table.toggleAllRowsSelected(false);
       row.toggleSelected();
       setIsInEditMode(false);
       table.toggleAllRowsExpanded(false);
     } else if (!row.getIsSelected()) {
-      table.toggleAllRowsSelected(false);
       row.toggleSelected();
       setIsInEditMode(false);
     }

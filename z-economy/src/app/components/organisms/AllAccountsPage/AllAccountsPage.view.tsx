@@ -63,6 +63,7 @@ export function AllAccountsPage() {
           data={loadedData}
           operators={operators}
           renderSubComponent={renderSubComponent}
+          tableReference={tableReference}
         />
       </section>
     </div>

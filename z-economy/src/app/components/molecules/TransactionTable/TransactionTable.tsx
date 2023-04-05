@@ -6,13 +6,15 @@ import {
   getSortedRowModel,
   getExpandedRowModel,
   Row,
+  Table,
 } from '@tanstack/react-table';
-import { useEffect, useMemo, useState } from 'react';
+import { MutableRefObject, useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 interface TransactionTableProperties<T> {
+  tableReference: MutableRefObject<Table<T> | undefined>;
   columns: ColumnDef<T, unknown>[];
   data: Array<T>;
   operators: any;
@@ -27,6 +29,7 @@ export function TransactionTable<T>({
   data,
   operators,
   renderSubComponent,
+  tableReference,
 }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
@@ -63,6 +66,8 @@ export function TransactionTable<T>({
     },
     debugTable: true,
   });
+
+  if (tableReference) tableReference.current = table;
 
   return (
     <table className={styles.z_table}>
@@ -120,9 +125,7 @@ export function TransactionTable<T>({
             {row.getIsExpanded() && (
               <tr>
                 {/* 2nd row is a custom 1 cell row */}
-                <td colSpan={row.getVisibleCells().length}>
-                  {renderSubComponent({ row }, operators.subComponentClickHandler)}
-                </td>
+                <div>{renderSubComponent({ row }, operators.subComponentClickHandler)}</div>
               </tr>
             )}
           </>
