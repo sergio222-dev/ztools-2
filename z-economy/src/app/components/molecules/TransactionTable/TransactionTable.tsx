@@ -5,7 +5,7 @@ import {
   flexRender,
   getSortedRowModel,
 } from '@tanstack/react-table';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 
@@ -19,23 +19,36 @@ interface TransactionTableProperties<T> {
 
 export function TransactionTable<T>({ columns, data, operators }: TransactionTableProperties<T>) {
   const memoData = useMemo(() => data, [data]);
-  const { isInEditMode, setIsInEditMode } = operators;
-  const handleRowClick = (row: any) => {
-    if (row.getIsSelected()) {
-      setIsInEditMode(true);
-    } else {
-      row.getToggleSelectedHandler()(row);
-      setIsInEditMode(false);
-    }
-  };
+  const [tableData, setTableData] = useState(memoData);
+
+  useEffect(() => {
+    setTableData(memoData);
+  }, [memoData]);
+
+  const handleRowClick = operators.handleRowClick;
 
   const table = useReactTable<T>({
-    data: memoData,
+    data: tableData,
     columns,
-    enableMultiRowSelection: false,
+    enableMultiRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    // debugTable: true,
+    meta: {
+      updateData: (rowIndex: number, columnId: any, value: any) => {
+        setTableData(old =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex]!,
+                [columnId]: value,
+              };
+            }
+            return row;
+          }),
+        );
+      },
+    },
+    debugTable: true,
   });
 
   return (
@@ -74,15 +87,15 @@ export function TransactionTable<T>({ columns, data, operators }: TransactionTab
           <tr
             key={row.id}
             className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
-            onClick={() => {
-              handleRowClick(row);
-            }}
           >
             {row.getVisibleCells().map(cell => (
               <td
                 className={styles.z_table_cell}
                 data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                 key={cell.id}
+                onClick={() => {
+                  handleRowClick(row, table, cell);
+                }}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>

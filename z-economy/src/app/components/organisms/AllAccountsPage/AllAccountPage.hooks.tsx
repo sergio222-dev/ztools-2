@@ -19,8 +19,25 @@ interface AllAccountPageModel {
 }
 
 interface AllAccountPageOperators {
-  isInEditMode: boolean;
-  setIsInEditMode: (isInEditMode: boolean) => void;
+  handleRowClick: (row: Row<Transaction>, table?: any, cell?: any) => void;
+}
+
+function EditableCell({ getValue, row: { index }, column: { id }, table }) {
+  const initialValue = getValue;
+  // We need to keep and update the state of the cell normally
+  const [value, setValue] = useState(initialValue);
+
+  // When the input is blurred, we'll call our table meta's updateData function
+  const onBlur = () => {
+    table.options.meta?.updateData(index, id, value);
+  };
+
+  // If the initialValue is changed external, sync it up with our state
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  return <input value={value as string} onChange={event => setValue(event.target.value)} onBlur={onBlur} />;
 }
 
 export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPageOperators] {
@@ -32,7 +49,8 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   const columnHelper = createColumnHelper<Transaction>();
   const columns: ColumnDef<Transaction, any>[] = [
     {
-      id: 'select',
+      accessorKey: 'checkbox',
+      id: 'checkbox',
       header: ({ table }: { table: Table<Transaction> }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
@@ -40,6 +58,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
               onChange: table.getToggleAllRowsSelectedHandler(),
+              onClick: () => {
+                setIsInEditMode(false);
+              },
             }}
           />
         </div>
@@ -74,7 +95,13 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
+            // <EditableCell
+            //   getValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
+            //   row={info.row}
+            //   column={info.column}
+            //   table={info.table}
+            // />
+            <input type="text" value={format(new Date(info.getValue()), 'dd/MM/yyyy')} readOnly />
           ) : (
             format(new Date(info.getValue()), 'dd/MM/yyyy')
           )
@@ -88,7 +115,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={info.renderValue()} />
+            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
           ) : (
             info.renderValue()
           )
@@ -102,7 +129,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={info.renderValue()} />
+            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
           ) : (
             info.renderValue()
           )
@@ -116,7 +143,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={info.renderValue()} />
+            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
           ) : (
             info.renderValue()
           )
@@ -130,7 +157,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={info.renderValue()} />
+            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
           ) : (
             info.renderValue()
           )
@@ -147,7 +174,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           isInEditMode ? (
-            <input type="text" value={info.renderValue()} />
+            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
           ) : (
             info.renderValue()
           )
@@ -170,6 +197,27 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
 
   // OPERATORS
 
+  const handleRowClick = (row: Row<Transaction>, table: any, cell: { id: string }) => {
+    if (cell.id.includes('checkbox')) {
+      setIsInEditMode(false);
+      row.toggleSelected();
+    } else if (row.getIsSelected() && !isInEditMode) {
+      table.toggleAllRowsSelected(false);
+      setTimeout(() => {
+        row.toggleSelected();
+      }, 1);
+      setIsInEditMode(true);
+    } else if (isInEditMode && !row.getIsSelected()) {
+      table.toggleAllRowsSelected(false);
+      row.toggleSelected();
+      setIsInEditMode(false);
+    } else if (!row.getIsSelected()) {
+      table.toggleAllRowsSelected(false);
+      row.toggleSelected();
+      setIsInEditMode(false);
+    }
+  };
+
   return [
     {
       columns,
@@ -177,8 +225,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       error,
     },
     {
-      isInEditMode,
-      setIsInEditMode,
+      handleRowClick,
     },
   ];
 }
