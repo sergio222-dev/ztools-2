@@ -1,12 +1,14 @@
 import { ChangeEvent, FocusEvent, HTMLAttributes, useEffect, useRef, useState } from 'react';
 import { Input } from '@atoms/Input/Input';
+import styles from '@molecules/EditableCell/EditableCell.module.scss';
 
 interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
   isEditable: boolean;
+  type?: string;
 }
 
-export function EditableCell2(properties: EditableCellProperties) {
-  const { defaultValue, onBlur, isEditable } = properties;
+export function EditableCell(properties: EditableCellProperties) {
+  const { defaultValue, onBlur, isEditable, type } = properties;
 
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(defaultValue);
@@ -22,7 +24,12 @@ export function EditableCell2(properties: EditableCellProperties) {
 
   // return <Input defaultValue={value} onChange={handleOnChange} onBlur={handleOnBlur} />;
   return isEditable ? (
-    <Input onChange={handleOnChange} onBlur={handleOnBlur} defaultValue={value} />
+    <Input
+      onChange={handleOnChange}
+      onBlur={handleOnBlur}
+      defaultValue={value}
+      className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
+    />
   ) : (
     <div>{defaultValue}</div>
   );

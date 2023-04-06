@@ -2,7 +2,7 @@ export class Transaction {
   constructor(
     readonly date: string,
     readonly payee: string,
-    readonly category: string,
+    public category: string,
     readonly memo: string,
     readonly inflow: string,
     readonly outflow: string,

@@ -1,19 +1,12 @@
 import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
-// import { ImBookmark } from 'react-icons/im';
-// import { AiFillCopyrightCircle } from 'react-icons/ai';
-// import { Labels } from '@utils/Labels';
-// import styles from './AllAccountsPage.module.scss';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
 import { format } from 'date-fns';
-import { ChangeEvent, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
-import { Input } from '../../atoms';
-import { EditableCell2 } from '@molecules/EditableCell/EditableCell';
+import { MutableRefObject, RefObject, useRef, useState } from 'react';
+import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { useOutsideClick } from '@utils/mouseUtils';
-
-// hardcodear category y traer el resto de la data del bakckend con useTransaction().
 
 interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
@@ -30,32 +23,6 @@ interface AllAccountPageModel {
 interface AllAccountPageOperators {
   handleRowClick: (row: Row<Transaction>, table?: any, cell?: any) => void;
   subComponentClickHandler: (row: Row<Transaction>) => void;
-}
-
-// eslint-disable-next-line react/prop-types,@typescript-eslint/ban-ts-comment
-// @ts-ignore
-// eslint-disable-next-line react/prop-types
-function EditableCell({ getValue, row: { index }, column: { id }, table }) {
-  const initialValue = getValue;
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = useState(initialValue);
-
-  // When the input is blurred, we'll call our table meta's updateData function
-  const handleOnBlur = () => {
-    // eslint-disable-next-line react/prop-types
-    table.options.meta?.updateData(index, id, value);
-  };
-
-  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
-
-  // If the initialValue is changed external, sync it up with our state
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-
-  return <Input defaultValue={value} onChange={handleOnChange} onBlur={handleOnBlur} />;
 }
 
 const renderSubComponent = (
@@ -82,6 +49,10 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   useOutsideClick(reference, () => {
     setIsInEditMode(false);
     tableReference.current && tableReference.current.toggleAllRowsExpanded(false);
+  });
+
+  data?.map(transaction => {
+    transaction.category = 'Entertainment';
   });
 
   const columnHelper = createColumnHelper<Transaction>();
@@ -156,9 +127,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'PAYEE',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell2 isEditable={isInEditMode} defaultValue={info.getValue()} />
+          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
         ) : (
-          <EditableCell2 isEditable={false} defaultValue={info.getValue()} />
+          <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
     }),
     columnHelper.accessor('category', {
@@ -166,13 +137,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'CATEGORY',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
-          ) : (
-            info.getValue()
-          )
+          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
         ) : (
-          info.getValue()
+          <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
     }),
     columnHelper.accessor('memo', {
@@ -180,13 +147,9 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'MEMO',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
-          ) : (
-            info.getValue()
-          )
+          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
         ) : (
-          info.getValue()
+          <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
     }),
     columnHelper.accessor('outflow', {
@@ -194,13 +157,13 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'OUTFLOW',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
-          ) : (
-            info.getValue()
-          )
+          <EditableCell
+            isEditable={isInEditMode}
+            defaultValue={info.getValue()}
+            type={new NumericTextType().getType()}
+          />
         ) : (
-          info.getValue()
+          <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
       meta: {
         type: new NumericTextType(),
@@ -211,13 +174,13 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'INFLOW',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            <EditableCell getValue={info.getValue} row={info.row} column={info.column} table={info.table} />
-          ) : (
-            info.getValue()
-          )
+          <EditableCell
+            isEditable={isInEditMode}
+            defaultValue={info.getValue()}
+            type={new NumericTextType().getType()}
+          />
         ) : (
-          info.getValue()
+          <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
       meta: {
         type: new NumericTextType(),
@@ -238,6 +201,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   const handleRowClick = (row: Row<Transaction>, table: Table<Transaction>, cell: { id: string }) => {
     if (cell.id.includes('checkbox')) {
       setIsInEditMode(false);
+      table.toggleAllRowsExpanded(false);
       row.toggleSelected();
     } else if (row.getIsSelected() && !isInEditMode) {
       table.toggleAllRowsSelected(false);

@@ -76,7 +76,7 @@ export function TransactionTable<T>({
           <tr key={headerGroup.id}>
             {headerGroup.headers.map(header => (
               <th
-                className={styles.z_table_head}
+                className={styles.z_table_header}
                 key={header.id}
                 data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
               >
@@ -123,9 +123,11 @@ export function TransactionTable<T>({
               ))}
             </tr>
             {row.getIsExpanded() && (
-              <tr>
+              <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
-                <div>{renderSubComponent({ row }, operators.subComponentClickHandler)}</div>
+                <div className={styles.z_table_subcomponent_cell}>
+                  {renderSubComponent({ row }, operators.subComponentClickHandler)}
+                </div>
               </tr>
             )}
           </>
