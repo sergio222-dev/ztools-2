@@ -236,22 +236,23 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
   // OPERATORS
 
   const handleRowClick = (row: Row<Transaction>, table: Table<Transaction>, cell: { id: string }) => {
-    table.toggleAllRowsSelected(false);
-
     if (cell.id.includes('checkbox')) {
       setIsInEditMode(false);
       row.toggleSelected();
     } else if (row.getIsSelected() && !isInEditMode) {
+      table.toggleAllRowsSelected(false);
       setTimeout(() => {
         row.toggleSelected();
       }, 1);
       setIsInEditMode(true);
       row.toggleExpanded(true);
     } else if (isInEditMode && !row.getIsSelected()) {
+      table.toggleAllRowsSelected(false);
       row.toggleSelected();
       setIsInEditMode(false);
       table.toggleAllRowsExpanded(false);
     } else if (!row.getIsSelected()) {
+      table.toggleAllRowsSelected(false);
       row.toggleSelected();
       setIsInEditMode(false);
     }
