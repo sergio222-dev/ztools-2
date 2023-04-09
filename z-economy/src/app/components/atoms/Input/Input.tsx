@@ -1,9 +1,9 @@
 import styles from './Input.module.scss';
-import { forwardRef, HtmlHTMLAttributes, Ref } from 'react';
+import { forwardRef, InputHTMLAttributes, Ref } from 'react';
 import cls from 'classnames';
 
 function InputBase(
-  properties: HtmlHTMLAttributes<HTMLInputElement>,
+  properties: InputHTMLAttributes<HTMLInputElement>,
   reference: Ref<HTMLInputElement>,
 ): JSX.Element {
   const { className, ...rest } = properties;

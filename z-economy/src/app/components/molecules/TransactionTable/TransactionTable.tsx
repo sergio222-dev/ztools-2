@@ -5,41 +5,40 @@ import {
   flexRender,
   getSortedRowModel,
   getExpandedRowModel,
-  Row,
   Table,
+  Row,
+  Cell,
 } from '@tanstack/react-table';
-import { MutableRefObject, useEffect, useMemo, useState } from 'react';
+import { ComponentType, Fragment, MutableRefObject, ReactElement, useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { ro } from 'date-fns/locale';
+
+interface SubComponentProperties<T> {
+  onSave: () => void;
+  onCancel: () => void;
+}
 
 interface TransactionTableProperties<T> {
   tableReference: MutableRefObject<Table<T> | undefined>;
   columns: ColumnDef<T, unknown>[];
   data: Array<T>;
-  operators: any;
-  renderSubComponent: (
-    { row }: { row: Row<T> },
-    subComponentClickHandler: (argument0: Row<Transaction>) => void,
-  ) => JSX.Element;
+  onClickRow?: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
+  SubComponent: ComponentType<SubComponentProperties<T>>;
 }
 
 export function TransactionTable<T>({
   columns,
   data,
-  operators,
-  renderSubComponent,
+  SubComponent,
   tableReference,
+  onClickRow,
 }: TransactionTableProperties<T>) {
+  // STATE
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
 
-  useEffect(() => {
-    setTableData(memoData);
-  }, [memoData]);
-
-  const handleRowClick = operators.handleRowClick;
-
+  // TABLE
   const table = useReactTable<T>({
     data: tableData,
     columns,
@@ -68,6 +67,11 @@ export function TransactionTable<T>({
   });
 
   if (tableReference) tableReference.current = table;
+
+  // SIDE EFFECT
+  useEffect(() => {
+    setTableData(memoData);
+  }, [memoData]);
 
   return (
     <table className={styles.z_table}>
@@ -104,18 +108,15 @@ export function TransactionTable<T>({
       </thead>
       <tbody>
         {table.getRowModel().rows.map(row => (
-          <>
-            <tr
-              key={row.id}
-              className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
-            >
+          <Fragment key={row.id}>
+            <tr className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}>
               {row.getVisibleCells().map(cell => (
                 <td
                   className={styles.z_table_cell}
                   data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                   key={cell.id}
                   onClick={() => {
-                    handleRowClick(row, table, cell);
+                    onClickRow && onClickRow(row, table, cell);
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -126,11 +127,11 @@ export function TransactionTable<T>({
               <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
                 <div className={styles.z_table_subcomponent_cell}>
-                  {renderSubComponent({ row }, operators.subComponentClickHandler)}
+                  <SubComponent onSave={() => {}} onCancel={() => {}} />
                 </div>
               </tr>
             )}
-          </>
+          </Fragment>
         ))}
       </tbody>
       <tfoot>

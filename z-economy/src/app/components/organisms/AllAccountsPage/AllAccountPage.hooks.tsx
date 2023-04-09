@@ -1,4 +1,4 @@
-import { ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
+import { Cell, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { MutableRefObject, RefObject, useRef, useState } from 'react';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { useOutsideClick } from '@utils/mouseUtils';
+import { tr } from 'date-fns/locale';
 
 interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
@@ -14,41 +15,27 @@ interface AllAccountPageModel {
   error: any;
   reference: RefObject<HTMLElement>;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
-  renderSubComponent: (
-    { row }: { row: Row<Transaction> },
-    subComponentClickHandler: (argument0: Row<Transaction>) => void,
-  ) => JSX.Element;
 }
 
 interface AllAccountPageOperators {
-  handleRowClick: (row: Row<Transaction>, table?: any, cell?: any) => void;
   subComponentClickHandler: (row: Row<Transaction>) => void;
+  handleClickRow: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
 }
 
-const renderSubComponent = (
-  { row }: { row: Row<Transaction> },
-  subComponentClickHandler: (argument0: Row<Transaction>) => void,
-) => {
-  return (
-    <div key={row.id} className="z_flex z_flex_jc_right" onClick={() => subComponentClickHandler(row)}>
-      <button key={row.id + 'cancelButton'}>cancel</button>
-      <button key={row.id + 'save'} onClick={() => console.log('saved')}>
-        save
-      </button>
-    </div>
-  );
-};
-export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPageOperators] {
+export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
   const [isInEditMode, setIsInEditMode] = useState(false);
+  const [editingCell, setEditingCell] = useState('');
   const { data, error, isLoading } = useTransaction();
   const reference = useRef<HTMLElement>(null);
   const tableReference = useRef<Table<Transaction>>();
   const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
   useOutsideClick(reference, () => {
-    setIsInEditMode(false);
-    tableReference.current && tableReference.current.toggleAllRowsExpanded(false);
+    if (isInEditMode) setIsInEditMode(false);
+    if (editingCell !== '') setEditingCell('');
+    if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
+      tableReference.current.toggleAllRowsExpanded(false);
   });
 
   data?.map(transaction => {
@@ -60,7 +47,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
     {
       accessorKey: 'checkbox',
       id: 'checkbox',
-      header: ({ table }: { table: Table<Transaction> }) => (
+      header: ({ table }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -75,7 +62,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
           />
         </div>
       ),
-      cell: ({ row, table }: { row: Row<Transaction>; table: Table<Transaction> }) => (
+      cell: ({ row, table }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -107,19 +94,12 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'DATE',
       cell: info =>
         info.row.getIsSelected() ? (
-          isInEditMode ? (
-            // <EditableCell
-            //   getValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
-            //   row={info.row}
-            //   column={info.column}
-            //   table={info.table}
-            // />
-            <input type="text" value={format(new Date(info.getValue()), 'dd/MM/yyyy')} readOnly />
-          ) : (
-            format(new Date(info.getValue()), 'dd/MM/yyyy')
-          )
+          <EditableCell
+            isEditable={isInEditMode && editingCell === info.row.id}
+            defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
+          />
         ) : (
-          format(new Date(info.getValue()), 'dd/MM/yyyy')
+          <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
         ),
     }),
     columnHelper.accessor('payee', {
@@ -127,7 +107,10 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'PAYEE',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={isInEditMode && editingCell === info.row.id}
+            defaultValue={info.getValue()}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -137,7 +120,10 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'CATEGORY',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={isInEditMode && editingCell === info.row.id}
+            defaultValue={info.getValue()}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -147,7 +133,10 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       header: () => 'MEMO',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={isInEditMode} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={isInEditMode && editingCell === info.row.id}
+            defaultValue={info.getValue()}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -158,7 +147,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={isInEditMode}
+            isEditable={isInEditMode && editingCell === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -175,7 +164,7 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={isInEditMode}
+            isEditable={isInEditMode && editingCell === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -198,28 +187,25 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
 
   // OPERATORS
 
-  const handleRowClick = (row: Row<Transaction>, table: Table<Transaction>, cell: { id: string }) => {
+  const handleClickRow = (
+    row: Row<Transaction>,
+    table: Table<Transaction>,
+    cell: Cell<Transaction, string>,
+  ) => {
     if (cell.id.includes('checkbox')) {
-      setIsInEditMode(false);
-      table.toggleAllRowsExpanded(false);
       row.toggleSelected();
-    } else if (row.getIsSelected() && !isInEditMode) {
-      table.toggleAllRowsSelected(false);
-      setTimeout(() => {
-        row.toggleSelected();
-      }, 1);
-      setIsInEditMode(true);
-      row.toggleExpanded(true);
-    } else if (isInEditMode && !row.getIsSelected()) {
-      table.toggleAllRowsSelected(false);
-      row.toggleSelected();
-      setIsInEditMode(false);
-      table.toggleAllRowsExpanded(false);
-    } else if (!row.getIsSelected()) {
-      table.toggleAllRowsSelected(false);
-      row.toggleSelected();
-      setIsInEditMode(false);
+      if (row.getIsSelected()) setEditingCell('');
+      return;
     }
+    if (row.getIsSelected()) {
+      setEditingCell(row.id);
+      setIsInEditMode(true);
+      return;
+    }
+    table.toggleAllRowsSelected(false);
+    row.toggleSelected();
+    if (editingCell !== '') setEditingCell('');
+    isInEditMode && setIsInEditMode(false);
   };
 
   const subComponentClickHandler = (row: Row<Transaction>) => {
@@ -232,12 +218,11 @@ export function useAllAccountPagePresenter(): [AllAccountPageModel, AllAccountPa
       columns,
       loadedData,
       error,
-      renderSubComponent,
       reference,
       tableReference,
     },
     {
-      handleRowClick,
+      handleClickRow,
       subComponentClickHandler,
     },
   ];

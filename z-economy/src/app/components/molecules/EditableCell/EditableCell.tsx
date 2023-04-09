@@ -31,6 +31,6 @@ export function EditableCell(properties: EditableCellProperties) {
       className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
     />
   ) : (
-    <div>{defaultValue}</div>
+    <Input disabled={true} defaultValue={defaultValue} />
   );
 }

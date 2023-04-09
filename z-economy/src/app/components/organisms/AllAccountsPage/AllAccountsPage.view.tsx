@@ -1,14 +1,16 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
 import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
-import { useAllAccountPagePresenter } from './AllAccountPage.hooks';
+import { useAllAccountPageHooks } from './AllAccountPage.hooks';
 import { Typography } from '@atoms/Typography/Typography';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 
 export function AllAccountsPage() {
-  const [model, operators] = useAllAccountPagePresenter();
+  const [model, operators] = useAllAccountPageHooks();
 
-  const { columns, loadedData, renderSubComponent, reference, tableReference } = model;
+  const { columns, loadedData, reference, tableReference } = model;
+  const { handleClickRow } = operators;
 
   return (
     <div className={cls(styles.all_accounts_page)}>
@@ -61,9 +63,9 @@ export function AllAccountsPage() {
         <TransactionTable<Transaction>
           columns={columns}
           data={loadedData}
-          operators={operators}
-          renderSubComponent={renderSubComponent}
+          SubComponent={EditableFooterButtons}
           tableReference={tableReference}
+          onClickRow={handleClickRow}
         />
       </section>
     </div>
