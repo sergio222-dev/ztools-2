@@ -7,7 +7,6 @@ import { format } from 'date-fns';
 import { MutableRefObject, RefObject, useRef, useState } from 'react';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { useOutsideClick } from '@utils/mouseUtils';
-import { tr } from 'date-fns/locale';
 
 interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
@@ -71,7 +70,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
               indeterminate: row.getIsSomeSelected(),
               onChange: row.getToggleSelectedHandler(),
               onClick: () => {
-                table.toggleAllRowsExpanded(false);
+                // table.toggleAllRowsExpanded(false);
               },
             }}
           />
@@ -194,16 +193,28 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   ) => {
     if (cell.id.includes('checkbox')) {
       row.toggleSelected();
-      if (row.getIsSelected()) setEditingCell('');
+      // row.toggleExpanded(false);
+      // if (row.getIsSelected()) setEditingCell('');
       return;
     }
-    if (row.getIsSelected()) {
-      setEditingCell(row.id);
-      setIsInEditMode(true);
-      return;
-    }
+    // if (row.getIsSelected()) {
+    //   setEditingCell(row.id);
+    //   setIsInEditMode(true);
+    //   row.toggleExpanded(true);
+    //   return;
+    // }
     table.toggleAllRowsSelected(false);
+    table.toggleAllRowsExpanded(false);
     row.toggleSelected();
+    if (row.getIsSelected()) {
+      requestAnimationFrame(() => {
+        row.toggleSelected();
+        setEditingCell(row.id);
+        setIsInEditMode(true);
+        row.toggleExpanded(true);
+      });
+      return;
+    }
     if (editingCell !== '') setEditingCell('');
     isInEditMode && setIsInEditMode(false);
   };

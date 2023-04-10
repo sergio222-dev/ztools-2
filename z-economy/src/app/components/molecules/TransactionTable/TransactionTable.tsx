@@ -12,8 +12,6 @@ import {
 import { ComponentType, Fragment, MutableRefObject, ReactElement, useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-import { ro } from 'date-fns/locale';
-
 interface SubComponentProperties<T> {
   onSave: () => void;
   onCancel: () => void;
@@ -68,7 +66,7 @@ export function TransactionTable<T>({
 
   if (tableReference) tableReference.current = table;
 
-  // SIDE EFFECT
+  // SIDE EFFECT posible loop infinito cuando se levanta el front primero y despues el server estando ya en all accounts page.
   useEffect(() => {
     setTableData(memoData);
   }, [memoData]);
