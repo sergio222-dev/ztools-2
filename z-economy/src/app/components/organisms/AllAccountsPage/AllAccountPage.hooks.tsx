@@ -204,7 +204,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   };
 
   const EditableFooterSaveHandler = (row: Row<Transaction>, table: Table<Transaction>) => {
-    // table.options.meta?.updateData(row.index, row.id, row.defaultValue);
     editingCell !== '' && setEditingCell('');
     row.toggleExpanded(false);
     row.toggleSelected(false);
