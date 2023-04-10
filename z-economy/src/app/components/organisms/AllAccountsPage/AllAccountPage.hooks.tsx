@@ -69,9 +69,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
               disabled: !row.getCanSelect(),
               indeterminate: row.getIsSomeSelected(),
               onChange: row.getToggleSelectedHandler(),
-              onClick: () => {
-                // table.toggleAllRowsExpanded(false);
-              },
             }}
           />
         </div>
@@ -192,31 +189,31 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     cell: Cell<Transaction, string>,
   ) => {
     if (cell.id.includes('checkbox')) {
+      if (row.getIsSelected()) {
+        if (row.id === editingCell) setIsInEditMode(false);
+        row.getIsExpanded() && row.toggleExpanded(false);
+      }
       row.toggleSelected();
-      // row.toggleExpanded(false);
-      // if (row.getIsSelected()) setEditingCell('');
       return;
     }
-    // if (row.getIsSelected()) {
-    //   setEditingCell(row.id);
-    //   setIsInEditMode(true);
-    //   row.toggleExpanded(true);
-    //   return;
-    // }
-    table.toggleAllRowsSelected(false);
-    table.toggleAllRowsExpanded(false);
-    row.toggleSelected();
+
     if (row.getIsSelected()) {
-      requestAnimationFrame(() => {
-        row.toggleSelected();
-        setEditingCell(row.id);
-        setIsInEditMode(true);
-        row.toggleExpanded(true);
-      });
+      editingCell !== row.id && setEditingCell(row.id);
+      !isInEditMode && setIsInEditMode(true);
+      table.setExpanded(() => ({
+        [row.id]: true,
+      }));
+      table.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+
       return;
     }
-    if (editingCell !== '') setEditingCell('');
     isInEditMode && setIsInEditMode(false);
+    if (editingCell !== '') setEditingCell('');
+    table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
+    table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
+    row.toggleSelected();
   };
 
   const subComponentClickHandler = (row: Row<Transaction>) => {

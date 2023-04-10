@@ -121,7 +121,7 @@ export function TransactionTable<T>({
                 </td>
               ))}
             </tr>
-            {row.getIsExpanded() && (
+            {row.getIsExpanded() && row.getIsSelected() && (
               <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
                 <div className={styles.z_table_subcomponent_cell}>
