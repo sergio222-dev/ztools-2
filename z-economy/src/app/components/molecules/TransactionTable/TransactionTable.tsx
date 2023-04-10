@@ -130,16 +130,15 @@ export function TransactionTable<T>({
             {row.getIsExpanded() && row.getIsSelected() && (
               <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
-                <div className={styles.z_table_subcomponent_cell}>
-                  <EditableFooterButtons
-                    onSave={() => {
-                      operators.EditableFooterSaveHandler;
-                    }}
-                    onCancel={() => {
-                      operators.EditableFooterCancelHandler;
-                    }}
-                  />
-                </div>
+                <EditableFooterButtons
+                  className={styles.z_table_subcomponent_cell}
+                  onSave={() => {
+                    operators.EditableFooterSaveHandler;
+                  }}
+                  onCancel={() => {
+                    operators.EditableFooterCancelHandler;
+                  }}
+                />
               </tr>
             )}
           </Fragment>
