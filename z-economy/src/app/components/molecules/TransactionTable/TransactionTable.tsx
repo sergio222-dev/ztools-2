@@ -9,28 +9,33 @@ import {
   Row,
   Cell,
 } from '@tanstack/react-table';
-import { ComponentType, Fragment, MutableRefObject, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Fragment, MutableRefObject, useEffect, useMemo, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-interface SubComponentProperties<T> {
-  onSave: () => void;
-  onCancel: () => void;
-}
+import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
+
+// interface SubComponentProperties<T> {
+//   onSave: () => void;
+//   onCancel: () => void;
+// }
 
 interface TransactionTableProperties<T> {
   tableReference: MutableRefObject<Table<T> | undefined>;
   columns: ColumnDef<T, unknown>[];
   data: Array<T>;
-  onClickRow?: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
-  SubComponent: ComponentType<SubComponentProperties<T>>;
+  operators: TransactionOperators<T>;
+}
+
+interface TransactionOperators<T> {
+  EditableFooterClickHandler: (row: Row<T>) => void;
+  handleClickRow: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
 }
 
 export function TransactionTable<T>({
   columns,
   data,
-  SubComponent,
   tableReference,
-  onClickRow,
+  operators,
 }: TransactionTableProperties<T>) {
   // STATE
   const memoData = useMemo(() => data, [data]);
@@ -41,7 +46,6 @@ export function TransactionTable<T>({
     data: tableData,
     columns,
     enableMultiRowSelection: true,
-    // getSubRows: row => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
@@ -114,7 +118,7 @@ export function TransactionTable<T>({
                   data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                   key={cell.id}
                   onClick={() => {
-                    onClickRow && onClickRow(row, table, cell);
+                    operators.handleClickRow && operators.handleClickRow(row, table, cell);
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -125,7 +129,7 @@ export function TransactionTable<T>({
               <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
                 <div className={styles.z_table_subcomponent_cell}>
-                  <SubComponent onSave={() => {}} onCancel={() => {}} />
+                  <EditableFooterButtons onSave={() => {}} onCancel={() => {}} />
                 </div>
               </tr>
             )}

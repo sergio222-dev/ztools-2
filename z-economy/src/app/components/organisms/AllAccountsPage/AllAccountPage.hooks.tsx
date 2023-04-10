@@ -17,13 +17,12 @@ interface AllAccountPageModel {
 }
 
 interface AllAccountPageOperators {
-  subComponentClickHandler: (row: Row<Transaction>) => void;
+  EditableFooterClickHandler: (row: Row<Transaction>) => void;
   handleClickRow: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
 }
 
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
-  const [isInEditMode, setIsInEditMode] = useState(false);
   const [editingCell, setEditingCell] = useState('');
   const { data, error, isLoading } = useTransaction();
   const reference = useRef<HTMLElement>(null);
@@ -31,7 +30,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
   useOutsideClick(reference, () => {
-    if (isInEditMode) setIsInEditMode(false);
     if (editingCell !== '') setEditingCell('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
       tableReference.current.toggleAllRowsExpanded(false);
@@ -54,14 +52,14 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
               indeterminate: table.getIsSomeRowsSelected(),
               onChange: table.getToggleAllRowsSelectedHandler(),
               onClick: () => {
-                setIsInEditMode(false);
+                editingCell !== '' && setEditingCell('');
                 table.toggleAllRowsExpanded(false);
               },
             }}
           />
         </div>
       ),
-      cell: ({ row, table }) => (
+      cell: ({ row }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
@@ -91,7 +89,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
+            isEditable={editingCell === info.row.id}
             defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
           />
         ) : (
@@ -103,10 +101,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'PAYEE',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
-            defaultValue={info.getValue()}
-          />
+          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -116,10 +111,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'CATEGORY',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
-            defaultValue={info.getValue()}
-          />
+          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -129,10 +121,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'MEMO',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
-            defaultValue={info.getValue()}
-          />
+          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -143,7 +132,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
+            isEditable={editingCell === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -160,7 +149,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={isInEditMode && editingCell === info.row.id}
+            isEditable={editingCell === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -190,7 +179,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   ) => {
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
-        if (row.id === editingCell) setIsInEditMode(false);
         row.getIsExpanded() && row.toggleExpanded(false);
       }
       row.toggleSelected();
@@ -199,7 +187,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
 
     if (row.getIsSelected()) {
       editingCell !== row.id && setEditingCell(row.id);
-      !isInEditMode && setIsInEditMode(true);
       table.setExpanded(() => ({
         [row.id]: true,
       }));
@@ -209,16 +196,14 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
 
       return;
     }
-    isInEditMode && setIsInEditMode(false);
     if (editingCell !== '') setEditingCell('');
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     row.toggleSelected();
   };
 
-  const subComponentClickHandler = (row: Row<Transaction>) => {
+  const EditableFooterClickHandler = (row: Row<Transaction>) => {
     row.toggleExpanded(false);
-    setIsInEditMode(false);
   };
 
   return [
@@ -231,7 +216,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     },
     {
       handleClickRow,
-      subComponentClickHandler,
+      EditableFooterClickHandler,
     },
   ];
 }

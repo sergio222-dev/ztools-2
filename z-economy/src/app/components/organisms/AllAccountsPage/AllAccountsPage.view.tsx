@@ -4,7 +4,6 @@ import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
 import { useAllAccountPageHooks } from './AllAccountPage.hooks';
 import { Typography } from '@atoms/Typography/Typography';
 import { Transaction } from '@core/budget/transactions/domain/Transaction';
-import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 
 export function AllAccountsPage() {
   const [model, operators] = useAllAccountPageHooks();
@@ -63,9 +62,8 @@ export function AllAccountsPage() {
         <TransactionTable<Transaction>
           columns={columns}
           data={loadedData}
-          SubComponent={EditableFooterButtons}
           tableReference={tableReference}
-          onClickRow={handleClickRow}
+          operators={operators}
         />
       </section>
     </div>
