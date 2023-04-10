@@ -13,6 +13,7 @@ import { Fragment, MutableRefObject, useEffect, useMemo, useState } from 'react'
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
+import { Transaction } from '@core/budget/transactions/domain/Transaction';
 
 // interface SubComponentProperties<T> {
 //   onSave: () => void;
@@ -27,7 +28,8 @@ interface TransactionTableProperties<T> {
 }
 
 interface TransactionOperators<T> {
-  EditableFooterClickHandler: (row: Row<T>) => void;
+  EditableFooterSaveHandler: (row: Row<Transaction>) => void;
+  EditableFooterCancelHandler: (row: Row<Transaction>) => void;
   handleClickRow: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
 }
 
@@ -129,7 +131,14 @@ export function TransactionTable<T>({
               <tr className={styles.z_table_subcomponent_tr}>
                 {/* 2nd row is a custom 1 cell row */}
                 <div className={styles.z_table_subcomponent_cell}>
-                  <EditableFooterButtons onSave={() => {}} onCancel={() => {}} />
+                  <EditableFooterButtons
+                    onSave={() => {
+                      operators.EditableFooterSaveHandler;
+                    }}
+                    onCancel={() => {
+                      operators.EditableFooterCancelHandler;
+                    }}
+                  />
                 </div>
               </tr>
             )}

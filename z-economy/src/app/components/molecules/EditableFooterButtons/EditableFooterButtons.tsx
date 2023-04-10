@@ -7,11 +7,11 @@ interface EditableFooterButtonsProperties<T> {
   onCancel: (row: Row<T>) => void;
 }
 
-export const EditableFooterButtons = <T,>({}: EditableFooterButtonsProperties<T>) => {
+export const EditableFooterButtons = <T,>({ onSave, onCancel }: EditableFooterButtonsProperties<T>) => {
   return (
     <div className="z_flex z_flex_jc_right">
-      <CancelButton className={styles.cancel_button} />
-      <SaveButton className={styles.save_button} />
+      <CancelButton className={styles.cancel_button} onClick={() => onCancel} />
+      <SaveButton className={styles.save_button} onClick={() => onSave} />
     </div>
   );
 };

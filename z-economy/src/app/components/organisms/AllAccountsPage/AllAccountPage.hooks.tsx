@@ -17,7 +17,8 @@ interface AllAccountPageModel {
 }
 
 interface AllAccountPageOperators {
-  EditableFooterClickHandler: (row: Row<Transaction>) => void;
+  EditableFooterSaveHandler: (row: Row<Transaction>) => void;
+  EditableFooterCancelHandler: (row: Row<Transaction>) => void;
   handleClickRow: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
 }
 
@@ -202,8 +203,12 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     row.toggleSelected();
   };
 
-  const EditableFooterClickHandler = (row: Row<Transaction>) => {
+  const EditableFooterSaveHandler = (row: Row<Transaction>) => {
     row.toggleExpanded(false);
+  };
+
+  const EditableFooterCancelHandler = (row: Row<Transaction>) => {
+    row.toggleExpanded(true);
   };
 
   return [
@@ -216,7 +221,8 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     },
     {
       handleClickRow,
-      EditableFooterClickHandler,
+      EditableFooterSaveHandler,
+      EditableFooterCancelHandler,
     },
   ];
 }
