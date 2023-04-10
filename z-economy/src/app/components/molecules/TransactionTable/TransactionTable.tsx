@@ -28,8 +28,8 @@ interface TransactionTableProperties<T> {
 }
 
 interface TransactionOperators<T> {
-  EditableFooterSaveHandler: (row: Row<Transaction>) => void;
-  EditableFooterCancelHandler: (row: Row<Transaction>) => void;
+  EditableFooterSaveHandler: (row: Row<T>, table: Table<T>) => void;
+  EditableFooterCancelHandler: (row: Row<T>) => void;
   handleClickRow: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
 }
 
@@ -133,10 +133,10 @@ export function TransactionTable<T>({
                 <EditableFooterButtons
                   className={styles.z_table_subcomponent_cell}
                   onSave={() => {
-                    operators.EditableFooterSaveHandler;
+                    operators.EditableFooterSaveHandler(row, table);
                   }}
                   onCancel={() => {
-                    operators.EditableFooterCancelHandler;
+                    operators.EditableFooterCancelHandler(row);
                   }}
                 />
               </tr>

@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { MutableRefObject, RefObject, useRef, useState } from 'react';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { useOutsideClick } from '@utils/mouseUtils';
+import { T } from 'vitest/dist/types-5872e574';
 
 interface AllAccountPageModel {
   columns: ColumnDef<Transaction, any>[];
@@ -17,7 +18,7 @@ interface AllAccountPageModel {
 }
 
 interface AllAccountPageOperators {
-  EditableFooterSaveHandler: (row: Row<Transaction>) => void;
+  EditableFooterSaveHandler: (row: Row<Transaction>, table: Table<Transaction>) => void;
   EditableFooterCancelHandler: (row: Row<Transaction>) => void;
   handleClickRow: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
 }
@@ -194,21 +195,25 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       table.setRowSelection(() => ({
         [row.id]: true,
       }));
-
       return;
     }
-    if (editingCell !== '') setEditingCell('');
+    editingCell !== '' && setEditingCell('');
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     row.toggleSelected();
   };
 
-  const EditableFooterSaveHandler = (row: Row<Transaction>) => {
+  const EditableFooterSaveHandler = (row: Row<Transaction>, table: Table<Transaction>) => {
+    // table.options.meta?.updateData(row.index, row.id, row.defaultValue);
+    editingCell !== '' && setEditingCell('');
     row.toggleExpanded(false);
+    row.toggleSelected(false);
   };
 
   const EditableFooterCancelHandler = (row: Row<Transaction>) => {
-    row.toggleExpanded(true);
+    editingCell !== '' && setEditingCell('');
+    row.toggleExpanded(false);
+    row.toggleSelected(false);
   };
 
   return [
