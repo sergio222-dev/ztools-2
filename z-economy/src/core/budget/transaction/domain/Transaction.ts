@@ -1,5 +1,6 @@
 export class Transaction {
   constructor(
+    readonly id: string,
     readonly date: string,
     readonly payee: string,
     public category: string,
@@ -10,6 +11,7 @@ export class Transaction {
   ) {}
 
   static CREATE(
+    id: string,
     date: string,
     payee: string,
     category: string,
@@ -18,6 +20,6 @@ export class Transaction {
     outflow: string,
     budgetId: string,
   ) {
-    return new Transaction(date, payee, category, memo, inflow, outflow, budgetId);
+    return new Transaction(id, date, payee, category, memo, inflow, outflow, budgetId);
   }
 }

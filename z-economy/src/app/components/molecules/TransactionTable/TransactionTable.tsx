@@ -13,7 +13,7 @@ import { Fragment, MutableRefObject, useEffect, useMemo, useState } from 'react'
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
-import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
 
 // interface SubComponentProperties<T> {
 //   onSave: () => void;

@@ -1,10 +1,10 @@
 import { Cell, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
-import { useTransaction } from '@core/budget/transactions/application/adapters/useTransaction';
-import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { format } from 'date-fns';
-import { MutableRefObject, RefObject, useRef, useState } from 'react';
+import { ChangeEvent, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { T } from 'vitest/dist/types-5872e574';
@@ -26,6 +26,7 @@ interface AllAccountPageOperators {
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
   const [editingCell, setEditingCell] = useState('');
+  const [editableValue, setEditableValue] = useState<Transaction | object>({});
   const { data, error, isLoading } = useTransaction();
   const reference = useRef<HTMLElement>(null);
   const tableReference = useRef<Table<Transaction>>();
@@ -93,6 +94,12 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           <EditableCell
             isEditable={editingCell === info.row.id}
             defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
+            onChangeValue={value => {
+              setEditableValue({
+                ...editableValue,
+                [info.column.id]: value,
+              });
+            }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
@@ -173,7 +180,6 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   ];
 
   // OPERATORS
-
   const handleClickRow = (
     row: Row<Transaction>,
     table: Table<Transaction>,
@@ -189,6 +195,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
 
     if (row.getIsSelected()) {
       editingCell !== row.id && setEditingCell(row.id);
+      setEditableValue(row.original);
       table.setExpanded(() => ({
         [row.id]: true,
       }));
@@ -198,6 +205,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       return;
     }
     editingCell !== '' && setEditingCell('');
+    setEditableValue({});
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     row.toggleSelected();
@@ -205,6 +213,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
 
   const EditableFooterSaveHandler = (row: Row<Transaction>, table: Table<Transaction>) => {
     editingCell !== '' && setEditingCell('');
+    setEditableValue({});
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };
@@ -214,6 +223,13 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };
+
+  // SIDE EFFECTS
+  // useEffect(() => {
+  //   if (editingCell === '') return;
+  //
+  //
+  // }, [editingCell]);
 
   return [
     {

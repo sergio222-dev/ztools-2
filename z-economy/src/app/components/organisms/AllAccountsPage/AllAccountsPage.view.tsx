@@ -3,7 +3,7 @@ import cls from 'classnames';
 import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
 import { useAllAccountPageHooks } from './AllAccountPage.hooks';
 import { Typography } from '@atoms/Typography/Typography';
-import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
 
 export function AllAccountsPage() {
   const [model, operators] = useAllAccountPageHooks();

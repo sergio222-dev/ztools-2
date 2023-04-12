@@ -5,16 +5,16 @@ interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputE
 }
 
 export function IndeterminateCheckbox({ indeterminate, checked, ...rest }: IndeterminateCheckboxProperties) {
-  const reference = useRef<HTMLInputElement>(null);
+  // const reference = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (reference.current) {
-      reference.current.indeterminate = !checked && indeterminate;
-    }
+    // if (reference.current) {
+    //   reference.current.indeterminate = !checked && indeterminate;
+    // }
   }, [indeterminate, checked]);
 
   // TODO create checkbox ATOM
-  return <input type="checkbox" ref={reference} checked={checked} {...rest} />;
+  return <input type="checkbox" checked={checked} {...rest} />;
 }
 
 // export function Filter({ column, table }: { column: Column<any, any>; table: Table<any> }) {

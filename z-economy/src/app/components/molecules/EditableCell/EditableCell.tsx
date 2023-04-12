@@ -4,11 +4,12 @@ import styles from '@molecules/EditableCell/EditableCell.module.scss';
 
 interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
   isEditable: boolean;
+  onChangeValue?: (value: string) => void;
   type?: string;
 }
 
 export function EditableCell(properties: EditableCellProperties) {
-  const { defaultValue, onBlur, isEditable, type } = properties;
+  const { defaultValue, onBlur, isEditable, type, onChangeValue } = properties;
 
   // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(defaultValue);
@@ -20,6 +21,7 @@ export function EditableCell(properties: EditableCellProperties) {
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+    onChangeValue && onChangeValue(event.target.value);
   };
 
   // return <Input defaultValue={value} onChange={handleOnChange} onBlur={handleOnBlur} />;
