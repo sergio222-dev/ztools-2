@@ -11,6 +11,23 @@ export class MongoTransactionRepository implements TransactionRepository {
     private transactionModel: Model<Transaction>,
   ) {}
   async findAll(): Promise<Transaction[]> {
-    return this.transactionModel.find().exec();
+    const transactions = await this.transactionModel.find().exec();
+
+    // const transactionsWithId = transactions.map((transaction) => {
+    //   return transaction.$set({
+    //     id: transaction._id
+    //   });
+    // });
+
+    return transactions;
+  }
+
+  async save(transaction: Transaction): Promise<void> {
+    const createdTransaction = new this.transactionModel(transaction);
+    // createdTransaction.$set({
+    //   _id: createdTransaction.id,
+    //   id: undefined,
+    // });
+    await createdTransaction.save();
   }
 }
