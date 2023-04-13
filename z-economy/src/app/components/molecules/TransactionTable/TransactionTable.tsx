@@ -30,7 +30,7 @@ interface TransactionTableProperties<T> {
 interface TransactionOperators<T> {
   EditableFooterSaveHandler: (row: Row<T>, table: Table<T>) => void;
   EditableFooterCancelHandler: (row: Row<T>) => void;
-  handleClickRow: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
+  handleRowClick: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
 }
 
 export function TransactionTable<T>({
@@ -52,21 +52,21 @@ export function TransactionTable<T>({
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
-    meta: {
-      updateData: (rowIndex: number, columnId: any, value: any) => {
-        setTableData(old =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex]!,
-                [columnId]: value,
-              };
-            }
-            return row;
-          }),
-        );
-      },
-    },
+    // meta: {
+    //   updateData: (rowIndex: number, columnId: any, value: any) => {
+    //     setTableData(old =>
+    //       old.map((row, index) => {
+    //         if (index === rowIndex) {
+    //           return {
+    //             ...old[rowIndex]!,
+    //             [columnId]: value,
+    //           };
+    //         }
+    //         return row;
+    //       }),
+    //     );
+    //   },
+    // },
     debugTable: true,
   });
 
@@ -120,7 +120,7 @@ export function TransactionTable<T>({
                   data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                   key={cell.id}
                   onClick={() => {
-                    operators.handleClickRow && operators.handleClickRow(row, table, cell);
+                    operators.handleRowClick && operators.handleRowClick(row, table, cell);
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

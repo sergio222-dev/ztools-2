@@ -20,20 +20,20 @@ interface AllAccountPageModel {
 interface AllAccountPageOperators {
   EditableFooterSaveHandler: (row: Row<Transaction>, table: Table<Transaction>) => void;
   EditableFooterCancelHandler: (row: Row<Transaction>) => void;
-  handleClickRow: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
+  handleRowClick: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
 }
 
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
-  const [editingCell, setEditingCell] = useState('');
+  const [editingRow, setEditingRow] = useState('');
   const [editableValue, setEditableValue] = useState<Transaction | object>({});
-  const { data, error, isLoading } = useTransaction();
+  const { data, error, isLoading, updateData, createData } = useTransaction();
   const reference = useRef<HTMLElement>(null);
   const tableReference = useRef<Table<Transaction>>();
   const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
 
   useOutsideClick(reference, () => {
-    if (editingCell !== '') setEditingCell('');
+    if (editingRow !== '') setEditingRow('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
       tableReference.current.toggleAllRowsExpanded(false);
   });
@@ -55,7 +55,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
               indeterminate: table.getIsSomeRowsSelected(),
               onChange: table.getToggleAllRowsSelectedHandler(),
               onClick: () => {
-                editingCell !== '' && setEditingCell('');
+                editingRow !== '' && setEditingRow('');
                 table.toggleAllRowsExpanded(false);
               },
             }}
@@ -92,7 +92,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={editingCell === info.row.id}
+            isEditable={editingRow === info.row.id}
             defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
             onChangeValue={value => {
               setEditableValue({
@@ -110,7 +110,19 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'PAYEE',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={editingRow === info.row.id}
+            defaultValue={info.getValue()}
+            onChangeValue={value => {
+              console.log(value);
+              console.log(editableValue);
+              setEditableValue({
+                ...editableValue,
+                [info.column.id]: value,
+              });
+              console.log(editableValue);
+            }}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -120,7 +132,16 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'CATEGORY',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={editingRow === info.row.id}
+            defaultValue={info.getValue()}
+            // onChangeValue={value => {
+            //   setEditableValue({
+            //     ...editableValue,
+            //     [info.row.original.memo]: value,
+            //   });
+            // }}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -130,7 +151,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'MEMO',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={editingCell === info.row.id} defaultValue={info.getValue()} />
+          <EditableCell isEditable={editingRow === info.row.id} defaultValue={info.getValue()} />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -141,7 +162,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={editingCell === info.row.id}
+            isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -158,7 +179,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
-            isEditable={editingCell === info.row.id}
+            isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             type={new NumericTextType().getType()}
           />
@@ -180,7 +201,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   ];
 
   // OPERATORS
-  const handleClickRow = (
+  const handleRowClick = (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
@@ -192,9 +213,8 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       row.toggleSelected();
       return;
     }
-
     if (row.getIsSelected()) {
-      editingCell !== row.id && setEditingCell(row.id);
+      editingRow !== row.id && setEditingRow(row.id);
       setEditableValue(row.original);
       table.setExpanded(() => ({
         [row.id]: true,
@@ -204,32 +224,33 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       }));
       return;
     }
-    editingCell !== '' && setEditingCell('');
+    editingRow !== '' && setEditingRow('');
     setEditableValue({});
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     row.toggleSelected();
   };
 
-  const EditableFooterSaveHandler = (row: Row<Transaction>, table: Table<Transaction>) => {
-    editingCell !== '' && setEditingCell('');
+  const EditableFooterSaveHandler = (row: Row<Transaction>) => {
+    void updateData(editableValue as Transaction);
+    editingRow !== '' && setEditingRow('');
     setEditableValue({});
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };
 
   const EditableFooterCancelHandler = (row: Row<Transaction>) => {
-    editingCell !== '' && setEditingCell('');
+    editingRow !== '' && setEditingRow('');
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };
 
   // SIDE EFFECTS
   // useEffect(() => {
-  //   if (editingCell === '') return;
+  //   if (editingRow === '') return;
   //
-  //
-  // }, [editingCell]);
+  //   void updateData(editableValue as Transaction);
+  // }, [editableValue]);
 
   return [
     {
@@ -240,7 +261,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       tableReference,
     },
     {
-      handleClickRow,
+      handleRowClick,
       EditableFooterSaveHandler,
       EditableFooterCancelHandler,
     },

@@ -20,8 +20,8 @@ export function EditableCell(properties: EditableCellProperties) {
   };
 
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
     onChangeValue && onChangeValue(event.target.value);
+    setValue(event.target.value);
   };
 
   // return <Input defaultValue={value} onChange={handleOnChange} onBlur={handleOnBlur} />;

@@ -17,4 +17,8 @@ export class AxiosTransactionRepository implements TransactionRepository {
     await this.axios.post('/transactions/create', transaction);
     return;
   }
+
+  async update(transaction: Transaction): Promise<void> {
+    await this.axios.put('/transactions/update', transaction);
+  }
 }

@@ -9,7 +9,6 @@ export function AllAccountsPage() {
   const [model, operators] = useAllAccountPageHooks();
 
   const { columns, loadedData, reference, tableReference } = model;
-  const { handleClickRow } = operators;
 
   return (
     <div className={cls(styles.all_accounts_page)}>
