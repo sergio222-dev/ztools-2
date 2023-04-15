@@ -1,16 +1,20 @@
-import { Body, Controller, Get, Injectable, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Injectable, Param, Post, Put, Req } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
-import { Transaction } from 'mongodb';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionFindAllQuery } from '@budget/transactions/application/useCase/find/TransactionFindAll.query';
 import { TransactionCreateCommand } from '@budget/transactions/application/useCase/create/TransactionCreate.command';
+import { TransactionUpdateCommand } from '@budget/transactions/application/useCase/update/TransactionUpdate.command';
+import { TransactionFindOneByIdQuery } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
+import { Transaction } from '@budget/transactions/domain/Transaction';
+import { NotFoundError } from 'rxjs';
 
-@Controller('transactions')
+@Controller('transaction')
+@ApiTags('transactions')
 @Injectable()
-export class TransactionsController {
+export class TransactionController {
   constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}
 
-  @Get('all')
+  @Get()
   @ApiResponse({
     status: 200,
     schema: {
@@ -31,11 +35,24 @@ export class TransactionsController {
     },
   })
   async findAll(): Promise<Transaction[]> {
-    console.log(process.env.asd);
     return await this.queryBus.execute<TransactionFindAllQuery, Transaction[]>(new TransactionFindAllQuery());
   }
 
-  @Post('create')
+  @Get(':id')
+  @ApiResponse({
+    status: 200,
+  })
+  async findOneById(@Param('id') id: string): Promise<Transaction> {
+    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(
+      new TransactionFindOneByIdQuery(id),
+    );
+
+    if (transaction.id === '') throw new NotFoundError(`the transaction with id ${id} doesn't exists`);
+
+    return transaction;
+  }
+
+  @Post()
   @ApiBody({
     schema: {
       type: 'object',
@@ -61,6 +78,29 @@ export class TransactionsController {
       body.memo,
       body.date,
     );
+    await this.commandBus.execute(command);
+  }
+
+  @Put()
+  @ApiResponse({
+    status: 201,
+  })
+  async update(@Body() body: TransactionUpdateCommand): Promise<void> {
+    const query = new TransactionFindOneByIdQuery(body.id);
+
+    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
+
+    if (transaction.id === '') throw new NotFoundError(`the transaction with id ${body.id} doesn't exists`);
+
+    const command = new TransactionUpdateCommand(
+      body.id,
+      body.inflow,
+      body.outflow,
+      body.payee,
+      body.memo,
+      body.date,
+    );
+
     await this.commandBus.execute(command);
   }
 }

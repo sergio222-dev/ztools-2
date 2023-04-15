@@ -11,15 +11,7 @@ export class MongoTransactionRepository implements TransactionRepository {
     private transactionModel: Model<Transaction>,
   ) {}
   async findAll(): Promise<Transaction[]> {
-    const transactions = await this.transactionModel.find().exec();
-
-    // const transactionsWithId = transactions.map((transaction) => {
-    //   return transaction.$set({
-    //     id: transaction._id
-    //   });
-    // });
-
-    return transactions;
+    return await this.transactionModel.find().exec();
   }
 
   async save(transaction: Transaction): Promise<void> {
@@ -29,5 +21,36 @@ export class MongoTransactionRepository implements TransactionRepository {
     //   id: undefined,
     // });
     await createdTransaction.save();
+  }
+
+  async update(transaction: Transaction): Promise<void> {
+    const oldTransaction = await this.transactionModel.findById(transaction.id).exec();
+
+    oldTransaction?.$set('isNew', false);
+
+    oldTransaction?.set('inflow', transaction.inflow);
+    oldTransaction?.set('outflow', transaction.outflow);
+    oldTransaction?.set('payee', transaction.payee);
+    oldTransaction?.set('memo', transaction.memo);
+    oldTransaction?.set('date', transaction.date);
+    oldTransaction?.set('updatedAt', new Date());
+    await oldTransaction?.save();
+  }
+
+  async findOneById(id: string): Promise<Transaction> {
+    const transaction = await this.transactionModel.findById(id).exec();
+
+    if (!transaction) {
+      return Transaction.CREATE(id, '0', '0', '', '', new Date());
+    }
+
+    return Transaction.CREATE(
+      id,
+      transaction.inflow,
+      transaction.outflow,
+      transaction.payee,
+      transaction.memo,
+      transaction.date,
+    );
   }
 }

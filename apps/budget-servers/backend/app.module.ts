@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { TransactionsController } from './controller/transactions/transactions.controller';
+import { TransactionController } from './controller/transactions/transactionController';
 import { BudgetModule } from '../src/budget.module';
 
-const controllers = [TransactionsController];
+const controllers = [TransactionController];
 
 const environmentFileName = `.${process.env.NODE_ENV || 'development'}.env`;
 
