@@ -10,13 +10,7 @@ const config: Config = {
   rootDir: '.',
   testRegex: '.*\\.test\\.ts$',
   coverageDirectory: './coverage',
-  collectCoverageFrom: [
-    '**/*.(t|j)s',
-    '!**/node_modules/**',
-    '!**/dist/**',
-    '!src/shared/**',
-    '!**/coverage/**',
-  ],
+  collectCoverageFrom: ['**/*.(t|j)s', '!**/node_modules/**', '!**/dist/**', '!**/coverage/**', '!test/**'],
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
