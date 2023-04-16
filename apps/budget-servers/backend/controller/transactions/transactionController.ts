@@ -1,12 +1,23 @@
-import { Body, Controller, Get, Injectable, Param, Post, Put, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionFindAllQuery } from '@budget/transactions/application/useCase/find/TransactionFindAll.query';
 import { TransactionCreateCommand } from '@budget/transactions/application/useCase/create/TransactionCreate.command';
 import { TransactionUpdateCommand } from '@budget/transactions/application/useCase/update/TransactionUpdate.command';
 import { TransactionFindOneByIdQuery } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
 import { Transaction } from '@budget/transactions/domain/Transaction';
-import { NotFoundError } from 'rxjs';
+import { TransactionDeleteCommand } from '@budget/transactions/application/useCase/delete/TransactionDelete.command';
 
 @Controller('transaction')
 @ApiTags('transactions')
@@ -34,6 +45,9 @@ export class TransactionController {
       },
     },
   })
+  @ApiOperation({
+    description: 'Get all transactions',
+  })
   async findAll(): Promise<Transaction[]> {
     return await this.queryBus.execute<TransactionFindAllQuery, Transaction[]>(new TransactionFindAllQuery());
   }
@@ -47,7 +61,8 @@ export class TransactionController {
       new TransactionFindOneByIdQuery(id),
     );
 
-    if (transaction.id === '') throw new NotFoundError(`the transaction with id ${id} doesn't exists`);
+    if (transaction.id === '')
+      throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
     return transaction;
   }
@@ -69,15 +84,8 @@ export class TransactionController {
   @ApiResponse({
     status: 201,
   })
-  async createAction(@Body() body: TransactionCreateCommand): Promise<void> {
-    const command = new TransactionCreateCommand(
-      body.id,
-      body.inflow,
-      body.outflow,
-      body.payee,
-      body.memo,
-      body.date,
-    );
+  async create(@Body() { id, date, outflow, payee, memo, inflow }: TransactionCreateCommand): Promise<void> {
+    const command = new TransactionCreateCommand(id, inflow, outflow, payee, memo, date);
     await this.commandBus.execute(command);
   }
 
@@ -85,21 +93,29 @@ export class TransactionController {
   @ApiResponse({
     status: 201,
   })
-  async update(@Body() body: TransactionUpdateCommand): Promise<void> {
-    const query = new TransactionFindOneByIdQuery(body.id);
+  async update(@Body() { id, inflow, outflow, payee, memo, date }: TransactionUpdateCommand): Promise<void> {
+    const query = new TransactionFindOneByIdQuery(id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
-    if (transaction.id === '') throw new NotFoundError(`the transaction with id ${body.id} doesn't exists`);
+    if (transaction.id === '')
+      throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new TransactionUpdateCommand(
-      body.id,
-      body.inflow,
-      body.outflow,
-      body.payee,
-      body.memo,
-      body.date,
-    );
+    const command = new TransactionUpdateCommand(id, inflow, outflow, payee, memo, date);
+
+    await this.commandBus.execute(command);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    const query = new TransactionFindOneByIdQuery(id);
+
+    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
+
+    if (transaction.id === '')
+      throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+
+    const command = new TransactionDeleteCommand(id);
 
     await this.commandBus.execute(command);
   }

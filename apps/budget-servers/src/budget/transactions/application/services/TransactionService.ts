@@ -24,4 +24,8 @@ export class TransactionService {
   async findOneById(id: string): Promise<Transaction> {
     return await this.transactionRepository.findOneById(id);
   }
+
+  async deleteOneById(id: string): Promise<void> {
+    await this.transactionRepository.delete(id);
+  }
 }

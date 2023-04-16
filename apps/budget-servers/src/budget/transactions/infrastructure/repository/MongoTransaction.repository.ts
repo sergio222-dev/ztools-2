@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Transaction } from '../../domain/Transaction';
+import { TransactionFindOneByIdQuery } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
 
 @Injectable()
 export class MongoTransactionRepository implements TransactionRepository {
@@ -16,10 +17,6 @@ export class MongoTransactionRepository implements TransactionRepository {
 
   async save(transaction: Transaction): Promise<void> {
     const createdTransaction = new this.transactionModel(transaction);
-    // createdTransaction.$set({
-    //   _id: createdTransaction.id,
-    //   id: undefined,
-    // });
     await createdTransaction.save();
   }
 
@@ -41,7 +38,7 @@ export class MongoTransactionRepository implements TransactionRepository {
     const transaction = await this.transactionModel.findById(id).exec();
 
     if (!transaction) {
-      return Transaction.CREATE(id, '0', '0', '', '', new Date());
+      return Transaction.CREATE('', '0', '0', '', '', new Date());
     }
 
     return Transaction.CREATE(
@@ -52,5 +49,10 @@ export class MongoTransactionRepository implements TransactionRepository {
       transaction.memo,
       transaction.date,
     );
+  }
+
+  async delete(id: string): Promise<void> {
+    const query = new TransactionFindOneByIdQuery(id);
+    await this.transactionModel.findByIdAndDelete(id).exec();
   }
 }

@@ -6,6 +6,7 @@ import { TransactionFindAllHandler } from './transactions/application/useCase/fi
 import { TransactionCreateHandler } from '@budget/transactions/application/useCase/create/TransactionCreate.handler';
 import { TransactionUpdateHandler } from '@budget/transactions/application/useCase/update/TransactionUpdate.handler';
 import { TransactionFindOneByIdHandler } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.handler';
+import { TransactionDeleteHandler } from '@budget/transactions/application/useCase/delete/TransactionDelete.handler';
 
 // mongo schemas
 import { TransactionSchema } from './transactions/infrastructure/mongo/transaction.schema';
@@ -20,6 +21,7 @@ const budget = {
     TransactionCreateHandler,
     TransactionUpdateHandler,
     TransactionFindOneByIdHandler,
+    TransactionDeleteHandler,
   ],
   schemas: [
     {
