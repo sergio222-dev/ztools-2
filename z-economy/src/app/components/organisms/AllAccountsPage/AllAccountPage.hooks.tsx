@@ -26,7 +26,13 @@ interface AllAccountPageOperators {
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // MODEL
   const [editingRow, setEditingRow] = useState('');
-  const [editableValue, setEditableValue] = useState<Transaction | object>({});
+  // const [editableValue, setEditableValue] = useState<Transaction | object>({});
+  // const editableValue = useRef<Transaction | object>({});
+
+  const editableValue = useRef<(object & { [key: string]: string }) | (Transaction & { [key: string]: any })>(
+    {},
+  );
+
   const { data, error, isLoading, updateData, createData } = useTransaction();
   const reference = useRef<HTMLElement>(null);
   const tableReference = useRef<Table<Transaction>>();
@@ -94,12 +100,12 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           <EditableCell
             isEditable={editingRow === info.row.id}
             defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
-            onChangeValue={value => {
-              setEditableValue({
-                ...editableValue,
-                [info.column.id]: value,
-              });
-            }}
+            // onChangeValue={value => {
+            //   setEditableValue({
+            //     ...editableValue,
+            //     [info.column.id]: value,
+            //   });
+            // }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
@@ -114,13 +120,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              console.log(value);
-              console.log(editableValue);
-              setEditableValue({
-                ...editableValue,
-                [info.column.id]: value,
-              });
-              console.log(editableValue);
+              editableValue.current[info.column.id] = value;
             }}
           />
         ) : (
@@ -135,12 +135,9 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           <EditableCell
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
-            // onChangeValue={value => {
-            //   setEditableValue({
-            //     ...editableValue,
-            //     [info.row.original.memo]: value,
-            //   });
-            // }}
+            onChangeValue={value => {
+              editableValue.current[info.column.id] = value;
+            }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
@@ -151,7 +148,13 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       header: () => 'MEMO',
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell isEditable={editingRow === info.row.id} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={editingRow === info.row.id}
+            defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editableValue.current[info.column.id] = value;
+            }}
+          />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
@@ -164,10 +167,17 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           <EditableCell
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editableValue.current[info.column.id] = value;
+            }}
             type={new NumericTextType().getType()}
           />
         ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={false}
+            defaultValue={info.getValue()}
+            type={new NumericTextType().getType()}
+          />
         ),
       meta: {
         type: new NumericTextType(),
@@ -181,10 +191,17 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           <EditableCell
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editableValue.current[info.column.id] = value;
+            }}
             type={new NumericTextType().getType()}
           />
         ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
+          <EditableCell
+            isEditable={false}
+            defaultValue={info.getValue()}
+            type={new NumericTextType().getType()}
+          />
         ),
       meta: {
         type: new NumericTextType(),
@@ -215,7 +232,8 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     }
     if (row.getIsSelected()) {
       editingRow !== row.id && setEditingRow(row.id);
-      setEditableValue(row.original);
+      // setEditableValue(row.original);
+      editableValue.current = row.original;
       table.setExpanded(() => ({
         [row.id]: true,
       }));
@@ -225,16 +243,18 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       return;
     }
     editingRow !== '' && setEditingRow('');
-    setEditableValue({});
+    // setEditableValue({});
+    editableValue.current = {};
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     row.toggleSelected();
   };
 
   const EditableFooterSaveHandler = (row: Row<Transaction>) => {
-    void updateData(editableValue as Transaction);
+    void updateData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
-    setEditableValue({});
+    // setEditableValue({});
+    editableValue.current = {};
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };

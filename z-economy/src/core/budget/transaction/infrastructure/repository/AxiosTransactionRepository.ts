@@ -8,17 +8,18 @@ export class AxiosTransactionRepository implements TransactionRepository {
   constructor(@inject('AxiosInstance') private axios: AxiosInstance) {}
 
   async getAll(): Promise<Transaction[]> {
-    const { data } = await this.axios.get<Transaction[]>('/transactions/all');
+    const { data } = await this.axios.get<Transaction[]>('/transaction');
 
     return data;
   }
 
   async save(transaction: Transaction): Promise<void> {
-    await this.axios.post('/transactions/create', transaction);
+    await this.axios.post('/transaction', transaction);
     return;
   }
 
   async update(transaction: Transaction): Promise<void> {
-    await this.axios.put('/transactions/update', transaction);
+    await this.axios.put('/transaction', transaction);
+    return;
   }
 }
