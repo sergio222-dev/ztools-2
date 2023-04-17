@@ -2,10 +2,11 @@
 @use '../../styles/functions';
 
 .z_table {
-  width: 100%;
+  //width: 100%;
   border-spacing: 0;
   font-size: 0.75rem;
   font-weight: 400;
+  flex: 1 1 auto;
 
   .z_table_header {
     text-transform: uppercase;
@@ -15,6 +16,7 @@
     padding: 0 functions.spacing(1);
     border-left: none;
     border-top: none;
+    position: relative;
 
     &:last-child {
       border-right: none;
@@ -26,6 +28,33 @@
 
     &[data-type='other'] {
       text-align: center;
+    }
+
+    .resizer {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: const.$primary-color;
+      cursor: col-resize;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .resizer.isResizing {
+      background: const.$light-primary-color;
+      opacity: 1;
+    }
+
+    @media (hover: hover) {
+      .resizer {
+        opacity: 0;
+      }
+
+      *:hover > .resizer {
+        opacity: 1;
+      }
     }
 
     // .z_sorting_icon {

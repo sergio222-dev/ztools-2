@@ -8,12 +8,16 @@ import {
   Table,
   Row,
   Cell,
+  ColumnResizeMode,
+  Header,
 } from '@tanstack/react-table';
-import { Fragment, MutableRefObject, useEffect, useMemo, useState } from 'react';
+import { Fragment, MutableRefObject, useEffect, useMemo, useReducer, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import cls from 'classnames';
+import { isUndefined } from 'swr/_internal';
 
 // interface SubComponentProperties<T> {
 //   onSave: () => void;
@@ -43,30 +47,17 @@ export function TransactionTable<T>({
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
 
+  const columnResizeMode = 'onChange';
   // TABLE
   const table = useReactTable<T>({
     data: tableData,
     columns,
+    columnResizeMode,
     enableMultiRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
-    // meta: {
-    //   updateData: (rowIndex: number, columnId: any, value: any) => {
-    //     setTableData(old =>
-    //       old.map((row, index) => {
-    //         if (index === rowIndex) {
-    //           return {
-    //             ...old[rowIndex]!,
-    //             [columnId]: value,
-    //           };
-    //         }
-    //         return row;
-    //       }),
-    //     );
-    //   },
-    // },
     debugTable: true,
   });
 
@@ -87,23 +78,52 @@ export function TransactionTable<T>({
                 className={styles.z_table_header}
                 key={header.id}
                 data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
+                {...{
+                  colSpan: header.colSpan,
+                  style: {
+                    width: header.getSize(),
+                  },
+                }}
               >
                 {header.isPlaceholder ? undefined : (
-                  <div
-                    {...{
-                      className: header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : '',
-                      onClick: header.column.getToggleSortingHandler(),
-                    }}
-                  >
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {header.id.includes('checkbox')
-                      ? undefined
-                      : {
-                          asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
-                          desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
-                          // eslint-disable-next-line unicorn/no-null
-                        }[header.column.getIsSorted() as string] ?? null}
-                  </div>
+                  <>
+                    <div
+                      {...{
+                        // className: header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : '',
+                        className: cls(header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : ''),
+                        onClick: header.id.includes('checkbox')
+                          ? undefined
+                          : header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.id.includes('checkbox')
+                        ? undefined
+                        : {
+                            asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
+                            desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
+                            // eslint-disable-next-line unicorn/no-null
+                          }[header.column.getIsSorted() as string] ?? null}
+                    </div>
+                    {header.id.includes('checkbox') || header.id.includes('inflow') ? undefined : (
+                      <div
+                        {...{
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: cls(
+                            styles.resizer,
+                            header.column.getIsResizing() ? styles.isResizing : '',
+                          ),
+                          // style: {
+                          //   transform:
+                          //     columnResizeMode === 'onEnd' && header.column.getIsResizing()
+                          //       ? `translateX(${table.getState().columnSizingInfo.deltaOffset}px)`
+                          //       : '',
+                          // },
+                        }}
+                      />
+                    )}
+                  </>
                 )}
               </th>
             ))}
@@ -121,6 +141,11 @@ export function TransactionTable<T>({
                   key={cell.id}
                   onClick={() => {
                     operators.handleRowClick && operators.handleRowClick(row, table, cell);
+                  }}
+                  {...{
+                    style: {
+                      width: cell.column.getSize(),
+                    },
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

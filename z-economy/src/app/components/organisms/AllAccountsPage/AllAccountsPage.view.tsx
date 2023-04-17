@@ -57,7 +57,7 @@ export function AllAccountsPage() {
           </div>
         </div>
       </section>
-      <section ref={reference}>
+      <section ref={reference} style={{ display: 'flex' }}>
         <TransactionTable<Transaction>
           columns={columns}
           data={loadedData}
