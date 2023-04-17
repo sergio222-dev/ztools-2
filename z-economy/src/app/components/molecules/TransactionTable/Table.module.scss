@@ -40,6 +40,7 @@
       cursor: col-resize;
       user-select: none;
       touch-action: none;
+      opacity: 0;
 
       &:hover {
         opacity: 1;
@@ -49,12 +50,6 @@
     .resizer.isResizing {
       background: const.$light-primary-color;
       opacity: 1;
-    }
-
-    @media (hover: hover) {
-      .resizer {
-        opacity: 0;
-      }
     }
 
     // .z_sorting_icon {
@@ -67,6 +62,8 @@
     padding: 0 functions.spacing(1);
     border: 1px none;
     border-bottom: 1px solid const.$page-light-border-color;
+    text-overflow: ellipsis;
+    //white-space: nowrap ;
 
     &[data-type='numeric'] {
       text-align: right;

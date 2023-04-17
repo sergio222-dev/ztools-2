@@ -81,7 +81,8 @@ export function TransactionTable<T>({
                 {...{
                   colSpan: header.colSpan,
                   style: {
-                    width: header.getSize(),
+                    width:
+                      header.column.columnDef.meta?.type.getType() ?? 'other' ? undefined : header.getSize(),
                   },
                 }}
               >
