@@ -5,6 +5,7 @@ export class TransactionUpdateCommand {
     private readonly _outflow: string,
     private readonly _payee: string,
     private readonly _memo: string,
+    private readonly _category: string,
     private readonly _date: Date,
   ) {}
 
@@ -26,6 +27,10 @@ export class TransactionUpdateCommand {
 
   get memo(): string {
     return this._memo;
+  }
+
+  get category(): string {
+    return this._category;
   }
 
   get date(): Date {

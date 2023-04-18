@@ -44,9 +44,9 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       tableReference.current.toggleAllRowsExpanded(false);
   });
 
-  data?.map(transaction => {
-    transaction.category = 'Entertainment';
-  });
+  // data?.map(transaction => {
+  //   transaction.category = 'Entertainment';
+  // });
 
   const columnHelper = createColumnHelper<Transaction>();
   const columns: ColumnDef<Transaction, any>[] = [
@@ -254,7 +254,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   };
 
   const EditableFooterSaveHandler = (row: Row<Transaction>) => {
-    void updateData(editableValue.current as Transaction);
+    void createData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
     // setEditableValue({});
     editableValue.current = {};

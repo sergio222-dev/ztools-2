@@ -38,7 +38,7 @@ export class MongoTransactionRepository implements TransactionRepository {
     const transaction = await this.transactionModel.findById(id).exec();
 
     if (!transaction) {
-      return Transaction.CREATE('', '0', '0', '', '', new Date());
+      return Transaction.CREATE('', '0', '0', '', '', '', new Date());
     }
 
     return Transaction.CREATE(
@@ -47,6 +47,7 @@ export class MongoTransactionRepository implements TransactionRepository {
       transaction.outflow,
       transaction.payee,
       transaction.memo,
+      transaction.category,
       transaction.date,
     );
   }

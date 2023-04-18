@@ -9,8 +9,8 @@ export class TransactionCreateHandler implements ICommandHandler<TransactionCrea
   constructor(private transactionService: TransactionService) {}
 
   async execute(command: TransactionCreateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, date } = command;
-    const transaction = Transaction.CREATE(id, inflow, outflow, payee, memo, new Date(date));
+    const { id, inflow, outflow, payee, memo, category, date } = command;
+    const transaction = Transaction.CREATE(id, inflow, outflow, payee, memo, category, new Date(date));
     await this.transactionService.create(transaction);
   }
 }

@@ -4,6 +4,7 @@ export class Transaction {
   public readonly outflow: string;
   public readonly payee: string;
   public readonly memo: string;
+  public readonly category: string;
   public readonly date: Date;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
@@ -13,6 +14,7 @@ export class Transaction {
     outflow: string,
     payee: string,
     memo: string,
+    category: string,
     date: Date,
     createdAt: Date,
     updatedAt: Date,
@@ -22,12 +24,21 @@ export class Transaction {
     this.outflow = outflow;
     this.payee = payee;
     this.memo = memo;
+    this.category = category;
     this.date = date;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
 
-  static CREATE(id: string, inflow: string, outflow: string, payee: string, memo: string, date: Date) {
-    return new Transaction(id, inflow, outflow, payee, memo, date, new Date(), new Date());
+  static CREATE(
+    id: string,
+    inflow: string,
+    outflow: string,
+    payee: string,
+    memo: string,
+    category: string,
+    date: Date,
+  ) {
+    return new Transaction(id, inflow, outflow, payee, memo, category, date, new Date(), new Date());
   }
 }
