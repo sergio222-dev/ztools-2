@@ -68,6 +68,9 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
           />
         </div>
       ),
+      size: 30,
+      minSize: 30,
+      maxSize: 30,
       cell: ({ row }) => (
         <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
