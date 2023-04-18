@@ -4,13 +4,18 @@ import { TransactionGetAll } from '@core/budget/transaction/application/useCase/
 import { TransactionUpdate } from '@core/budget/transaction/application/useCase/TransactionUpdate';
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import { da } from 'date-fns/locale';
 
 export const useTransaction = () => {
+  // SERVICES
   const transactionGetAll = container.resolve(TransactionGetAll);
   const transactionUpdate = container.resolve(TransactionUpdate);
   const transactionCreate = container.resolve(TransactionCreate);
+
+  // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
 
+  // HANDLERS
   const updateData = async (updatedTransaction: Transaction) => {
     if (!data) return;
 
@@ -30,8 +35,8 @@ export const useTransaction = () => {
   };
 
   return {
-    data,
-    error,
+    data: data ?? [],
+    error: error,
     updateData,
     createData,
     isLoading,

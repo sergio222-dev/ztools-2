@@ -1,0 +1,109 @@
+@use '../../../styles/constants' as const;
+@use '../../../styles/functions';
+
+.z_table {
+  //width: 100%;
+  border-spacing: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  flex: 1 1 auto;
+
+  .z_table_header {
+    text-transform: uppercase;
+    font-weight: unset;
+    text-align: left;
+    border: 1px solid const.$page-light-border-color;
+    padding: 0 functions.spacing(1);
+    border-left: none;
+    border-top: none;
+    position: relative;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &[data-type='numeric'] {
+      text-align: right;
+    }
+
+    &[data-type='other'] {
+      text-align: center;
+    }
+
+    .resizer {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 5px;
+      background: const.$primary-color;
+      cursor: col-resize;
+      user-select: none;
+      touch-action: none;
+      opacity: 0;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .resizer.isResizing {
+      background: const.$light-primary-color;
+      opacity: 1;
+    }
+
+    // .z_sorting_icon {
+    //  margin: 0;
+    //  font-size: functions.spacing(2);
+    // }
+  }
+
+  .z_table_cell {
+    padding: 0 functions.spacing(1);
+    border: 1px none;
+    border-bottom: 1px solid const.$page-light-border-color;
+    text-overflow: ellipsis;
+    //white-space: nowrap ;
+
+    &[data-type='numeric'] {
+      text-align: right;
+    }
+
+    &[data-type='other'] {
+      text-align: center;
+      width: functions.spacing(5);
+    }
+  }
+
+  %z_table_row {
+    height: 40px;
+    user-select: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+
+  .z_table_row_unselected {
+    @extend %z_table_row;
+  }
+  .z_table_row_selected {
+    @extend %z_table_row;
+    background-color: const.$selection-color;
+    cursor: text;
+  }
+
+  .z_table_subcomponent_tr {
+    position: relative;
+    height: 40px;
+  }
+
+  .z_table_subcomponent_cell {
+    position: absolute;
+    text-align: right;
+    right: 0;
+    background-color: const.$selection-color;
+    width: 100%;
+    height: 40px;
+    border: 1px none;
+    border-bottom: 1px solid const.$page-light-border-color;
+  }
+}

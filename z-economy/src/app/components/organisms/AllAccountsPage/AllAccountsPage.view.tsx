@@ -4,11 +4,12 @@ import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
 import { useAllAccountPageHooks } from './AllAccountPage.hooks';
 import { Typography } from '@atoms/Typography/Typography';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import { TransactionTableView } from '../../tables/transactions/TransactionTable.view';
 
 export function AllAccountsPage() {
-  const [model, operators] = useAllAccountPageHooks();
+  // const [model, operators] = useAllAccountPageHooks();
 
-  const { columns, loadedData, reference, tableReference } = model;
+  // const { loadedData, reference, tableReference } = model;
 
   return (
     <div className={cls(styles.all_accounts_page)}>
@@ -57,13 +58,14 @@ export function AllAccountsPage() {
           </div>
         </div>
       </section>
-      <section ref={reference} style={{ display: 'flex' }}>
-        <TransactionTable<Transaction>
-          columns={columns}
-          data={loadedData}
-          tableReference={tableReference}
-          operators={operators}
-        />
+      <section>
+        <TransactionTableView />
+        {/*<TransactionTable<Transaction>*/}
+        {/*  columns={columns}*/}
+        {/*  data={loadedData}*/}
+        {/*  tableReference={tableReference}*/}
+        {/*  operators={operators}*/}
+        {/*/>*/}
       </section>
     </div>
   );
