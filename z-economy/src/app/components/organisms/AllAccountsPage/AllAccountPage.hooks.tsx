@@ -36,7 +36,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
   const { data, error, isLoading, updateData, createData } = useTransaction();
   const reference = useRef<HTMLElement>(null);
   const tableReference = useRef<Table<Transaction>>();
-  const loadedData = isLoading ? [] : error ? [] : (data as Transaction[]);
+  const loadedData = isLoading ? [] : (error ? [] : (data as Transaction[]));
 
   useOutsideClick(reference, () => {
     if (editingRow !== '') setEditingRow('');
