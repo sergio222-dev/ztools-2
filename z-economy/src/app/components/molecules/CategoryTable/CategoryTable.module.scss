@@ -1,0 +1,47 @@
+@use '../../styles/constants' as const;
+@use '../../styles/functions';
+@use '../../styles/mixins';
+
+.z_table {
+  width: 100%;
+  border-spacing: 0;
+  //font-size: 0.8rem;
+  //font-weight: 400;
+
+  .z_table_head {
+    text-transform: uppercase;
+    font-weight: unset;
+    text-align: left;
+    padding: 0 functions.spacing(1);
+    border: 1px none const.$page-light-border-color;
+    border-bottom-style: solid;
+
+    &[data-type='numeric'] {
+      text-align: right;
+    }
+
+    &[data-type='other'] {
+      text-align: center;
+    }
+  }
+
+  .z_table_cell {
+    border: 1px none const.$page-light-border-color;
+    border-bottom-style: solid;
+    padding: 0 functions.spacing(1);
+
+    &[data-type='numeric'] {
+      text-align: right;
+    }
+
+    &[data-type='other'] {
+      text-align: center;
+      width: functions.spacing(5);
+    }
+  }
+
+  .z_table_expansible_row {
+    background-color: const.$page-darker-background-color;
+  }
+
+}

@@ -1,0 +1,9 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins.scss';
+@use '../../styles/functions.scss';
+
+.z_input {
+  @include mixins.remove-default-input;
+  border-radius: const.$radius;
+  border: 2px solid const.$primary-color;
+}

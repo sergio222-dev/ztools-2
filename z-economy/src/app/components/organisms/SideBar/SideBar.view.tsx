@@ -1,32 +1,38 @@
 import styles from './SideBar.module.scss';
-import { IconButton } from '../../atoms/Button/IconButton';
+import { IconButton } from '@atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
-import { SidebarButton } from '../../atoms/Button/SidebarButton';
+import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
-import { useSideBarPresenter } from './SideBar.presenter';
+import { useSideBarHooks } from './SideBar.hooks';
+import { Typography } from '@atoms/Typography/Typography';
 
 export function SideBarView() {
-  const [model, operators] = useSideBarPresenter();
+  const [model, operators] = useSideBarHooks();
 
-  const { SIDEBAR_BUTTON_NAMES, SIDEBAR_BUTTON_ICONS, activeButton, toggleSidebar } = model;
+  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar } = model;
 
   const { handleSidebarButtonClick, handleSidebarCollapsibleClick } = operators;
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
       <div className={styles.menu_button_container}>
-        {SIDEBAR_BUTTON_NAMES.map((name, index) => {
+        {SIDEBAR_BUTTONS.map((button, index) => {
           return (
             <SidebarButton
-              key={name}
-              aria-selected={activeButton === name}
-              active={activeButton === name}
-              onClick={() => handleSidebarButtonClick(name)}
-              StartIcon={SIDEBAR_BUTTON_ICONS[index]}
+              key={button.name}
+              aria-selected={activeButton === button.route}
+              active={activeButton === button.route}
+              onClick={() => {
+                handleSidebarButtonClick(button.route);
+              }}
+              StartIcon={button.icon}
               className={styles.menu_button}
+              variant="base"
             >
-              <span className="z_text_a_left">{name}</span>
+              <div className="z_text_a_left">
+                <Typography size="large">{button.name}</Typography>
+              </div>
             </SidebarButton>
           );
         })}
@@ -48,7 +54,9 @@ export function SideBarView() {
         />
       </div>
       <div>
-        <Button className={styles.add_btn}>Add Account</Button>
+        <Button className={styles.add_btn}>
+          <Typography>Add Account</Typography>
+        </Button>
       </div>
       <IconButton className={styles.z_collapsible_icon_button} onClick={handleSidebarCollapsibleClick}>
         <TbLayoutSidebarLeftCollapse />

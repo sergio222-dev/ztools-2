@@ -5,6 +5,10 @@
   @return #{$unit * Const.$grid-size}px;
 }
 
+@function to-negative($value) {
+  @return calc(($value) * -1);
+}
+
 @function breakpoint-min($name, $breakpoints: Const.$grid-breakpoints) {
   $min: map.get($breakpoints, $name);
 

@@ -12,12 +12,12 @@
     padding: functions.spacing(2);
   }
 
-  .balances_contents {
+  .balance_contents {
     display: flex;
     flex-direction: column;
     justify-content: center;
 
-    .balances_symbol {
+    .balance_symbol {
       margin: 0;
       padding: functions.spacing(2);
       text-align: center;
@@ -41,7 +41,7 @@
 
   .all_accounts_page_title {
     background-color: const.$page-darker-background-color;
-    padding: 0 functions.spacing(2);
+    padding: functions.spacing(2);
   }
 
   .all_accounts_table {

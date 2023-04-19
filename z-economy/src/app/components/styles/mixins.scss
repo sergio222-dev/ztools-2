@@ -12,6 +12,12 @@
   cursor: pointer;
 }
 
+@mixin remove-default-input {
+  border-style: solid;
+  outline: none;
+  padding: functions.spacing(1);
+}
+
 @mixin media-breakpoint-up($name, $breakpoints: constants.$grid-breakpoints) {
   $min: functions.breakpoint-min($name, $breakpoints);
 
@@ -34,6 +40,6 @@
   }
 
   &.large {
-    font-size: #{$coefficient * 1.3}rem;
+    font-size: #{$coefficient * 1.12}rem;
   }
 }

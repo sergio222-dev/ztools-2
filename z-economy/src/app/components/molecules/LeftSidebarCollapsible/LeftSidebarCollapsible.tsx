@@ -1,8 +1,9 @@
 import styles from './LeftSidebarCollapsible.module.scss';
 import { CollapsibleButton } from '../../atoms';
 import { ReactNode, useState } from 'react';
-import { SidebarButton } from '../../atoms/Button/SidebarButton';
+import { SidebarButton } from '@atoms/Button/SidebarButton';
 import cls from 'classnames';
+import { Typography } from '@atoms/Typography/Typography';
 
 type AccountType = {
   name: string;
@@ -34,8 +35,12 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
       <CollapsibleButton onClick={handleContentVisible}>
         <div className="z_flex z_flex_ai_center z_col_gap_1">
           <span className={cls('z_flex_inline', styles.icon)}>{Icon}</span>
-          <span>BUDGET</span>
-          <span className={styles.amount}>{total}</span>
+          <div>
+            <Typography size="large">BUDGET</Typography>
+          </div>
+          <div className={styles.amount}>
+            <Typography size="large">${total}</Typography>
+          </div>
         </div>
       </CollapsibleButton>
       {isContentVisible && (
@@ -43,14 +48,15 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
           {accounts.map(a => (
             <SidebarButton
               key={a.name}
-              className={cls(
-                styles.collapsible_inside_button,
-                'z_stack_margin_bottom_item_1',
-                'z_padding_left_5',
-              )}
+              className="z_stack_margin_bottom_item_1 z_padding_left_5"
+              variant="base"
             >
-              <span className={styles.bank_name}>{a.name}</span>
-              <span className={styles.amount}>{a.total}</span>
+              <span className={styles.bank_name}>
+                <Typography>{a.name}</Typography>
+              </span>
+              <span className={styles.amount}>
+                <Typography>${a.total}</Typography>
+              </span>
             </SidebarButton>
           ))}
         </div>

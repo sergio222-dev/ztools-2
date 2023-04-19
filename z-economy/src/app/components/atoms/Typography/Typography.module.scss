@@ -1,15 +1,30 @@
 @use '../../styles/mixins';
+@use '../../styles/constants' as const;
 
 .typography {
   margin: 0;
 
   &.variant_info {
-    color: blue;
-
-    @include mixins.font-size-variant(0.7);
+    @include mixins.font-size-variant(1);
   }
 
   &.variant_normal {
-    @include mixins.font-size-variant(1.1);
+    @include mixins.font-size-variant(0.9);
   }
+
+  &.variant_bold {
+    @include mixins.font-size-variant(0.9);
+    font-weight: bold;
+  }
+
+  &.variant_title {
+    @include mixins.font-size-variant(1.25);
+  }
+
+  &.variant_balance {
+    @include mixins.font-size-variant(1.1);
+    color: const.$positive-background-color;
+    font-weight: bold;
+  }
+
 }
