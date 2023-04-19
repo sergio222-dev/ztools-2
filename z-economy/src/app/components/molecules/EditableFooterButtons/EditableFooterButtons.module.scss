@@ -1,0 +1,16 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+%button_margin {
+  margin-right: functions.spacing(1);
+  margin-top: 1px;
+}
+
+.cancel_button {
+  @extend %button_margin;
+}
+
+.save_button {
+  @extend %button_margin;
+}

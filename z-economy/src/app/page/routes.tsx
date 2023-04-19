@@ -3,6 +3,7 @@ import { Home } from './Home';
 import { AllAccounts } from '@page/AllAccounts';
 import { MainLayout } from '@page/MainLayout';
 import { Reports } from '@page/Reports';
+
 export const withLayout = (routes: RouteObject[]) => {
   return routes.map(r => ({
     ...r,

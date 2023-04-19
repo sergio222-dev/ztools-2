@@ -16,4 +16,16 @@ export class TransactionService {
   async findAll(): Promise<Transaction[]> {
     return this.transactionRepository.findAll();
   }
+
+  async update(transaction: Transaction): Promise<void> {
+    await this.transactionRepository.update(transaction);
+  }
+
+  async findOneById(id: string): Promise<Transaction> {
+    return await this.transactionRepository.findOneById(id);
+  }
+
+  async deleteOneById(id: string): Promise<void> {
+    await this.transactionRepository.delete(id);
+  }
 }

@@ -8,8 +8,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Transactions')
-    .setDescription('Transactions API')
+    .setTitle('Budget Server')
+    .setDescription('Busdget Server API')
     .setVersion('1.0')
     .build();
 

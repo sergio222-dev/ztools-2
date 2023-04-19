@@ -27,7 +27,7 @@
       "@page/*": ["src/app/page/*"],
       "@templates/*": ["src/app/templates/*"],
       "@utils/*": ["src/app/utils/*"],
-      "@core/*": ["src/core/*"],
+      "@core/*": ["src/core/*"]
     }
   },
   "include": ["src", "test"],

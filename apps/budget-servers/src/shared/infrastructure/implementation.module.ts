@@ -5,18 +5,18 @@ import { Implementation } from './enum';
 @Module({})
 export class ImplementationModule {
   static register(implementation: Implementation): DynamicModule {
-    let implementedmodule;
+    let implementedModule;
 
     switch (implementation) {
       case Implementation.mongo: {
-        implementedmodule = MongoModule.register();
+        implementedModule = MongoModule.register();
       }
     }
 
     return {
       module: ImplementationModule,
-      imports: [implementedmodule],
-      exports: [implementedmodule],
+      imports: [implementedModule],
+      exports: [implementedModule],
     };
   }
 }

@@ -1,14 +1,11 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
-import { TransactionTable } from '@molecules/TransactionTable/TransactionTable';
-import { useAllAccountPagePresenter } from './AllAccountPage.hooks';
+import { useAllAccountPageHooks } from './AllAccountPage.hooks';
 import { Typography } from '@atoms/Typography/Typography';
-import { Transaction } from '@core/budget/transactions/domain/Transaction';
+import { TransactionTableView } from '../../tables/transactions/TransactionTable.view';
 
 export function AllAccountsPage() {
-  const [model, operators] = useAllAccountPagePresenter();
-
-  const { columns, loadedData } = model;
+  const [model, operators] = useAllAccountPageHooks();
 
   return (
     <div className={cls(styles.all_accounts_page)}>
@@ -58,7 +55,7 @@ export function AllAccountsPage() {
         </div>
       </section>
       <section>
-        <TransactionTable<Transaction> columns={columns} data={loadedData} operators={operators} />
+        <TransactionTableView />
       </section>
     </div>
   );
