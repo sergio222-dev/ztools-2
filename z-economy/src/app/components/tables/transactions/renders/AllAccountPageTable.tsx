@@ -48,6 +48,7 @@ export function AllAccountPageTable({
   const table = useReactTable<Transaction>({
     data: tableData,
     columns,
+    getRowId: row => row.id,
     columnResizeMode,
     enableMultiRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
@@ -149,6 +150,7 @@ export function AllAccountPageTable({
             </tr>
             {row.getIsExpanded() && row.getIsSelected() && (
               <tr className={styles.z_table_subcomponent_tr}>
+                {}
                 {/* 2nd row is a custom 1 cell row */}
                 <EditableFooterButtons
                   className={styles.z_table_subcomponent_cell}

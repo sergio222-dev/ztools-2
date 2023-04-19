@@ -1,12 +1,9 @@
 import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
 import { container } from 'tsyringe';
 import { TransactionGetAll } from '@core/budget/transaction/application/useCase/TransactionGetAll';
 import { TransactionUpdate } from '@core/budget/transaction/application/useCase/TransactionUpdate';
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { da } from 'date-fns/locale';
-import { format } from 'date-fns';
 
 export const useTransaction = () => {
   // SERVICES
@@ -20,6 +17,7 @@ export const useTransaction = () => {
   const trigger = async () => {
     void mutate(
       async () => {
+        if (data && data[0].id === '') return data ?? [];
         const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', '');
         return [newTransaction, ...(data ?? [])];
       },
