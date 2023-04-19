@@ -84,7 +84,9 @@ export class TransactionController {
   @ApiResponse({
     status: 201,
   })
-  async create(@Body() { id, date, outflow, payee, memo, category, inflow }: TransactionCreateCommand): Promise<void> {
+  async create(
+    @Body() { id, date, outflow, payee, memo, category, inflow }: TransactionCreateCommand,
+  ): Promise<void> {
     const command = new TransactionCreateCommand(id, inflow, outflow, payee, memo, category, date);
     await this.commandBus.execute(command);
   }
@@ -93,7 +95,9 @@ export class TransactionController {
   @ApiResponse({
     status: 201,
   })
-  async update(@Body() { id, inflow, outflow, payee, memo, category, date }: TransactionUpdateCommand): Promise<void> {
+  async update(
+    @Body() { id, inflow, outflow, payee, memo, category, date }: TransactionUpdateCommand,
+  ): Promise<void> {
     const query = new TransactionFindOneByIdQuery(id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
@@ -101,7 +105,7 @@ export class TransactionController {
     if (transaction.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new TransactionUpdateCommand(id, inflow, outflow, payee, category , memo, date);
+    const command = new TransactionUpdateCommand(id, inflow, outflow, payee, memo, category, date);
 
     await this.commandBus.execute(command);
   }

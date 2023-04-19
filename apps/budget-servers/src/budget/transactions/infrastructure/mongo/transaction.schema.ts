@@ -32,6 +32,10 @@ export const TransactionSchema = new Schema<Document<string> & Transaction>(
       type: Date,
       required: true,
     },
+    category: {
+      type: String,
+      required: false,
+    },
     createdAt: {
       type: Date,
       required: true,

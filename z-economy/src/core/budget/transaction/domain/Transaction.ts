@@ -3,7 +3,7 @@ export class Transaction {
     readonly id: string,
     readonly date: string,
     readonly payee: string,
-    public category: string,
+    readonly category: string,
     readonly memo: string,
     readonly inflow: string,
     readonly outflow: string,

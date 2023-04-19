@@ -1,37 +1,33 @@
 import {
-  useReactTable,
-  ColumnDef,
-  getCoreRowModel,
-  flexRender,
-  getSortedRowModel,
-  getExpandedRowModel,
-  Table,
-  Row,
   Cell,
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  getSortedRowModel,
+  Row,
+  Table,
+  useReactTable,
 } from '@tanstack/react-table';
-import { Fragment, MutableRefObject, useEffect, useMemo, useState } from 'react';
+import { Fragment, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
-import { EditableFooterButtons } from '../../../molecules/EditableFooterButtons/EditableFooterButtons';
+import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
-
-// interface SubComponentProperties<T> {
-//   onSave: () => void;
-//   onCancel: () => void;
-// }
 
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   columns: ColumnDef<Transaction, unknown>[];
   data: Array<Transaction>;
-  operators: TransactionOperators;
-}
-
-interface TransactionOperators {
-  EditableFooterSaveHandler: (row: Row<Transaction>, table: Table<Transaction>) => void;
-  EditableFooterCancelHandler: (row: Row<Transaction>) => void;
-  handleRowClick: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
+  handleSaveEdit: (row: Row<Transaction>, table: Table<Transaction>) => void;
+  handleCancelEdit: (row: Row<Transaction>) => void;
+  handleOnEdit: (
+    row: Row<Transaction>,
+    table: Table<Transaction>,
+    cell: Cell<Transaction, string>,
+    selectedColumnId: MutableRefObject<string>,
+  ) => void;
 }
 
 export function AllAccountPageTable({
@@ -45,10 +41,11 @@ export function AllAccountPageTable({
   // STATE
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
+  const selectedColumnId = useRef('');
 
   const columnResizeMode = 'onChange';
   // TABLE
-  const table = useReactTable<T>({
+  const table = useReactTable<Transaction>({
     data: tableData,
     columns,
     columnResizeMode,
@@ -114,12 +111,6 @@ export function AllAccountPageTable({
                             styles.resizer,
                             header.column.getIsResizing() ? styles.isResizing : '',
                           ),
-                          // style: {
-                          //   transform:
-                          //     columnResizeMode === 'onEnd' && header.column.getIsResizing()
-                          //       ? `translateX(${table.getState().columnSizingInfo.deltaOffset}px)`
-                          //       : '',
-                          // },
                         }}
                       />
                     )}
@@ -140,7 +131,7 @@ export function AllAccountPageTable({
                   data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                   key={cell.id}
                   onClick={() => {
-                    handleOnEdit && handleOnEdit(row, table, cell);
+                    handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
                   }}
                   {...{
                     style: {
@@ -148,7 +139,11 @@ export function AllAccountPageTable({
                     },
                   }}
                 >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  {flexRender(cell.column.columnDef.cell, {
+                    ...cell.getContext(),
+                    shouldFocus: true,
+                    selectedColumnId,
+                  })}
                 </td>
               ))}
             </tr>

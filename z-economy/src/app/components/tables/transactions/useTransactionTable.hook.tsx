@@ -1,10 +1,10 @@
-import { Cell, ColumnDef, createColumnHelper, Row, Table, useReactTable } from '@tanstack/react-table';
+import { Cell, CellContext, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/IndeterminateCheckbox';
 import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
-import { useMemo, useRef, useState } from 'react';
+import { MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 
@@ -14,17 +14,21 @@ export const useTransactionTableHook = () => {
   const editableValue = useRef<(object & { [key: string]: string }) | (Transaction & { [key: string]: any })>(
     {},
   );
-  const reference = useRef<HTMLElement>(null);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Transaction>>();
 
   // SERVICES
-  const { data, updateData } = useTransaction();
+  const { data, updateData, trigger } = useTransaction();
 
   // HANDLERS
   const handleOnEdit = (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
+    selectedColumnId: MutableRefObject<string>,
   ) => {
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
@@ -43,6 +47,7 @@ export const useTransactionTableHook = () => {
       table.setRowSelection(() => ({
         [row.id]: true,
       }));
+      selectedColumnId.current = cell.column.id;
       return;
     }
     editingRow !== '' && setEditingRow('');
@@ -125,21 +130,17 @@ export const useTransactionTableHook = () => {
     columnHelper.accessor('date', {
       id: 'date',
       header: () => 'DATE',
-      cell: info =>
-        info.row.getIsSelected() ? (
+      cell: info => {
+        return info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
-            // onChangeValue={value => {
-            //   setEditableValue({
-            //     ...editableValue,
-            //     [info.column.id]: value,
-            //   });
-            // }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
-        ),
+        );
+      },
     }),
     columnHelper.accessor('payee', {
       id: 'payee',
@@ -147,6 +148,7 @@ export const useTransactionTableHook = () => {
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
@@ -163,6 +165,7 @@ export const useTransactionTableHook = () => {
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
@@ -179,6 +182,7 @@ export const useTransactionTableHook = () => {
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
@@ -192,9 +196,10 @@ export const useTransactionTableHook = () => {
     columnHelper.accessor('outflow', {
       id: 'outflow',
       header: () => 'OUTFLOW',
-      cell: info =>
+      cell: (info: CellContext<Transaction, any>) =>
         info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
@@ -219,6 +224,7 @@ export const useTransactionTableHook = () => {
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
@@ -255,5 +261,6 @@ export const useTransactionTableHook = () => {
     handleOnEdit,
     handleSaveEdit,
     handleCancelEdit,
+    trigger,
   };
 };

@@ -1,10 +1,12 @@
 import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 import { container } from 'tsyringe';
 import { TransactionGetAll } from '@core/budget/transaction/application/useCase/TransactionGetAll';
 import { TransactionUpdate } from '@core/budget/transaction/application/useCase/TransactionUpdate';
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { da } from 'date-fns/locale';
+import { format } from 'date-fns';
 
 export const useTransaction = () => {
   // SERVICES
@@ -14,6 +16,18 @@ export const useTransaction = () => {
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
+
+  const trigger = async () => {
+    void mutate(
+      async () => {
+        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', '');
+        return [newTransaction, ...(data ?? [])];
+      },
+      {
+        revalidate: false,
+      },
+    );
+  };
 
   // HANDLERS
   const updateData = async (updatedTransaction: Transaction) => {
@@ -40,5 +54,6 @@ export const useTransaction = () => {
     updateData,
     createData,
     isLoading,
+    trigger,
   };
 };
