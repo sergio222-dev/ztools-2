@@ -63,7 +63,10 @@ export function AllAccountPageTable({
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getRowCanExpand: () => true,
-    // debugTable: true,
+    initialState: {
+      sorting: [{ id: 'date', desc: true }],
+    },
+    debugTable: true,
   });
 
   if (tableReference) tableReference.current = table;
