@@ -38,7 +38,8 @@ export const useTransaction = () => {
   const deleteFakeRow = () => {
     void mutate(
       () => {
-        return data?.filter(t => t.id !== '');
+        if (data && data[0].id === '') return data?.filter(t => t.id !== '');
+        return data;
       },
       {
         revalidate: false,

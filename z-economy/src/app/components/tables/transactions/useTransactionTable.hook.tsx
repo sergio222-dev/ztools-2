@@ -93,7 +93,13 @@ export const useTransactionTableHook = () => {
   const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
     if (row.getIsSelected() && event.key === 'Enter' && editingRow === '') {
       setEditingRow(row.id);
-      row.toggleExpanded();
+      tableReference.current?.toggleAllRowsSelected(false);
+      tableReference.current?.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+      tableReference.current?.setExpanded(() => ({
+        [row.id]: true,
+      }));
       return;
     }
     if (editingRow !== row.id && event.key === 'Enter') {
