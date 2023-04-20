@@ -14,6 +14,7 @@ export const useTransaction = () => {
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
 
+  // TODO: Resolve types.
   const trigger = async (tableReference, setEditingRow) => {
     void mutate(
       async () => {
