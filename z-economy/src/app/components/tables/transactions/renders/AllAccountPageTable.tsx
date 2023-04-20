@@ -33,7 +33,6 @@ interface TransactionTableProperties {
     row: Row<Transaction>,
     selectedColumnId: { current: string },
   ) => void;
-  trigger: (row: Row<Transaction>, table: Table<Transaction>, selectedColumnId: { current: string }) => void;
 }
 
 export function AllAccountPageTable({
@@ -44,7 +43,6 @@ export function AllAccountPageTable({
   handleCancelEdit,
   handleOnEdit,
   handleRowOnKeyDown,
-  trigger,
 }: TransactionTableProperties) {
   // STATE
   const memoData = useMemo(() => data, [data]);
