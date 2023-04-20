@@ -49,8 +49,8 @@ export function AllAccountPageTable({
   const [tableData, setTableData] = useState(memoData);
   const selectedColumnId = useRef('date');
 
-  const columnResizeMode = 'onChange';
   // TABLE
+  const columnResizeMode = 'onChange';
   const table = useReactTable<Transaction>({
     data: tableData,
     columns,

@@ -35,9 +35,9 @@ export const useTransaction = () => {
     }));
   };
 
-  const deleteFakeRow = (revalidate: boolean) => {
+  const deleteFakeRow = async (revalidate: boolean) => {
     void mutate(
-      () => {
+      async () => {
         if (data && data[0].id === '') return data?.filter(t => t.id !== '');
         return data;
       },
@@ -62,8 +62,8 @@ export const useTransaction = () => {
 
   const createData = async (t: Transaction) => {
     if (!data) return;
-    deleteFakeRow(true);
     await transactionCreate.execute(t);
+    await deleteFakeRow(true);
   };
 
   return {
