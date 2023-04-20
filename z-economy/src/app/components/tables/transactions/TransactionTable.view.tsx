@@ -11,6 +11,7 @@ export function TransactionTableView() {
     handleSaveEdit,
     handleCancelEdit,
     handleOnEdit,
+    handleRowOnKeyDown,
   } = useTransactionTableHook();
 
   return (
@@ -23,6 +24,7 @@ export function TransactionTableView() {
         handleSaveEdit={handleSaveEdit}
         handleCancelEdit={handleCancelEdit}
         handleOnEdit={handleOnEdit}
+        handleRowOnKeyDown={handleRowOnKeyDown}
       />
     </div>
   );

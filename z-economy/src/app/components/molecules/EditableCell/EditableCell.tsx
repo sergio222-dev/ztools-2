@@ -13,7 +13,6 @@ export function EditableCell(properties: EditableCellProperties) {
   const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue } = properties;
 
   // STATE
-  // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(defaultValue);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -21,7 +20,6 @@ export function EditableCell(properties: EditableCellProperties) {
   const inputReference = useRef<HTMLInputElement>(undefined);
 
   // HANDLERS
-  // When the input is blurred, we'll call our table meta's updateData function
   const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
     onBlur && onBlur(event);
   };
@@ -47,6 +45,7 @@ export function EditableCell(properties: EditableCellProperties) {
       event.key !== 'Home' &&
       event.key !== 'End' &&
       event.key !== 'F5' &&
+      event.key !== 'Escape' &&
       !event.ctrlKey
     ) {
       event.preventDefault();
@@ -57,6 +56,7 @@ export function EditableCell(properties: EditableCellProperties) {
   useEffect(() => {
     if (shouldFocus) {
       inputReference.current?.focus();
+      inputReference.current?.select();
     }
   }, [shouldFocus]);
 

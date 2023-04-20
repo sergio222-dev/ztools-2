@@ -4,7 +4,7 @@ import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/Indeterm
 import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
-import { MutableRefObject, useRef, useState } from 'react';
+import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 
@@ -34,6 +34,7 @@ export const useTransactionTableHook = () => {
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
       }
+      editingRow === row.id && setEditingRow('');
       row.toggleSelected();
       return;
     }
@@ -54,22 +55,62 @@ export const useTransactionTableHook = () => {
     editableValue.current = {};
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
+    selectedColumnId.current = 'date';
     row.toggleSelected();
   };
 
-  const handleSaveEdit = (row: Row<Transaction>) => {
+  const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     void updateData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
     // setEditableValue({});
     editableValue.current = {};
+    selectedColumnId.current = 'date';
     row.toggleExpanded(false);
     row.toggleSelected(false);
   };
 
-  const handleCancelEdit = (row: Row<Transaction>) => {
+  const handleCancelEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     editingRow !== '' && setEditingRow('');
+    selectedColumnId.current = 'date';
     row.toggleExpanded(false);
-    row.toggleSelected(false);
+    // row.toggleSelected(false);
+  };
+
+  const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
+    if (row.getIsSelected() && event.key === 'Enter' && editingRow === '') {
+      setEditingRow(row.id);
+      row.toggleExpanded();
+      return;
+    }
+    if (editingRow !== row.id && event.key === 'Enter') {
+      row.getToggleSelectedHandler()(row);
+      return;
+    }
+    if (editingRow === '' && event.key === 'Enter') {
+      row.getToggleSelectedHandler()(row);
+      return;
+    }
+  };
+
+  const handleHeaderCheckboxOnCLick = (table: Table<Transaction>) => {
+    editingRow !== '' && setEditingRow('');
+    table.toggleAllRowsExpanded(false);
+  };
+
+  const handleCellCheckboxOnClick = (row: Row<Transaction>) => {
+    if (editingRow !== '' && editingRow === row.id) {
+      setEditingRow('');
+    }
+  };
+
+  const handleRowOnKeyDown = (
+    event: KeyboardEvent,
+    row: Row<Transaction>,
+    selectedColumnId: { current: string },
+  ) => {
+    if (event.key === 'Escape' && editingRow === row.id) {
+      handleCancelEdit(row, selectedColumnId);
+    }
   };
 
   // SIDE EFFECTS
@@ -93,8 +134,7 @@ export const useTransactionTableHook = () => {
               indeterminate: table.getIsSomeRowsSelected(),
               onChange: table.getToggleAllRowsSelectedHandler(),
               onClick: () => {
-                editingRow !== '' && setEditingRow('');
-                table.toggleAllRowsExpanded(false);
+                handleHeaderCheckboxOnCLick(table);
               },
             }}
           />
@@ -110,7 +150,13 @@ export const useTransactionTableHook = () => {
               checked: row.getIsSelected(),
               disabled: !row.getCanSelect(),
               indeterminate: row.getIsSomeSelected(),
+              onKeyDown: event => {
+                handleCheckboxOnKeyDown(event, row);
+              },
               onChange: row.getToggleSelectedHandler(),
+              onClick: () => {
+                handleCellCheckboxOnClick(row);
+              },
             }}
           />
         </div>
@@ -262,5 +308,6 @@ export const useTransactionTableHook = () => {
     handleSaveEdit,
     handleCancelEdit,
     trigger,
+    handleRowOnKeyDown,
   };
 };
