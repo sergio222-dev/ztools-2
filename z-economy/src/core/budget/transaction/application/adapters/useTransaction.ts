@@ -35,14 +35,14 @@ export const useTransaction = () => {
     }));
   };
 
-  const deleteFakeRow = () => {
+  const deleteFakeRow = (revalidate: boolean) => {
     void mutate(
       () => {
         if (data && data[0].id === '') return data?.filter(t => t.id !== '');
         return data;
       },
       {
-        revalidate: false,
+        revalidate: revalidate,
       },
     );
   };
@@ -62,7 +62,7 @@ export const useTransaction = () => {
 
   const createData = async (t: Transaction) => {
     if (!data) return;
-
+    deleteFakeRow(true);
     await transactionCreate.execute(t);
   };
 

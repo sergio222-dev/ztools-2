@@ -54,7 +54,7 @@ export const useTransactionTableHook = () => {
     }
     editingRow !== '' && setEditingRow('');
     editableValue.current = {};
-    deleteFakeRow();
+    deleteFakeRow(false);
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     selectedColumnId.current = 'date';
@@ -87,7 +87,7 @@ export const useTransactionTableHook = () => {
     editingRow !== '' && setEditingRow('');
     selectedColumnId.current = 'date';
     row.toggleExpanded(false);
-    deleteFakeRow();
+    deleteFakeRow(false);
   };
 
   const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
@@ -138,7 +138,7 @@ export const useTransactionTableHook = () => {
     if (editingRow !== '') setEditingRow('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
       tableReference.current.toggleAllRowsExpanded(false);
-    deleteFakeRow();
+    deleteFakeRow(false);
   });
 
   // COLUMNS
