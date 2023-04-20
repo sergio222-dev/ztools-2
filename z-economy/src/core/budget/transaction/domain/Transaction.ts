@@ -1,13 +1,13 @@
 export class Transaction {
   constructor(
-    readonly id: string,
+    public id: string,
     readonly date: string,
     readonly payee: string,
     readonly category: string,
     readonly memo: string,
-    readonly inflow: string,
-    readonly outflow: string,
-    readonly budgetId: string,
+    public inflow: string,
+    public outflow: string,
+    private budgetId: string,
   ) {}
 
   static CREATE(

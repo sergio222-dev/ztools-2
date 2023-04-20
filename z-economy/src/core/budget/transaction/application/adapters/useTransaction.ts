@@ -14,7 +14,7 @@ export const useTransaction = () => {
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
 
-  const trigger = async () => {
+  const trigger = async (tableReference, setEditingRow) => {
     void mutate(
       async () => {
         if (data && data[0].id === '') return data ?? [];
@@ -25,6 +25,19 @@ export const useTransaction = () => {
         revalidate: false,
       },
     );
+    setEditingRow('');
+    tableReference.current?.setRowSelection(() => ({
+      ['']: true,
+    }));
+    tableReference.current?.setExpanded(() => ({
+      ['']: true,
+    }));
+  };
+
+  const deleteFakeRow = () => {
+    void mutate(() => {
+      return data?.filter(t => t.id !== '');
+    });
   };
 
   // HANDLERS
@@ -53,5 +66,6 @@ export const useTransaction = () => {
     createData,
     isLoading,
     trigger,
+    deleteFakeRow,
   };
 };

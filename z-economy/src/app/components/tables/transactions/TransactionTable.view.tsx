@@ -8,6 +8,7 @@ export function TransactionTableView() {
     trigger,
     reference,
     tableReference,
+    setEditingRow,
     handleSaveEdit,
     handleCancelEdit,
     handleOnEdit,
@@ -16,7 +17,7 @@ export function TransactionTableView() {
 
   return (
     <div ref={reference} style={{ display: 'flex' }}>
-      <button onClick={() => trigger()}>apretar</button>
+      <button onClick={() => trigger(tableReference, setEditingRow)}>apretar</button>
       <AllAccountPageTable
         tableReference={tableReference}
         columns={columns}
@@ -25,6 +26,7 @@ export function TransactionTableView() {
         handleCancelEdit={handleCancelEdit}
         handleOnEdit={handleOnEdit}
         handleRowOnKeyDown={handleRowOnKeyDown}
+        trigger={trigger}
       />
     </div>
   );

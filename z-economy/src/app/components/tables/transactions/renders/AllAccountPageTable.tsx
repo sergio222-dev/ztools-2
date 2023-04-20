@@ -15,7 +15,6 @@ import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
-import { Simulate } from 'react-dom/test-utils';
 
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
@@ -34,6 +33,7 @@ interface TransactionTableProperties {
     row: Row<Transaction>,
     selectedColumnId: { current: string },
   ) => void;
+  trigger: (row: Row<Transaction>, table: Table<Transaction>, selectedColumnId: { current: string }) => void;
 }
 
 export function AllAccountPageTable({
@@ -44,6 +44,7 @@ export function AllAccountPageTable({
   handleCancelEdit,
   handleOnEdit,
   handleRowOnKeyDown,
+  trigger,
 }: TransactionTableProperties) {
   // STATE
   const memoData = useMemo(() => data, [data]);
