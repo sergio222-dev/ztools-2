@@ -33,6 +33,7 @@ export const useTransactionTableHook = () => {
     selectedColumnId: MutableRefObject<string>,
   ) => {
     if (cell.id.includes('checkbox')) {
+      if (row.id === '') return;
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
       }
@@ -55,7 +56,7 @@ export const useTransactionTableHook = () => {
     }
     editingRow !== '' && setEditingRow('');
     editableValue.current = {};
-    deleteFakeRow(false);
+    void deleteFakeRow(false);
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     selectedColumnId.current = 'date';
@@ -88,7 +89,7 @@ export const useTransactionTableHook = () => {
     editingRow !== '' && setEditingRow('');
     selectedColumnId.current = 'date';
     row.toggleExpanded(false);
-    deleteFakeRow(false);
+    void deleteFakeRow(false);
   };
 
   const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
@@ -119,6 +120,7 @@ export const useTransactionTableHook = () => {
   };
 
   const handleCellCheckboxOnClick = (row: Row<Transaction>) => {
+    if (row.id === '') return;
     if (editingRow !== '' && editingRow === row.id) {
       setEditingRow('');
     }
@@ -206,7 +208,7 @@ export const useTransactionTableHook = () => {
           <IndeterminateCheckbox
             {...{
               checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
+              disabled: !row.getCanSelect() || row.id === '',
               indeterminate: row.getIsSomeSelected(),
               onKeyDown: event => {
                 handleCheckboxOnKeyDown(event, row);
