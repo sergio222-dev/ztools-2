@@ -33,7 +33,6 @@ export const useTransactionTableHook = () => {
     selectedColumnId: MutableRefObject<string>,
   ) => {
     if (cell.id.includes('checkbox')) {
-      if (row.id === '') return;
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
       }
@@ -120,7 +119,6 @@ export const useTransactionTableHook = () => {
   };
 
   const handleCellCheckboxOnClick = (row: Row<Transaction>) => {
-    if (row.id === '') return;
     if (editingRow !== '' && editingRow === row.id) {
       setEditingRow('');
     }
