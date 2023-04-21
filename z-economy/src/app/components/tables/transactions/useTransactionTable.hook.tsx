@@ -8,6 +8,7 @@ import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { chunkify, normalizeText } from '@utils/TextUtils';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -141,18 +142,12 @@ export const useTransactionTableHook = () => {
 
     if (a === undefined || b === undefined) return 0;
 
-    const lowerA = a.toLowerCase();
-    const lowerB = b.toLowerCase();
+    const lowerA = normalizeText(a);
+    const lowerB = normalizeText(b);
 
     if (lowerA === lowerB) {
       return 0;
     }
-
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const chunkify = (string: string) => {
-      const regex = /(\d+)|(\D+)/g;
-      return string.match(regex) || [];
-    };
 
     const chunkedA = chunkify(lowerA);
     const chunkedB = chunkify(lowerB);
@@ -172,13 +167,7 @@ export const useTransactionTableHook = () => {
         return aChunk < bChunk ? -1 : 1;
       }
     }
-
     return 0;
-
-    // const numberA: string = rowA.getValue(columnId);
-    // const numberB: string = rowB.getValue(columnId);
-    //
-    // return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
   };
 
   // SIDE EFFECTS
