@@ -173,6 +173,7 @@ export const useTransactionTableHook = () => {
   };
 
   // SIDE EFFECTS
+  // TODO: make selectedColumnId = 'date' when using this function.
   useOutsideClick(reference, () => {
     if (editingRow !== '') setEditingRow('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
@@ -192,9 +193,10 @@ export const useTransactionTableHook = () => {
             {...{
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
-              onChange: data[0]?.id === '' ? undefined : table.getToggleAllRowsSelectedHandler(),
+              disabled: data[0]?.id === '',
+              onChange: table.getToggleAllRowsSelectedHandler(),
               onClick: () => {
-                data[0]?.id !== '' && handleHeaderCheckboxOnCLick(table);
+                handleHeaderCheckboxOnCLick(table);
               },
             }}
           />
