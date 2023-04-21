@@ -136,10 +136,49 @@ export const useTransactionTableHook = () => {
   const handleSorting = (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => {
     if (rowA.id === '' || rowB.id === '') return 0;
 
-    const numberA: number = rowA.getValue(columnId);
-    const numberB: number = rowB.getValue(columnId);
+    const a: string = rowA.getValue(columnId);
+    const b: string = rowB.getValue(columnId);
 
-    return numberA < numberB ? 1 : numberA > numberB ? -1 : 0;
+    if (a === undefined || b === undefined) return 0;
+
+    const lowerA = a.toLowerCase();
+    const lowerB = b.toLowerCase();
+
+    if (lowerA === lowerB) {
+      return 0;
+    }
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const chunkify = (string: string) => {
+      const regex = /(\d+)|(\D+)/g;
+      return string.match(regex) || [];
+    };
+
+    const chunkedA = chunkify(lowerA);
+    const chunkedB = chunkify(lowerB);
+
+    for (let index = 0; index < Math.max(chunkedA.length, chunkedB.length); index++) {
+      const aChunk = chunkedA[index] || '';
+      const bChunk = chunkedB[index] || '';
+
+      const aNumber = Number.parseInt(aChunk, 10);
+      const bNumber = Number.parseInt(bChunk, 10);
+
+      if (!Number.isNaN(aNumber) && !Number.isNaN(bNumber)) {
+        if (aNumber !== bNumber) {
+          return aNumber - bNumber;
+        }
+      } else if (aChunk !== bChunk) {
+        return aChunk < bChunk ? -1 : 1;
+      }
+    }
+
+    return 0;
+
+    // const numberA: string = rowA.getValue(columnId);
+    // const numberB: string = rowB.getValue(columnId);
+    //
+    // return numberA < numberB ? -1 : numberA > numberB ? 1 : 0;
   };
 
   // SIDE EFFECTS
