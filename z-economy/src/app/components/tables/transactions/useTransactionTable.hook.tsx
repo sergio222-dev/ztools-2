@@ -192,9 +192,9 @@ export const useTransactionTableHook = () => {
             {...{
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
+              onChange: data[0]?.id === '' ? undefined : table.getToggleAllRowsSelectedHandler(),
               onClick: () => {
-                handleHeaderCheckboxOnCLick(table);
+                data[0]?.id !== '' && handleHeaderCheckboxOnCLick(table);
               },
             }}
           />
