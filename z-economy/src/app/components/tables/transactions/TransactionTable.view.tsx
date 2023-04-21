@@ -30,7 +30,6 @@ export function TransactionTableView() {
           handleCancelEdit={handleCancelEdit}
           handleOnEdit={handleOnEdit}
           handleRowOnKeyDown={handleRowOnKeyDown}
-          trigger={trigger}
         />
       </div>
     </div>
