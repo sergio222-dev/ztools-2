@@ -133,6 +133,15 @@ export const useTransactionTableHook = () => {
     }
   };
 
+  const handleSorting = (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => {
+    if (rowA.id === '' || rowB.id === '') return 0;
+
+    const numberA: number = rowA.getValue(columnId);
+    const numberB: number = rowB.getValue(columnId);
+
+    return numberA < numberB ? 1 : numberA > numberB ? -1 : 0;
+  };
+
   // SIDE EFFECTS
   useOutsideClick(reference, () => {
     if (editingRow !== '') setEditingRow('');
@@ -208,6 +217,7 @@ export const useTransactionTableHook = () => {
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
         );
       },
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     columnHelper.accessor('payee', {
       id: 'payee',
@@ -225,6 +235,7 @@ export const useTransactionTableHook = () => {
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     columnHelper.accessor('category', {
       id: 'category',
@@ -242,6 +253,7 @@ export const useTransactionTableHook = () => {
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     columnHelper.accessor('memo', {
       id: 'memo',
@@ -259,6 +271,7 @@ export const useTransactionTableHook = () => {
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />
         ),
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     columnHelper.accessor('outflow', {
       id: 'outflow',
@@ -284,6 +297,7 @@ export const useTransactionTableHook = () => {
       meta: {
         type: new NumericTextType(),
       },
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     columnHelper.accessor('inflow', {
       id: 'inflow',
@@ -309,6 +323,7 @@ export const useTransactionTableHook = () => {
       meta: {
         type: new NumericTextType(),
       },
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     // columnHelper.accessor('creditIcon', {
     //   id: 'creditIcon',
