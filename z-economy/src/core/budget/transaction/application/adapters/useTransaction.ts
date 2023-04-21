@@ -15,7 +15,8 @@ export const useTransaction = () => {
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
 
   // TODO: Resolve types.
-  const trigger = async (tableReference, setEditingRow) => {
+  const trigger = async (tableReference, setEditingRow, editableValue: { current: object }) => {
+    editableValue.current = {};
     void mutate(
       async () => {
         if (data && data[0].id === '') return data ?? [];

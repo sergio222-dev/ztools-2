@@ -325,6 +325,7 @@ export const useTransactionTableHook = () => {
     tableReference,
     reference,
     data,
+    editableValue,
     setEditingRow,
     handleOnEdit,
     handleSaveEdit,

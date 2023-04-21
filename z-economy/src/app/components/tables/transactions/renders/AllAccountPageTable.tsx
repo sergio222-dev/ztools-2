@@ -84,7 +84,7 @@ export function AllAccountPageTable({
   };
 
   return (
-    <table className={styles.z_table}>
+    <table className={styles.z_table} getRow>
       <thead>
         {table.getHeaderGroups().map(headerGroup => (
           <tr key={headerGroup.id}>

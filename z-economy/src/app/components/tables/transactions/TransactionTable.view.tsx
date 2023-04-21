@@ -13,21 +13,26 @@ export function TransactionTableView() {
     handleCancelEdit,
     handleOnEdit,
     handleRowOnKeyDown,
+    editableValue,
   } = useTransactionTableHook();
 
   return (
-    <div ref={reference} style={{ display: 'flex' }}>
-      <button onClick={() => trigger(tableReference, setEditingRow)}>apretar</button>
-      <AllAccountPageTable
-        tableReference={tableReference}
-        columns={columns}
-        data={data}
-        handleSaveEdit={handleSaveEdit}
-        handleCancelEdit={handleCancelEdit}
-        handleOnEdit={handleOnEdit}
-        handleRowOnKeyDown={handleRowOnKeyDown}
-        trigger={trigger}
-      />
+    <div>
+      <div>
+        <button onClick={() => trigger(tableReference, setEditingRow, editableValue)}>apretar</button>
+      </div>
+      <div ref={reference} style={{ display: 'flex' }}>
+        <AllAccountPageTable
+          tableReference={tableReference}
+          columns={columns}
+          data={data}
+          handleSaveEdit={handleSaveEdit}
+          handleCancelEdit={handleCancelEdit}
+          handleOnEdit={handleOnEdit}
+          handleRowOnKeyDown={handleRowOnKeyDown}
+          trigger={trigger}
+        />
+      </div>
     </div>
   );
 }
