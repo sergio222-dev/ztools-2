@@ -42,7 +42,7 @@ export function TransactionTableButtons({
       >
         <Typography>Add Transaction</Typography>
       </UtilityButton>
-      <UtilityButton StartIcon={<MdEdit />} variant={'icon'} style={{ flexGrow: '1' }}>
+      <UtilityButton StartIcon={<MdEdit />} variant={'icon'}>
         <Typography>Edit</Typography>
       </UtilityButton>
       <SearchDebounceInput
