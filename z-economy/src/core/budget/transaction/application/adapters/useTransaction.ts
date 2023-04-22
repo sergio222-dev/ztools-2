@@ -36,14 +36,14 @@ export const useTransaction = () => {
     }));
   };
 
-  const deleteFakeRow = async (revalidate: boolean) => {
+  const deleteFakeRow = async (revalidate?: boolean) => {
     void mutate(
       async () => {
         if (data && data[0].id === '') return data?.filter(t => t.id !== '');
         return data;
       },
       {
-        revalidate: revalidate,
+        revalidate: revalidate ?? false,
       },
     );
   };
