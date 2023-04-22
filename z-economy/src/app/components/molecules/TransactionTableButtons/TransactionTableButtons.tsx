@@ -33,11 +33,17 @@ export function TransactionTableButtons({
   globalFilter,
   setGlobalFilter,
 }: TransactionTableButtonsProperties) {
+  const handleAddTransaction = () => {
+    if (globalFilter !== '') setGlobalFilter('');
+    trigger(tableReference, setEditingRow, editableValue);
+  };
+
   return (
     <div className={styles.z_table_util_buttons}>
       <UtilityButton
         StartIcon={<AiFillPlusCircle />}
-        onClick={() => trigger(tableReference, setEditingRow, editableValue)}
+        // onClick={() => trigger(tableReference, setEditingRow, editableValue)}
+        onClick={() => handleAddTransaction()}
         variant={'icon'}
       >
         <Typography>Add Transaction</Typography>
