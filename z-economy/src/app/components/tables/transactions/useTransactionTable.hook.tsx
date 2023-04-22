@@ -12,6 +12,7 @@ import { chunkify, normalizeText } from '@utils/TextUtils';
 
 export const useTransactionTableHook = () => {
   // STATE
+  const [globalFilter, setGlobalFilter] = useState('');
   const [editingRow, setEditingRow] = useState('');
   const editableValue = useRef<(object & { [key: string]: string }) | (Transaction & { [key: string]: any })>(
     {},
@@ -166,10 +167,13 @@ export const useTransactionTableHook = () => {
       }
     }
     return 0;
+
+    // To use default react-table alphanumeric sorting:
+    // return sortingFns.alphanumeric(rowA, rowB, columnId);
   };
 
   // SIDE EFFECTS
-  // TODO: make selectedColumnId = 'date' when using this function.
+  // TODO: do selectedColumnId = 'date' inside this function.
   useOutsideClick(reference, () => {
     if (editingRow !== '') setEditingRow('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
@@ -369,6 +373,8 @@ export const useTransactionTableHook = () => {
     reference,
     data,
     editableValue,
+    globalFilter,
+    setGlobalFilter,
     setEditingRow,
     handleOnEdit,
     handleSaveEdit,

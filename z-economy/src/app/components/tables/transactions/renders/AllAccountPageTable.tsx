@@ -4,12 +4,23 @@ import {
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   Row,
   Table,
   useReactTable,
 } from '@tanstack/react-table';
-import { Fragment, KeyboardEvent, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Dispatch,
+  Fragment,
+  KeyboardEvent,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
@@ -33,6 +44,8 @@ interface TransactionTableProperties {
     row: Row<Transaction>,
     selectedColumnId: { current: string },
   ) => void;
+  globalFilter: string;
+  setGlobalFilter: Dispatch<SetStateAction<string>>;
 }
 
 export function AllAccountPageTable({
@@ -43,6 +56,8 @@ export function AllAccountPageTable({
   handleCancelEdit,
   handleOnEdit,
   handleRowOnKeyDown,
+  globalFilter,
+  setGlobalFilter,
 }: TransactionTableProperties) {
   // STATE
   const memoData = useMemo(() => data, [data]);
@@ -56,10 +71,16 @@ export function AllAccountPageTable({
     columns,
     getRowId: row => row.id,
     columnResizeMode,
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'includesString',
     enableMultiRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getRowCanExpand: () => true,
     initialState: {
       sorting: [{ id: 'date', desc: true }],

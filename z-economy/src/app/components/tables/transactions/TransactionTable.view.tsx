@@ -1,5 +1,6 @@
 import { useTransactionTableHook } from './useTransactionTable.hook';
 import { AllAccountPageTable } from './renders/AllAccountPageTable';
+import { TransactionTableButtons } from '@molecules/TransactionTableButtons/TransactionTableButtons';
 
 export function TransactionTableView() {
   const {
@@ -14,13 +15,20 @@ export function TransactionTableView() {
     handleOnEdit,
     handleRowOnKeyDown,
     editableValue,
+    globalFilter,
+    setGlobalFilter,
   } = useTransactionTableHook();
 
   return (
     <div>
-      <div>
-        <button onClick={() => trigger(tableReference, setEditingRow, editableValue)}>apretar</button>
-      </div>
+      <TransactionTableButtons
+        trigger={trigger}
+        tableReference={tableReference}
+        setEditingRow={setEditingRow}
+        editableValue={editableValue}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+      ></TransactionTableButtons>
       <div ref={reference} style={{ display: 'flex' }}>
         <AllAccountPageTable
           tableReference={tableReference}
@@ -30,6 +38,8 @@ export function TransactionTableView() {
           handleCancelEdit={handleCancelEdit}
           handleOnEdit={handleOnEdit}
           handleRowOnKeyDown={handleRowOnKeyDown}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
         />
       </div>
     </div>

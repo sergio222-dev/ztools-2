@@ -17,7 +17,7 @@ export function IndeterminateCheckbox({ indeterminate, checked, ...rest }: Indet
   return <input type="checkbox" checked={checked} {...rest} />;
 }
 
-// export function Filter({ column, table }: { column: Column<any, any>; table: Table<any> }) {
+// export function TableFilter({ column, table }: { column: Column<any, any>; table: Table<any> }) {
 //   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id);
 //
 //   return typeof firstValue === 'number' ? (

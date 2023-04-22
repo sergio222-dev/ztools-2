@@ -4,6 +4,8 @@ import { TransactionGetAll } from '@core/budget/transaction/application/useCase/
 import { TransactionUpdate } from '@core/budget/transaction/application/useCase/TransactionUpdate';
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { Table } from '@tanstack/react-table';
 
 export const useTransaction = () => {
   // SERVICES
@@ -14,26 +16,29 @@ export const useTransaction = () => {
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
 
-  // TODO: Resolve types.
-  const trigger = async (tableReference, setEditingRow, editableValue: { current: object }) => {
+  const trigger = async (
+    tableReference: MutableRefObject<Table<Transaction> | undefined>,
+    setEditingRow: Dispatch<SetStateAction<string>>,
+    editableValue: { current: object },
+  ) => {
     editableValue.current = {};
     void mutate(
       async () => {
         if (data && data[0].id === '') return data ?? [];
         const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', '');
+        setEditingRow('');
+        tableReference.current?.setRowSelection(() => ({
+          ['']: true,
+        }));
+        tableReference.current?.setExpanded(() => ({
+          ['']: true,
+        }));
         return [newTransaction, ...(data ?? [])];
       },
       {
         revalidate: false,
       },
     );
-    setEditingRow('');
-    tableReference.current?.setRowSelection(() => ({
-      ['']: true,
-    }));
-    tableReference.current?.setExpanded(() => ({
-      ['']: true,
-    }));
   };
 
   const deleteFakeRow = async (revalidate?: boolean) => {
