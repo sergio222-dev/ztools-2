@@ -63,8 +63,8 @@ export const useTransaction = () => {
 
   const createData = async (t: Transaction) => {
     if (!data) return;
-    await transactionCreate.execute(t);
     await deleteFakeRow(true);
+    await transactionCreate.execute(t);
   };
 
   return {

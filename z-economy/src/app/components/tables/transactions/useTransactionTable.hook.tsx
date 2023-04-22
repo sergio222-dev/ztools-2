@@ -72,8 +72,6 @@ export const useTransactionTableHook = () => {
       editingRow !== '' && setEditingRow('');
       editableValue.current = {};
       selectedColumnId.current = 'date';
-      row.toggleExpanded(false);
-      row.toggleSelected(false);
       return;
     }
     void updateData(editableValue.current as Transaction);
