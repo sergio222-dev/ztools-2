@@ -22,4 +22,8 @@ export class AxiosTransactionRepository implements TransactionRepository {
     await this.axios.put('/transaction', transaction);
     return;
   }
+
+  delete(t: Transaction): Promise<void> {
+    return this.axios.delete(`/transaction/${t.id}`);
+  }
 }

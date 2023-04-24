@@ -17,6 +17,7 @@ export function TransactionTableView() {
     editableValue,
     globalFilter,
     setGlobalFilter,
+    handleDelete,
   } = useTransactionTableHook();
 
   return (
@@ -28,6 +29,7 @@ export function TransactionTableView() {
         editableValue={editableValue}
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
+        handleDelete={handleDelete}
       ></TransactionTableButtons>
       <div ref={reference} style={{ display: 'flex' }}>
         <AllAccountPageTable

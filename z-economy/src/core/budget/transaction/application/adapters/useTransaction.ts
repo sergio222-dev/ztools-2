@@ -6,12 +6,14 @@ import { TransactionCreate } from '@core/budget/transaction/application/useCase/
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Table } from '@tanstack/react-table';
+import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
 
 export const useTransaction = () => {
   // SERVICES
   const transactionGetAll = container.resolve(TransactionGetAll);
   const transactionUpdate = container.resolve(TransactionUpdate);
   const transactionCreate = container.resolve(TransactionCreate);
+  const transactionDelete = container.resolve(TransactionDelete);
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
@@ -72,12 +74,19 @@ export const useTransaction = () => {
     await transactionCreate.execute(t);
   };
 
+  const deleteData = async (t: Transaction) => {
+    if (!data) return;
+    await transactionDelete.execute(t);
+    await mutate(data);
+  };
+
   return {
     data: data ?? [],
     error: error,
+    isLoading,
     updateData,
     createData,
-    isLoading,
+    deleteData,
     trigger,
     deleteFakeRow,
   };

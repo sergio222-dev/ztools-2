@@ -32,6 +32,8 @@ export function EditableCell(properties: EditableCellProperties) {
     onChangeValue && onChangeValue(event.target.value);
     setValue(event.target.value);
   };
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     const regex = /^[\d.]/;
 

@@ -3,10 +3,9 @@ import { InputHTMLAttributes, useEffect, useRef } from 'react';
 interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputElement> {
   indeterminate: boolean;
 }
-
+// TODO fix indeterminate state
 export function IndeterminateCheckbox({ indeterminate, checked, ...rest }: IndeterminateCheckboxProperties) {
   // const reference = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     // if (reference.current) {
     //   reference.current.indeterminate = !checked && indeterminate;

@@ -14,9 +14,7 @@ export const useTransactionTableHook = () => {
   // STATE
   const [globalFilter, setGlobalFilter] = useState('');
   const [editingRow, setEditingRow] = useState('');
-  const editableValue = useRef<(object & { [key: string]: string }) | (Transaction & { [key: string]: any })>(
-    {},
-  );
+  const editableValue = useRef<Record<keyof Transaction, string> | Record<string, never>>({});
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   // eslint-disable-next-line unicorn/no-useless-undefined
@@ -24,7 +22,7 @@ export const useTransactionTableHook = () => {
   const tableReference = useRef<Table<Transaction>>();
 
   // SERVICES
-  const { data, updateData, createData, trigger, deleteFakeRow } = useTransaction();
+  const { data, updateData, createData, deleteData, trigger, deleteFakeRow } = useTransaction();
 
   // HANDLERS
   const handleOnEdit = (
@@ -43,8 +41,7 @@ export const useTransactionTableHook = () => {
     }
     if (row.getIsSelected()) {
       editingRow !== row.id && setEditingRow(row.id);
-      // setEditableValue(row.original);
-      editableValue.current = row.original;
+      editableValue.current = Object.assign(row.original, editableValue.current);
       table.setExpanded(() => ({
         [row.id]: true,
       }));
@@ -66,7 +63,6 @@ export const useTransactionTableHook = () => {
   const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     if (row.id === '') {
       editableValue.current.id = uuidv4();
-      editableValue.current.budgetId = uuidv4();
       if (editableValue.current.inflow === '') editableValue.current.inflow = '0';
       if (editableValue.current.outflow === '') editableValue.current.outflow = '0';
       void createData(editableValue.current as Transaction);
@@ -85,9 +81,19 @@ export const useTransactionTableHook = () => {
 
   const handleCancelEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     editingRow !== '' && setEditingRow('');
+    editableValue.current = {};
     selectedColumnId.current = 'date';
     row.toggleExpanded(false);
     void deleteFakeRow();
+  };
+
+  const handleDelete = () => {
+    if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
+      return;
+    }
+    const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
+
+    void deleteData(row?.original as Transaction);
   };
 
   const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
@@ -261,7 +267,7 @@ export const useTransactionTableHook = () => {
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id] = value;
+              editableValue.current[info.column.id as keyof Transaction] = value;
             }}
           />
         ) : (
@@ -279,7 +285,7 @@ export const useTransactionTableHook = () => {
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id] = value;
+              editableValue.current[info.column.id as keyof Transaction] = value;
             }}
           />
         ) : (
@@ -295,9 +301,10 @@ export const useTransactionTableHook = () => {
           <EditableCell
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
+            // TODO: fix row.original not reset on cancel.
+            defaultValue={editingRow === info.row.id ? info.row.original.memo : info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id] = value;
+              editableValue.current[info.column.id as keyof Transaction] = value;
             }}
           />
         ) : (
@@ -315,7 +322,7 @@ export const useTransactionTableHook = () => {
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id] = value;
+              editableValue.current[info.column.id as keyof Transaction] = value;
             }}
             type={new NumericTextType().getType()}
           />
@@ -341,7 +348,7 @@ export const useTransactionTableHook = () => {
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id] = value;
+              editableValue.current[info.column.id as keyof Transaction] = value;
             }}
             type={new NumericTextType().getType()}
           />
@@ -374,6 +381,7 @@ export const useTransactionTableHook = () => {
     data,
     editableValue,
     globalFilter,
+    handleDelete,
     setGlobalFilter,
     setEditingRow,
     handleOnEdit,
