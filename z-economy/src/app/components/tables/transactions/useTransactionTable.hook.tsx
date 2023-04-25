@@ -1,14 +1,11 @@
-import { Cell, CellContext, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
+import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/IndeterminateCheckbox';
-import { NumericTextType, OtherTextType } from '@utils/table/types';
-import { EditableCell } from '@molecules/EditableCell/EditableCell';
-import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/TextUtils';
+import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -188,191 +185,15 @@ export const useTransactionTableHook = () => {
   });
 
   // COLUMNS
-  const columnHelper = createColumnHelper<Transaction>();
-  const columns: ColumnDef<Transaction, any>[] = [
-    {
-      accessorKey: 'checkbox',
-      id: 'checkbox',
-      header: ({ table }) => (
-        <div className="z_flex z_flex_jc_center">
-          <IndeterminateCheckbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              disabled: data[0]?.id === '',
-              onChange: table.getToggleAllRowsSelectedHandler(),
-              onClick: () => {
-                handleHeaderCheckboxOnCLick(table);
-              },
-            }}
-          />
-        </div>
-      ),
-      size: 30,
-      minSize: 30,
-      maxSize: 30,
-      cell: ({ row }) => (
-        <div className="z_flex z_flex_jc_center">
-          <IndeterminateCheckbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect() || row.id === '',
-              indeterminate: row.getIsSomeSelected(),
-              onKeyDown: event => {
-                handleCheckboxOnKeyDown(event, row);
-              },
-              onChange: row.getToggleSelectedHandler(),
-              onClick: () => {
-                handleCellCheckboxOnClick(row);
-              },
-            }}
-          />
-        </div>
-      ),
-      meta: {
-        type: new OtherTextType(),
-      },
-    },
-    // columnHelper.accessor('flagMark', {
-    //   id: 'flagMark',
-    //   header: () => <ImBookmark className={styles.flag_mark} />,
-    //   cell: () => <ImBookmark />,
-    //   meta: {
-    //     type: new OtherTextType(),
-    //   },
-    // }),
-    columnHelper.accessor('date', {
-      id: 'date',
-      header: () => 'DATE',
-      cell: info => {
-        return info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
-          />
-        ) : (
-          <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
-        );
-      },
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    columnHelper.accessor('payee', {
-      id: 'payee',
-      header: () => 'PAYEE',
-      cell: info =>
-        info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
-            onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
-            }}
-          />
-        ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
-        ),
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    columnHelper.accessor('category', {
-      id: 'category',
-      header: () => 'CATEGORY',
-      cell: info =>
-        info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
-            onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
-            }}
-          />
-        ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
-        ),
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    columnHelper.accessor('memo', {
-      id: 'memo',
-      header: () => 'MEMO',
-      cell: info =>
-        info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            // TODO: fix row.original not reset on cancel.
-            defaultValue={editingRow === info.row.id ? info.row.original.memo : info.getValue()}
-            onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
-            }}
-          />
-        ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
-        ),
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    columnHelper.accessor('outflow', {
-      id: 'outflow',
-      header: () => 'OUTFLOW',
-      cell: (info: CellContext<Transaction, any>) =>
-        info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
-            onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
-            }}
-            type={new NumericTextType().getType()}
-          />
-        ) : (
-          <EditableCell
-            isEditable={false}
-            defaultValue={info.getValue()}
-            type={new NumericTextType().getType()}
-          />
-        ),
-      meta: {
-        type: new NumericTextType(),
-      },
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    columnHelper.accessor('inflow', {
-      id: 'inflow',
-      header: () => 'INFLOW',
-      cell: info =>
-        info.row.getIsSelected() ? (
-          <EditableCell
-            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
-            isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
-            onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
-            }}
-            type={new NumericTextType().getType()}
-          />
-        ) : (
-          <EditableCell
-            isEditable={false}
-            defaultValue={info.getValue()}
-            type={new NumericTextType().getType()}
-          />
-        ),
-      meta: {
-        type: new NumericTextType(),
-      },
-      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
-    }),
-    // columnHelper.accessor('creditIcon', {
-    //   id: 'creditIcon',
-    //   header: () => <AiFillCopyrightCircle />,
-    //   cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
-    //   meta: {
-    //     type: new OtherTextType(),
-    //   },
-    // }),
-  ];
+  const columns = useTransactionTableColumnsHook(
+    data,
+    handleHeaderCheckboxOnCLick,
+    handleCellCheckboxOnClick,
+    handleCheckboxOnKeyDown,
+    handleSorting,
+    editableValue,
+    editingRow,
+  );
 
   return {
     columns,
