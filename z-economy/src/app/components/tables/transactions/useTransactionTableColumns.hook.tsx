@@ -16,7 +16,7 @@ export function useTransactionTableColumnsHook(
   editingRow: string,
 ) {
   const columnHelper = createColumnHelper<Transaction>();
-  const columns: ColumnDef<Transaction, never>[] = [
+  const columns: ColumnDef<Transaction, any>[] = [
     {
       accessorKey: 'checkbox',
       id: 'checkbox',
@@ -142,7 +142,7 @@ export function useTransactionTableColumnsHook(
     columnHelper.accessor('outflow', {
       id: 'outflow',
       header: () => 'OUTFLOW',
-      cell: (info: CellContext<Transaction, never>) =>
+      cell: (info: CellContext<Transaction, any>) =>
         info.row.getIsSelected() ? (
           <EditableCell
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
