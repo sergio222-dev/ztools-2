@@ -4,12 +4,23 @@ import {
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   Row,
   Table,
   useReactTable,
 } from '@tanstack/react-table';
-import { Fragment, MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Dispatch,
+  Fragment,
+  KeyboardEvent,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styles from './Table.module.scss';
 import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
@@ -20,14 +31,21 @@ interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   columns: ColumnDef<Transaction, unknown>[];
   data: Array<Transaction>;
-  handleSaveEdit: (row: Row<Transaction>, table: Table<Transaction>) => void;
-  handleCancelEdit: (row: Row<Transaction>) => void;
+  handleSaveEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
+  handleCancelEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
   handleOnEdit: (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
     selectedColumnId: MutableRefObject<string>,
   ) => void;
+  handleRowOnKeyDown: (
+    event: KeyboardEvent,
+    row: Row<Transaction>,
+    selectedColumnId: { current: string },
+  ) => void;
+  globalFilter: string;
+  setGlobalFilter: Dispatch<SetStateAction<string>>;
 }
 
 export function AllAccountPageTable({
@@ -37,24 +55,36 @@ export function AllAccountPageTable({
   handleSaveEdit,
   handleCancelEdit,
   handleOnEdit,
+  handleRowOnKeyDown,
+  globalFilter,
+  setGlobalFilter,
 }: TransactionTableProperties) {
   // STATE
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
-  const selectedColumnId = useRef('');
+  const selectedColumnId = useRef('date');
 
-  const columnResizeMode = 'onChange';
   // TABLE
+  const columnResizeMode = 'onChange';
   const table = useReactTable<Transaction>({
     data: tableData,
     columns,
     getRowId: row => row.id,
     columnResizeMode,
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: 'includesString',
     enableMultiRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getRowCanExpand: () => true,
+    initialState: {
+      sorting: [{ id: 'date', desc: true }],
+    },
     debugTable: true,
   });
 
@@ -64,6 +94,15 @@ export function AllAccountPageTable({
   useEffect(() => {
     setTableData(memoData);
   }, [memoData]);
+
+  // LOCAL HANDLERS
+  const cellOnClickHandler = (
+    row: Row<Transaction>,
+    table: Table<Transaction>,
+    cell: Cell<Transaction, string>,
+  ) => {
+    handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
+  };
 
   return (
     <table className={styles.z_table}>
@@ -125,14 +164,19 @@ export function AllAccountPageTable({
       <tbody>
         {table.getRowModel().rows.map(row => (
           <Fragment key={row.id}>
-            <tr className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}>
+            <tr
+              className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
+              onKeyDown={event => {
+                handleRowOnKeyDown(event, row, selectedColumnId);
+              }}
+            >
               {row.getVisibleCells().map(cell => (
                 <td
                   className={styles.z_table_cell}
                   data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                   key={cell.id}
                   onClick={() => {
-                    handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
+                    cellOnClickHandler(row, table, cell);
                   }}
                   {...{
                     style: {
@@ -149,16 +193,21 @@ export function AllAccountPageTable({
               ))}
             </tr>
             {row.getIsExpanded() && row.getIsSelected() && (
-              <tr className={styles.z_table_subcomponent_tr}>
+              <tr
+                className={styles.z_table_subcomponent_tr}
+                onKeyDown={event => {
+                  handleRowOnKeyDown(event, row, selectedColumnId);
+                }}
+              >
                 {}
                 {/* 2nd row is a custom 1 cell row */}
                 <EditableFooterButtons
                   className={styles.z_table_subcomponent_cell}
                   onSave={() => {
-                    handleSaveEdit(row, table);
+                    handleSaveEdit(row, selectedColumnId);
                   }}
                   onCancel={() => {
-                    handleCancelEdit(row);
+                    handleCancelEdit(row, selectedColumnId);
                   }}
                 />
               </tr>

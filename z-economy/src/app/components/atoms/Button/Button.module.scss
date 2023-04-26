@@ -173,3 +173,15 @@
 
   @extend %edit_buttons_focus-visible_active_hover;
 }
+
+.z_utility_button {
+  display: inline-flex;
+  color: const.$primary-color;
+  column-gap: functions.spacing(0.5);
+  justify-content: left;
+  //align-items: center;
+
+  &:hover {
+    color: const.$dark-primary-color;
+  }
+}

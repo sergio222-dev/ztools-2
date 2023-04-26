@@ -1,0 +1,19 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.z_table_util_buttons {
+  display: flex;
+  border-bottom: const.$page-light-border-color 1px solid;
+  align-items: center;
+}
+
+.z_table_search_input {
+  border: 1px solid const.$primary-color;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: functions.spacing(1);
+  margin-left: auto;
+  height: functions.spacing(3.8);
+  min-height: 0;
+}
