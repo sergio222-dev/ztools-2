@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { UtilityButton } from '../../atoms/Button/UtilityButton';
@@ -10,13 +10,13 @@ import { SearchDebounceInput } from '../../molecules/SearchDebounceInput/SearchD
 
 interface TransactionTableButtonsProperties {
   trigger: (
-    tableReference: React.MutableRefObject<Table<Transaction> | undefined>,
-    setEditingRow: React.Dispatch<React.SetStateAction<string>>,
-    editableValue: React.MutableRefObject<
+    tableReference: MutableRefObject<Table<Transaction> | undefined>,
+    setEditingRow: Dispatch<SetStateAction<string>>,
+    editableValue: MutableRefObject<
       (object & { [p: string]: string }) | (Transaction & { [p: string]: never })
     >,
-    setSelectedQty: React.Dispatch<React.SetStateAction<number>>,
-    setDisableDelete: React.Dispatch<React.SetStateAction<boolean>>,
+    setSelectedQty: Dispatch<SetStateAction<number>>,
+    setDisableDelete: Dispatch<SetStateAction<boolean>>,
   ) => void;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   setEditingRow: Dispatch<SetStateAction<string>>;

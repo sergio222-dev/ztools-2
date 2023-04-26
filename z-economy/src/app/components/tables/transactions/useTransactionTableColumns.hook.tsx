@@ -5,6 +5,7 @@ import { NumericTextType, OtherTextType } from '../../../utils/table/types';
 import { EditableCell } from '../../molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject } from 'react';
+import { AiFillCopyrightCircle } from 'react-icons/ai';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -192,6 +193,26 @@ export function useTransactionTableColumnsHook(
       },
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
+    {
+      accessorKey: 'checkbox',
+      id: 'checkbox',
+      header: table => (
+        <div className="z_flex z_flex_jc_center">
+          <AiFillCopyrightCircle />
+        </div>
+      ),
+      size: 30,
+      minSize: 30,
+      maxSize: 30,
+      cell: row => (
+        <div className="z_flex z_flex_jc_center">
+          <AiFillCopyrightCircle />
+        </div>
+      ),
+      meta: {
+        type: new OtherTextType(),
+      },
+    },
     // columnHelper.accessor('creditIcon', {
     //   id: 'creditIcon',
     //   header: () => <AiFillCopyrightCircle />,
