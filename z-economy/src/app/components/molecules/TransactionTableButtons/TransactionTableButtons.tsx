@@ -66,7 +66,7 @@ export function TransactionTableButtons({
         onClick={handleDelete}
         disabled={disableDelete}
       >
-        <Typography>Edit {selectedQty === 0 ? undefined : `(${selectedQty})`}</Typography>
+        <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
       </UtilityButton>
       <SearchDebounceInput
         value={globalFilter ?? ''}
