@@ -9,7 +9,7 @@ import { KeyboardEvent, MutableRefObject } from 'react';
 export function useTransactionTableColumnsHook(
   data: Transaction[],
   handleHeaderCheckboxOnChange: (table: Table<Transaction>) => void,
-  handleHeaderCheckboxOnKeyDown: any,
+  handleHeaderCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, table: Table<Transaction>) => void,
   handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
