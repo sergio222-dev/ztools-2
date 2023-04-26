@@ -11,6 +11,10 @@ export const useTransactionTableHook = () => {
   // STATE
   const [globalFilter, setGlobalFilter] = useState('');
   const [editingRow, setEditingRow] = useState('');
+  const [disableDelete, setDisableDelete] = useState(true);
+  const [selectedQty, setSelectedQty] = useState(0);
+
+  // REFS
   const editableValue = useRef<Record<keyof Transaction, string> | Record<string, never>>({});
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -22,7 +26,7 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow } = useTransaction();
 
   // HANDLERS
-  const handleOnEdit = (
+  const handleOnEdit = async (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
@@ -33,7 +37,14 @@ export const useTransactionTableHook = () => {
         row.getIsExpanded() && row.toggleExpanded(false);
       }
       editingRow === row.id && setEditingRow('');
-      row.toggleSelected();
+      if (disableDelete && !row.getIsSelected()) {
+        setDisableDelete(false);
+      }
+      if (row.getIsSelected() && table.getSelectedRowModel().rows.filter(t => t.id !== '').length === 1) {
+        setDisableDelete(true);
+      }
+      await row.toggleSelected();
+      setSelectedQty(table.getSelectedRowModel().rows.filter(t => t.id !== '').length);
       return;
     }
     if (row.getIsSelected()) {
@@ -42,10 +53,11 @@ export const useTransactionTableHook = () => {
       table.setExpanded(() => ({
         [row.id]: true,
       }));
-      table.setRowSelection(() => ({
+      await table.setRowSelection(() => ({
         [row.id]: true,
       }));
       selectedColumnId.current = cell.column.id;
+      row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
       return;
     }
     editingRow !== '' && setEditingRow('');
@@ -54,12 +66,18 @@ export const useTransactionTableHook = () => {
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
     selectedColumnId.current = 'date';
-    row.toggleSelected();
+    await row.toggleSelected();
+    setSelectedQty(table.getSelectedRowModel().rows.length);
+    disableDelete && setDisableDelete(false);
   };
 
   const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     if (row.id === '') {
       editableValue.current.id = uuidv4();
+      // Is still possible to paste invalid characters in the inflow/outflow fields so we replace them before sending to the server
+      editableValue.current.inflow = editableValue.current.inflow.replaceAll(/[^\d.]/g, '');
+      editableValue.current.outflow = editableValue.current.outflow.replaceAll(/[^\d.]/g, '');
+      // If field is empty set it to 0
       if (editableValue.current.inflow === '') editableValue.current.inflow = '0';
       if (editableValue.current.outflow === '') editableValue.current.outflow = '0';
       void createData(editableValue.current as Transaction);
@@ -84,12 +102,13 @@ export const useTransactionTableHook = () => {
     void deleteFakeRow();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
     const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
-
+    await row?.toggleSelected(false);
+    setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
     void deleteData(row?.original as Transaction);
   };
 
@@ -115,12 +134,16 @@ export const useTransactionTableHook = () => {
     }
   };
 
-  const handleHeaderCheckboxOnCLick = (table: Table<Transaction>) => {
+  const handleHeaderCheckboxOnChange = async (table: Table<Transaction>) => {
     editingRow !== '' && setEditingRow('');
+    table.getIsAllRowsSelected() && setDisableDelete(true);
+    disableDelete && setDisableDelete(false);
+    await table.toggleAllRowsSelected();
     table.toggleAllRowsExpanded(false);
+    setSelectedQty(table.getSelectedRowModel().rows.length);
   };
 
-  const handleCellCheckboxOnClick = (row: Row<Transaction>) => {
+  const handleCellCheckboxOnChange = (row: Row<Transaction>) => {
     if (editingRow !== '' && editingRow === row.id) {
       setEditingRow('');
     }
@@ -182,13 +205,15 @@ export const useTransactionTableHook = () => {
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
       tableReference.current.toggleAllRowsExpanded(false);
     void deleteFakeRow();
+    tableReference.current &&
+      setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
   });
 
   // COLUMNS
   const columns = useTransactionTableColumnsHook(
     data,
-    handleHeaderCheckboxOnCLick,
-    handleCellCheckboxOnClick,
+    handleHeaderCheckboxOnChange,
+    handleCellCheckboxOnChange,
     handleCheckboxOnKeyDown,
     handleSorting,
     editableValue,
@@ -202,6 +227,10 @@ export const useTransactionTableHook = () => {
     data,
     editableValue,
     globalFilter,
+    disableDelete,
+    setDisableDelete,
+    selectedQty,
+    setSelectedQty,
     handleDelete,
     setGlobalFilter,
     setEditingRow,

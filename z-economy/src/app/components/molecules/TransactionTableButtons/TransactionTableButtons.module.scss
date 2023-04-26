@@ -6,6 +6,11 @@
   display: flex;
   border-bottom: const.$page-light-border-color 1px solid;
   align-items: center;
+
+  *:disabled {
+    opacity: 0.5;
+    color: const.$dark-primary-color;
+  }
 }
 
 .z_table_search_input {

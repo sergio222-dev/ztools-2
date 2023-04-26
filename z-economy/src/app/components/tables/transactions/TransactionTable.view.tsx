@@ -18,6 +18,10 @@ export function TransactionTableView() {
     globalFilter,
     setGlobalFilter,
     handleDelete,
+    disableDelete,
+    setDisableDelete,
+    selectedQty,
+    setSelectedQty,
   } = useTransactionTableHook();
 
   return (
@@ -30,6 +34,10 @@ export function TransactionTableView() {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         handleDelete={handleDelete}
+        disableDelete={disableDelete}
+        selectedQty={selectedQty}
+        setSelectedQty={setSelectedQty}
+        setDisableDelete={setDisableDelete}
       ></TransactionTableButtons>
       <div ref={reference} style={{ display: 'flex' }}>
         <AllAccountPageTable

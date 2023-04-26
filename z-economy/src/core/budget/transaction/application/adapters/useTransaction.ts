@@ -22,19 +22,24 @@ export const useTransaction = () => {
     tableReference: MutableRefObject<Table<Transaction> | undefined>,
     setEditingRow: Dispatch<SetStateAction<string>>,
     editableValue: { current: object },
+    setSelectedQty: Dispatch<SetStateAction<number>>,
+    setDisableDelete: Dispatch<SetStateAction<boolean>>,
   ) => {
     editableValue.current = {};
     void mutate(
       async () => {
-        if (data && data[0].id === '') return data ?? [];
+        if (data && data[0]?.id === '') return data ?? [];
         const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', '');
         setEditingRow('');
-        tableReference.current?.setRowSelection(() => ({
+        await tableReference.current?.setRowSelection(() => ({
           ['']: true,
         }));
         tableReference.current?.setExpanded(() => ({
           ['']: true,
         }));
+        tableReference.current &&
+          setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
+        setDisableDelete(true);
         return [newTransaction, ...(data ?? [])];
       },
       {
@@ -46,7 +51,7 @@ export const useTransaction = () => {
   const deleteFakeRow = async (revalidate?: boolean) => {
     void mutate(
       async () => {
-        if (data && data[0].id === '') return data?.filter(t => t.id !== '');
+        if (data && data[0]?.id === '') return data?.filter(t => t.id !== '');
         return data;
       },
       {

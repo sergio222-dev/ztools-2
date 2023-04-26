@@ -8,8 +8,8 @@ import { KeyboardEvent, MutableRefObject } from 'react';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
-  handleHeaderCheckboxOnCLick: (table: Table<Transaction>) => void,
-  handleCellCheckboxOnClick: (row: Row<Transaction>) => void,
+  handleHeaderCheckboxOnChange: (table: Table<Transaction>) => void,
+  handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
   editableValue: MutableRefObject<Record<keyof Transaction, string> | Record<string, never>>,
@@ -27,9 +27,8 @@ export function useTransactionTableColumnsHook(
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
               disabled: data[0]?.id === '',
-              onChange: table.getToggleAllRowsSelectedHandler(),
-              onClick: () => {
-                handleHeaderCheckboxOnCLick(table);
+              onChange: () => {
+                handleHeaderCheckboxOnChange(table);
               },
             }}
           />
@@ -48,9 +47,8 @@ export function useTransactionTableColumnsHook(
               onKeyDown: event => {
                 handleCheckboxOnKeyDown(event, row);
               },
-              onChange: row.getToggleSelectedHandler(),
-              onClick: () => {
-                handleCellCheckboxOnClick(row);
+              onChange: () => {
+                handleCellCheckboxOnChange(row);
               },
             }}
           />
@@ -128,7 +126,6 @@ export function useTransactionTableColumnsHook(
           <EditableCell
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            // TODO: fix row.original not reset on cancel.
             defaultValue={editingRow === info.row.id ? info.row.original.memo : info.getValue()}
             onChangeValue={value => {
               editableValue.current[info.column.id as keyof Transaction] = value;

@@ -10,11 +10,13 @@ import { SearchDebounceInput } from '../../molecules/SearchDebounceInput/SearchD
 
 interface TransactionTableButtonsProperties {
   trigger: (
-    tableReference: MutableRefObject<Table<Transaction> | undefined>,
-    setEditingRow: Dispatch<SetStateAction<string>>,
-    editableValue: MutableRefObject<
+    tableReference: React.MutableRefObject<Table<Transaction> | undefined>,
+    setEditingRow: React.Dispatch<React.SetStateAction<string>>,
+    editableValue: React.MutableRefObject<
       (object & { [p: string]: string }) | (Transaction & { [p: string]: never })
     >,
+    setSelectedQty: React.Dispatch<React.SetStateAction<number>>,
+    setDisableDelete: React.Dispatch<React.SetStateAction<boolean>>,
   ) => void;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   setEditingRow: Dispatch<SetStateAction<string>>;
@@ -24,6 +26,10 @@ interface TransactionTableButtonsProperties {
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
   handleDelete: () => void;
+  disableDelete: boolean;
+  selectedQty: number;
+  setSelectedQty: Dispatch<SetStateAction<number>>;
+  setDisableDelete: Dispatch<SetStateAction<boolean>>;
 }
 export function TransactionTableButtons({
   trigger,
@@ -33,19 +39,34 @@ export function TransactionTableButtons({
   globalFilter,
   setGlobalFilter,
   handleDelete,
+  disableDelete,
+  selectedQty,
+  setSelectedQty,
+  setDisableDelete,
 }: TransactionTableButtonsProperties) {
   const handleAddTransaction = () => {
     if (globalFilter !== '') setGlobalFilter('');
-    trigger(tableReference, setEditingRow, editableValue);
+    trigger(tableReference, setEditingRow, editableValue, setSelectedQty, setDisableDelete);
   };
 
   return (
     <div className={styles.z_table_util_buttons}>
-      <UtilityButton StartIcon={<AiFillPlusCircle />} onClick={() => handleAddTransaction()} variant={'icon'}>
+      <UtilityButton
+        className={styles.table_utility_buttons}
+        StartIcon={<AiFillPlusCircle />}
+        onClick={() => handleAddTransaction()}
+        variant={'icon'}
+      >
         <Typography>Add Transaction</Typography>
       </UtilityButton>
-      <UtilityButton StartIcon={<MdEdit />} variant={'icon'} onClick={handleDelete}>
-        <Typography>Edit</Typography>
+      <UtilityButton
+        className={styles.table_utility_buttons}
+        StartIcon={<MdEdit />}
+        variant={'icon'}
+        onClick={handleDelete}
+        disabled={disableDelete}
+      >
+        <Typography>Edit {selectedQty === 0 ? undefined : `(${selectedQty})`}</Typography>
       </UtilityButton>
       <SearchDebounceInput
         value={globalFilter ?? ''}
