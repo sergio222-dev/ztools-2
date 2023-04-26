@@ -26,6 +26,8 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow } = useTransaction();
 
   // HANDLERS
+
+  //Row handlers
   const handleOnEdit = async (
     row: Row<Transaction>,
     table: Table<Transaction>,
@@ -71,6 +73,17 @@ export const useTransactionTableHook = () => {
     disableDelete && setDisableDelete(false);
   };
 
+  const handleRowOnKeyDown = (
+    event: KeyboardEvent,
+    row: Row<Transaction>,
+    selectedColumnId: { current: string },
+  ) => {
+    if (event.key === 'Escape' && editingRow === row.id) {
+      handleCancelEdit(row, selectedColumnId);
+    }
+  };
+
+  // Button handlers
   const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     if (row.id === '') {
       editableValue.current.id = uuidv4();
@@ -112,24 +125,34 @@ export const useTransactionTableHook = () => {
     void deleteData(row?.original as Transaction);
   };
 
-  const handleCheckboxOnKeyDown = (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
+  // Checkbox handlers
+  const handleCellCheckboxOnChange = (row: Row<Transaction>) => {
+    if (editingRow !== '' && editingRow === row.id) {
+      setEditingRow('');
+    }
+  };
+
+  const handleCheckboxOnKeyDown = async (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => {
     if (row.getIsSelected() && event.key === 'Enter' && editingRow === '') {
       setEditingRow(row.id);
-      tableReference.current?.toggleAllRowsSelected(false);
-      tableReference.current?.setRowSelection(() => ({
+      await tableReference.current?.toggleAllRowsSelected(false);
+      await tableReference.current?.setRowSelection(() => ({
         [row.id]: true,
       }));
       tableReference.current?.setExpanded(() => ({
         [row.id]: true,
       }));
+      tableReference.current &&
+        setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
       return;
     }
-    if (editingRow !== row.id && event.key === 'Enter') {
-      row.getToggleSelectedHandler()(row);
-      return;
-    }
-    if (editingRow === '' && event.key === 'Enter') {
-      row.getToggleSelectedHandler()(row);
+    if ((editingRow !== row.id || editingRow === '') && event.key === 'Enter') {
+      if (disableDelete && !row.getIsSelected()) {
+        setDisableDelete(false);
+      }
+      await row.getToggleSelectedHandler()(row);
+      tableReference.current &&
+        setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
       return;
     }
   };
@@ -143,22 +166,17 @@ export const useTransactionTableHook = () => {
     setSelectedQty(table.getSelectedRowModel().rows.length);
   };
 
-  const handleCellCheckboxOnChange = (row: Row<Transaction>) => {
-    if (editingRow !== '' && editingRow === row.id) {
-      setEditingRow('');
-    }
-  };
-
-  const handleRowOnKeyDown = (
-    event: KeyboardEvent,
-    row: Row<Transaction>,
-    selectedColumnId: { current: string },
+  const handleHeaderCheckboxOnKeyDown = async (
+    event: KeyboardEvent<HTMLInputElement>,
+    table: Table<Transaction>,
   ) => {
-    if (event.key === 'Escape' && editingRow === row.id) {
-      handleCancelEdit(row, selectedColumnId);
+    if (event.key === 'Enter') {
+      await handleHeaderCheckboxOnChange(table);
+      return;
     }
   };
 
+  // Sorting handlers
   const handleSorting = (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => {
     if (rowA.id === '' || rowB.id === '') return 0;
 
@@ -213,6 +231,7 @@ export const useTransactionTableHook = () => {
   const columns = useTransactionTableColumnsHook(
     data,
     handleHeaderCheckboxOnChange,
+    handleHeaderCheckboxOnKeyDown,
     handleCellCheckboxOnChange,
     handleCheckboxOnKeyDown,
     handleSorting,
