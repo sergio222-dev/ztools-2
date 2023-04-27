@@ -7,14 +7,14 @@ import { useState } from 'react';
 import { Button } from '../../atoms/Button/Button';
 
 interface TransactionEditDropdownProperties {
-  handleDelete: any;
-  disableDelete: any;
-  selectedQty: any;
+  handleDelete: () => void;
+  disableDelete: boolean;
+  selectedQty: number;
 }
 
 export function TransactionEditDropdown(props: TransactionEditDropdownProperties) {
   const { handleDelete, disableDelete, selectedQty } = props;
-  const [showDropdown, setShowDropdown] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const DROPDOWN_BUTTONS = [
     {

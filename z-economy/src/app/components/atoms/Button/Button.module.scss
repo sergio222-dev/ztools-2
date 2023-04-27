@@ -13,6 +13,7 @@
 
   &.variant_icon {
     background: none;
+    border-radius: const.$radius;
   }
 
   &.variant_primary {
@@ -183,5 +184,9 @@
 
   &:hover {
     color: const.$dark-primary-color;
+  }
+
+  &:focus-visible {
+    @include mixin.box-shadow(const.$primary-color);
   }
 }

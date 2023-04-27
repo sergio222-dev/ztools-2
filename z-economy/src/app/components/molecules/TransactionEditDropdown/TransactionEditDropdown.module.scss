@@ -28,9 +28,29 @@
     width: 100%;
     padding: functions.spacing(1) functions.spacing(2);
 
+    &[disabled] {
+      &:hover {
+        background-color: const.$page-light-background-color;
+      }
+    }
     &:hover {
       background-color: const.$page-light-border-color;
     }
+
+    &:focus-visible {
+      @include mixin.box-shadow(const.$primary-color);
+    }
   }
 
+}
+
+.t_table_dropdown:before {
+  content: "";
+  position: absolute;
+  border: 0.8rem solid transparent;
+  border-bottom-color: white;
+  top: -1.5rem;
+  right: 45%;
+  z-index: 1;
+  pointer-events: none;
 }
