@@ -3,10 +3,10 @@ import { Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { UtilityButton } from '../../atoms/Button/UtilityButton';
 import { AiFillPlusCircle } from 'react-icons/ai';
-import { MdEdit } from 'react-icons/md';
 import styles from './TransactionTableButtons.module.scss';
 import { Typography } from '../../atoms/Typography/Typography';
 import { SearchDebounceInput } from '../../molecules/SearchDebounceInput/SearchDebounceInput';
+import { TransactionEditDropdown } from '../../molecules/TransactionEditDropdown/TransactionEditDropdown';
 
 interface TransactionTableButtonsProperties {
   trigger: (
@@ -50,28 +50,19 @@ export function TransactionTableButtons({
   };
 
   return (
-    <div className={styles.z_table_util_buttons}>
-      <UtilityButton
-        className={styles.table_utility_buttons}
-        StartIcon={<AiFillPlusCircle />}
-        onClick={() => handleAddTransaction()}
-        variant={'icon'}
-      >
+    <div className={styles.t_table_buttons_main_div}>
+      <UtilityButton StartIcon={<AiFillPlusCircle />} onClick={() => handleAddTransaction()} variant={'icon'}>
         <Typography>Add Transaction</Typography>
       </UtilityButton>
-      <UtilityButton
-        className={styles.table_utility_buttons}
-        StartIcon={<MdEdit />}
-        variant={'icon'}
-        onClick={handleDelete}
-        disabled={disableDelete}
-      >
-        <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
-      </UtilityButton>
+      <TransactionEditDropdown
+        handleDelete={handleDelete}
+        disableDelete={disableDelete}
+        selectedQty={selectedQty}
+      />
       <SearchDebounceInput
         value={globalFilter ?? ''}
         onChange={value => setGlobalFilter(String(value))}
-        className={styles.z_table_search_input}
+        className={styles.t_table_search_input}
         placeholder="Search All Accounts..."
       />
     </div>

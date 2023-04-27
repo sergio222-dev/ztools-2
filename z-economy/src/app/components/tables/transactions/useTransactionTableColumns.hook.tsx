@@ -194,8 +194,8 @@ export function useTransactionTableColumnsHook(
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
     {
-      accessorKey: 'checkbox',
-      id: 'checkbox',
+      accessorKey: 'cleared',
+      id: 'cleared',
       header: table => (
         <div className="z_flex z_flex_jc_center">
           <AiFillCopyrightCircle />

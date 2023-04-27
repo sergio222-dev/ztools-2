@@ -2,7 +2,7 @@
 @use '../../styles/mixins' as mixin;
 @use '../../styles/functions';
 
-.z_table_util_buttons {
+.t_table_buttons_main_div {
   display: flex;
   border-bottom: const.$page-light-border-color 1px solid;
   align-items: center;
@@ -13,7 +13,7 @@
   }
 }
 
-.z_table_search_input {
+.t_table_search_input {
   border: 1px solid const.$primary-color;
   padding-top: 0;
   padding-bottom: 0;
