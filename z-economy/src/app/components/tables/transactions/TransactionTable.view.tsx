@@ -12,7 +12,7 @@ export function TransactionTableView() {
     setEditingRow,
     handleSaveEdit,
     handleCancelEdit,
-    handleOnEdit,
+    handleOnEnterEditMode,
     handleRowOnKeyDown,
     editableValue,
     globalFilter,
@@ -30,7 +30,7 @@ export function TransactionTableView() {
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         handleDelete={handleDelete}
-      ></TransactionTableButtons>
+      />
       <div ref={reference} style={{ display: 'flex' }}>
         <AllAccountPageTable
           tableReference={tableReference}
@@ -38,7 +38,7 @@ export function TransactionTableView() {
           data={data}
           handleSaveEdit={handleSaveEdit}
           handleCancelEdit={handleCancelEdit}
-          handleOnEdit={handleOnEdit}
+          handleOnEnterEditMode={handleOnEnterEditMode}
           handleRowOnKeyDown={handleRowOnKeyDown}
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}

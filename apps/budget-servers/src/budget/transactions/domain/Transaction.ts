@@ -6,6 +6,7 @@ export class Transaction {
   public readonly memo: string;
   public readonly category: string;
   public readonly date: Date;
+  public readonly cleared: boolean;
   public readonly createdAt: Date;
   public readonly updatedAt: Date;
   private constructor(
@@ -16,6 +17,7 @@ export class Transaction {
     memo: string,
     category: string,
     date: Date,
+    cleared: boolean,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -26,6 +28,7 @@ export class Transaction {
     this.memo = memo;
     this.category = category;
     this.date = date;
+    this.cleared = cleared;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -38,7 +41,8 @@ export class Transaction {
     memo: string,
     category: string,
     date: Date,
+    cleared: boolean,
   ) {
-    return new Transaction(id, inflow, outflow, payee, memo, category, date, new Date(), new Date());
+    return new Transaction(id, inflow, outflow, payee, memo, category, date, cleared, new Date(), new Date());
   }
 }

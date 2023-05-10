@@ -4,7 +4,7 @@ import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { chunkify, normalizeText } from '@utils/TextUtils';
+import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 
 export const useTransactionTableHook = () => {
@@ -22,39 +22,23 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow } = useTransaction();
 
   // HANDLERS
-  const handleOnEdit = (
+  const handleOnEnterEditMode = (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
-    selectedColumnId: MutableRefObject<string>,
   ) => {
-    if (cell.id.includes('checkbox')) {
-      if (row.getIsSelected()) {
-        row.getIsExpanded() && row.toggleExpanded(false);
-      }
-      editingRow === row.id && setEditingRow('');
-      row.toggleSelected();
-      return;
-    }
-    if (row.getIsSelected()) {
-      editingRow !== row.id && setEditingRow(row.id);
-      editableValue.current = Object.assign(row.original, editableValue.current);
-      table.setExpanded(() => ({
-        [row.id]: true,
-      }));
-      table.setRowSelection(() => ({
-        [row.id]: true,
-      }));
-      selectedColumnId.current = cell.column.id;
-      return;
-    }
-    editingRow !== '' && setEditingRow('');
-    editableValue.current = {};
-    void deleteFakeRow();
-    table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
-    table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
-    selectedColumnId.current = 'date';
-    row.toggleSelected();
+    // if (cell.id.includes('checkbox')) {
+    //   editingRow === row.id && setEditingRow('');
+    //   return;
+    // }
+    // if (row.getIsSelected()) {
+    editingRow !== row.id && setEditingRow(row.id);
+    editableValue.current = Object.assign(row.original, editableValue.current);
+    // return;
+    // }
+    // editingRow !== '' && setEditingRow('');
+    // editableValue.current = {};
+    // void deleteFakeRow();
   };
 
   const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
@@ -205,7 +189,7 @@ export const useTransactionTableHook = () => {
     handleDelete,
     setGlobalFilter,
     setEditingRow,
-    handleOnEdit,
+    handleOnEnterEditMode,
     handleSaveEdit,
     handleCancelEdit,
     trigger,

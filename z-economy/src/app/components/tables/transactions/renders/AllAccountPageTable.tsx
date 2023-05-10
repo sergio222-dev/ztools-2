@@ -26,6 +26,7 @@ import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
+import { getColumnType } from '@utils/table';
 
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
@@ -33,7 +34,7 @@ interface TransactionTableProperties {
   data: Array<Transaction>;
   handleSaveEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
   handleCancelEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
-  handleOnEdit: (
+  handleOnEnterEditMode: (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
@@ -48,13 +49,21 @@ interface TransactionTableProperties {
   setGlobalFilter: Dispatch<SetStateAction<string>>;
 }
 
+function handleCheckboxCellClick(row: Row<Transaction>) {
+  if (row.getIsSelected()) {
+    row.getIsExpanded() && row.toggleExpanded(false);
+  }
+  row.toggleSelected();
+  return;
+}
+
 export function AllAccountPageTable({
   columns,
   data,
   tableReference,
   handleSaveEdit,
   handleCancelEdit,
-  handleOnEdit,
+  handleOnEnterEditMode,
   handleRowOnKeyDown,
   globalFilter,
   setGlobalFilter,
@@ -90,19 +99,38 @@ export function AllAccountPageTable({
 
   if (tableReference) tableReference.current = table;
 
-  // SIDE EFFECT posible loop infinito cuando se levanta el front primero y despues el server estando ya en all accounts page.
-  useEffect(() => {
-    setTableData(memoData);
-  }, [memoData]);
-
-  // LOCAL HANDLERS
-  const cellOnClickHandler = (
+  // HANDLERS
+  const handleOnClickCell = (
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
   ) => {
-    handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
+    if (cell.id.includes('checkbox')) {
+      handleCheckboxCellClick(row);
+      // handleOnEnterEditMode && handleOnEnterEditMode(row, table, cell);
+      return;
+    }
+    if (row.getIsSelected()) {
+      table.setExpanded(() => ({
+        [row.id]: true,
+      }));
+      table.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+      selectedColumnId.current = cell.column.id;
+      handleOnEnterEditMode(row, table, cell);
+      return;
+    }
+    table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
+    table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
+    selectedColumnId.current = 'date';
+    row.toggleSelected();
   };
+
+  // SIDE EFFECT posible loop infinito cuando se levanta el front primero y despues el server estando ya en all accounts page.
+  useEffect(() => {
+    setTableData(memoData);
+  }, [memoData]);
 
   return (
     <table className={styles.z_table}>
@@ -173,10 +201,10 @@ export function AllAccountPageTable({
               {row.getVisibleCells().map(cell => (
                 <td
                   className={styles.z_table_cell}
-                  data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
+                  data-type={getColumnType<Transaction>(cell.column)}
                   key={cell.id}
                   onClick={() => {
-                    cellOnClickHandler(row, table, cell);
+                    handleOnClickCell(row, table, cell);
                   }}
                   {...{
                     style: {
@@ -199,7 +227,6 @@ export function AllAccountPageTable({
                   handleRowOnKeyDown(event, row, selectedColumnId);
                 }}
               >
-                {}
                 {/* 2nd row is a custom 1 cell row */}
                 <EditableFooterButtons
                   className={styles.z_table_subcomponent_cell}
