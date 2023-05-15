@@ -24,4 +24,13 @@ export class TransactionCreateHandlerTest extends TransactionUnitTestCase {
     void this.handler.execute(command);
     this.shouldSaved(transaction);
   }
+
+  @test('should create with empty clreaded flag')
+  async it_should_create_transaction_with_cleared_flag(): Promise<void> {
+    const command = TransactionCreateCommandMother.randomWithoutCleared();
+    const transaction = TransactionMother.fromCreateCommand(command);
+
+    void this.handler.execute(command);
+    this.shouldSaved(transaction);
+  }
 }

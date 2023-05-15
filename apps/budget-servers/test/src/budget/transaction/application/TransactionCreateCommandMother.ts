@@ -15,4 +15,16 @@ export class TransactionCreateCommandMother {
       MotherCreator.random().datatype.boolean(),
     );
   }
+
+  public static randomWithoutCleared(): TransactionCreateCommand {
+    return new TransactionCreateCommand(
+      IdMother.random(),
+      MotherCreator.random().finance.amount(),
+      MotherCreator.random().finance.amount(),
+      MotherCreator.random().name.firstName(),
+      MotherCreator.random().company.name(),
+      MotherCreator.random().commerce.department(),
+      MotherCreator.random().date.recent(),
+    );
+  }
 }

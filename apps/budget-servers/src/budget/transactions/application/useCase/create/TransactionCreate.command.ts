@@ -9,7 +9,7 @@ export class TransactionCreateCommand {
     private readonly _memo: string,
     private readonly _category: string,
     private readonly _date: Date,
-    private readonly _cleared: boolean,
+    private readonly _cleared = false,
   ) {}
 
   @ApiProperty()
