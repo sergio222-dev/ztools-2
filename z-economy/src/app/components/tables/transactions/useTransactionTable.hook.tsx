@@ -124,7 +124,8 @@ export const useTransactionTableHook = () => {
       const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
       const selectedRowsIds = { ids: selectedRows?.map(row => row.id) };
       console.log(selectedRowsIds);
-      // setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
+      await selectedRows?.map(row => row.toggleSelected(false));
+      setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
       void deleteDataBatch(selectedRowsIds);
       return;
     }
