@@ -1,4 +1,5 @@
 export class Transaction {
+  // TODO makes private
   constructor(
     public id: string,
     readonly date: string,
