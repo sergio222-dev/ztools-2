@@ -52,14 +52,13 @@ export const useTransactionTableHook = () => {
     if (row.getIsSelected()) {
       editingRow !== row.id && setEditingRow(row.id);
       editableValue.current = Object.assign(row.original, editableValue.current);
+      selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
       }));
       await table.setRowSelection(() => ({
         [row.id]: true,
       }));
-      console.log('soy el selected column id');
-      selectedColumnId.current = cell.column.id; // It worked but now it doesn't.
       row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
       return;
     }
