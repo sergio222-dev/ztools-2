@@ -14,7 +14,7 @@ export function useTransactionTableColumnsHook(
   handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
-  editableValue: MutableRefObject<Record<keyof Transaction, string> | Record<string, never>>,
+  editableValue: MutableRefObject<Transaction>,
   editingRow: string,
 ) {
   const columnHelper = createColumnHelper<Transaction>();

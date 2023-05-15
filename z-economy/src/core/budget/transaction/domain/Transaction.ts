@@ -2,10 +2,10 @@ export class Transaction {
   // TODO makes private
   constructor(
     public id: string,
-    readonly date: string,
-    readonly payee: string,
-    readonly category: string,
-    readonly memo: string,
+    public date: string,
+    public payee: string,
+    public category: string,
+    public memo: string,
     public inflow: string,
     public outflow: string,
     private budgetId: string,

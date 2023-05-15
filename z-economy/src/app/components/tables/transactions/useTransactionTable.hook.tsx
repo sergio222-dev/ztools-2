@@ -6,6 +6,7 @@ import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
+import { createEmptyTransaction } from '@core/budget/budget/domain/TransactionUtils';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -15,7 +16,7 @@ export const useTransactionTableHook = () => {
   const [selectedQty, setSelectedQty] = useState(0);
 
   // REFS
-  const editableValue = useRef<Record<keyof Transaction, string> | Record<string, never>>({});
+  const editableValue = useRef<Transaction>(createEmptyTransaction());
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   // eslint-disable-next-line unicorn/no-useless-undefined
@@ -64,7 +65,7 @@ export const useTransactionTableHook = () => {
       return;
     }
     editingRow !== '' && setEditingRow('');
-    editableValue.current = {};
+    editableValue.current = createEmptyTransaction();
     void deleteFakeRow();
     table.getIsSomeRowsExpanded() && table.toggleAllRowsExpanded(false);
     table.getIsSomeRowsSelected() && table.toggleAllRowsSelected(false);
@@ -95,13 +96,13 @@ export const useTransactionTableHook = () => {
       if (editableValue.current.outflow === '') editableValue.current.outflow = '0';
       void createData(editableValue.current as Transaction);
       editingRow !== '' && setEditingRow('');
-      editableValue.current = {};
+      editableValue.current = createEmptyTransaction();
       selectedColumnId.current = 'date';
       return;
     }
     void updateData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
-    editableValue.current = {};
+    editableValue.current = createEmptyTransaction();
     selectedColumnId.current = 'date';
     row.toggleExpanded(false);
     row.toggleSelected(false);
@@ -109,7 +110,7 @@ export const useTransactionTableHook = () => {
 
   const handleCancelEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     editingRow !== '' && setEditingRow('');
-    editableValue.current = {};
+    createEmptyTransaction();
     selectedColumnId.current = 'date';
     row.toggleExpanded(false);
     void deleteFakeRow();
