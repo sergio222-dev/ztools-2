@@ -5,8 +5,9 @@ import { TransactionUpdate } from '@core/budget/transaction/application/useCase/
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
-import { Table } from '@tanstack/react-table';
+import { Row, Table } from '@tanstack/react-table';
 import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
+import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
 
 export const useTransaction = () => {
   // SERVICES
@@ -14,6 +15,7 @@ export const useTransaction = () => {
   const transactionUpdate = container.resolve(TransactionUpdate);
   const transactionCreate = container.resolve(TransactionCreate);
   const transactionDelete = container.resolve(TransactionDelete);
+  const transactionDeleteBatch = container.resolve(TransactionDeleteBatch);
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
@@ -73,15 +75,21 @@ export const useTransaction = () => {
     await mutate(data);
   };
 
-  const createData = async (transaction: Transaction) => {
+  const createData = async (t: Transaction) => {
     if (!data) return;
     await deleteFakeRow(true);
-    await transactionCreate.execute(transaction);
+    await transactionCreate.execute(t);
   };
 
-  const deleteData = async (transaction: Transaction) => {
+  const deleteData = async (t: Transaction) => {
     if (!data) return;
-    await transactionDelete.execute(transaction);
+    await transactionDelete.execute(t);
+    await mutate(data);
+  };
+
+  const deleteDataBatch = async (t: { ids: string[] }) => {
+    if (!data) return;
+    await transactionDeleteBatch.execute(t);
     await mutate(data);
   };
 
@@ -94,5 +102,6 @@ export const useTransaction = () => {
     deleteData,
     trigger,
     deleteFakeRow,
+    deleteDataBatch,
   };
 };

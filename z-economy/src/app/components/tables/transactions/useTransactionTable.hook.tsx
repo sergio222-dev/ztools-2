@@ -23,7 +23,8 @@ export const useTransactionTableHook = () => {
   const tableReference = useRef<Table<Transaction>>();
 
   // SERVICES
-  const { data, updateData, createData, deleteData, trigger, deleteFakeRow } = useTransaction();
+  const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
+    useTransaction();
 
   // HANDLERS
 
@@ -115,7 +116,16 @@ export const useTransactionTableHook = () => {
   };
 
   const handleDelete = async () => {
+    console.log(selectedQty);
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
+      return;
+    }
+    if (selectedQty > 1) {
+      const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
+      const selectedRowsIds = { ids: selectedRows?.map(row => row.id) };
+      console.log(selectedRowsIds);
+      // setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
+      void deleteDataBatch(selectedRowsIds);
       return;
     }
     const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
