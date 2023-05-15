@@ -44,4 +44,8 @@ export class MongoCategoryRepository implements CategoryRepository {
 
     return Category.CREATE(id, category.name, category.assignedBudget, category.currentBudget);
   }
+
+  async delete(id: string): Promise<void> {
+    await this.categoryModel.findByIdAndDelete(id);
+  }
 }

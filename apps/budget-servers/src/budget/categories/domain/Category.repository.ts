@@ -5,4 +5,5 @@ export interface CategoryRepository {
   findOneById(id: string): Promise<Category>;
   update(category: Category): Promise<void>;
   save(category: Category): Promise<void>;
+  delete(id: string): Promise<void>;
 }

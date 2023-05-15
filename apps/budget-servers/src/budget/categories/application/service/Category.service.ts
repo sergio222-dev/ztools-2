@@ -24,4 +24,8 @@ export class CategoryService {
   async update(category: Category): Promise<void> {
     await this.categoryRepository.update(category);
   }
+
+  async delete(id: string): Promise<void> {
+    await this.categoryRepository.delete(id);
+  }
 }
