@@ -99,7 +99,7 @@ export function AllAccountPageTable({
   const cellOnClickHandler = (
     row: Row<Transaction>,
     table: Table<Transaction>,
-    cell: Cell<Transaction, unknown>,
+    cell: Cell<Transaction, string>,
   ) => {
     handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
   };
