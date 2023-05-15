@@ -9,7 +9,7 @@ export class TransactionService {
     private transactionRepository: TransactionRepository,
   ) {}
 
-  async create(transaction: Transaction): Promise<void> {
+  async createOne(transaction: Transaction): Promise<void> {
     await this.transactionRepository.save(transaction);
   }
 
@@ -27,5 +27,9 @@ export class TransactionService {
 
   async deleteOneById(id: string): Promise<void> {
     await this.transactionRepository.delete(id);
+  }
+
+  async deleteBatch(ids: string[]): Promise<void> {
+    await this.transactionRepository.deleteBatch(ids);
   }
 }

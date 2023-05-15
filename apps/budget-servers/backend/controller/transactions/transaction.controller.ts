@@ -18,34 +18,17 @@ import { TransactionUpdateCommand } from '@budget/transactions/application/useCa
 import { TransactionFindOneByIdQuery } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
 import { Transaction } from '@budget/transactions/domain/Transaction';
 import { TransactionDeleteCommand } from '@budget/transactions/application/useCase/delete/TransactionDelete.command';
+import { TransactionDeleteBatchCommand } from '@budget/transactions/application/useCase/deleteBatch/TransactionDeleteBatch.command';
 
 @Controller('transaction')
 @ApiTags('transactions')
 @Injectable()
 export class TransactionController {
-  constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}
+  constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
   @ApiResponse({
     status: 200,
-    schema: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string', example: '1' },
-          inflow: { type: 'string', example: '0' },
-          outflow: { type: 'string', example: '800' },
-          payee: { type: 'string', example: 'Walmart' },
-          memo: { type: 'string', example: '' },
-          date: { type: 'string', example: new Date().toISOString() },
-          updatedAt: { type: 'string', example: new Date().toISOString() },
-          createdAt: { type: 'string', example: new Date().toISOString() },
-        },
-      },
-    },
-  })
-  @ApiOperation({
     description: 'Get all transactions',
   })
   async findAll(): Promise<Transaction[]> {
@@ -68,26 +51,13 @@ export class TransactionController {
   }
 
   @Post()
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        id: { type: 'string', example: '1' },
-        inflow: { type: 'string', example: '0' },
-        outflow: { type: 'string', example: '800' },
-        payee: { type: 'string', example: 'Walmart' },
-        memo: { type: 'string', example: '' },
-        date: { type: 'string', example: new Date().toISOString() },
-      },
-    },
-  })
   @ApiResponse({
     status: 201,
   })
   async create(
-    @Body() { id, date, outflow, payee, memo, category, inflow }: TransactionCreateCommand,
+    @Body() { id, date, outflow, payee, memo, category, inflow, cleared }: TransactionCreateCommand,
   ): Promise<void> {
-    const command = new TransactionCreateCommand(id, inflow, outflow, payee, memo, category, date);
+    const command = new TransactionCreateCommand(id, inflow, outflow, payee, memo, category, date, cleared);
     await this.commandBus.execute(command);
   }
 
@@ -96,7 +66,7 @@ export class TransactionController {
     status: 201,
   })
   async update(
-    @Body() { id, inflow, outflow, payee, memo, category, date }: TransactionUpdateCommand,
+    @Body() { id, inflow, outflow, payee, memo, category, date, cleared }: TransactionUpdateCommand,
   ): Promise<void> {
     const query = new TransactionFindOneByIdQuery(id);
 
@@ -105,7 +75,7 @@ export class TransactionController {
     if (transaction.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new TransactionUpdateCommand(id, inflow, outflow, payee, memo, category, date);
+    const command = new TransactionUpdateCommand(id, inflow, outflow, payee, memo, category, date, cleared);
 
     await this.commandBus.execute(command);
   }
@@ -122,5 +92,15 @@ export class TransactionController {
     const command = new TransactionDeleteCommand(id);
 
     await this.commandBus.execute(command);
+  }
+
+  @Post('/delete')
+  async deleteBatch(@Body() { ids }: TransactionDeleteBatchCommand): Promise<void> {
+    try {
+      const command = new TransactionDeleteBatchCommand(ids);
+      await this.commandBus.execute<TransactionDeleteBatchCommand>(command);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

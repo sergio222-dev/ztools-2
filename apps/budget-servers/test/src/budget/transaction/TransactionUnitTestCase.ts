@@ -1,6 +1,6 @@
 import { UnitTestCase } from '../../shared/infrastructure/UnitTestCase';
 import { TransactionRepository } from '../../../../src/budget/transactions/domain/Transaction.repository';
-import { TransactionService } from '../../../../src/budget/transactions/application/services/TransactionService';
+import { TransactionService } from '../../../../src/budget/transactions/application/services/Transaction.service';
 import { Transaction } from '../../../../src/budget/transactions/domain/Transaction';
 import { MockProxy } from 'jest-mock-extended';
 import '../../shared/domain/TestUtils';
@@ -56,5 +56,10 @@ export abstract class TransactionUnitTestCase extends UnitTestCase {
   protected shouldDelete(id: string): void {
     expect(this.repository.delete).toBeCalledTimes(1);
     expect(this.repository.delete).toBeCalledWith(id);
+  }
+
+  protected shouldDeleteBatch(ids: string[]): void {
+    expect(this.repository.deleteBatch).toBeCalledTimes(1);
+    expect(this.repository.deleteBatch).toBeCalledWith(ids);
   }
 }

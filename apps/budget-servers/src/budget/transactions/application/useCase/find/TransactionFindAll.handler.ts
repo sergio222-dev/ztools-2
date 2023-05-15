@@ -1,7 +1,7 @@
 import { Transaction } from '../../../domain/Transaction';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { TransactionFindAllQuery } from './TransactionFindAll.query';
-import { TransactionService } from '@budget/transactions/application/services/TransactionService';
+import { TransactionService } from '@budget/transactions/application/services/Transaction.service';
 
 @QueryHandler(TransactionFindAllQuery)
 export class TransactionFindAllHandler implements IQueryHandler<TransactionFindAllQuery, Transaction[]> {

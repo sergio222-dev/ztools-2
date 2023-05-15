@@ -4,7 +4,7 @@ import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
-import { chunkify, normalizeText } from '@utils/TextUtils';
+import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 
 export const useTransactionTableHook = () => {
