@@ -58,7 +58,8 @@ export const useTransactionTableHook = () => {
       await table.setRowSelection(() => ({
         [row.id]: true,
       }));
-      selectedColumnId.current = cell.column.id;
+      console.log('soy el selected column id');
+      selectedColumnId.current = cell.column.id; // It worked but now it doesn't.
       row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
       return;
     }
@@ -87,10 +88,9 @@ export const useTransactionTableHook = () => {
   const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
     if (row.id === '') {
       editableValue.current.id = uuidv4();
-      // Is still possible to paste invalid characters in the inflow/outflow fields so we replace them before sending to the server
+      // Is still possible to paste invalid characters in the inflow/outflow fields, so we replace them before sending to the server
       editableValue.current.inflow = editableValue.current.inflow.replaceAll(/[^\d.]/g, '');
       editableValue.current.outflow = editableValue.current.outflow.replaceAll(/[^\d.]/g, '');
-      // If field is empty set it to 0
       if (editableValue.current.inflow === '') editableValue.current.inflow = '0';
       if (editableValue.current.outflow === '') editableValue.current.outflow = '0';
       void createData(editableValue.current as Transaction);
