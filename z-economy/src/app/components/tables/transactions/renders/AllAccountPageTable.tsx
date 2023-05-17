@@ -85,7 +85,7 @@ export function AllAccountPageTable({
     initialState: {
       sorting: [{ id: 'date', desc: true }],
     },
-    debugTable: true,
+    debugTable: false,
   });
 
   if (tableReference) tableReference.current = table;
@@ -99,7 +99,7 @@ export function AllAccountPageTable({
   const cellOnClickHandler = (
     row: Row<Transaction>,
     table: Table<Transaction>,
-    cell: Cell<Transaction, string>,
+    cell: Cell<Transaction, unknown>,
   ) => {
     handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
   };

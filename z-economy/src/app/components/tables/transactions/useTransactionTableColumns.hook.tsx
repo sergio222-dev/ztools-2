@@ -99,7 +99,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as 'payee'] = value;
+              editableValue.current.payee = value;
             }}
           />
         ) : (
@@ -117,7 +117,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as 'category'] = value;
+              editableValue.current.category = value;
             }}
           />
         ) : (
@@ -135,7 +135,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={editingRow === info.row.id ? info.row.original.memo : info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as 'memo'] = value;
+              editableValue.current.memo = value;
             }}
           />
         ) : (
@@ -153,7 +153,8 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as 'outflow'] = value;
+              editableValue.current.outflow = value;
+              editableValue.current.inflow = '0';
             }}
             type={new NumericTextType().getType()}
           />
@@ -179,7 +180,8 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as 'inflow'] = value;
+              editableValue.current.inflow = value;
+              editableValue.current.outflow = '0';
             }}
             type={new NumericTextType().getType()}
           />
@@ -195,31 +197,6 @@ export function useTransactionTableColumnsHook(
       },
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
-    // {
-    //   accessorKey: 'cleared',
-    //   id: 'cleared',
-    //   header: table => (
-    //     <div className="z_flex z_flex_jc_center">
-    //       <AiFillCopyrightCircle />
-    //     </div>
-    //   ),
-    //   size: 30,
-    //   minSize: 30,
-    //   maxSize: 30,
-    //   cell: row =>
-    //     cleared ? (
-    //       <div className={cls('z_flex z_flex_jc_center', styles.z_table_cleared_icon)}>
-    //         <AiFillCopyrightCircle />
-    //       </div>
-    //     ) : (
-    //       <div className="z_flex z_flex_jc_center">
-    //         <AiFillCopyrightCircle />
-    //       </div>
-    //     ),
-    //   meta: {
-    //     type: new OtherTextType(),
-    //   },
-    // },
     columnHelper.accessor('cleared', {
       id: 'cleared',
       header: () => <AiFillCopyrightCircle />,

@@ -18,7 +18,7 @@ export const useTransaction = () => {
   const transactionDeleteBatch = container.resolve(TransactionDeleteBatch);
 
   // SWR
-  const { data, error, isLoading, mutate } = useSWR(['transactions', {}], () => transactionGetAll.execute());
+  const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
 
   const trigger = async (
     tableReference: MutableRefObject<Table<Transaction> | undefined>,

@@ -32,6 +32,7 @@ export class MongoTransactionRepository implements TransactionRepository {
     oldTransaction?.set('date', transaction.date);
     oldTransaction?.set('category', transaction.category);
     oldTransaction?.set('updatedAt', new Date());
+    oldTransaction?.set('cleared', transaction.cleared);
     await oldTransaction?.save();
   }
 

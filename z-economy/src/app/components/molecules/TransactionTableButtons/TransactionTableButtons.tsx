@@ -12,17 +12,13 @@ interface TransactionTableButtonsProperties {
   trigger: (
     tableReference: MutableRefObject<Table<Transaction> | undefined>,
     setEditingRow: Dispatch<SetStateAction<string>>,
-    editableValue: MutableRefObject<
-      (object & { [p: string]: string }) | (Transaction & { [p: string]: never })
-    >,
+    editableValue: MutableRefObject<Transaction>,
     setSelectedQty: Dispatch<SetStateAction<number>>,
     setDisableDelete: Dispatch<SetStateAction<boolean>>,
   ) => void;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   setEditingRow: Dispatch<SetStateAction<string>>;
-  editableValue: MutableRefObject<
-    (object & { [p: string]: string }) | (Transaction & { [p: string]: never })
-  >;
+  editableValue: MutableRefObject<Transaction>;
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
   handleDelete: () => void;

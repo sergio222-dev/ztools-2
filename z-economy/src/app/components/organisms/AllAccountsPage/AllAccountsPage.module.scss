@@ -12,33 +12,6 @@
     padding: functions.spacing(2);
   }
 
-  .balance_contents {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    .balance_symbol {
-      margin: 0;
-      padding: functions.spacing(2);
-      text-align: center;
-      display: block;
-      font-size: 1.17em;
-      font-weight: bold;
-    }
-
-    .amount {
-      color: const.$positive-background-color;
-      font-weight: bold;
-      font-size: 1.1rem;
-      padding-bottom: functions.spacing(0.5);
-    }
-
-    .balance_text {
-      font-size: 0.8rem;
-      white-space: nowrap;
-    }
-  }
-
   .all_accounts_page_title {
     background-color: const.$page-darker-background-color;
     padding: functions.spacing(2);

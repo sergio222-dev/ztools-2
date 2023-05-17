@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent, HTMLAttributes, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Input } from '@atoms/Input/Input';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
+import currency from 'currency.js';
 
 interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
   isEditable: boolean;
@@ -73,7 +74,9 @@ export function EditableCell(properties: EditableCellProperties) {
       onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
     />
   ) : (
-    <div>{type === 'numeric' ? '$' + defaultValue : defaultValue}</div>
+    <div>
+      {type === 'numeric' ? currency(defaultValue as string, { separator: ',' }).format() : defaultValue}
+    </div>
   );
 }
 
