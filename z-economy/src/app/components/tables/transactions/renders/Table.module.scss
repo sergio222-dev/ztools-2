@@ -105,5 +105,10 @@
     height: 40px;
     border: 1px none;
     border-bottom: 1px solid const.$page-light-border-color;
+    padding-right: functions.spacing(4);
   }
+}
+
+.z_table_cleared_icon {
+  color: const.$positive-background-color;
 }

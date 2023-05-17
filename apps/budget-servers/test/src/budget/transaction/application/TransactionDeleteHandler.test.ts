@@ -20,5 +20,7 @@ export class TransactionDeleteHandlerTest extends TransactionUnitTestCase {
     const command = new TransactionDeleteCommand(id);
 
     void this.handler.execute(command);
+
+    this.shouldDelete(id);
   }
 }

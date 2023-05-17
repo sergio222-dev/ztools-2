@@ -1,6 +1,7 @@
 import { ChangeEvent, FocusEvent, HTMLAttributes, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { Input } from '@atoms/Input/Input';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
+import currency from 'currency.js';
 
 interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
   isEditable: boolean;
@@ -13,7 +14,6 @@ export function EditableCell(properties: EditableCellProperties) {
   const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue } = properties;
 
   // STATE
-  // We need to keep and update the state of the cell normally
   const [value, setValue] = useState(defaultValue);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -21,11 +21,11 @@ export function EditableCell(properties: EditableCellProperties) {
   const inputReference = useRef<HTMLInputElement>(undefined);
 
   // HANDLERS
-  // When the input is blurred, we'll call our table meta's updateData function
   const handleOnBlur = (event: FocusEvent<HTMLInputElement>) => {
     onBlur && onBlur(event);
   };
   const handleOnChangeNumeric = (event: ChangeEvent<HTMLInputElement>) => {
+    // TODO: se puede hacer ctrl + v y poner texto en el input y si despues apretamos save se manda a la db.
     const value = event.target.value.replace(/[^\d\s.A-Za-z]/g, '');
     onChangeValue && onChangeValue(value);
     setValue(value);
@@ -34,6 +34,8 @@ export function EditableCell(properties: EditableCellProperties) {
     onChangeValue && onChangeValue(event.target.value);
     setValue(event.target.value);
   };
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleOnKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     const regex = /^[\d.]/;
 
@@ -47,6 +49,7 @@ export function EditableCell(properties: EditableCellProperties) {
       event.key !== 'Home' &&
       event.key !== 'End' &&
       event.key !== 'F5' &&
+      event.key !== 'Escape' &&
       !event.ctrlKey
     ) {
       event.preventDefault();
@@ -57,6 +60,7 @@ export function EditableCell(properties: EditableCellProperties) {
   useEffect(() => {
     if (shouldFocus) {
       inputReference.current?.focus();
+      inputReference.current?.select();
     }
   }, [shouldFocus]);
 
@@ -70,7 +74,9 @@ export function EditableCell(properties: EditableCellProperties) {
       onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
     />
   ) : (
-    <div>{type === 'numeric' ? '$' + defaultValue : defaultValue}</div>
+    <div>
+      {type === 'numeric' ? currency(defaultValue as string, { separator: ',' }).format() : defaultValue}
+    </div>
   );
 }
 

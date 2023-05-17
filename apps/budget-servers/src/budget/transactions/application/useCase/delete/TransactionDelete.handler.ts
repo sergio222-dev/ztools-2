@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionDeleteCommand } from '@budget/transactions/application/useCase/delete/TransactionDelete.command';
-import { TransactionService } from '@budget/transactions/application/services/TransactionService';
+import { TransactionService } from '@budget/transactions/application/services/Transaction.service';
 
 @CommandHandler(TransactionDeleteCommand)
 export class TransactionDeleteHandler implements ICommandHandler<TransactionDeleteCommand> {

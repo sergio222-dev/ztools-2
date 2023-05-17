@@ -1,13 +1,14 @@
 export class Transaction {
+  // TODO makes private
   constructor(
-    readonly id: string,
-    readonly date: string,
-    readonly payee: string,
-    readonly category: string,
-    readonly memo: string,
-    readonly inflow: string,
-    readonly outflow: string,
-    readonly budgetId: string,
+    public id: string,
+    public date: string,
+    public payee: string,
+    public category: string,
+    public memo: string,
+    public inflow: string,
+    public outflow: string,
+    public cleared: boolean,
   ) {}
 
   static CREATE(
@@ -18,8 +19,8 @@ export class Transaction {
     memo: string,
     inflow: string,
     outflow: string,
-    budgetId: string,
+    cleared: boolean,
   ) {
-    return new Transaction(id, date, payee, category, memo, inflow, outflow, budgetId);
+    return new Transaction(id, date, payee, category, memo, inflow, outflow, cleared);
   }
 }

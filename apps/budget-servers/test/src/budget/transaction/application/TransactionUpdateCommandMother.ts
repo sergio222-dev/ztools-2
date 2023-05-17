@@ -10,7 +10,9 @@ export class TransactionUpdateCommandMother {
       MotherCreator.random().finance.amount(),
       MotherCreator.random().name.firstName(),
       MotherCreator.random().company.name(),
+      MotherCreator.random().commerce.department(),
       MotherCreator.random().date.recent(),
+      MotherCreator.random().datatype.boolean(),
     );
   }
 }
