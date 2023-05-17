@@ -1,5 +1,5 @@
 # ztools-2 monorepo
-this monorepo contains general propourse projects
+this monorepo contains general purpose projects
 
 # Folder structure
 ## Apps
@@ -10,7 +10,7 @@ this monorepo contains general propourse projects
 > Frontend
 
 ## TODOS
-- [ ] Refactor the all acount page table
+- [ ] Refactor the all account page table
 - [ ] Migrate to tailwind with modules
 - [ ] Add coding guidelines
 - [ ] Add styles guidelines
