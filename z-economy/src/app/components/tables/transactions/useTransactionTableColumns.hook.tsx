@@ -6,6 +6,8 @@ import { EditableCell } from '../../molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject } from 'react';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
+import styles from './renders/Table.module.scss';
+import cls from 'classnames';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -97,7 +99,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
+              editableValue.current[info.column.id as 'payee'] = value;
             }}
           />
         ) : (
@@ -115,7 +117,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
+              editableValue.current[info.column.id as 'category'] = value;
             }}
           />
         ) : (
@@ -133,7 +135,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={editingRow === info.row.id ? info.row.original.memo : info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
+              editableValue.current[info.column.id as 'memo'] = value;
             }}
           />
         ) : (
@@ -151,7 +153,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
+              editableValue.current[info.column.id as 'outflow'] = value;
             }}
             type={new NumericTextType().getType()}
           />
@@ -177,7 +179,7 @@ export function useTransactionTableColumnsHook(
             isEditable={editingRow === info.row.id}
             defaultValue={info.getValue()}
             onChangeValue={value => {
-              editableValue.current[info.column.id as keyof Transaction] = value;
+              editableValue.current[info.column.id as 'inflow'] = value;
             }}
             type={new NumericTextType().getType()}
           />
@@ -193,34 +195,51 @@ export function useTransactionTableColumnsHook(
       },
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
-    {
-      accessorKey: 'cleared',
-      id: 'cleared',
-      header: table => (
-        <div className="z_flex z_flex_jc_center">
-          <AiFillCopyrightCircle />
-        </div>
-      ),
-      size: 30,
-      minSize: 30,
-      maxSize: 30,
-      cell: row => (
-        <div className="z_flex z_flex_jc_center">
-          <AiFillCopyrightCircle />
-        </div>
-      ),
-      meta: {
-        type: new OtherTextType(),
-      },
-    },
-    // columnHelper.accessor('creditIcon', {
-    //   id: 'creditIcon',
-    //   header: () => <AiFillCopyrightCircle />,
-    //   cell: info => (info.getValue() ? <AiFillCopyrightCircle /> : ''),
+    // {
+    //   accessorKey: 'cleared',
+    //   id: 'cleared',
+    //   header: table => (
+    //     <div className="z_flex z_flex_jc_center">
+    //       <AiFillCopyrightCircle />
+    //     </div>
+    //   ),
+    //   size: 30,
+    //   minSize: 30,
+    //   maxSize: 30,
+    //   cell: row =>
+    //     cleared ? (
+    //       <div className={cls('z_flex z_flex_jc_center', styles.z_table_cleared_icon)}>
+    //         <AiFillCopyrightCircle />
+    //       </div>
+    //     ) : (
+    //       <div className="z_flex z_flex_jc_center">
+    //         <AiFillCopyrightCircle />
+    //       </div>
+    //     ),
     //   meta: {
     //     type: new OtherTextType(),
     //   },
-    // }),
+    // },
+    columnHelper.accessor('cleared', {
+      id: 'cleared',
+      header: () => <AiFillCopyrightCircle />,
+      cell: info =>
+        info.getValue() ? (
+          <div className={cls('z_flex z_flex_jc_center', styles.z_table_cleared_icon)}>
+            <AiFillCopyrightCircle />
+          </div>
+        ) : (
+          <div className="z_flex z_flex_jc_center">
+            <AiFillCopyrightCircle />
+          </div>
+        ),
+      size: 30,
+      minSize: 30,
+      maxSize: 30,
+      meta: {
+        type: new OtherTextType(),
+      },
+    }),
   ];
 
   return columns;

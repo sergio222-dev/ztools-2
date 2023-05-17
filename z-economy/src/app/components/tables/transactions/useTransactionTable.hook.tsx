@@ -51,9 +51,15 @@ export const useTransactionTableHook = () => {
       setSelectedQty(table.getSelectedRowModel().rows.filter(t => t.id !== '').length);
       return;
     }
+    if (cell.id.includes('cleared')) {
+      const clearedTransaction = row.original;
+      clearedTransaction.cleared = !clearedTransaction.cleared;
+      void updateData(clearedTransaction as Transaction);
+      return;
+    }
     if (row.getIsSelected()) {
       editingRow !== row.id && setEditingRow(row.id);
-      editableValue.current = Object.assign(row.original, editableValue.current);
+      editableValue.current = Object.assign({}, editableValue.current, row.original);
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -62,6 +68,8 @@ export const useTransactionTableHook = () => {
         [row.id]: true,
       }));
       row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
+      console.log(row.original, 'original');
+      console.log(editableValue.current, 'current');
       return;
     }
     editingRow !== '' && setEditingRow('');

@@ -8,7 +8,7 @@ export class Transaction {
     public memo: string,
     public inflow: string,
     public outflow: string,
-    private budgetId: string,
+    public cleared: boolean,
   ) {}
 
   static CREATE(
@@ -19,8 +19,8 @@ export class Transaction {
     memo: string,
     inflow: string,
     outflow: string,
-    budgetId: string,
+    cleared: boolean,
   ) {
-    return new Transaction(id, date, payee, category, memo, inflow, outflow, budgetId);
+    return new Transaction(id, date, payee, category, memo, inflow, outflow, cleared);
   }
 }

@@ -5,7 +5,7 @@ import { TransactionUpdate } from '@core/budget/transaction/application/useCase/
 import { TransactionCreate } from '@core/budget/transaction/application/useCase/TransactionCreate';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
-import { Row, Table } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
 import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
 import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
 
@@ -31,7 +31,7 @@ export const useTransaction = () => {
     void mutate(
       async () => {
         if (data && data[0]?.id === '') return data ?? [];
-        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', '');
+        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', false);
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({
           ['']: true,
