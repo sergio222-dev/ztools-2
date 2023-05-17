@@ -13,13 +13,21 @@ export class AxiosTransactionRepository implements TransactionRepository {
     return data;
   }
 
-  async save(transaction: Transaction): Promise<void> {
-    await this.axios.post('/transaction', transaction);
+  async save(t: Transaction): Promise<void> {
+    await this.axios.post('/transaction', t);
     return;
   }
 
-  async update(transaction: Transaction): Promise<void> {
-    await this.axios.put('/transaction', transaction);
+  async update(t: Transaction): Promise<void> {
+    await this.axios.put('/transaction', t);
     return;
+  }
+
+  async delete(t: Transaction): Promise<void> {
+    return this.axios.delete(`/transaction/${t.id}`);
+  }
+
+  async deleteBatch(t: { ids: string[] }): Promise<void> {
+    return this.axios.post('/transaction/delete', t);
   }
 }

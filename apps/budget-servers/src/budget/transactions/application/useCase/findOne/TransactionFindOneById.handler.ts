@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { TransactionService } from '@budget/transactions/application/services/TransactionService';
+import { TransactionService } from '@budget/transactions/application/services/Transaction.service';
 import { TransactionFindOneByIdQuery } from '@budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
 import { Transaction } from '@budget/transactions/domain/Transaction';
 

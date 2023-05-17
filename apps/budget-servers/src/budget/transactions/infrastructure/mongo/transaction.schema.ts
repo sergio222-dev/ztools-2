@@ -36,6 +36,10 @@ export const TransactionSchema = new Schema<Document<string> & Transaction>(
       type: String,
       required: false,
     },
+    cleared: {
+      type: Boolean,
+      required: false,
+    },
     createdAt: {
       type: Date,
       required: true,

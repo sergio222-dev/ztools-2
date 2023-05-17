@@ -1,0 +1,56 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.t_table_dropdown {
+  background-color: const.$page-light-background-color;
+  position: absolute;
+  z-index: 9;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  border-radius: const.$radius;
+  transform: translate(-30%, 0);
+  //right: 50%;
+
+  & > ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 200px;
+  }
+
+  //& > ul > li {
+  //  padding: functions.spacing(0.5) functions.spacing(1);
+  //}
+
+  .dropdown_buttons {
+    display: inline-flex;
+    column-gap: functions.spacing(1);
+    width: 100%;
+    padding: functions.spacing(1) functions.spacing(2);
+
+    &[disabled] {
+      &:hover {
+        background-color: const.$page-light-background-color;
+      }
+    }
+    &:hover {
+      background-color: const.$page-light-border-color;
+    }
+
+    &:focus-visible {
+      @include mixin.box-shadow(const.$primary-color);
+    }
+  }
+
+}
+
+.t_table_dropdown:before {
+  content: "";
+  position: absolute;
+  border: 0.8rem solid transparent;
+  border-bottom-color: white;
+  top: -1.5rem;
+  right: 45%;
+  z-index: 1;
+  pointer-events: none;
+}

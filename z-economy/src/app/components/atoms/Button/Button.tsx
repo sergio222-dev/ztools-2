@@ -1,10 +1,10 @@
 import styles from './Button.module.scss';
-import { HtmlHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 import cls from 'classnames';
 
 type ButtonVariants = 'primary' | 'base' | 'icon';
 
-export interface ButtonProperties extends HtmlHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProperties extends ButtonHTMLAttributes<HTMLButtonElement> {
   StartIcon?: ReactNode | undefined;
   variant?: ButtonVariants;
 }

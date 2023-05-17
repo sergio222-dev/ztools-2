@@ -1,6 +1,7 @@
 ztools = db.getSiblingDB('ztools');
 
 ztools.createCollection('transactions');
+ztools.createCollection('categories');
 
 transactions = ztools.getCollection('transactions');
 
