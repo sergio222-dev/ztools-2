@@ -1,14 +1,16 @@
-# ztools-2
-***
-## Folder structure
-### Apps
+# ztools-2 monorepo
+this monorepo contains general propourse projects
+
+# Folder structure
+## Apps
 #### budget servers
 > Backend for z-economy
 
-### z-economy
+## z-economy
 > Frontend
 
-***
 ## TODOS
- - [ ] Refactor the all acount page table
- - [ ] migrate to tailwind with modules
+- [ ] Refactor the all acount page table
+- [ ] Migrate to tailwind with modules
+- [ ] Add coding guidelines
+- [ ] Add styles guidelines
