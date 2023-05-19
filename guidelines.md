@@ -3,18 +3,15 @@
 ## Commits
 commit should have the next structure
 ```text
-[BranchName]
 [emoji/reason]: [changes]
 ```
 
-where **[BranchName]** is the name of the current branch, 
-**[emoji/reason]** is a word or emoji that sum up the git message in one word,
+where **[emoji/reason]** is a word or emoji that sum up the git message in one word,
 the only case where *two words* are allowed is only for refactor, and 
 **[changes]** are the changes in the current commit
 
 example
 ```text
-feature/docs
 📃: Add some docs
 ```
 
@@ -26,4 +23,5 @@ Reasons:
 - 🦴/service/repository/controller: used for update backend
 - ⚙️/configuration: used for update configuration
 - ⛑️/refactor: used for refactor commits
+- ❤️‍🩹/fix: used when fix something
 - 🧻/clean: used for clean the code
