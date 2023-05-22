@@ -31,7 +31,7 @@ export const useTransaction = () => {
     void mutate(
       async () => {
         if (data && data[0]?.id === '') return data ?? [];
-        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', false);
+        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', true);
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({
           ['']: true,
