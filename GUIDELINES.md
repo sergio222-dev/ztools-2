@@ -1,14 +1,26 @@
 # Guidelines
 
+## Branches
+branches names should have the next structure
+```text
+[purpose]/[description]
+```
+purpose can be one of the next options
+ - feature: branch for a new feature
+ - bugfix: branch to fix a bug
+ - improvement: branch for improvement
+
+`[description]`: a brief description of the purpose of the branch in pascalCase
+
 ## Commits
 commit should have the next structure
 ```text
 [emoji/reason]: [changes]
 ```
 
-where **[emoji/reason]** is a word or emoji that sum up the git message in one word,
+where `[emoji/reason]` is a word or emoji that sum up the git message in one word,
 the only case where *two words* are allowed is only for refactor, and 
-**[changes]** are the changes in the current commit
+`[changes]` are the changes in the current commit
 
 example
 ```text
