@@ -59,7 +59,10 @@ export const useTransactionTableHook = () => {
     }
     if (row.getIsSelected()) {
       editingRow !== row.id && setEditingRow(row.id);
-      editableValue.current = Object.assign({}, editableValue.current, row.original);
+      editableValue.current =
+        row.id === ''
+          ? Object.assign({}, row.original, editableValue.current)
+          : Object.assign({}, editableValue.current, row.original);
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
