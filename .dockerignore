@@ -65,7 +65,7 @@ common/autoinstallers/*/.npmrc
 **/.rush/temp/
 
 # Generated js files
-*/**/node_modules
+#*/**/node_modules
 
 # IDE
 .idea/
