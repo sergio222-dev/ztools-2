@@ -10,13 +10,13 @@ RM = pwsh -command Get-ChildItem $(BUDGET_SERVER_CONTAINER) | pwsh -command Remo
 setup:
 	if not exist $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER) mkdir $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER)
 
-update: setup
+update:
 	rush update
 
 build: update
 	rush build
 
-deploy: build
+deploy: build setup
 	rush deploy --project budget-servers --target-folder ./common/deploy/containers/budget-servers --overwrite
 
 docker: deploy
