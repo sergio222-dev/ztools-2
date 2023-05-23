@@ -1,12 +1,12 @@
 # ztools-2 monorepo
 this monorepo contains general purpose projects
-***
+
 ## Folder structure
 - 📁 apps/
     - 📁 budget-servers/
 - 📁 z-economy/
 
-***
+
 ### Installation
 To install all dependencies you can use the update target (only windows)
 ```shell
