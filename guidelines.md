@@ -22,6 +22,6 @@ Reasons:
 - 🪟/view/front: used for update frontend/components/styles
 - 🦴/service/repository/controller: used for update backend
 - ⚙️/configuration: used for update configuration
-- ⛑️/refactor: used for refactor commits
+- ♻️/refactor: used for refactor commits
 - ❤️‍🩹/fix: used when fix something
 - 🧻/clean: used for clean the code
