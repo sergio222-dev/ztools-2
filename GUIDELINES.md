@@ -12,6 +12,23 @@ purpose can be one of the next options
 
 `[description]`: a brief description of the purpose of the branch in pascalCase
 
+## Pull Request
+pull request title should have the next structure
+```text
+[purpose]: [description]
+```
+where ``[purpose]`` is an emoji or the purpose of the branch and ``[description]`` is a summary of all commits
+
+#### Conventions
+- feature: 🚀
+- bugfix: 🐞
+- improvement: 🌟
+
+example
+```text
+🌟: Changed in README.md and configurations
+```
+
 ## Commits
 commit should have the next structure
 ```text
