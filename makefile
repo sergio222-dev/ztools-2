@@ -20,4 +20,4 @@ deploy: build setup
 	rush deploy --project budget-servers --target-folder ./common/deploy/containers/budget-servers --overwrite
 
 docker: deploy
-	docker-compose --profile $(PROFILE) up -d
+	docker-compose --profile $(PROFILE) up -d --build
