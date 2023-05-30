@@ -1,4 +1,4 @@
-import { Cell, Row, Table } from '@tanstack/react-table';
+import { Cell, Row, sortingFns, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
@@ -238,6 +238,15 @@ export const useTransactionTableHook = () => {
     // return sortingFns.alphanumeric(rowA, rowB, columnId);
   };
 
+  const handleClearedSorting = (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => {
+    if (rowA.id === '' || rowB.id === '') return 0;
+
+    const a: boolean = rowA.getValue(columnId);
+    const b: boolean = rowB.getValue(columnId);
+
+    return a === b ? 0 : a ? -1 : 1;
+  };
+
   // SIDE EFFECTS
   // TODO: do selectedColumnId = 'date' inside this function.
   useOutsideClick(reference, () => {
@@ -257,6 +266,7 @@ export const useTransactionTableHook = () => {
     handleCellCheckboxOnChange,
     handleCheckboxOnKeyDown,
     handleSorting,
+    handleClearedSorting,
     editableValue,
     editingRow,
   );
