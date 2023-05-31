@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
+import { supabase } from '../../forms/Auth/Auth';
 
 // type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 
@@ -39,6 +40,7 @@ interface SideBarModel {
 interface SideBarOperators {
   handleSidebarButtonClick: (buttonRoute: string) => void;
   handleSidebarCollapsibleClick: () => void;
+  handleLogout: () => void;
 }
 export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
   // MODEL
@@ -55,6 +57,12 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
     setToggleSidebar(!toggleSidebar);
   };
 
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) return alert(error.message);
+    navigate('/login');
+  };
+
   return [
     {
       SIDEBAR_BUTTONS,
@@ -64,6 +72,7 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
     {
       handleSidebarButtonClick,
       handleSidebarCollapsibleClick,
+      handleLogout,
     },
   ];
 }
