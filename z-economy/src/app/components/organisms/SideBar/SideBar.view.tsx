@@ -12,18 +12,12 @@ export function SideBarView() {
 
   const { SIDEBAR_BUTTONS, activeButton, toggleSidebar } = model;
 
-  const { handleSidebarButtonClick, handleSidebarCollapsibleClick, handleLogout } = operators;
+  const { handleSidebarButtonClick, handleSidebarCollapsibleClick } = operators;
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
-      <div className={styles.side_bar_header}>
-        <Button variant="primary" onClick={handleLogout} style={{ backgroundColor: 'indianred' }}>
-          {' '}
-          Log out
-        </Button>
-      </div>
       <div className={styles.menu_button_container}>
-        {SIDEBAR_BUTTONS.map(button => {
+        {SIDEBAR_BUTTONS.map((button, index) => {
           return (
             <SidebarButton
               key={button.name}

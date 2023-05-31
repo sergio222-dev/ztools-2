@@ -15,25 +15,25 @@
     background: none;
     border-radius: const.$radius;
   }
-}
 
-.variant_primary {
-  background-color: const.$secondary-color;
-  color: const.$secondary-text-color;
-  border-radius: const.$radius;
+  &.variant_primary {
+    background-color: const.$secondary-color;
+    color: const.$secondary-text-color;
+    border-radius: const.$radius;
 
-  &:focus-visible {
-    background-color: const.$dark-primary-color;
+    &:focus-visible {
+      background-color: const.$dark-primary-color;
 
-    @include mixin.box-shadow(const.$light_primary_color);
-  }
+      @include mixin.box-shadow(const.$light_primary_color);
+    }
 
-  &:active {
-    @include mixin.box-shadow(const.$light-primary-color);
-  }
+    &:active {
+      @include mixin.box-shadow(const.$light-primary-color);
+    }
 
-  &:hover {
-    background-color: const.$dark-primary-color;
+    &:hover {
+      background-color: const.$dark-primary-color;
+    }
   }
 }
 

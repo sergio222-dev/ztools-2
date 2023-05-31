@@ -16,10 +16,6 @@ $starting-hiding-width: 150px;
   overflow: hidden;
   height: 100vh;
 
-  .side_bar_header {
-    margin-bottom: functions.spacing(1);
-  }
-
   @include Mixins.media-breakpoint-up('sm') {
     width: 320px;
   }
