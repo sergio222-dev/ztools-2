@@ -10,17 +10,4 @@ export class Transaction {
     public outflow: string,
     public cleared: boolean,
   ) {}
-
-  static CREATE(
-    id: string,
-    date: string,
-    payee: string,
-    category: string,
-    memo: string,
-    inflow: string,
-    outflow: string,
-    cleared: boolean,
-  ) {
-    return new Transaction(id, date, payee, category, memo, inflow, outflow, cleared);
-  }
 }

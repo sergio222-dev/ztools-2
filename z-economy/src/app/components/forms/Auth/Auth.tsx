@@ -1,10 +1,10 @@
 import { Input } from '@supabase/ui';
 import styles from './Auth.module.scss';
-import { Button } from '../../atoms/Button/Button';
+import { Button } from '@atoms/Button/Button';
 import { SyntheticEvent, useRef, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router';
-import { Typography } from '../../atoms/Typography/Typography';
+import { Typography } from '@atoms/Typography/Typography';
 
 // import { Input } from '../../atoms/Input/Input';
 

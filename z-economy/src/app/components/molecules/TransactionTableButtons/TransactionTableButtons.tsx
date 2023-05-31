@@ -1,12 +1,12 @@
 import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { UtilityButton } from '../../atoms/Button/UtilityButton';
+import { UtilityButton } from '@atoms/Button/UtilityButton';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import styles from './TransactionTableButtons.module.scss';
-import { Typography } from '../../atoms/Typography/Typography';
-import { SearchDebounceInput } from '../../molecules/SearchDebounceInput/SearchDebounceInput';
-import { TransactionEditDropdown } from '../../molecules/TransactionEditDropdown/TransactionEditDropdown';
+import { Typography } from '@atoms/Typography/Typography';
+import { SearchDebounceInput } from '@molecules/SearchDebounceInput/SearchDebounceInput';
+import { TransactionEditDropdown } from '@molecules/TransactionEditDropdown/TransactionEditDropdown';
 
 interface TransactionTableButtonsProperties {
   trigger: (

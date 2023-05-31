@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import * as axios_1 from 'axios';
 import { BudgetRepository } from '@core/budget/budget/domain/BudgetRepository';
-import { Budget } from '@core/budget/budget/domain/Budget';
+import { Budget } from '@core/budget/budget/domain/Category';
 
 @injectable()
 export class AxiosBudgetRepository implements BudgetRepository {

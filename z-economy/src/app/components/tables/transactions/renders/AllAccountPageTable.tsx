@@ -90,7 +90,7 @@ export function AllAccountPageTable({
 
   if (tableReference) tableReference.current = table;
 
-  // SIDE EFFECT posible loop infinito cuando se levanta el front primero y despues el server estando ya en all accounts page.
+  // SIDE EFFECT
   useEffect(() => {
     setTableData(memoData);
   }, [memoData]);

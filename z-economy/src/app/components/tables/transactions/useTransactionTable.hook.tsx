@@ -1,4 +1,4 @@
-import { Cell, Row, sortingFns, Table } from '@tanstack/react-table';
+import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
 import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
@@ -6,7 +6,7 @@ import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
-import { createEmptyTransaction } from '@core/budget/budget/domain/TransactionUtils';
+import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -71,8 +71,6 @@ export const useTransactionTableHook = () => {
         [row.id]: true,
       }));
       row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
-      console.log(row.original, 'original');
-      console.log(editableValue.current, 'current');
       return;
     }
     editingRow !== '' && setEditingRow('');
@@ -128,14 +126,12 @@ export const useTransactionTableHook = () => {
   };
 
   const handleDelete = async () => {
-    console.log(selectedQty);
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
     if (selectedQty > 1) {
       const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
       const selectedRowsIds = { ids: selectedRows?.map(row => row.id) };
-      console.log(selectedRowsIds);
       await selectedRows?.map(row => row.toggleSelected(false));
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
       void deleteDataBatch(selectedRowsIds);

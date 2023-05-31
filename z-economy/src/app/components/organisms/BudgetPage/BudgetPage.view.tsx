@@ -1,4 +1,4 @@
-import { CategoryTable } from '../../molecules/index';
+import { CategoryTable, CategoryTableButtons } from '../../molecules/index';
 import { Category, useBudgetPageHooks } from './BudgetPage.hooks';
 
 export function BudgetPageView() {
@@ -7,6 +7,7 @@ export function BudgetPageView() {
 
   return (
     <section>
+      <CategoryTableButtons />
       <CategoryTable<Category> columns={columns} data={data} />
     </section>
   );

@@ -1,10 +1,9 @@
 import styles from '../ResetPassword/ResetPassword.module.scss';
-import { Typography } from '../../atoms/Typography/Typography';
+import { Typography } from '@atoms/Typography/Typography';
 import { Input } from '@supabase/ui';
-import { Button } from '../../atoms/Button/Button';
+import { Button } from '@atoms/Button/Button';
 import { SyntheticEvent, useRef } from 'react';
 import { supabase } from '../Auth/Auth';
-import { navigate } from '@storybook/addon-links';
 import { useNavigate } from 'react-router';
 
 export const ResetPassword = () => {

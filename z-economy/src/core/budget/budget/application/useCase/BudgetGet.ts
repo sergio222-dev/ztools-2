@@ -1,5 +1,5 @@
 import { UseCase } from '@core/shared/application/UseCase';
-import { Budget } from '@core/budget/budget/domain/Budget';
+import { Budget } from '@core/budget/budget/domain/Category';
 import { inject, injectable } from 'tsyringe';
 import * as BudgetRepository from '@core/budget/budget/domain/BudgetRepository';
 

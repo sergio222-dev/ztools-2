@@ -1,11 +1,12 @@
 import styles from './Button.module.scss';
-import { HtmlHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes } from 'react';
+import { Typography } from '../../atoms/Typography/Typography';
 
-export function SaveButton(props: HtmlHTMLAttributes<HTMLButtonElement>): JSX.Element {
+export function SaveButton(props: ButtonHTMLAttributes<HTMLButtonElement>): JSX.Element {
   const { className, ...rest } = props;
   return (
     <button {...rest} className={`${className} ${styles.z_button_save}`}>
-      Save
+      <Typography>Save</Typography>
     </button>
   );
 }

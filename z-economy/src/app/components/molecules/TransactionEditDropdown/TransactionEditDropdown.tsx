@@ -1,10 +1,10 @@
-import { UtilityButton } from '../../atoms/Button/UtilityButton';
-import styles from '../../molecules/TransactionEditDropdown/TransactionEditDropdown.module.scss';
+import { UtilityButton } from '@atoms/Button/UtilityButton';
+import styles from '@molecules/TransactionEditDropdown/TransactionEditDropdown.module.scss';
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { FaCopy } from 'react-icons/fa';
-import { Typography } from '../../atoms/Typography/Typography';
+import { Typography } from '@atoms/Typography/Typography';
 import { useState } from 'react';
-import { Button } from '../../atoms/Button/Button';
+import { Button } from '@atoms/Button/Button';
 
 interface TransactionEditDropdownProperties {
   handleDelete: () => void;

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useEffect, useRef } from 'react';
+import { InputHTMLAttributes, useEffect } from 'react';
 
 interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputElement> {
   indeterminate: boolean;

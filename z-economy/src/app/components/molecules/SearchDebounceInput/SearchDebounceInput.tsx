@@ -1,5 +1,5 @@
 import { InputHTMLAttributes, useEffect, useState } from 'react';
-import { Input } from '../../atoms/Input/Input';
+import { Input } from '@atoms/Input/Input';
 
 export function SearchDebounceInput({
   value: initialValue,
