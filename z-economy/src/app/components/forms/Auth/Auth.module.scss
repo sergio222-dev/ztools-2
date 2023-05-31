@@ -1,0 +1,35 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.login_form {
+  width: 20%;
+  margin: 30vh auto auto;
+
+  .login_links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & a {
+      text-decoration: none;
+      color: const.$bold-text-color;
+
+      &:hover {
+        color: const.$primary-color;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+.submit_button {
+  background-color: const.$primary-color;
+  width: 80%;
+  margin: functions.spacing(1);
+
+  //&:hover {
+  //  background-color: const.$dark-primary-color;
+  //}
+}
+
