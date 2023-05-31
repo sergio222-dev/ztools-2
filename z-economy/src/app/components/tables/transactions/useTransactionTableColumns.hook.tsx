@@ -16,7 +16,6 @@ export function useTransactionTableColumnsHook(
   handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
-  handleClearedSorting: any,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
 ) {
@@ -217,7 +216,6 @@ export function useTransactionTableColumnsHook(
       meta: {
         type: new OtherTextType(),
       },
-      sortingFn: (rowA, rowB, columnId) => handleClearedSorting(rowA, rowB, columnId),
     }),
   ];
 
