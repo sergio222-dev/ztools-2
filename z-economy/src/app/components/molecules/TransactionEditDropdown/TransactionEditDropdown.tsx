@@ -31,6 +31,8 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     },
   ];
 
+  // TODO: refactor with Tooltip
+
   return showDropdown ? (
     <div>
       <UtilityButton StartIcon={<MdEdit />} variant={'icon'} onClick={() => setShowDropdown(!showDropdown)}>

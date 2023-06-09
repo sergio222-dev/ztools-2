@@ -1,16 +1,16 @@
 import { inject, injectable } from 'tsyringe';
-import * as BudgetRepository from '@core/budget/budget/domain/BudgetRepository';
+import * as CategoryRepository from '@core/budget/budget/domain/CategoryRepository';
 import { UseCase } from '@core/shared/application/UseCase';
-import { Budget } from '@core/budget/budget/domain/Category';
+import { Category } from '@core/budget/budget/domain/Category';
 
 @injectable()
-export class BudgetGetAll implements UseCase<unknown, Budget[]> {
+export class CategoryGetAll implements UseCase<unknown, Category[]> {
   constructor(
-    @inject('BudgetRepository')
-    private budgetRepository: BudgetRepository.BudgetRepository,
+    @inject('CategoryRepository')
+    private categoryRepository: CategoryRepository.CategoryRepository,
   ) {}
 
-  async execute(): Promise<Budget[]> {
-    return await this.budgetRepository.getAll();
+  async execute(): Promise<Category[]> {
+    return await this.categoryRepository.getAll();
   }
 }

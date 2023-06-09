@@ -7,6 +7,6 @@ export class Category {
     readonly assigned: string,
     readonly activity: string,
     readonly available: string,
-    readonly budgets: Budget,
+    readonly budget: Budget,
   ) {}
 }
