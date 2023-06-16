@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router';
-import { useAuth } from '@utils/router/PrivateOutlet';
+import { useAuth } from '@utils/useAuth';
 import { Auth, supabase } from '../components/forms/Auth/Auth';
 import { useEffect } from 'react';
 
