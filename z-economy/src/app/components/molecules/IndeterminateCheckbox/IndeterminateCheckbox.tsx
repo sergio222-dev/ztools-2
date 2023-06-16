@@ -1,4 +1,5 @@
-import { InputHTMLAttributes, useEffect } from 'react';
+import { InputHTMLAttributes, useEffect, useRef } from 'react';
+import { Checkbox } from '@atoms/Input/Checkbox';
 
 interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputElement> {
   indeterminate: boolean;
@@ -7,13 +8,13 @@ interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputE
 export function IndeterminateCheckbox({ indeterminate, checked, ...rest }: IndeterminateCheckboxProperties) {
   // const reference = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    // if (reference.current) {
-    //   reference.current.indeterminate = !checked && indeterminate;
-    // }
+    //   if (reference.current) {
+    //     reference.current.indeterminate = !checked && indeterminate;
+    //   }
   }, [indeterminate, checked]);
 
-  // TODO create checkbox ATOM
-  return <input type="checkbox" checked={checked} {...rest} />;
+  // return <input type="checkbox" checked={checked} {...rest} />;
+  return <Checkbox checked={checked} {...rest} />;
 }
 
 // export function TableFilter({ column, table }: { column: Column<any, any>; table: Table<any> }) {
