@@ -28,6 +28,11 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     isOpen.value = false;
   });
 
+  const localHandleDelete = () => {
+    handleDelete();
+    isOpen.value = false;
+  };
+
   const DROPDOWN_BUTTONS = [
     {
       name: 'Duplicate',
@@ -38,7 +43,7 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     {
       name: 'Delete',
       icon: <MdDeleteForever />,
-      onClick: handleDelete,
+      onClick: localHandleDelete,
       disabled: disableDelete,
     },
   ];
