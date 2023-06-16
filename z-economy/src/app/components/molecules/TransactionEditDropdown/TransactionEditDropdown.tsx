@@ -43,8 +43,6 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     },
   ];
 
-  // TODO: refactor with Tooltip
-
   return (
     <div>
       <a data-tooltip-id="edit-tooltip">
