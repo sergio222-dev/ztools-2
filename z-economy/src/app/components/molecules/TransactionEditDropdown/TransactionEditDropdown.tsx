@@ -3,8 +3,11 @@ import styles from '@molecules/TransactionEditDropdown/TransactionEditDropdown.m
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { FaCopy } from 'react-icons/fa';
 import { Typography } from '@atoms/Typography/Typography';
-import { useState } from 'react';
 import { Button } from '@atoms/Button/Button';
+import { Tooltip } from 'react-tooltip';
+import { useSignal } from '@preact/signals-react';
+import { useRef } from 'react';
+import { useOutsideClick } from '@utils/mouseUtils';
 
 interface TransactionEditDropdownProperties {
   handleDelete: () => void;
@@ -14,7 +17,16 @@ interface TransactionEditDropdownProperties {
 
 export function TransactionEditDropdown(props: TransactionEditDropdownProperties) {
   const { handleDelete, disableDelete, selectedQty } = props;
-  const [showDropdown, setShowDropdown] = useState(false);
+  const isOpen = useSignal(false);
+  const tooltipReference = useRef(null);
+  const handleEditClick = () => {
+    isOpen.value = !isOpen.value;
+    return;
+  };
+
+  useOutsideClick(tooltipReference, () => {
+    isOpen.value = false;
+  });
 
   const DROPDOWN_BUTTONS = [
     {
@@ -33,32 +45,42 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
 
   // TODO: refactor with Tooltip
 
-  return showDropdown ? (
+  return (
     <div>
-      <UtilityButton StartIcon={<MdEdit />} variant={'icon'} onClick={() => setShowDropdown(!showDropdown)}>
-        <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
-      </UtilityButton>
-      <div className={styles.t_table_dropdown}>
-        <ul>
-          {DROPDOWN_BUTTONS.map(button => (
-            <li key={button.name}>
-              <Button
-                variant={'icon'}
-                StartIcon={button.icon}
-                disabled={button.disabled}
-                onClick={button.onClick}
-                className={styles.dropdown_buttons}
-              >
-                <Typography>{button.name}</Typography>
-              </Button>
-            </li>
-          ))}
-        </ul>
+      <a data-tooltip-id="edit-tooltip">
+        <UtilityButton StartIcon={<MdEdit />} variant={'icon'} onClick={handleEditClick}>
+          <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
+        </UtilityButton>
+      </a>
+      {/*<div className={styles.t_table_dropdown}>*/}
+      <div className={styles.t_table_buttons} ref={tooltipReference}>
+        <Tooltip
+          id="edit-tooltip"
+          clickable
+          place="bottom"
+          className={styles.t_table_tooltip}
+          isOpen={isOpen.value}
+        >
+          <div>
+            <ul className={styles.edit_ul}>
+              {DROPDOWN_BUTTONS.map(button => (
+                <li key={button.name}>
+                  <Button
+                    variant={'icon'}
+                    StartIcon={button.icon}
+                    disabled={button.disabled}
+                    onClick={button.onClick}
+                    className={styles.dropdown_buttons}
+                  >
+                    <Typography>{button.name}</Typography>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Tooltip>
       </div>
+      {/*</div>*/}
     </div>
-  ) : (
-    <UtilityButton StartIcon={<MdEdit />} variant={'icon'} onClick={() => setShowDropdown(!showDropdown)}>
-      <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
-    </UtilityButton>
   );
 }

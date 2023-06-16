@@ -7,6 +7,7 @@ import styles from './TransactionTableButtons.module.scss';
 import { Typography } from '@atoms/Typography/Typography';
 import { SearchDebounceInput } from '@molecules/SearchDebounceInput/SearchDebounceInput';
 import { TransactionEditDropdown } from '@molecules/TransactionEditDropdown/TransactionEditDropdown';
+import { useSignal } from '@preact/signals-react';
 
 interface TransactionTableButtonsProperties {
   trigger: (

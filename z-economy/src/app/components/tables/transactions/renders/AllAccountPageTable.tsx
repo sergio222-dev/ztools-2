@@ -18,7 +18,6 @@ import {
   SetStateAction,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import styles from './Table.module.scss';
@@ -31,21 +30,13 @@ interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   columns: ColumnDef<Transaction, unknown>[];
   data: Array<Transaction>;
-  handleSaveEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
-  handleCancelEdit: (row: Row<Transaction>, selectedColumnId: { current: string }) => void;
-  handleOnEdit: (
-    row: Row<Transaction>,
-    table: Table<Transaction>,
-    cell: Cell<Transaction, string>,
-    selectedColumnId: MutableRefObject<string>,
-  ) => void;
-  handleRowOnKeyDown: (
-    event: KeyboardEvent,
-    row: Row<Transaction>,
-    selectedColumnId: { current: string },
-  ) => void;
+  handleSaveEdit: (row: Row<Transaction>) => void;
+  handleCancelEdit: (row: Row<Transaction>) => void;
+  handleOnEdit: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
+  handleRowOnKeyDown: (event: KeyboardEvent, row: Row<Transaction>) => void;
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
+  selectedColumnId: MutableRefObject<string>;
 }
 
 export function AllAccountPageTable({
@@ -58,11 +49,11 @@ export function AllAccountPageTable({
   handleRowOnKeyDown,
   globalFilter,
   setGlobalFilter,
+  selectedColumnId,
 }: TransactionTableProperties) {
   // STATE
   const memoData = useMemo(() => data, [data]);
   const [tableData, setTableData] = useState(memoData);
-  const selectedColumnId = useRef('date');
 
   // TABLE
   const columnResizeMode = 'onChange';
@@ -101,7 +92,7 @@ export function AllAccountPageTable({
     table: Table<Transaction>,
     cell: Cell<Transaction, unknown>,
   ) => {
-    handleOnEdit && handleOnEdit(row, table, cell, selectedColumnId);
+    handleOnEdit && handleOnEdit(row, table, cell);
   };
 
   return (
@@ -167,7 +158,7 @@ export function AllAccountPageTable({
             <tr
               className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}
               onKeyDown={event => {
-                handleRowOnKeyDown(event, row, selectedColumnId);
+                handleRowOnKeyDown(event, row);
               }}
             >
               {row.getVisibleCells().map(cell => (
@@ -196,7 +187,7 @@ export function AllAccountPageTable({
               <tr
                 className={styles.z_table_subcomponent_tr}
                 onKeyDown={event => {
-                  handleRowOnKeyDown(event, row, selectedColumnId);
+                  handleRowOnKeyDown(event, row);
                 }}
               >
                 {}
@@ -204,10 +195,10 @@ export function AllAccountPageTable({
                 <EditableFooterButtons
                   className={styles.z_table_subcomponent_cell}
                   onSave={() => {
-                    handleSaveEdit(row, selectedColumnId);
+                    handleSaveEdit(row);
                   }}
                   onCancel={() => {
-                    handleCancelEdit(row, selectedColumnId);
+                    handleCancelEdit(row);
                   }}
                 />
               </tr>
