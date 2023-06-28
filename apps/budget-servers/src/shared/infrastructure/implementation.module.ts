@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { MongoModule } from './implementations/mongo.module';
+
 import { Implementation } from './enum';
+import { MongoModule } from './implementations/mongo.module';
 
 @Module({})
 export class ImplementationModule {

@@ -19,7 +19,8 @@
     "incremental": true,
     "strictNullChecks": true,
     "paths": {
-      "@budget/*": ["src/budget/*"]
+      "@budget/*": ["src/budget/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
   "include": ["src/**/*", "backend/**/*"],

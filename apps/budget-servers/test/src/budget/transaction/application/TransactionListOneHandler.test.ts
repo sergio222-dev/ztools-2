@@ -1,9 +1,10 @@
-import { TransactionUnitTestCase } from '../TransactionUnitTestCase';
-import { TransactionFindOneByIdHandler } from '../../../../../src/budget/transactions/application/useCase/findOne/TransactionFindOneById.handler';
 import { suite, test } from '@testdeck/jest';
+
+import { TransactionFindOneByIdHandler } from '../../../../../src/budget/transactions/application/useCase/findOne/TransactionFindOneById.handler';
 import { TransactionFindOneByIdQuery } from '../../../../../src/budget/transactions/application/useCase/findOne/TransactionFindOneById.query';
 import { IdMother } from '../../../shared/domain/IdMother';
 import { TransactionMother } from '../domain/TransactionMother';
+import { TransactionUnitTestCase } from '../TransactionUnitTestCase';
 
 @suite('Transaction list one unit test case')
 export class TransactionListOneHandlerTest extends TransactionUnitTestCase {

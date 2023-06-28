@@ -1,8 +1,9 @@
-import { TransactionUnitTestCase } from '../TransactionUnitTestCase';
+import { suite, test } from '@testdeck/jest';
+
+import { TransactionDeleteCommand } from '../../../../../src/budget/transactions/application/useCase/delete/TransactionDelete.command';
 import { TransactionDeleteHandler } from '../../../../../src/budget/transactions/application/useCase/delete/TransactionDelete.handler';
 import { IdMother } from '../../../shared/domain/IdMother';
-import { TransactionDeleteCommand } from '../../../../../src/budget/transactions/application/useCase/delete/TransactionDelete.command';
-import { suite, test } from '@testdeck/jest';
+import { TransactionUnitTestCase } from '../TransactionUnitTestCase';
 
 @suite('Transaction delete unit test case')
 export class TransactionDeleteHandlerTest extends TransactionUnitTestCase {
