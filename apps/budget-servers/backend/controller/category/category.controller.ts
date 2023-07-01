@@ -69,39 +69,4 @@ export class CategoryController {
     const command = new CategoryCreateCommand(bodyCommand.id, bodyCommand.name);
     await this.commandBus.execute(command);
   }
-  //
-  // @Put()
-  // @ApiResponse({
-  //   status: 201,
-  // })
-  // async update(@Body() bodyCommand: CategoryUpdateCommand) {
-  //   const query = new CategoryFindOneQuery(bodyCommand.id);
-  //
-  //   const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
-  //
-  //   if (category.id === '')
-  //     throw new HttpException(`the category with id ${bodyCommand.id} doesn't exists`, HttpStatus.NOT_FOUND);
-  //
-  //   const command = new CategoryUpdateCommand(
-  //     category.id,
-  //     bodyCommand.name,
-  //     bodyCommand.assignedBudget,
-  //     bodyCommand.currentBudget,
-  //   );
-  //   await this.commandBus.execute(command);
-  // }
-  //
-  // @Delete(':id')
-  // async delete(@Param('id') id: string) {
-  //   const query = new CategoryFindOneQuery(id);
-  //
-  //   const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
-  //
-  //   if (category.id === '')
-  //     throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
-  //
-  //   const command = new CategoryDeleteCommand(id);
-  //
-  //   await this.commandBus.execute(command);
-  // }
 }

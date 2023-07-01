@@ -4,13 +4,9 @@ import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { TransactionActivityCreatedEvent } from '@budget/transaction/domain/event/TransactionActivityCreated.event';
 import { TransactionActivityUpdatedEvent } from '@budget/transaction/domain/event/TransactionActivityUpdated.event';
-import { TransactionDateUpdatedEvent } from '@budget/transaction/domain/event/TransactionDateUpdated.event';
-import { TransactionSubCategoryIdUpdatedEvent } from '@budget/transaction/domain/event/TransactionSubCategoryIdUpdated.event';
 import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 
 export class Transaction extends AggregateRoot {
-  private readonly _flowType: FlowType;
-
   get id(): string {
     return this._id;
   }
@@ -52,7 +48,21 @@ export class Transaction extends AggregateRoot {
   }
 
   get flowType(): FlowType {
-    return this._flowType;
+    return this.determineFlowType();
+  }
+
+  get activity(): SignedAmount {
+    switch (this.flowType) {
+      case FlowTypeValue.IN: {
+        return new SignedAmount(this.inflow.amount);
+      }
+      case FlowTypeValue.OUT: {
+        return new SignedAmount(this.outflow.negated().amount);
+      }
+      default: {
+        return new SignedAmount(0);
+      }
+    }
   }
 
   private constructor(
@@ -68,8 +78,6 @@ export class Transaction extends AggregateRoot {
     private _updatedAt: Date,
   ) {
     super();
-    // determine flow type
-    this._flowType = this.determineFlowType();
   }
 
   private determineFlowType(): FlowType {
@@ -181,7 +189,7 @@ export class Transaction extends AggregateRoot {
   }
 
   public setNewAmount(inflow: UnsignedAmount, outflow: UnsignedAmount) {
-    const currentActivityValue = this.getCurrentActivityValue();
+    const previousActivityValue = this.getCurrentActivityValue();
 
     if (inflow.isGreaterThan(Amount.ZeroValue) && outflow.isGreaterThan(Amount.ZeroValue)) {
       // TODO domain exception
@@ -198,27 +206,72 @@ export class Transaction extends AggregateRoot {
 
     const newActivityValue = this.getCurrentActivityValue();
 
-    this.record(
-      new TransactionActivityUpdatedEvent(
-        this.id,
-        newActivityValue.amount,
-        currentActivityValue.amount,
-        this.subCategoryId,
-        this.date.toISOString(),
-      ),
-    );
+    if (this.eventExist(TransactionActivityUpdatedEvent)) {
+      this.domainEvents = this.domainEvents.map(event => {
+        if (event instanceof TransactionActivityUpdatedEvent) {
+          return new TransactionActivityUpdatedEvent(
+            this.id,
+            newActivityValue.amount,
+            previousActivityValue.amount,
+            event.subCategoryId,
+            event.previousSubCategoryId,
+            event.date,
+            event.previousDate,
+            event.eventId,
+            event.occurredOn,
+          );
+        }
+        return event;
+      });
+    } else {
+      this.record(
+        new TransactionActivityUpdatedEvent(
+          this.id,
+          newActivityValue.amount,
+          previousActivityValue.amount,
+          this.subCategoryId,
+          this.subCategoryId,
+          this.date.toISOString(),
+          this.date.toISOString(),
+        ),
+      );
+    }
   }
 
-  public setDate(date: Date) {
-    this.record(
-      new TransactionDateUpdatedEvent(
-        this.id,
-        this.subCategoryId,
-        date.toISOString(),
-        this.date.toISOString(),
-      ),
-    );
-    this._date = date;
+  public setDate(newDate: Date) {
+    const previousDate = this.date;
+    this._date = newDate;
+
+    if (this.eventExist(TransactionActivityUpdatedEvent)) {
+      this.domainEvents = this.domainEvents.map(event => {
+        if (event instanceof TransactionActivityUpdatedEvent) {
+          return new TransactionActivityUpdatedEvent(
+            this.id,
+            event.amount,
+            event.previousAmount,
+            event.subCategoryId,
+            event.previousSubCategoryId,
+            newDate.toISOString(),
+            previousDate.toISOString(),
+            event.eventId,
+            event.occurredOn,
+          );
+        }
+        return event;
+      });
+    } else {
+      this.record(
+        new TransactionActivityUpdatedEvent(
+          this.id,
+          this.getCurrentActivityValue().amount,
+          this.getCurrentActivityValue().amount,
+          this.subCategoryId,
+          this.subCategoryId,
+          newDate.toISOString(),
+          previousDate.toISOString(),
+        ),
+      );
+    }
   }
 
   public setCleared(cleared: boolean) {
@@ -233,15 +286,38 @@ export class Transaction extends AggregateRoot {
     this._memo = memo;
   }
 
-  public setSubCategoryId(subCategoryId: string) {
-    this.record(
-      new TransactionSubCategoryIdUpdatedEvent(
-        this.id,
-        subCategoryId,
-        this.subCategoryId,
-        this.date.toISOString(),
-      ),
-    );
-    this._subCategoryId = subCategoryId;
+  public setSubCategoryId(newSubCategoryId: string) {
+    const previousSubCategoryId = this.subCategoryId;
+    this._subCategoryId = newSubCategoryId;
+
+    if (this.eventExist(TransactionActivityUpdatedEvent)) {
+      this.domainEvents = this.domainEvents.map(event => {
+        if (event instanceof TransactionActivityUpdatedEvent) {
+          return new TransactionActivityUpdatedEvent(
+            this.id,
+            event.amount,
+            event.previousAmount,
+            newSubCategoryId,
+            previousSubCategoryId,
+            event.date,
+            event.previousDate,
+          );
+        }
+
+        return event;
+      });
+    } else {
+      this.record(
+        new TransactionActivityUpdatedEvent(
+          this.id,
+          this.getCurrentActivityValue().amount,
+          this.getCurrentActivityValue().amount,
+          newSubCategoryId,
+          previousSubCategoryId,
+          this.date.toISOString(),
+          this.date.toISOString(),
+        ),
+      );
+    }
   }
 }

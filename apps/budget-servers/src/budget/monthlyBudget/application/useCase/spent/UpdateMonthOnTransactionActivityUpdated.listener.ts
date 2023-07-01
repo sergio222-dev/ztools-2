@@ -13,21 +13,22 @@ export class UpdateMonthOnTransactionActivityUpdatedListener {
   async handleEvent(event: TransactionActivityUpdatedEvent) {
     const newAmount = new SignedAmount(event.amount);
     const previousAmount = new SignedAmount(event.previousAmount);
-    console.log('event', event);
-    console.log('newAmount', newAmount.amount);
-    console.log('previousAmount', previousAmount.amount);
 
     if (newAmount.isPositive() && previousAmount.isPositive()) {
       const difference = previousAmount.minus(newAmount);
 
       if (difference.isPositive()) {
-        await this.monthActivityService.decrementActivity(difference, event.subCategoryId, event.date);
+        await this.monthActivityService.decrementActivity(
+          difference,
+          event.previousSubCategoryId,
+          event.previousDate,
+        );
       } else {
         const positiveDifference = difference.negated();
         await this.monthActivityService.incrementActivity(
           positiveDifference,
-          event.subCategoryId,
-          event.date,
+          event.previousSubCategoryId,
+          event.previousDate,
         );
       }
     }
@@ -36,25 +37,70 @@ export class UpdateMonthOnTransactionActivityUpdatedListener {
       const difference = previousAmount.negated().minus(newAmount.negated());
 
       if (difference.isPositive()) {
-        await this.monthActivityService.incrementActivity(difference, event.subCategoryId, event.date);
+        await this.monthActivityService.incrementActivity(
+          difference,
+          event.previousSubCategoryId,
+          event.previousDate,
+        );
       } else {
         const positiveDifference = difference.negated();
         await this.monthActivityService.decrementActivity(
           positiveDifference,
-          event.subCategoryId,
-          event.date,
+          event.previousSubCategoryId,
+          event.previousDate,
         );
       }
     }
 
     if (newAmount.isNegative() && previousAmount.isPositive()) {
       const difference = previousAmount.plus(newAmount.negated());
-      await this.monthActivityService.decrementActivity(difference, event.subCategoryId, event.date);
+      await this.monthActivityService.decrementActivity(
+        difference,
+        event.previousSubCategoryId,
+        event.previousDate,
+      );
     }
 
     if (newAmount.isPositive() && previousAmount.isNegative()) {
       const difference = previousAmount.negated().plus(newAmount);
-      await this.monthActivityService.incrementActivity(difference, event.subCategoryId, event.date);
+      await this.monthActivityService.incrementActivity(
+        difference,
+        event.previousSubCategoryId,
+        event.previousDate,
+      );
+    }
+
+    if (event.subCategoryId !== event.previousSubCategoryId && event.date !== event.previousDate) {
+      await this.monthActivityService.moveActivity(
+        event.previousSubCategoryId,
+        event.subCategoryId,
+        event.previousDate,
+        event.date,
+        newAmount,
+      );
+      return;
+    }
+
+    if (event.subCategoryId !== event.previousSubCategoryId) {
+      await this.monthActivityService.moveActivity(
+        event.previousSubCategoryId,
+        event.subCategoryId,
+        event.date,
+        event.date,
+        newAmount,
+      );
+      return;
+    }
+
+    if (event.date !== event.previousDate) {
+      await this.monthActivityService.moveActivity(
+        event.subCategoryId,
+        event.subCategoryId,
+        event.previousDate,
+        event.date,
+        newAmount,
+      );
+      return;
     }
   }
 }

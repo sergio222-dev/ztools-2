@@ -14,9 +14,9 @@ export class BudgetAssigner {
     month: string,
     year: string,
   ): Promise<void> {
-    const monthlyBudgetDocument = await this.monthlyBudgetRepository.findOne(year, month, subCategoryId);
+    const monthlyBudget = await this.monthlyBudgetRepository.findOne(year, month, subCategoryId);
 
-    if (!monthlyBudgetDocument) {
+    if (!monthlyBudget) {
       const newMonthlyBudget = MonthlyBudget.CREATE(
         uuid(),
         month,
@@ -34,17 +34,7 @@ export class BudgetAssigner {
       return;
     }
 
-    const monthlyBudget = MonthlyBudget.RETRIEVE(
-      monthlyBudgetDocument.id,
-      monthlyBudgetDocument.month,
-      monthlyBudgetDocument.year,
-      monthlyBudgetDocument.subCategoryId,
-      amount,
-      monthlyBudgetDocument.activity,
-      monthlyBudgetDocument.available,
-      monthlyBudgetDocument.createdAt,
-      new Date(),
-    );
+    monthlyBudget.setAssigned(amount);
 
     await this.monthlyBudgetRepository.update(monthlyBudget);
   }

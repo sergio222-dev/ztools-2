@@ -9,6 +9,10 @@ export class MonthlyBudgetFindOneHandler implements IQueryHandler {
   constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
 
   async execute(query: MonthlyBudgetFindOneQuery): Promise<MonthlyBudget | undefined> {
-    return await this.monthlyBudgetService.findOne(query.year, query.month, query.subCategoryId);
+    return await this.monthlyBudgetService.getCurrentMonthlyBudget(
+      query.year,
+      query.month,
+      query.subCategoryId,
+    );
   }
 }

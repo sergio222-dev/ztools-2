@@ -6,7 +6,9 @@ export class TransactionActivityUpdatedEvent extends DomainEvent {
     public readonly amount: string,
     public readonly previousAmount: string,
     public readonly subCategoryId: string,
+    public readonly previousSubCategoryId: string,
     public readonly date: string,
+    public readonly previousDate: string,
     eventId?: string,
     occurredOn?: string,
   ) {

@@ -66,6 +66,61 @@ export class MonthActivityService {
     await this.monthlyBudgetRepository.update(monthlyBudget);
   }
 
+  async moveActivity(
+    fromSubCategoryId: string,
+    toSubCategoryId: string,
+    fromDate: string,
+    toDate: string,
+    amountToMove: SignedAmount,
+  ) {
+    const fromMonth = this.getMonth(fromDate);
+    const fromYear = this.getYear(fromDate);
+
+    const toMonth = this.getMonth(toDate);
+    const toYear = this.getYear(toDate);
+
+    const monthlyBudget = await this.monthlyBudgetRepository.findOne(fromYear, fromMonth, fromSubCategoryId);
+
+    if (!monthlyBudget) {
+      // TODO should be an domain exception
+      throw new Error('Inconsistent data, no monthly budget found');
+    }
+
+    if (amountToMove.isPositive()) {
+      monthlyBudget.decrementActivity(amountToMove);
+    } else {
+      monthlyBudget.incrementActivity(amountToMove.negated());
+    }
+
+    await this.monthlyBudgetRepository.update(monthlyBudget);
+
+    let newMonthlyBudget = await this.monthlyBudgetRepository.findOne(toYear, toMonth, toSubCategoryId);
+
+    if (!newMonthlyBudget) {
+      newMonthlyBudget = MonthlyBudget.CREATE(
+        uuidv4(),
+        toMonth,
+        toYear,
+        toSubCategoryId,
+        new UnsignedAmount(0),
+        new SignedAmount(0),
+        new SignedAmount(0),
+        new Date(),
+        new Date(),
+      );
+
+      await this.monthlyBudgetRepository.createOne(newMonthlyBudget);
+    }
+
+    if (amountToMove.isPositive()) {
+      newMonthlyBudget.incrementActivity(amountToMove);
+    } else {
+      newMonthlyBudget.decrementActivity(amountToMove.negated());
+    }
+
+    await this.monthlyBudgetRepository.update(newMonthlyBudget);
+  }
+
   private getMonth(date: string): string {
     return (new Date(date).getMonth() + 1).toString().padStart(2, '0');
   }

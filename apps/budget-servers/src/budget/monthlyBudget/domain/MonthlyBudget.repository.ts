@@ -6,4 +6,5 @@ export interface MonthlyBudgetRepository {
   createOne(monthlyBudget: MonthlyBudget): Promise<void>;
   update(monthlyBudget: MonthlyBudget): Promise<void>;
   findOne(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget | undefined>;
+  findAllAvailableBefore(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget[]>;
 }

@@ -41,6 +41,51 @@ export class MonthlyBudgetService {
     );
   }
 
+  async getCurrentMonthlyBudget(
+    year: string,
+    month: string,
+    subCategoryId: string,
+  ): Promise<MonthlyBudget | undefined> {
+    const monthlyBudgetDocument = await this.monthlyBudgetRepository.findOne(year, month, subCategoryId);
+
+    const previousBudgets = await this.monthlyBudgetRepository.findAllAvailableBefore(
+      year,
+      month,
+      subCategoryId,
+    );
+
+    let totalAvailable = new UnsignedAmount(0);
+    for (const budget of previousBudgets) {
+      totalAvailable = totalAvailable.plus(budget.available);
+    }
+
+    if (!monthlyBudgetDocument) {
+      return MonthlyBudget.RETRIEVE(
+        '',
+        month,
+        year,
+        subCategoryId,
+        new UnsignedAmount(0),
+        new UnsignedAmount(0),
+        totalAvailable,
+        new Date(),
+        new Date(),
+      );
+    }
+
+    return MonthlyBudget.RETRIEVE(
+      monthlyBudgetDocument.id,
+      monthlyBudgetDocument.month,
+      monthlyBudgetDocument.year,
+      monthlyBudgetDocument.subCategoryId,
+      monthlyBudgetDocument.assigned,
+      monthlyBudgetDocument.activity,
+      monthlyBudgetDocument.available.plus(totalAvailable),
+      monthlyBudgetDocument.createdAt,
+      monthlyBudgetDocument.updatedAt,
+    );
+  }
+
   async createOne(monthlyBudget: MonthlyBudget): Promise<void> {
     await this.monthlyBudgetRepository.createOne(monthlyBudget);
   }

@@ -17,6 +17,46 @@ export class MongoMonthlyBudgetRepository implements MonthlyBudgetRepository {
     private readonly monthlyBudgetModel: Model<MonthlyBudget>,
   ) {}
 
+  async findAllAvailableBefore(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget[]> {
+    const allDocuments = await this.monthlyBudgetModel.find({
+      $expr: {
+        $and: [
+          {
+            $eq: ['$subCategoryId', subCategoryId],
+          },
+          {
+            $lte: ['$year', year],
+          },
+          {
+            $lt: ['$month', month],
+          },
+          {
+            $not: {
+              $regexMatch: {
+                input: '$available',
+                regex: '-',
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return allDocuments.map(document => {
+      return MonthlyBudget.RETRIEVE(
+        document.id,
+        document.month,
+        document.year,
+        document.subCategoryId,
+        document.assigned,
+        document.activity,
+        document.available,
+        document.createdAt,
+        document.updatedAt,
+      );
+    });
+  }
+
   async findOne(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget | undefined> {
     const monthlyBudgetDocument = await this.monthlyBudgetModel
       .findOne({
