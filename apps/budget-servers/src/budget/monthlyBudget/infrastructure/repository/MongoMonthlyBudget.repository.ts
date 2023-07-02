@@ -5,9 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { MonthlyBudget } from '@budget/monthlyBudget/domain/MonthlyBudget.aggregate';
 import { MonthlyBudgetRepository } from '@budget/monthlyBudget/domain/MonthlyBudget.repository';
-import { Amount } from '@budget/shared/domain/valueObject/Amount';
-import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
+import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { convertToSimple } from '@shared/infrastructure/mongo/convertToSimple';
 
 @Injectable()
