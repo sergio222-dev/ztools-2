@@ -1,6 +1,7 @@
 import { expect } from '@jest/globals';
 import { MatcherFunction } from 'expect';
-import { Transaction } from '../../../../src/budget/transactions/domain/Transaction';
+
+import { TransactionAggregate } from '../../../../src/budget/transactions/domain/Transaction.aggregate';
 
 function getSimpleSubject(subject, ignoreKeys) {
   const newSubject = structuredClone(subject);
@@ -47,6 +48,6 @@ expect.extend({
 
 declare module 'expect' {
   interface Matchers<R> {
-    toBeCalledWithAndWithoutKeys(transaction: Transaction, ignoreKeys?: string[]): R;
+    toBeCalledWithAndWithoutKeys(transaction: TransactionAggregate, ignoreKeys?: string[]): R;
   }
 }

@@ -1,7 +1,7 @@
-import { Transaction } from '../../../../../src/budget/transactions/domain/Transaction';
-import { MotherCreator } from '../../../shared/domain/MotherCreator';
 import { TransactionCreateCommand } from '../../../../../src/budget/transactions/application/useCase/create/TransactionCreate.command';
 import { TransactionUpdateCommand } from '../../../../../src/budget/transactions/application/useCase/update/TransactionUpdate.command';
+import { TransactionAggregate } from '../../../../../src/budget/transactions/domain/Transaction.aggregate';
+import { MotherCreator } from '../../../shared/domain/MotherCreator';
 
 export class TransactionMother {
   public static create(
@@ -13,12 +13,12 @@ export class TransactionMother {
     category: string,
     date: Date,
     cleared: boolean,
-  ): Transaction {
-    return Transaction.CREATE(id, inflow, outflow, payee, memo, category, date, cleared);
+  ): TransactionAggregate {
+    return TransactionAggregate.CREATE(id, inflow, outflow, payee, memo, category, date, cleared);
   }
 
-  public static randomWithId(id: string): Transaction {
-    return Transaction.CREATE(
+  public static randomWithId(id: string): TransactionAggregate {
+    return TransactionAggregate.CREATE(
       id,
       MotherCreator.random().finance.amount(),
       MotherCreator.random().finance.amount(),
@@ -30,8 +30,8 @@ export class TransactionMother {
     );
   }
 
-  public static fromCreateCommand(command: TransactionCreateCommand): Transaction {
-    return Transaction.CREATE(
+  public static fromCreateCommand(command: TransactionCreateCommand): TransactionAggregate {
+    return TransactionAggregate.CREATE(
       command.id,
       command.inflow,
       command.outflow,
@@ -43,8 +43,8 @@ export class TransactionMother {
     );
   }
 
-  public static fromUpdateCommand(command: TransactionUpdateCommand): Transaction {
-    return Transaction.CREATE(
+  public static fromUpdateCommand(command: TransactionUpdateCommand): TransactionAggregate {
+    return TransactionAggregate.CREATE(
       command.id,
       command.inflow,
       command.outflow,

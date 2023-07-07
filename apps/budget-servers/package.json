@@ -25,7 +25,11 @@
     "@faker-js/faker": "~7.6.0",
     "@nestjs/mongoose": "~9.2.2",
     "@nestjs/cqrs": "~9.0.3",
-    "mongoose": "~7.0.3"
+    "mongoose": "~7.0.3",
+    "@supabase/supabase-js": "~2.23.0",
+    "bignumber.js": "~9.1.1",
+    "uuid": "~9.0.0",
+    "@nestjs/event-emitter": "~2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
