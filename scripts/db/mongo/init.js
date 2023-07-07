@@ -2,6 +2,8 @@ ztools = db.getSiblingDB('ztools');
 
 ztools.createCollection('transactions');
 ztools.createCollection('categories');
+ztools.createCollection('budgets');
+ztools.createView('monthlyBudgets', 'categories', [{}]);
 
 transactions = ztools.getCollection('transactions');
 
