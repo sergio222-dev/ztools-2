@@ -1,5 +1,9 @@
 .PHONY: build update deploy docker cleanup setup
-PROFILE = server
+
+# PROJECTS DATA
+## BUDGET
+BUDGET_PROJECT_NAME = budget-servers
+DOCKER_PROFILE_BUDGET = budget-server
 
 BASE_DEPLOY_CONTAINER = .\common\deploy\containers
 BUDGET_SERVER_CONTAINER = budget-servers
@@ -7,17 +11,17 @@ BUDGET_SERVER_CONTAINER = budget-servers
 RM = pwsh -command Get-ChildItem $(BUDGET_SERVER_CONTAINER) | pwsh -command Remove-Item .\common\deploy\containers\budget-servers -D -Force -Confirm:$false -Recurse
 
 #check if the directory $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER) exists
-setup:
+setup-budget:
 	if not exist $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER) mkdir $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER)
 
 update:
 	rush update
 
-build: update
-	rush build
+build-budget: update
+	rush build --to $(BUDGET_PROJECT_NAME)
 
-deploy: build setup
-	rush deploy --project budget-servers --target-folder ./common/deploy/containers/budget-servers --overwrite
+deploy-budget:
+	rush deploy --project $(BUDGET_PROJECT_NAME) --target-folder ./common/deploy/containers/$(BUDGET_PROJECT_NAME) --overwrite
 
-docker: deploy
-	docker-compose --profile $(PROFILE) up -d --build
+docker-budget:
+	docker-compose --profile $(DOCKER_PROFILE_BUDGET) up -d --build
