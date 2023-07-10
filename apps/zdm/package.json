@@ -1,5 +1,5 @@
 {
-  "name": "zdm",
+  "name": "@ztools/zdm",
   "version": "0.1.0",
   "private": true,
   "engines": {
