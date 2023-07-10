@@ -1,23 +1,23 @@
 .PHONY: build update deploy docker cleanup setup
-PROFILE = server
 
+# PROJECTS DATA
 BASE_DEPLOY_CONTAINER = .\common\deploy\containers
+
+## BUDGET
+BUDGET_PROJECT_NAME = budget-servers
+DOCKER_PROFILE_BUDGET = budget-server
+ENV_CONFIG_PATH = .\configs\budget\.env
 BUDGET_SERVER_CONTAINER = budget-servers
 
-RM = pwsh -command Get-ChildItem $(BUDGET_SERVER_CONTAINER) | pwsh -command Remove-Item .\common\deploy\containers\budget-servers -D -Force -Confirm:$false -Recurse
-
-#check if the directory $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER) exists
-setup:
-	if not exist $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER) mkdir $(BASE_DEPLOY_CONTAINER)\$(BUDGET_SERVER_CONTAINER)
-
+#RM = pwsh -command Get-ChildItem $(BUDGET_SERVER_CONTAINER) | pwsh -command Remove-Item .\common\deploy\containers\budget-servers -D -Force -Confirm:$false -Recurse
 update:
 	rush update
 
-build: update
-	rush build
+build-budget: update
+	rush build --to $(BUDGET_PROJECT_NAME)
 
-deploy: build setup
-	rush deploy --project budget-servers --target-folder ./common/deploy/containers/budget-servers --overwrite
+deploy-budget:
+	rush deploy --project $(BUDGET_PROJECT_NAME) --target-folder $(BASE_DEPLOY_CONTAINER)/$(BUDGET_PROJECT_NAME) --overwrite
 
-docker: deploy
-	docker-compose --profile $(PROFILE) up -d --build
+docker-budget: deploy-budget
+	docker-compose --profile $(DOCKER_PROFILE_BUDGET) --env-file $(ENV_CONFIG_PATH) up -d --build
