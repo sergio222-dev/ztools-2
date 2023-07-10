@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Collection of script",
   "main": "index.js",
+  "engines": {
+    "node": "19.5.0"
+  },
   "scripts": {
     "build": ""
   },
