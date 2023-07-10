@@ -424,13 +424,13 @@
     //   "tags": ["frontend", "jr-devs", "react"]
     // }
     {
-      "packageName": "budget-servers",
+      "packageName": "@ztools/budget-servers",
       "projectFolder": "apps/budget-servers",
       "tags": ["backend", "nestjs"],
       "reviewCategory": "production"
     },
     {
-      "packageName": "zdm",
+      "packageName": "@ztools/zdm",
       "projectFolder": "apps/zdm",
       "tags": ["frontend", "nextjs"],
       "reviewCategory": "production"
