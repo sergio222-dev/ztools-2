@@ -26,9 +26,9 @@
    * Specify one of: "pnpmVersion", "npmVersion", or "yarnVersion".  See the Rush documentation
    * for details about these alternatives.
    */
-  "pnpmVersion": "6.7.1",
+  "pnpmVersion": "6.35.1",
 
-  // "npmVersion": "6.14.15",
+  //   "npmVersion": "6.14.15",
   // "yarnVersion": "1.9.4",
 
   /**
@@ -124,34 +124,28 @@
    * The approvals are tracked in two config files "browser-approved-packages.json"
    * and "nonbrowser-approved-packages.json".  See the Rush documentation for details.
    */
-  // "approvedPackagesPolicy": {
-  //   /**
-  //    * The review categories allow you to say for example "This library is approved for usage
-  //    * in prototypes, but not in production code."
-  //    *
-  //    * Each project can be associated with one review category, by assigning the "reviewCategory" field
-  //    * in the "projects" section of rush.json.  The approval is then recorded in the files
-  //    * "common/config/rush/browser-approved-packages.json" and "nonbrowser-approved-packages.json"
-  //    * which are automatically generated during "rush update".
-  //    *
-  //    * Designate categories with whatever granularity is appropriate for your review process,
-  //    * or you could just have a single category called "default".
-  //    */
-  //   "reviewCategories": [
-  //     // Some example categories:
-  //     "production", // projects that ship to production
-  //     "tools",      // non-shipping projects that are part of the developer toolchain
-  //     "prototypes"  // experiments that should mostly be ignored by the review process
-  //   ],
-  //
-  //   /**
-  //    * A list of NPM package scopes that will be excluded from review.
-  //    * We recommend to exclude TypeScript typings (the "@types" scope), because
-  //    * if the underlying package was already approved, this would imply that the typings
-  //    * are also approved.
-  //    */
-  //   // "ignoredNpmScopes": ["@types"]
-  // },
+  "approvedPackagesPolicy": {
+    //   /**
+    //    * The review categories allow you to say for example "This library is approved for usage
+    //    * in prototypes, but not in production code."
+    //    *
+    //    * Each project can be associated with one review category, by assigning the "reviewCategory" field
+    //    * in the "projects" section of rush.json.  The approval is then recorded in the files
+    //    * "common/config/rush/browser-approved-packages.json" and "nonbrowser-approved-packages.json"
+    //    * which are automatically generated during "rush update".
+    //    *
+    //    * Designate categories with whatever granularity is appropriate for your review process,
+    //    * or you could just have a single category called "default".
+    //    */
+    "reviewCategories": ["production", "tools", "prototypes"]
+    //   /**
+    //    * A list of NPM package scopes that will be excluded from review.
+    //    * We recommend to exclude TypeScript typings (the "@types" scope), because
+    //    * if the underlying package was already approved, this would imply that the typings
+    //    * are also approved.
+    //    */
+    //   // "ignoredNpmScopes": ["@types"]
+  },
 
   /**
    * If you use Git as your version control system, this section has some additional
@@ -315,7 +309,7 @@
    * separated by hyphens or slashes, where a word may contain lowercase ASCII letters, digits,
    * ".", and "@" characters.
    */
-  // "allowedProjectTags": [ "tools", "frontend-team", "1.0.0-release" ],
+  "allowedProjectTags": ["script", "frontend", "backend", "nestjs", "nextjs"],
 
   /**
    * (Required) This is the inventory of projects to be managed by Rush.
@@ -432,7 +426,20 @@
     {
       "packageName": "budget-servers",
       "projectFolder": "apps/budget-servers",
-      "tags": ["backend", "nestjs"]
+      "tags": ["backend", "nestjs"],
+      "reviewCategory": "production"
+    },
+    {
+      "packageName": "zdm",
+      "projectFolder": "apps/zdm",
+      "tags": ["frontend", "nextjs"],
+      "reviewCategory": "production"
+    },
+    {
+      "packageName": "@ztools/ztemplates",
+      "projectFolder": "tools/ztemplates",
+      "tags": ["script"],
+      "reviewCategory": "tools"
     }
   ]
 }

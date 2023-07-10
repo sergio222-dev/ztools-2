@@ -1,0 +1,22 @@
+{
+  "name": "@ztools/ztemplates",
+  "version": "1.0.0",
+  "description": "Collection of script",
+  "main": "index.js",
+  "engines": {
+    "node": "19.5.0"
+  },
+  "scripts": {
+    "build": ""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "ztemplates": "./index.js"
+  },
+  "dependencies": {
+    "yargs": "~17.7.2",
+    "cross-spawn": "~7.0.3"
+  }
+}

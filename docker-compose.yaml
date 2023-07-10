@@ -7,7 +7,7 @@ services:
       dockerfile: apps/budget-servers/Dockerfile
       target: budget-server
     profiles:
-      - server
+      - budget-server
     ports:
       - '${BUDGET_SERVER_PORT}:${BUDGET_SERVER_PORT}'
     environment:
@@ -21,8 +21,8 @@ services:
   mongo:
     image: mongo
     profiles:
-      - mongo
-      - server
+      - budget-server-mongo
+      - budget-server
     ports:
       - '${MONGO_PORT}:${MONGO_PORT}'
     volumes:
@@ -34,8 +34,8 @@ services:
   mongo-express:
     image: mongo-express
     profiles:
-      - mongo
-      - server
+      - budget-server-mongo
+      - budget-server
     depends_on:
       - mongo
     restart: always
