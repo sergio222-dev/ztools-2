@@ -5,6 +5,9 @@
   "engines": {
     "node": "19.5.0"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
