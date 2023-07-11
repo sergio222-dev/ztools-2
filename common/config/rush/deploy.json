@@ -17,7 +17,7 @@
    * If the main project should include other unrelated Rush projects, add it to the "projectSettings" section,
    * and then specify those projects in the "additionalProjectsToInclude" list.
    */
-  "deploymentProjectNames": ["budget-servers"],
+  "deploymentProjectNames": ["@ztools/budget-servers"],
 
   /**
    * When deploying a local Rush project, the package.json "devDependencies" are normally excluded.
@@ -44,7 +44,7 @@
    *
    * The default value is false.
    */
-  // "omitPnpmWorkaroundLinks": true,
+   "omitPnpmWorkaroundLinks": true,
 
   /**
    * Specify how links (symbolic links, hard links, and/or NTFS junctions) will be created in the deployed folder:
