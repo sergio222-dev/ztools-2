@@ -1,6 +1,6 @@
 import { Category } from '@core/budget/budget/domain/Category';
 
 export interface CategoryRepository {
-  getAll(): Promise<Category[]>;
-  get(id: string): Promise<Category>;
+  getAll(month: string, year: string): Promise<Category[]>;
+  create(c: Category): Promise<void>;
 }

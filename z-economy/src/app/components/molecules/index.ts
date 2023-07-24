@@ -1,6 +1,6 @@
 export { LeftSidebarCollapsible } from './LeftSidebarCollapsible/LeftSidebarCollapsible';
 export { IndeterminateCheckbox } from './IndeterminateCheckbox/IndeterminateCheckbox';
-export { CategoryTable } from '../molecules/CategoryTable/CategoryTable';
+export { BudgetPageTable } from '../tables/Categories/renders/BudgetPageTable';
 export { TransactionTableButtons } from '../molecules/TransactionTableButtons/TransactionTableButtons';
 export { SearchDebounceInput } from '../molecules/SearchDebounceInput/SearchDebounceInput';
 export { TransactionEditDropdown } from '../molecules/TransactionEditDropdown/TransactionEditDropdown';

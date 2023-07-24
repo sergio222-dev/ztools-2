@@ -18,6 +18,9 @@ export function AddCategoryForm({ isOpen }: AddCategoryFormProperties) {
   const formSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     isOpen.value = false;
+    if (formReference.current === null) return;
+    const categoryName = new FormData(formReference.current);
+    console.log(categoryName.get('categoryName') as string);
   };
 
   const formCancelHandler = () => {
@@ -37,7 +40,7 @@ export function AddCategoryForm({ isOpen }: AddCategoryFormProperties) {
           ref={formReference}
           onSubmit={formSubmitHandler}
         >
-          <Input placeholder="New Category Group" type="text" />
+          <Input placeholder="New Category Group" type="text" name="categoryName" />
           <div className={styles.form_buttons}>
             <CancelButton type="reset" onClick={formCancelHandler} />
             <SaveButton type="submit" />

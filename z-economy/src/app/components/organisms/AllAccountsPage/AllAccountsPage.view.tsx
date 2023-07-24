@@ -1,6 +1,6 @@
 import styles from './AllAccountsPage.module.scss';
 import cls from 'classnames';
-import { useAllAccountPageHooks } from './AllAccountPage.hooks';
+import { useAllAccountPageHooks } from './AllAccountPage.hook';
 import { Typography } from '@atoms/Typography/Typography';
 import { TransactionTableView } from '../../tables/transactions/TransactionTable.view';
 import { WorkingBalance } from '@molecules/WorkingBalance/WorkingBalance';

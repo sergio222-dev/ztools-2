@@ -7,14 +7,12 @@ import { Category } from '@core/budget/budget/domain/Category';
 export class AxiosBudgetRepository implements CategoryRepository {
   constructor(@inject('AxiosInstance') private axios: axios_1.AxiosInstance) {}
 
-  async get(id: string): Promise<Category> {
-    const { data } = await this.axios.get<Category>(`/category/${id}`);
-
-    return data;
+  async create(c: Category): Promise<void> {
+    await this.axios.post<Category>(`/category/`, c);
   }
 
-  async getAll(): Promise<Category[]> {
-    const { data } = await this.axios.get<Category[]>('/category');
+  async getAll(month: string, year: string): Promise<Category[]> {
+    const { data } = await this.axios.get<Category[]>(`/category?month=${month}&year=${year}`);
 
     return data;
   }

@@ -1,72 +1,44 @@
-import { useMemo } from 'react';
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 import { IndeterminateCheckbox } from '@molecules/index';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
 import { Button } from '@atoms/Button/Button';
+import { useCategoryHook } from '@core/budget/budget/application/adapter/useCategory.hook';
+import { Category } from '@core/budget/budget/domain/Category';
 
-export type Category = {
-  category: string;
-  assigned: string;
+export type TableCategory = {
+  id: string;
+  name: string;
+  assignedBudget: string;
   activity: string;
   available: string;
-  subRows?: SubRowData[];
+  subCategories?: subCategories[];
 };
 
-export type SubRowData = {
-  category: string;
-  assigned: string;
+export type subCategories = {
+  id: string;
+  name: string;
+  assignedBudget: string;
   activity: string;
   available: string;
-  subRows?: SubRowData[];
+  subCategories?: subCategories[];
 };
 
-const range = (length: number) => {
-  const array = [];
-  for (let index = 0; index < length; index++) {
-    array.push(index);
-  }
-  return array;
-};
+// interface CategoryTableModel {
+//   data: TableCategory[];
+//   columns: ColumnDef<TableCategory, any>[];
+//   newCategoryGroup: (c: Category) => void;
+// }
 
-const newCategory = (): Category => {
-  return {
-    category: 'Bills',
-    assigned: '$100.000',
-    activity: '$0.00',
-    available: '$0.00',
-  };
-};
-
-export function makeData(...lens: number[]) {
-  const makeDataLevel = (depth = 0): Category[] => {
-    const length = lens[depth]!;
-    return range(length).map((): Category => {
-      return {
-        ...newCategory(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      };
-    });
-  };
-
-  return makeDataLevel();
-}
-
-interface CategoryTableModel {
-  columns: ColumnDef<Category, any>[];
-  data: Category[];
-}
-
-export function useBudgetPageHooks(): [CategoryTableModel, object] {
+export function useCategoryTableHook() {
   // MODEL
-  const originalData = makeData(5, 3);
-  const data = useMemo(() => originalData, []);
-  const columnHelper = createColumnHelper<Category>();
+  const { data, newCategoryGroup } = useCategoryHook();
+  const columnHelper = createColumnHelper<TableCategory>();
 
-  const columns: ColumnDef<Category, any>[] = [
+  const columns: ColumnDef<TableCategory, any>[] = [
     {
-      accessorKey: 'category',
+      accessorKey: 'name',
       header: ({ table }) => (
         <div className="z_flex z_flex_jc_left z_flex_ai_center">
           <IndeterminateCheckbox
@@ -119,10 +91,10 @@ export function useBudgetPageHooks(): [CategoryTableModel, object] {
       ),
       // footer: props => props.column.id,
     },
-    columnHelper.accessor('assigned', {
+    columnHelper.accessor('assignedBudget', {
       id: 'assigned',
       header: () => <Typography size="small">ASSIGNED</Typography>,
-      cell: info => info.getValue(),
+      cell: info => (info.getValue() === undefined ? '0' : info.getValue()),
       meta: {
         type: new NumericTextType(),
       },
@@ -130,7 +102,7 @@ export function useBudgetPageHooks(): [CategoryTableModel, object] {
     columnHelper.accessor('activity', {
       id: 'activity',
       header: () => <Typography size="small">ACTIVITY</Typography>,
-      cell: info => info.getValue(),
+      cell: info => (info.getValue() === undefined ? '23424' : info.getValue()),
       meta: {
         type: new NumericTextType(),
       },
@@ -138,18 +110,12 @@ export function useBudgetPageHooks(): [CategoryTableModel, object] {
     columnHelper.accessor('available', {
       id: 'available',
       header: () => <Typography size="small">AVAILABLE</Typography>,
-      cell: info => info.getValue(),
+      cell: info => (info.getValue() === undefined ? '123123' : info.getValue()),
       meta: {
         type: new NumericTextType(),
       },
     }),
   ];
 
-  return [
-    {
-      columns,
-      data,
-    },
-    {},
-  ];
+  return { data, columns };
 }

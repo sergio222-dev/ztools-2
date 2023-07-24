@@ -1,7 +1,7 @@
 import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { KeyboardEvent, useRef, useState } from 'react';
-import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
+import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
@@ -26,7 +26,7 @@ export const useTransactionTableHook = () => {
 
   // SERVICES
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
-    useTransaction();
+    useTransactionHook();
 
   // HANDLERS
 

@@ -4,7 +4,7 @@
 BASE_DEPLOY_CONTAINER = .\common\deploy\containers
 
 ## BUDGET
-BUDGET_PROJECT_NAME = budget-servers
+BUDGET_PROJECT_NAME = @ztools/budget-servers
 DOCKER_PROFILE_BUDGET = budget-server
 ENV_CONFIG_PATH = .\configs\budget\.env
 BUDGET_SERVER_CONTAINER = budget-servers

@@ -14,7 +14,7 @@ interface CategoryTableProperties<T> {
   data: Array<T>;
 }
 
-export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) {
+export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
   const table = useReactTable<T>({
@@ -26,7 +26,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
     onExpandedChange: setExpanded,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    getSubRows: row => row.subRows,
+    getSubRows: row => row.subCategories,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     // debugTable: true,

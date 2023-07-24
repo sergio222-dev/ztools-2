@@ -76,6 +76,7 @@ export const Auth = () => {
     });
     if (error) return alert(error.message);
     alert('Password reset email sent!');
+    navigate('/');
   };
 
   switch (loginState) {

@@ -1,6 +1,6 @@
-@use '../../styles/constants' as const;
-@use '../../styles/functions';
-@use '../../styles/mixins';
+@use '../../../styles/constants' as const;
+@use '../../../styles/functions';
+@use '../../../styles/mixins';
 
 .z_table {
   width: 100%;
@@ -43,5 +43,4 @@
   .z_table_expansible_row {
     background-color: const.$page-darker-background-color;
   }
-
 }

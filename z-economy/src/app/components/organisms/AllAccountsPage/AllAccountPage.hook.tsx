@@ -1,4 +1,4 @@
-import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
+import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import currency from 'currency.js';
 interface AllAccountPageModel {
   workingBalance: string;
@@ -11,7 +11,7 @@ interface AllAccountPageOperators {}
 
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
-  const { data } = useTransaction();
+  const { data } = useTransactionHook();
 
   // eslint-disable-next-line unicorn/no-array-reduce
   const totalCleared = data

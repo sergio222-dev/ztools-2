@@ -10,7 +10,7 @@ export class CategoryGetAll implements UseCase<unknown, Category[]> {
     private categoryRepository: CategoryRepository.CategoryRepository,
   ) {}
 
-  async execute(): Promise<Category[]> {
-    return await this.categoryRepository.getAll();
+  async execute(date: { month: string; year: string }): Promise<Category[]> {
+    return await this.categoryRepository.getAll(date.month, date.year);
   }
 }
