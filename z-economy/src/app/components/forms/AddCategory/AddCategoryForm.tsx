@@ -7,10 +7,11 @@ import { Tooltip } from 'react-tooltip';
 import { Signal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { Category } from '@core/budget/budget/domain/Category';
 
 interface AddCategoryFormProperties {
   isOpen: Signal<boolean>;
-  createCategoryGroup: any;
+  createCategoryGroup: (c: Category) => Promise<void>;
 }
 
 export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryFormProperties) {
@@ -24,7 +25,10 @@ export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryForm
     const createCategoryGroupForm = new FormData(formReference.current);
     const newCategoryGroupName = createCategoryGroupForm.get('categoryName') as string;
     if (newCategoryGroupName === '') return;
-    createCategoryGroup({ id: uuidv4(), name: newCategoryGroupName });
+    createCategoryGroup({
+      id: uuidv4(),
+      name: newCategoryGroupName,
+    });
   };
 
   const formCancelHandler = () => {

@@ -9,9 +9,9 @@ import { useCategoryHook } from '@core/budget/budget/application/adapter/useCate
 export type TableCategory = {
   id: string;
   name: string;
-  assignedBudget: string;
-  activity: string;
-  available: string;
+  assignedBudget?: string;
+  activity?: string;
+  available?: string;
   subCategories?: subCategories[];
 };
 
@@ -74,7 +74,7 @@ export function useCategoryTableHook() {
                 onClick={row.getToggleExpandedHandler()}
                 variant="icon"
                 StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-                style={{ opacity: row.original.subCategories.length === 0 ? '0' : '1' }}
+                style={{ opacity: row.original.subCategories.length === 0 ? '0.25' : '1' }}
               />
             )}
             {row.original.subCategories ? (

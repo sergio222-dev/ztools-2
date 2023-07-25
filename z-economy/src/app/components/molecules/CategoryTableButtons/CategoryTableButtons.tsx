@@ -4,9 +4,10 @@ import styles from './CategoryTableButtons.module.scss';
 import { Typography } from '@atoms/Typography/Typography';
 import { AddCategoryForm } from '../../forms/AddCategory/AddCategoryForm';
 import { useSignal } from '@preact/signals-react';
+import { Category } from '@core/budget/budget/domain/Category';
 
 interface CategoryTableButtonsProperties {
-  createCategoryGroup: any;
+  createCategoryGroup: (c: Category) => Promise<void>;
 }
 
 export function CategoryTableButtons({ createCategoryGroup }: CategoryTableButtonsProperties) {
