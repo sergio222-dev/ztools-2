@@ -69,14 +69,15 @@ export function useCategoryTableHook() {
                 onChange: row.getToggleSelectedHandler(),
               }}
             />
-            {row.getCanExpand() && (
+            {row.original.subCategories && (
               <Button
                 onClick={row.getToggleExpandedHandler()}
                 variant="icon"
                 StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
+                style={{ opacity: row.original.subCategories.length === 0 ? '0' : '1' }}
               />
             )}
-            {row.getCanExpand() ? (
+            {row.original.subCategories ? (
               <Typography size="large" variant="bold">
                 {getValue()}
               </Typography>

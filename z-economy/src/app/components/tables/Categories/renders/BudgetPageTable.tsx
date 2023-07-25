@@ -61,7 +61,9 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
             return (
               <tr
                 key={row.id}
-                className={row.getCanExpand() ? styles.z_table_expansible_row : styles.z_table_normal_row}
+                className={
+                  row.original.subCategories ? styles.z_table_expansible_row : styles.z_table_normal_row
+                }
               >
                 {row.getVisibleCells().map(cell => {
                   return (

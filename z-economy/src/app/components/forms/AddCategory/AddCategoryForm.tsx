@@ -23,6 +23,7 @@ export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryForm
     if (formReference.current === null) return;
     const createCategoryGroupForm = new FormData(formReference.current);
     const newCategoryGroupName = createCategoryGroupForm.get('categoryName') as string;
+    if (newCategoryGroupName === '') return;
     createCategoryGroup({ id: uuidv4(), name: newCategoryGroupName });
   };
 
