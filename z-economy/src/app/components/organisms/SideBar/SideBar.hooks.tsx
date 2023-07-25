@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
-import { supabase } from '../../forms/Auth/Auth';
+import { supabase } from '../../forms/Auth/AuthForm';
 
 // type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
 

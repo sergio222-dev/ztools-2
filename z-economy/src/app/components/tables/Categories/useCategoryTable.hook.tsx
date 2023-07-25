@@ -117,5 +117,5 @@ export function useCategoryTableHook() {
     }),
   ];
 
-  return { data, columns };
+  return { data, columns, newCategoryGroup };
 }

@@ -2,14 +2,14 @@ import { UtilityButton } from '@atoms/Button/UtilityButton';
 import { AiFillPlusCircle } from 'react-icons/ai';
 import styles from './CategoryTableButtons.module.scss';
 import { Typography } from '@atoms/Typography/Typography';
-import { AddCategoryForm } from '../../forms/AddCategory/AddCategory';
+import { AddCategoryForm } from '../../forms/AddCategory/AddCategoryForm';
 import { useSignal } from '@preact/signals-react';
 
-// interface CategoryTableButtonsProperties {
-//
-// }
+interface CategoryTableButtonsProperties {
+  newCategoryGroup: any;
+}
 
-export function CategoryTableButtons() {
+export function CategoryTableButtons({ newCategoryGroup }: CategoryTableButtonsProperties) {
   const isOpen = useSignal(false);
   const handleAddCategory = () => {
     isOpen.value = !isOpen.value;

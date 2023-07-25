@@ -1,6 +1,6 @@
 import { Navigate, useNavigate } from 'react-router';
 import { useAuth } from '@utils/useAuth';
-import { Auth, supabase } from '../components/forms/Auth/Auth';
+import { AuthForm, supabase } from '../components/forms/Auth/AuthForm';
 import { useEffect } from 'react';
 
 export const Login = () => {
@@ -19,7 +19,7 @@ export const Login = () => {
     <Navigate to="/" />
   ) : (
     <div className="z_flex z_flex_jc_center">
-      <Auth />
+      <AuthForm />
     </div>
   );
 };
