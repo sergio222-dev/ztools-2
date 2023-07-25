@@ -1,5 +1,5 @@
 import { Input } from '@supabase/ui';
-import styles from './Auth.module.scss';
+import styles from './AuthForm.module.scss';
 import { Button } from '@atoms/Button/Button';
 import { SyntheticEvent, useRef, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
@@ -16,7 +16,7 @@ const LOGIN_STATE = {
   FORGOT_PASSWORD: Symbol(),
 };
 
-export const Auth = () => {
+export const AuthForm = () => {
   const [loginState, setLoginState] = useState(LOGIN_STATE.SING_IN);
   const loginReference = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();

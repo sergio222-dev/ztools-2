@@ -1,4 +1,4 @@
-import styles from './AddCategory.module.scss';
+import styles from './AddCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { CancelButton } from '@atoms/Button/CancelButton';
 import { SaveButton } from '@atoms/Button/SaveButton';

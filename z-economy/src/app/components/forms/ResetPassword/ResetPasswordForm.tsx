@@ -1,12 +1,12 @@
-import styles from '../ResetPassword/ResetPassword.module.scss';
+import styles from './ResetPasswordForm.module.scss';
 import { Typography } from '@atoms/Typography/Typography';
 import { Input } from '@supabase/ui';
 import { Button } from '@atoms/Button/Button';
 import { SyntheticEvent, useRef } from 'react';
-import { supabase } from '../Auth/Auth';
+import { supabase } from '../Auth/AuthForm';
 import { useNavigate } from 'react-router';
 
-export const ResetPassword = () => {
+export const ResetPasswordForm = () => {
   const loginReference = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
   const formSubmitHandler = async (event: SyntheticEvent<HTMLFormElement>) => {
