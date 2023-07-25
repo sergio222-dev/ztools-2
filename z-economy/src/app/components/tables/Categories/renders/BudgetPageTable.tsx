@@ -62,6 +62,8 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
               <tr
                 key={row.id}
                 className={
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
                   row.original.subCategories ? styles.z_table_expansible_row : styles.z_table_normal_row
                 }
               >
