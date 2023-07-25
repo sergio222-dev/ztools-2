@@ -14,9 +14,10 @@ export const useCategoryHook = () => {
     categoryGetAll.execute({ month: '07', year: '2023' }),
   );
 
-  const newCategoryGroup = (c: Category) => {
+  const createCategoryGroup = async (c: Category) => {
     if (!data) return;
-    categoryCreate.execute(c);
+    await categoryCreate.execute(c);
+    await mutate(data);
   };
 
   return {
@@ -24,6 +25,6 @@ export const useCategoryHook = () => {
     error: error,
     isLoading,
     mutate,
-    newCategoryGroup,
+    createCategoryGroup,
   };
 };

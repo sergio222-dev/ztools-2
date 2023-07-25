@@ -5,7 +5,6 @@ import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
 import { Button } from '@atoms/Button/Button';
 import { useCategoryHook } from '@core/budget/budget/application/adapter/useCategory.hook';
-import { Category } from '@core/budget/budget/domain/Category';
 
 export type TableCategory = {
   id: string;
@@ -33,7 +32,7 @@ export type subCategories = {
 
 export function useCategoryTableHook() {
   // MODEL
-  const { data, newCategoryGroup } = useCategoryHook();
+  const { data, createCategoryGroup } = useCategoryHook();
   const columnHelper = createColumnHelper<TableCategory>();
 
   const columns: ColumnDef<TableCategory, any>[] = [
@@ -117,5 +116,5 @@ export function useCategoryTableHook() {
     }),
   ];
 
-  return { data, columns, newCategoryGroup };
+  return { data, columns, createCategoryGroup };
 }

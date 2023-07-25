@@ -6,10 +6,10 @@ import { AddCategoryForm } from '../../forms/AddCategory/AddCategoryForm';
 import { useSignal } from '@preact/signals-react';
 
 interface CategoryTableButtonsProperties {
-  newCategoryGroup: any;
+  createCategoryGroup: any;
 }
 
-export function CategoryTableButtons({ newCategoryGroup }: CategoryTableButtonsProperties) {
+export function CategoryTableButtons({ createCategoryGroup }: CategoryTableButtonsProperties) {
   const isOpen = useSignal(false);
   const handleAddCategory = () => {
     isOpen.value = !isOpen.value;
@@ -23,7 +23,7 @@ export function CategoryTableButtons({ newCategoryGroup }: CategoryTableButtonsP
           <Typography>Category Group</Typography>
         </UtilityButton>
       </a>
-      <AddCategoryForm isOpen={isOpen} />
+      <AddCategoryForm isOpen={isOpen} createCategoryGroup={createCategoryGroup} />
     </div>
   );
 }

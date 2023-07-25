@@ -6,12 +6,14 @@ import { SyntheticEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddCategoryFormProperties {
   isOpen: Signal<boolean>;
+  createCategoryGroup: any;
 }
 
-export function AddCategoryForm({ isOpen }: AddCategoryFormProperties) {
+export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryFormProperties) {
   const formReference = useRef(null);
   const tooltipReference = useRef(null);
 
@@ -19,8 +21,9 @@ export function AddCategoryForm({ isOpen }: AddCategoryFormProperties) {
     event.preventDefault();
     isOpen.value = false;
     if (formReference.current === null) return;
-    const categoryName = new FormData(formReference.current);
-    console.log(categoryName.get('categoryName') as string);
+    const createCategoryGroupForm = new FormData(formReference.current);
+    const newCategoryGroupName = createCategoryGroupForm.get('categoryName') as string;
+    createCategoryGroup({ id: uuidv4(), name: newCategoryGroupName });
   };
 
   const formCancelHandler = () => {
