@@ -3,6 +3,14 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@builder.io/qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@builder.io/qwik-city",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@faker-js/faker",
       "allowedCategories": [ "production" ]
     },
@@ -64,6 +72,10 @@
     },
     {
       "name": "@testdeck/jest",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@types/eslint",
       "allowedCategories": [ "production" ]
     },
     {
@@ -139,6 +151,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "eslint-plugin-qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "eslint-plugin-sonarjs",
       "allowedCategories": [ "production" ]
     },
@@ -175,7 +191,19 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "normalize.css",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "pg",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "postcss",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "prettier",
       "allowedCategories": [ "production" ]
     },
     {
@@ -231,7 +259,19 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "undici",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "uuid",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite-tsconfig-paths",
       "allowedCategories": [ "production" ]
     },
     {
