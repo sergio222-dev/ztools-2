@@ -11,24 +11,57 @@ import { Category } from '@core/budget/budget/domain/Category';
 
 interface AddCategoryFormProperties {
   isOpen: Signal<boolean>;
-  createCategoryGroup: (c: Category) => Promise<void>;
+  createCategoryGroup?: (c: Category) => Promise<void>;
+  createSubCategory?: (c: SubCategory) => Promise<void>;
+  variant?: 'subCategory';
+  categoryId?: string;
 }
 
-export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryFormProperties) {
+export interface SubCategory {
+  id: string;
+  name: string;
+  categoryId: string;
+}
+
+export function AddCategoryForm({
+  isOpen,
+  createCategoryGroup,
+  createSubCategory,
+  variant,
+  categoryId,
+}: AddCategoryFormProperties) {
   const formReference = useRef(null);
   const tooltipReference = useRef(null);
 
-  const formSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
+  const categoryGroupSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     isOpen.value = false;
     if (formReference.current === null) return;
     const createCategoryGroupForm = new FormData(formReference.current);
     const newCategoryGroupName = createCategoryGroupForm.get('categoryName') as string;
     if (newCategoryGroupName === '') return;
-    createCategoryGroup({
-      id: uuidv4(),
-      name: newCategoryGroupName,
-    });
+    if (createCategoryGroup) {
+      void createCategoryGroup({
+        id: uuidv4(),
+        name: newCategoryGroupName,
+      });
+    }
+  };
+
+  const categorySubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    isOpen.value = false;
+    if (formReference.current === null) return;
+    const createCategoryForm = new FormData(formReference.current);
+    const newCategoryName = createCategoryForm.get('categoryName') as string;
+    if (newCategoryName === '') return;
+    if (createSubCategory && categoryId) {
+      void createSubCategory({
+        id: uuidv4(),
+        name: newCategoryName,
+        categoryId: categoryId,
+      });
+    }
   };
 
   const formCancelHandler = () => {
@@ -39,14 +72,31 @@ export function AddCategoryForm({ isOpen, createCategoryGroup }: AddCategoryForm
     isOpen.value = false;
   });
 
-  return (
+  return variant === 'subCategory' ? (
     <div className={styles.add_category_form_container} ref={tooltipReference}>
       <Tooltip anchorSelect="#add-category" clickable className={styles.c_tooltip} isOpen={isOpen.value}>
         <form
           name="add-category"
           className={styles.add_category_form}
           ref={formReference}
-          onSubmit={formSubmitHandler}
+          onSubmit={categorySubmitHandler}
+        >
+          <Input placeholder="New Category" type="text" name="categoryName" />
+          <div className={styles.form_buttons}>
+            <CancelButton type="reset" onClick={formCancelHandler} />
+            <SaveButton type="submit" />
+          </div>
+        </form>
+      </Tooltip>
+    </div>
+  ) : (
+    <div className={styles.add_category_form_container} ref={tooltipReference}>
+      <Tooltip anchorSelect="#add-category" clickable className={styles.c_tooltip} isOpen={isOpen.value}>
+        <form
+          name="add-category"
+          className={styles.add_category_form}
+          ref={formReference}
+          onSubmit={categoryGroupSubmitHandler}
         >
           <Input placeholder="New Category Group" type="text" name="categoryName" />
           <div className={styles.form_buttons}>

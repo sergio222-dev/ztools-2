@@ -1,5 +1,5 @@
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-import { IndeterminateCheckbox } from '@molecules/index';
+import { AddCategoryButton, IndeterminateCheckbox } from '@molecules/index';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
@@ -32,7 +32,7 @@ export type subCategories = {
 
 export function useCategoryTableHook() {
   // MODEL
-  const { data, createCategoryGroup } = useCategoryHook();
+  const { data, createCategoryGroup, createSubCategory } = useCategoryHook();
   const columnHelper = createColumnHelper<TableCategory>();
 
   const columns: ColumnDef<TableCategory, any>[] = [
@@ -74,13 +74,19 @@ export function useCategoryTableHook() {
                 onClick={row.getToggleExpandedHandler()}
                 variant="icon"
                 StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-                style={{ opacity: row.original.subCategories.length === 0 ? '0.25' : '1' }}
+                style={{
+                  opacity: row.original.subCategories.length === 0 ? '0' : '1',
+                  cursor: row.original.subCategories.length === 0 ? 'default' : 'pointer',
+                }}
               />
             )}
             {row.original.subCategories ? (
-              <Typography size="large" variant="bold">
-                {getValue()}
-              </Typography>
+              <div>
+                <Typography size="large" variant="bold">
+                  {getValue()}
+                </Typography>
+                <AddCategoryButton createSubCategory={createSubCategory} categoryId={row.original.id} />
+              </div>
             ) : (
               <div className="z_padding_left_4">
                 <Typography size="large">{getValue()}</Typography>

@@ -5,3 +5,4 @@ export { TransactionTableButtons } from '../molecules/TransactionTableButtons/Tr
 export { SearchDebounceInput } from '../molecules/SearchDebounceInput/SearchDebounceInput';
 export { TransactionEditDropdown } from '../molecules/TransactionEditDropdown/TransactionEditDropdown';
 export { CategoryTableButtons } from '../molecules/CategoryTableButtons/CategoryTableButtons';
+export { AddCategoryButton } from '../molecules/AddCategoryButton/AddCategoryButton';
