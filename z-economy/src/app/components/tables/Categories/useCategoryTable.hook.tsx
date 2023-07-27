@@ -5,6 +5,8 @@ import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
 import { Button } from '@atoms/Button/Button';
 import { useCategoryHook } from '@core/budget/budget/application/adapter/useCategory.hook';
+import styles from './renders/CategoryTable.module.scss';
+import cls from 'classnames';
 
 export type TableCategory = {
   id: string;
@@ -60,7 +62,7 @@ export function useCategoryTableHook() {
         </div>
       ),
       cell: ({ row, getValue }) => (
-        <div className="z_flex z_flex_jc_left z_flex_ai_center">
+        <div className={cls('z_flex z_flex_jc_left z_flex_ai_center')}>
           <>
             <IndeterminateCheckbox
               {...{
@@ -81,11 +83,13 @@ export function useCategoryTableHook() {
               />
             )}
             {row.original.subCategories ? (
-              <div>
+              <div className="z_flex_inline">
                 <Typography size="large" variant="bold">
                   {getValue()}
                 </Typography>
-                <AddCategoryButton createSubCategory={createSubCategory} categoryId={row.original.id} />
+                <div className={styles.c_table_add_button}>
+                  <AddCategoryButton createSubCategory={createSubCategory} categoryId={row.original.id} />
+                </div>
               </div>
             ) : (
               <div className="z_padding_left_4">

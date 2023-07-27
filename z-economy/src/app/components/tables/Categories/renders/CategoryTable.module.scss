@@ -44,3 +44,11 @@
     background-color: const.$page-darker-background-color;
   }
 }
+
+.c_table_add_button {
+  display: none;
+}
+
+.c_table_row:hover .c_table_add_button {
+  display: flex;
+}

@@ -8,6 +8,7 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import styles from './CategoryTable.module.scss';
+import cls from 'classnames';
 
 interface CategoryTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
@@ -64,7 +65,9 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
                 className={
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   // @ts-ignore
-                  row.original.subCategories ? styles.z_table_expansible_row : styles.z_table_normal_row
+                  row.original.subCategories
+                    ? cls(styles.z_table_expansible_row, styles.c_table_row)
+                    : styles.z_table_normal_row
                 }
               >
                 {row.getVisibleCells().map(cell => {
