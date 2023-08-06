@@ -1,0 +1,40 @@
+version: '3.8'
+name: 'zdm'
+services:
+  zdm-server:
+    build:
+      context: ./../../
+      dockerfile: ./apps/zdm-servers/Dockerfile
+      target: zdm-server
+    profiles:
+      - zdm
+      - zdm-server
+    ports:
+      - '${ZDM_SERVER_PORT}:${ZDM_SERVER_PORT}'
+    env_file:
+      - .env.development # load env vars in the container
+  zdm-db:
+    image: postgres
+    profiles:
+      - zdm
+      - zdm-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    volumes:
+      - './scripts/db:/docker-entrypoint-initdb.d'
+  admin:
+    image: adminer
+    profiles:
+      - zdm
+      - zdm-postgres
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: zdm-db
+      ADMINER_DESIGN: dracula
+    ports:
+      - '${ADMINER_PORT}:8080'

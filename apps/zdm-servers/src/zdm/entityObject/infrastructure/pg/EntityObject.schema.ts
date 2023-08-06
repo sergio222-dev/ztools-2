@@ -3,8 +3,13 @@ import { StringValueObject } from '@shared/domain/valueObject/StringValueObject'
 import { StringUndefinedValueObject } from '@shared/domain/valueObject/StringUndefinedValueObject';
 import { EntityObject } from '@zdm/entityObject/domain/EntityObject.aggregate';
 import { EntitySchema } from 'typeorm';
+import {
+  OwnershipEntitySchema,
+  ownershipInfo,
+} from '@shared/infrastructure/pg/schemasUtils';
+import { DateValueObject } from '@shared/domain/valueObject/DateValueObject';
 
-export interface EntityObjectSchemaType {
+export interface EntityObjectSchemaType extends OwnershipEntitySchema {
   id: string;
   name: string;
   entity_id: string;
@@ -18,8 +23,20 @@ export const mapToAggregate = (entity: EntityObjectSchemaType) => {
   const description = new StringUndefinedValueObject(entity.description);
   const image_link = new StringUndefinedValueObject(entity.image_link);
   const entity_id = new StringValueObject(entity.entity_id);
+  const user_id = new IdObject(entity.user_id);
+  const created_at = new DateValueObject(entity.createdAt);
+  const updated_at = new DateValueObject(entity.updatedAt);
 
-  return EntityObject.RETRIEVE(id, name, entity_id, description, image_link);
+  return EntityObject.RETRIEVE(
+    id,
+    name,
+    entity_id,
+    description,
+    image_link,
+    user_id,
+    created_at,
+    updated_at,
+  );
 };
 
 export const mapToSchema = (entity: EntityObject): EntityObjectSchemaType => {
@@ -29,11 +46,14 @@ export const mapToSchema = (entity: EntityObject): EntityObjectSchemaType => {
     entity_id: entity.entity_id.value,
     description: entity.description.value,
     image_link: entity.image_link.value,
+    user_id: entity.user_id.value,
+    createdAt: entity.createdAt.value,
+    updatedAt: entity.updatedAt.value,
   };
 };
 
 export const EntityObjectSchema = new EntitySchema<EntityObjectSchemaType>({
-  name: 'entity',
+  name: 'entity_object',
   columns: {
     id: {
       type: 'text',
@@ -51,5 +71,6 @@ export const EntityObjectSchema = new EntitySchema<EntityObjectSchemaType>({
     image_link: {
       type: 'text',
     },
+    ...ownershipInfo,
   },
 });

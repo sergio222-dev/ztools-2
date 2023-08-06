@@ -34,5 +34,5 @@ docker-budget:
 	  echo 'You should run make deploy-budget before make docker-budget'; \
 	fi
 
-docker-zdm:
-	docker-compose --profile $(ZDM_DOCKER_PROFILE) --env-file $(ENV_CONFIG_PATH) up -d --build
+docker-zdm-server:
+	make -C ./apps/zdm-servers docker

@@ -18,7 +18,12 @@ const config: Config = {
     '!test/**',
   ],
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t|j)s$': [
+      'ts-jest',
+      {
+        diagnostics: false,
+      },
+    ],
   },
   coverageThreshold: {
     global: {

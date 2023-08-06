@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { EntityRepository } from '@zdm/entity/domain/Entity.repository';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 import {
   EntitySchema,
   EntitySchemaType,
+  mapToAggregate,
   mapToSchema,
 } from '@zdm/entity/infrastructure/pg/Entity.schema';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Entity } from '@zdm/entity/domain/Entity.aggregate';
+import { PgBaseRepositoryRepository } from '@shared/infrastructure/pg/PgBaseRepository.repository';
 
 @Injectable()
-export class PgEntityRepository implements EntityRepository {
-  constructor(
-    @InjectRepository(EntitySchema)
-    private readonly repository: Repository<EntitySchemaType>,
-  ) {}
-
-  async save(entity: Entity): Promise<void> {
-    const schema = mapToSchema(entity);
-    await this.repository.save(schema);
+export class PgEntityRepository extends PgBaseRepositoryRepository<
+  Entity,
+  EntitySchemaType
+> {
+  constructor(@InjectDataSource() dataSource: DataSource) {
+    super(dataSource, EntitySchema, mapToAggregate, mapToSchema);
   }
 }

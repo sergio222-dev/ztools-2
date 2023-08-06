@@ -1,14 +1,12 @@
-import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 import { IdObject } from '@shared/domain/valueObject/IdObject';
 import { StringValueObject } from '@shared/domain/valueObject/StringValueObject';
 import { StringUndefinedValueObject } from '@shared/domain/valueObject/StringUndefinedValueObject';
+import { DateValueObject } from '@shared/domain/valueObject/DateValueObject';
+import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
-export class Entity extends AggregateRoot {
+export class Entity extends AggregateRootOwnership {
   get parent_id(): StringUndefinedValueObject {
     return this._parent_id;
-  }
-  get id(): IdObject {
-    return this._id;
   }
 
   get name(): StringValueObject {
@@ -19,12 +17,15 @@ export class Entity extends AggregateRoot {
     return this._description;
   }
   private constructor(
-    private readonly _id: IdObject,
+    _id: IdObject,
     private readonly _name: StringValueObject,
     private readonly _description: StringUndefinedValueObject,
     private readonly _parent_id: StringUndefinedValueObject,
+    _userId: IdObject,
+    _createdAt: DateValueObject,
+    _updatedAt: DateValueObject,
   ) {
-    super();
+    super(_id, _userId, _createdAt, _updatedAt);
   }
 
   static CREATE(
@@ -32,8 +33,19 @@ export class Entity extends AggregateRoot {
     name: StringValueObject,
     description: StringUndefinedValueObject,
     parent_id: StringUndefinedValueObject,
+    user_id: IdObject,
+    created_at: DateValueObject,
+    updated_at: DateValueObject,
   ): Entity {
-    return new Entity(id, name, description, parent_id);
+    return new Entity(
+      id,
+      name,
+      description,
+      parent_id,
+      user_id,
+      created_at,
+      updated_at,
+    );
   }
 
   static RETRIEVE(
@@ -41,7 +53,18 @@ export class Entity extends AggregateRoot {
     name: StringValueObject,
     description: StringUndefinedValueObject,
     parent_id: StringUndefinedValueObject,
+    user_id: IdObject,
+    created_at: DateValueObject,
+    updated_at: DateValueObject,
   ): Entity {
-    return new Entity(id, name, description, parent_id);
+    return new Entity(
+      id,
+      name,
+      description,
+      parent_id,
+      user_id,
+      created_at,
+      updated_at,
+    );
   }
 }

@@ -8,4 +8,8 @@ export class ValueObject<T> {
   constructor(value: T) {
     this._value = value;
   }
+
+  isEqualTo(value: ValueObject<T>): boolean {
+    return this._value === value.value;
+  }
 }

@@ -19,6 +19,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@modular-forms/qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@nestjs/cli",
       "allowedCategories": [ "production" ]
     },
@@ -40,6 +44,10 @@
     },
     {
       "name": "@nestjs/event-emitter",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@nestjs/jwt",
       "allowedCategories": [ "production" ]
     },
     {
@@ -123,8 +131,20 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "class-transformer",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "class-validator",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "cross-spawn",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "env-cmd",
+      "allowedCategories": [ "production" ]
     },
     {
       "name": "eslint",
@@ -175,6 +195,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "jest-extended",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "jest-mock-extended",
       "allowedCategories": [ "production" ]
     },
@@ -184,6 +208,10 @@
     },
     {
       "name": "mongoose",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "nestjs-zod",
       "allowedCategories": [ "production" ]
     },
     {
@@ -277,6 +305,10 @@
     {
       "name": "yargs",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "zod",
+      "allowedCategories": [ "production" ]
     }
   ]
 }

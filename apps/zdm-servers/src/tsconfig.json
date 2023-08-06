@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../dist/",
+    "paths": {
+      "@zdm/*": ["zdm/*"],
+      "@shared/*": ["shared/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../"
+    }
+  ]
+}

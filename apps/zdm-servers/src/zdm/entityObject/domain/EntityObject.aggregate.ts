@@ -1,13 +1,10 @@
-import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 import { IdObject } from '@shared/domain/valueObject/IdObject';
 import { StringValueObject } from '@shared/domain/valueObject/StringValueObject';
 import { StringUndefinedValueObject } from '@shared/domain/valueObject/StringUndefinedValueObject';
+import { DateValueObject } from '@shared/domain/valueObject/DateValueObject';
+import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
-export class EntityObject extends AggregateRoot {
-  get id(): IdObject {
-    return this._id;
-  }
-
+export class EntityObject extends AggregateRootOwnership {
   get name(): StringValueObject {
     return this._name;
   }
@@ -25,13 +22,16 @@ export class EntityObject extends AggregateRoot {
   }
 
   private constructor(
-    private readonly _id: IdObject,
+    _id: IdObject,
     private readonly _name: StringValueObject,
     private readonly _entity_id: StringValueObject,
     private readonly _description: StringUndefinedValueObject,
     private readonly _image_link: StringUndefinedValueObject,
+    _user_id: IdObject,
+    _createdAt: DateValueObject,
+    _updatedAt: DateValueObject,
   ) {
-    super();
+    super(_id, _user_id, _createdAt, _updatedAt);
   }
 
   static CREATE(
@@ -40,8 +40,20 @@ export class EntityObject extends AggregateRoot {
     entity_id: StringValueObject,
     description: StringUndefinedValueObject,
     image_link: StringUndefinedValueObject,
+    _user_id: IdObject,
+    _createdAt: DateValueObject,
+    _updatedAt: DateValueObject,
   ) {
-    return new EntityObject(id, name, entity_id, description, image_link);
+    return new EntityObject(
+      id,
+      name,
+      entity_id,
+      description,
+      image_link,
+      _user_id,
+      _createdAt,
+      _updatedAt,
+    );
   }
 
   static RETRIEVE(
@@ -50,7 +62,19 @@ export class EntityObject extends AggregateRoot {
     entity_id: StringValueObject,
     description: StringUndefinedValueObject,
     image_link: StringUndefinedValueObject,
+    _user_id: IdObject,
+    _createdAt: DateValueObject,
+    _updatedAt: DateValueObject,
   ) {
-    return new EntityObject(id, name, entity_id, description, image_link);
+    return new EntityObject(
+      id,
+      name,
+      entity_id,
+      description,
+      image_link,
+      _user_id,
+      _createdAt,
+      _updatedAt,
+    );
   }
 }

@@ -1,15 +1,18 @@
-import { Module } from '@nestjs/common';
-import zdm from './zdm';
-import { ImplementationModule } from '@shared/infrastructure/implementation.module';
-import { Implementation } from '@shared/infrastructure/implementation';
+import { DynamicModule, Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ConfigModule } from '@nestjs/config';
+import { ZdmModule } from '@zdm/zdm.module';
 
 @Module({
-  imports: [
-    ImplementationModule.register(Implementation.pg),
-    EventEmitterModule.forRoot(),
-  ],
-  providers: [...zdm.services, ...zdm.handlers],
-  exports: [...zdm.services, ...zdm.handlers],
+  imports: [EventEmitterModule.forRoot(), ZdmModule],
+  exports: [ZdmModule],
 })
-export class MainModule {}
+export class MainModule {
+  static async forRoot(): Promise<DynamicModule> {
+    await ConfigModule.envVariablesLoaded;
+
+    return {
+      module: MainModule,
+    };
+  }
+}

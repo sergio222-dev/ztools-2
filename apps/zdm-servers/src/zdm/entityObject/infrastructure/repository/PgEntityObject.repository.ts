@@ -3,18 +3,17 @@ import {
   EntityObjectSchema,
   EntityObjectSchemaType,
   mapToSchema,
+  mapToAggregate,
 } from '@zdm/entityObject/infrastructure/pg/EntityObject.schema';
-import { EntityObjectRepository } from '@zdm/entityObject/domain/EntityObject.repository';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { PgBaseRepositoryRepository } from '@shared/infrastructure/pg/PgBaseRepository.repository';
 
-export class PgEntityObjectRepository implements EntityObjectRepository {
-  constructor(
-    @InjectRepository(EntityObjectSchema)
-    private readonly repository: Repository<EntityObjectSchemaType>,
-  ) {}
-  async save(entity: EntityObject): Promise<void> {
-    const schema = mapToSchema(entity);
-    await this.repository.save(schema);
+export class PgEntityObjectRepository extends PgBaseRepositoryRepository<
+  EntityObject,
+  EntityObjectSchemaType
+> {
+  constructor(@InjectDataSource() dataSource: DataSource) {
+    super(dataSource, EntityObjectSchema, mapToAggregate, mapToSchema);
   }
 }

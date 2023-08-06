@@ -1,8 +1,8 @@
-import type { HTMLAttributes } from '@builder.io/qwik';
+import type { QwikIntrinsicElements } from '@builder.io/qwik';
 import { component$ } from '@builder.io/qwik';
 
-interface InputProperties extends HTMLAttributes<HTMLInputElement> {}
+type InputProperties = QwikIntrinsicElements['input'];
 
 export default component$((properties: Omit<InputProperties, 'children'>) => {
-  return <input {...properties} type="text" class="form-control" />;
+  return <input {...properties} class="form-control" />;
 });
