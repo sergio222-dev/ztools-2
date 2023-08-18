@@ -25,7 +25,7 @@ export function EditableCell(properties: EditableCellProperties) {
     onBlur && onBlur(event);
   };
   const handleOnChangeNumeric = (event: ChangeEvent<HTMLInputElement>) => {
-    // TODO: se puede hacer ctrl + v y poner texto en el input y si despues apretamos save se manda a la db.
+    // TODO: se puede hacer ctrl + v y poner texto en el input pero no se manda a la DB.
     const value = event.target.value.replace(/[^\d\s.A-Za-z]/g, '');
     onChangeValue && onChangeValue(value);
     setValue(value);

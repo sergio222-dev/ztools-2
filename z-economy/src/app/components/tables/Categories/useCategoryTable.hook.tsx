@@ -7,6 +7,7 @@ import { Button } from '@atoms/Button/Button';
 import { useCategoryHook } from '@core/budget/budget/application/adapter/useCategory.hook';
 import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
+import { EditableCell } from '@molecules/EditableCell/EditableCell';
 
 export type TableCategory = {
   id: string;
@@ -23,7 +24,6 @@ export type subCategories = {
   assignedBudget: string;
   activity: string;
   available: string;
-  subCategories?: subCategories[];
 };
 
 // interface CategoryTableModel {
@@ -104,7 +104,15 @@ export function useCategoryTableHook() {
     columnHelper.accessor('assignedBudget', {
       id: 'assigned',
       header: () => <Typography size="small">ASSIGNED</Typography>,
-      cell: info => (info.getValue() === undefined ? '0' : info.getValue()),
+      cell: info => {
+        return info.row.getIsSelected() &&
+          !info.row.original.subCategories &&
+          info.table.getSelectedRowModel().rows.length === 0 ? (
+          <EditableCell isEditable={true} />
+        ) : (
+          '111111'
+        );
+      },
       meta: {
         type: new NumericTextType(),
       },
@@ -112,7 +120,7 @@ export function useCategoryTableHook() {
     columnHelper.accessor('activity', {
       id: 'activity',
       header: () => <Typography size="small">ACTIVITY</Typography>,
-      cell: info => (info.getValue() === undefined ? '23424' : info.getValue()),
+      cell: info => info.getValue(),
       meta: {
         type: new NumericTextType(),
       },
