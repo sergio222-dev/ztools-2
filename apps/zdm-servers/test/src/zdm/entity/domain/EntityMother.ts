@@ -6,8 +6,20 @@ import { DateValueObject } from '../../../../../src/shared/domain/valueObject/Da
 import { CreateEntityCommand } from '../../../../../src/zdm/entity/application/create/CreateEntity.command';
 import { IdMother } from '../../../shared/domain/IdMother';
 import { StringMother } from '../../../shared/domain/StringMother';
+import { QuantityMother } from '../../../shared/domain/QuantityMother';
 
 export class EntityMother {
+  public static create() {
+    return Entity.CREATE(
+      new IdObject(IdMother.random()),
+      new StringValueObject(StringMother.random()),
+      new StringUndefinedValueObject(StringMother.random()),
+      new StringUndefinedValueObject(StringMother.random()),
+      new IdObject(IdMother.random()),
+      new DateValueObject(new Date()),
+      new DateValueObject(new Date()),
+    );
+  }
   public static fromCommand(command: CreateEntityCommand) {
     return Entity.CREATE(
       new IdObject(command.id),
@@ -18,6 +30,15 @@ export class EntityMother {
       new DateValueObject(new Date()),
       new DateValueObject(new Date()),
     );
+  }
+
+  public static randomList(quantity = QuantityMother.random()): Entity[] {
+    // iterate over array
+    const list = [];
+    for (let index = 0; index < quantity; index++) {
+      list.push(this.create());
+    }
+    return list;
   }
 
   public static fromId(id: string) {

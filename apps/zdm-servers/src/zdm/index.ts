@@ -2,13 +2,17 @@
 import { CreateEntity } from '@zdm/entity/application/create/CreateEntity';
 import { CreateEntityObject } from '@zdm/entityObject/application/create/CreateEntityObject';
 import { ListEntity } from '@zdm/entity/application/list/ListEntity';
-import { SignIn } from '@zdm/user/application/signIn/SignIn';
+import { FindByUserName } from '@zdm/user/application/findByUserName/FindByUserName';
+import { ListEntityObject } from '@zdm/entityObject/application/list/ListEntityObject';
+import { DeleteEntity } from '@zdm/entity/application/delete/DeleteEntity';
 
 // Handlers
 import { CreateEntityHandler } from '@zdm/entity/application/create/CreateEntity.handler';
 import { CreateEntityObjectHandler } from '@zdm/entityObject/application/create/CreateEntityObject.handler';
 import { ListEntityHandler } from '@zdm/entity/application/list/ListEntityHandler';
-import { SignInHandler } from '@zdm/user/application/signIn/SignIn.handler';
+import { FindByUserNameHandler } from '@zdm/user/application/findByUserName/FindByUserName.handler';
+import { ListEntityObjectHandler } from '@zdm/entityObject/application/list/ListEntityObjectHandler';
+import { DeleteEntityHandler } from '@zdm/entity/application/delete/DeleteEntity.handler';
 
 // Schemas
 import { EntitySchema } from './entity/infrastructure/pg/Entity.schema';
@@ -21,12 +25,21 @@ import { PgEntityObjectRepository } from '@zdm/entityObject/infrastructure/repos
 import { PgUserRepository } from '@zdm/user/infrastructure/repository/PgUser.repository';
 
 const zdm = {
-  services: [CreateEntity, CreateEntityObject, SignIn, ListEntity],
+  services: [
+    CreateEntity,
+    CreateEntityObject,
+    FindByUserName,
+    ListEntity,
+    ListEntityObject,
+    DeleteEntity,
+  ],
   handlers: [
     CreateEntityHandler,
     CreateEntityObjectHandler,
-    SignInHandler,
     ListEntityHandler,
+    FindByUserNameHandler,
+    ListEntityObjectHandler,
+    DeleteEntityHandler,
   ],
   schemas: [EntityObjectSchema, EntitySchema, UserSchema],
   pgRepositories: [

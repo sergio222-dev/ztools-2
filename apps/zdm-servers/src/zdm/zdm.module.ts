@@ -13,7 +13,6 @@ import { ImplementationModule } from '@zdm/shared/infrastructure/implementation.
     TypeOrmModule.forFeature(zdm.schemas),
     JwtModule.registerAsync({
       global: true,
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         await ConfigModule.envVariablesLoaded;

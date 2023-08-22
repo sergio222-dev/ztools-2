@@ -10,7 +10,7 @@ export const recordInfo = {
 };
 
 export const ownershipInfo = {
-  userId: {
+  user_id: {
     type: String,
     name: 'user_id',
   },

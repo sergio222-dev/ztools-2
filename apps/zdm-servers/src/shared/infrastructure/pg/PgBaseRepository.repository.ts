@@ -1,5 +1,4 @@
 import { SimpleRepository } from '@shared/domain/aggregate/SimpleRepository';
-import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 import { IdObject } from '@shared/domain/valueObject/IdObject';
 import {
   DataSource,
@@ -7,6 +6,7 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
+import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 
 type BaseSchema = {
   id: string;
@@ -20,6 +20,7 @@ export abstract class PgBaseRepositoryRepository<
   protected readonly repository: Repository<EntitySchemaType>;
   protected readonly mapToAggregate: (schema: EntitySchemaType) => E;
   protected readonly mapToSchema: (v: E) => EntitySchemaType;
+  protected readonly datasource: DataSource;
 
   protected constructor(
     dataSource: DataSource,
@@ -27,6 +28,7 @@ export abstract class PgBaseRepositoryRepository<
     mapToAggregate: (v: EntitySchemaType) => E,
     mapToEntity: (v: E) => EntitySchemaType,
   ) {
+    this.datasource = dataSource;
     this.repository = dataSource.getRepository(schema);
     this.mapToAggregate = mapToAggregate;
     this.mapToSchema = mapToEntity;
@@ -42,8 +44,12 @@ export abstract class PgBaseRepositoryRepository<
     return result ? this.mapToAggregate(result) : undefined;
   }
 
-  async findAll(): Promise<E[]> {
-    const result = await this.repository.find();
+  async findAll(userId?: IdObject): Promise<E[]> {
+    const result = await this.repository.find({
+      where: {
+        user_id: userId?.value ?? undefined,
+      } as FindOptionsWhere<EntitySchemaType & { user_id: string }>,
+    });
     return result.map((element) => this.mapToAggregate(element));
   }
 

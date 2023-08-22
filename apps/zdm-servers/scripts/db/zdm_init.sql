@@ -11,13 +11,14 @@ CREATE TABLE IF NOT EXISTS "user" (
 CREATE TABLE IF NOT EXISTS entity (
     id        text NOT NULL,
     "name"		varchar(40) NOT NULL,
+    order integer NOT NULL,
   	description text,
   	parent_id	text,
   	createdAt timestamp NOT NULL,
   	updatedAt timestamp NOT NULL,
   	user_id text NOT NULL,
   	PRIMARY KEY(id),
-  	CONSTRAINT fk_parent_id FOREIGN KEY(parent_id) REFERENCES entity(id),
+  	CONSTRAINT fk_parent_id FOREIGN KEY(parent_id) REFERENCES entity(id) ON DELETE CASCADE,
     CONSTRAINT fk_attribute_value_user FOREIGN KEY(user_id) REFERENCES "user"(id)
 );
 
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS entity_object (
   	createdAt timestamp NOT NULL,
   	updatedAt timestamp NOT NULL,
     PRIMARY KEY(id),
-    CONSTRAINT fk_entity_object_entity FOREIGN KEY(entity_id) REFERENCES entity(id),
+    CONSTRAINT fk_entity_object_entity FOREIGN KEY(entity_id) REFERENCES entity(id) ON DELETE CASCADE,
     CONSTRAINT fk_attribute_value_user FOREIGN KEY(user_id) REFERENCES "user"(id)
 );
 
@@ -56,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "attribute" (
   	updatedAt timestamp NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT fk_attribute_attribute_type FOREIGN KEY(type_id) REFERENCES attribute_type(id),
-    CONSTRAINT fk_attribute_entity FOREIGN KEY(entity_id) REFERENCES entity(id),
+    CONSTRAINT fk_attribute_entity FOREIGN KEY(entity_id) REFERENCES entity(id) ON DELETE CASCADE,
     CONSTRAINT fk_attribute_value_user FOREIGN KEY(user_id) REFERENCES "user"(id)
 );
 
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS attribute_value (
   	createdAt timestamp NOT NULL,
   	updatedAt timestamp NOT NULL,
     PRIMARY KEY(id),
-    CONSTRAINT fk_attribute_value_attribute FOREIGN KEY(attribute_id) REFERENCES attribute(id),
-    CONSTRAINT fk_attribute_value_entity FOREIGN KEY(entity_id) REFERENCES entity(id),
+    CONSTRAINT fk_attribute_value_attribute FOREIGN KEY(attribute_id) REFERENCES attribute(id) ON DELETE CASCADE,
+    CONSTRAINT fk_attribute_value_entity FOREIGN KEY(entity_id) REFERENCES entity(id) ON DELETE CASCADE,
     CONSTRAINT fk_attribute_value_user FOREIGN KEY(user_id) REFERENCES "user"(id)
 );

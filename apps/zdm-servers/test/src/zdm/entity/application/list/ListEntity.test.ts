@@ -2,6 +2,7 @@ import { suite, test } from '@testdeck/jest';
 import { EntityUnitTestCase } from '../../EntityUnitTestCase';
 import { ListEntityHandler } from '../../../../../../src/zdm/entity/application/list/ListEntityHandler';
 import { ListEntity } from '../../../../../../src/zdm/entity/application/list/ListEntity';
+import { EntityMother } from '../../domain/EntityMother';
 
 @suite('Entity Find')
 class ListEntityTest extends EntityUnitTestCase {
@@ -26,6 +27,15 @@ class ListEntityTest extends EntityUnitTestCase {
 
   @test('it should list entities')
   async it_should_list_entities() {
-    // test here
+    const quantity = 1;
+    const list = EntityMother.randomList(quantity);
+
+    const returnValue = async () => list;
+    const returnValueMock = returnValue();
+    this.setReturnValueRepository('findAll', returnValueMock);
+
+    const result = await this.handler.execute();
+    this.shouldFindEntities();
+    this.assertEntityList(list, result);
   }
 }

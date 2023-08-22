@@ -4,18 +4,10 @@ import { EntityObject } from '../../../../src/zdm/entityObject/domain/EntityObje
 import { IgnoreRecordType } from '../../shared/domain/utils';
 import { MockProxy } from 'jest-mock-extended';
 
-export abstract class EntityObjectUnitTestCase extends UnitTestCase {
-  private _repository: EntityObjectRepository &
-    MockProxy<EntityObjectRepository>;
-
-  get repository(): EntityObjectRepository & MockProxy<EntityObjectRepository> {
-    if (!this._repository) {
-      this._repository = this.mock<EntityObjectRepository>();
-    }
-
-    return this._repository;
-  }
-
+export abstract class EntityObjectUnitTestCase extends UnitTestCase<
+  EntityObject,
+  EntityObjectRepository
+> {
   shouldSaved(entity: EntityObject) {
     expect(this.repository.save).toBeCalledTimes(1);
     expect(this.repository.save).toBeCalledWith(
@@ -35,5 +27,21 @@ export abstract class EntityObjectUnitTestCase extends UnitTestCase {
     expect(this.repository.find).toBeCalledTimes(1);
     expect(this.repository.find).toBeCalledWith(entity.id);
     expect(result).toBe(entity);
+  }
+
+  assertEntityObjectList(list: EntityObject[], result: EntityObject[]) {
+    expect(result.length).toBe(list.length);
+    for (const [index, entity] of list.entries()) {
+      expect(result[index]).toBe(
+        expect.objectContaining<IgnoreRecordType<EntityObject>>({
+          id: entity.id,
+          user_id: entity.user_id,
+          name: entity.name,
+          description: entity.description,
+          image_link: entity.image_link,
+          entity_id: entity.entity_id,
+        }),
+      );
+    }
   }
 }

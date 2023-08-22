@@ -32,7 +32,7 @@ class FindEntityObjectTest extends EntityObjectUnitTestCase {
     const entityObject = EntityObjectMother.fromId(query.id);
     const returnValue = async () => entityObject;
     const returnValueMock = returnValue();
-    this.repository.find.mockReturnValue(returnValueMock);
+    this.setReturnValueRepository('find', returnValueMock);
 
     const result = await this.handler.execute(query);
     this.shouldReturnEntityObject(entityObject, result);

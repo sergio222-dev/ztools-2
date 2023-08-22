@@ -2,19 +2,13 @@ import { UnitTestCase } from '../../shared/infrastructure/UnitTestCase';
 import { IgnoreRecordType } from '../../shared/domain/utils';
 import { UserRepository } from '../../../../src/zdm/user/domain/User.repository';
 import { User } from '../../../../src/zdm/user/domain/User.aggregate';
-import { MockProxy } from 'jest-mock-extended';
+import { FindByUserNameResponse } from '../../../../src/zdm/user/application/findByUserName/FindByUserNameResponse';
+import { FindByUserNameQuery } from '../../../../src/zdm/user/application/findByUserName/FindByUserName.query';
 
-export abstract class UserUnitTestCase extends UnitTestCase {
-  private _repository: UserRepository & MockProxy<UserRepository>;
-
-  get repository(): UserRepository & MockProxy<UserRepository> {
-    if (!this._repository) {
-      this._repository = this.mock<UserRepository>();
-    }
-
-    return this._repository;
-  }
-
+export abstract class UserUnitTestCase extends UnitTestCase<
+  User,
+  UserRepository
+> {
   shouldSaved(entity: User) {
     expect(this.repository.save).toBeCalledTimes(1);
     expect(this.repository.save).toBeCalledWith(
@@ -27,9 +21,26 @@ export abstract class UserUnitTestCase extends UnitTestCase {
     );
   }
 
-  shouldReturnEntity(entity: User, result: User) {
-    expect(this.repository.find).toBeCalledTimes(1);
-    expect(this.repository.find).toBeCalledWith(entity.id);
-    expect(result).toBe(entity);
+  assertUser(user: User, subject: User) {
+    expect(user).toBe(
+      expect.objectContaining<IgnoreRecordType<User>>({
+        id: subject.id,
+        name: subject.name,
+        email: subject.email,
+        password: subject.password,
+      }),
+    );
+  }
+
+  shouldFindUser(user: User) {
+    expect(this.repository.findByUserName).toBeCalledTimes(1);
+    expect(this.repository.findByUserName).toBeCalledWith(user.name);
+  }
+
+  assertFindByUserNameResponse(
+    response: FindByUserNameResponse,
+    query: FindByUserNameQuery,
+  ) {
+    expect(response.name).toBe(query.username);
   }
 }
