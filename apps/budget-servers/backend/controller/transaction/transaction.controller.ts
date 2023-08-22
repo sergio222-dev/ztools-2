@@ -57,9 +57,8 @@ export class TransactionController {
     status: 200,
   })
   async findOneById(@Param('id') id: string): Promise<Transaction> {
-    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(
-      new TransactionFindOneByIdQuery(id),
-    );
+    const query = new TransactionFindOneByIdQuery(id);
+    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
     if (transaction.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);

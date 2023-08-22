@@ -430,6 +430,12 @@
       "reviewCategory": "production"
     },
     {
+      "packageName": "@ztools/zdm-servers",
+      "projectFolder": "apps/zdm-servers",
+      "tags": ["backend", "nestjs"],
+      "reviewCategory": "production"
+    },
+    {
       "packageName": "@ztools/zdm",
       "projectFolder": "apps/zdm",
       "tags": ["frontend", "nextjs"],

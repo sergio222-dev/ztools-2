@@ -3,11 +3,31 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@babel/plugin-proposal-decorators",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@babel/preset-typescript",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@builder.io/qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@builder.io/qwik-city",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@faker-js/faker",
       "allowedCategories": [ "production" ]
     },
     {
       "name": "@jest/globals",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@modular-forms/qwik",
       "allowedCategories": [ "production" ]
     },
     {
@@ -32,6 +52,10 @@
     },
     {
       "name": "@nestjs/event-emitter",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@nestjs/jwt",
       "allowedCategories": [ "production" ]
     },
     {
@@ -67,6 +91,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/eslint",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@types/express",
       "allowedCategories": [ "production" ]
     },
@@ -91,6 +119,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/uuid",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@typescript-eslint/eslint-plugin",
       "allowedCategories": [ "production" ]
     },
@@ -103,6 +135,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "babel-plugin-parameter-decorator",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "bignumber.js",
       "allowedCategories": [ "production" ]
     },
@@ -111,8 +147,20 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "class-transformer",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "class-validator",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "cross-spawn",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "env-cmd",
+      "allowedCategories": [ "production" ]
     },
     {
       "name": "eslint",
@@ -139,6 +187,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "eslint-plugin-qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "eslint-plugin-sonarjs",
       "allowedCategories": [ "production" ]
     },
@@ -159,6 +211,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "jest-extended",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "jest-mock-extended",
       "allowedCategories": [ "production" ]
     },
@@ -171,11 +227,31 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "nestjs-zod",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "next",
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "node-fetch",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "normalize.css",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "pg",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "postcss",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "prettier",
       "allowedCategories": [ "production" ]
     },
     {
@@ -223,6 +299,14 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "tsyringe",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "typed-inject",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "typeorm",
       "allowedCategories": [ "production" ]
     },
@@ -231,12 +315,32 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "undici",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "uuid",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite-plugin-babel",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite-tsconfig-paths",
       "allowedCategories": [ "production" ]
     },
     {
       "name": "yargs",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "zod",
+      "allowedCategories": [ "production" ]
     }
   ]
 }

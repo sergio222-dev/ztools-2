@@ -10,6 +10,9 @@ BUDGET_DEPLOY_CONTAINER = '$(BASE_DEPLOY_CONTAINER)\$(BUDGET_PROJECT_NAME_PATH)'
 DOCKER_PROFILE_BUDGET = budget-server
 ENV_CONFIG_PATH = .\configs\budget\.env
 
+## ZDM
+ZDM_DOCKER_PROFILE = zdm
+
 update:
 	@rush update
 
@@ -30,3 +33,6 @@ docker-budget:
 	else \
 	  echo 'You should run make deploy-budget before make docker-budget'; \
 	fi
+
+docker-zdm-server:
+	make -C ./apps/zdm-servers docker

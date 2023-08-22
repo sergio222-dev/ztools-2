@@ -3,7 +3,6 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
-import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @CommandHandler(TransactionCreateCommand)
 export class TransactionCreateHandler implements ICommandHandler<TransactionCreateCommand> {

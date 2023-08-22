@@ -1,13 +1,12 @@
-import { CategoryTable } from '../../molecules/index';
-import { Category, useBudgetPageHooks } from './BudgetPage.hooks';
+import { useBudgetPageHooks } from './BudgetPage.hook';
+import { CategoryTableView } from '../../tables/Categories/CategoryTable.view';
 
 export function BudgetPageView() {
-  const [model] = useBudgetPageHooks();
-  const { columns, data } = model;
+  const [] = useBudgetPageHooks();
 
   return (
     <section>
-      <CategoryTable<Category> columns={columns} data={data} />
+      <CategoryTableView />
     </section>
   );
 }

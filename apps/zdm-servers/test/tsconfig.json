@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "target": "es2017",
+    "module": "CommonJS",
+    "experimentalDecorators": true,
+    "paths": {
+      "@zdm/*": ["zdm/*"],
+      "@shared/*": ["shared/*"]
+    }
+  },
+  "files": ["global.d.ts"],
+  "include": ["src/**/*"],
+  "references": [
+    {
+      "path": "../"
+    }
+  ]
+}

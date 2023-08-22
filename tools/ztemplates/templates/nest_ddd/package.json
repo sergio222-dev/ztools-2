@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
-  "private": true,
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "start": "nest start",
@@ -22,7 +22,13 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.5.5",
+    "@nestjs/config": "~2.3.1",
+    "@nestjs/swagger": "~6.2.1",
+    "@faker-js/faker": "~7.6.0",
+    "@nestjs/cqrs": "~9.0.3",
+    "uuid": "~9.0.0",
+    "@nestjs/event-emitter": "~2.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -48,6 +54,8 @@
     "eslint-plugin-sonarjs": "^0.18.0",
     "eslint-plugin-unicorn": "^46.0.0",
     "typescript": "^4.9.3",
+    "@nestjs/typeorm": "~9.0.1",
+    "typeorm": "~0.3.12",
     "@testdeck/jest": "~0.3.3",
     "jest-mock-extended": "~3.0.4",
     "faker": "~6.6.6",

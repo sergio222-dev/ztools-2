@@ -6,11 +6,14 @@
   "engines": {
     "node": "19.5.0"
   },
-  "scripts": {
-    "build": ""
+  "private": false,
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sergio222-dev/ztools-2.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Sergio",
   "license": "ISC",
   "bin": {
     "ztemplates": "./index.js"

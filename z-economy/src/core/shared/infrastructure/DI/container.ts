@@ -1,8 +1,10 @@
 import * as axios from 'axios';
 import { container } from 'tsyringe';
 import { AxiosInstance } from '@core/shared/infrastructure/Axios/instance';
-import { registerTransactions } from '@core/budget/transaction/infrastructure/DI/registry';
-import { registerBudget } from '@core/budget/budget/infrastructure/DI/registry';
+import { TransactionRepository } from '@core/budget/transaction/domain/TransactionRepository';
+import { AxiosTransactionRepository } from '@core/budget/transaction/infrastructure/repository/AxiosTransactionRepository';
+import { CategoryRepository } from '@core/budget/budget/domain/CategoryRepository';
+import { AxiosBudgetRepository } from '@core/budget/budget/infrastructure/repository/AxiosBudgetRepository';
 
 export function buildContainer() {
   // repository
@@ -10,9 +12,15 @@ export function buildContainer() {
     useValue: AxiosInstance,
   });
 
-  // Transactions
-  registerTransactions();
+  // Implementation
+  axiosImplementation();
+}
 
-  // Budget
-  registerBudget();
+function axiosImplementation() {
+  container.register<TransactionRepository>('TransactionRepository', {
+    useClass: AxiosTransactionRepository,
+  });
+  container.register<CategoryRepository>('CategoryRepository', {
+    useClass: AxiosBudgetRepository,
+  });
 }

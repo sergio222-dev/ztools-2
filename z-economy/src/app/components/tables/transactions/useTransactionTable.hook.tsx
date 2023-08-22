@@ -1,12 +1,12 @@
-import { Cell, Row, sortingFns, Table } from '@tanstack/react-table';
+import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { KeyboardEvent, MutableRefObject, useRef, useState } from 'react';
-import { useTransaction } from '@core/budget/transaction/application/adapters/useTransaction';
+import { KeyboardEvent, useRef, useState } from 'react';
+import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
-import { createEmptyTransaction } from '@core/budget/budget/domain/TransactionUtils';
+import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -22,10 +22,11 @@ export const useTransactionTableHook = () => {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Transaction>>();
+  const selectedColumnId = useRef('date');
 
   // SERVICES
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
-    useTransaction();
+    useTransactionHook();
 
   // HANDLERS
 
@@ -34,7 +35,6 @@ export const useTransactionTableHook = () => {
     row: Row<Transaction>,
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
-    selectedColumnId: MutableRefObject<string>,
   ) => {
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
@@ -71,8 +71,6 @@ export const useTransactionTableHook = () => {
         [row.id]: true,
       }));
       row.id !== '' && setSelectedQty(table.getSelectedRowModel().rows.length);
-      console.log(row.original, 'original');
-      console.log(editableValue.current, 'current');
       return;
     }
     editingRow !== '' && setEditingRow('');
@@ -86,18 +84,14 @@ export const useTransactionTableHook = () => {
     disableDelete && setDisableDelete(false);
   };
 
-  const handleRowOnKeyDown = (
-    event: KeyboardEvent,
-    row: Row<Transaction>,
-    selectedColumnId: { current: string },
-  ) => {
+  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Transaction>) => {
     if (event.key === 'Escape' && editingRow === row.id) {
-      handleCancelEdit(row, selectedColumnId);
+      handleCancelEdit(row);
     }
   };
 
   // Button handlers
-  const handleSaveEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
+  const handleSaveEdit = (row: Row<Transaction>) => {
     if (row.id === '') {
       editableValue.current.id = uuidv4();
       // Is still possible to paste invalid characters in the inflow/outflow fields, so we replace them before sending to the server
@@ -119,7 +113,7 @@ export const useTransactionTableHook = () => {
     row.toggleSelected(false);
   };
 
-  const handleCancelEdit = (row: Row<Transaction>, selectedColumnId: { current: string }) => {
+  const handleCancelEdit = (row: Row<Transaction>) => {
     editingRow !== '' && setEditingRow('');
     createEmptyTransaction();
     selectedColumnId.current = 'date';
@@ -127,15 +121,14 @@ export const useTransactionTableHook = () => {
     void deleteFakeRow();
   };
 
+  // TODO: delete button doesn't disable after usage.
   const handleDelete = async () => {
-    console.log(selectedQty);
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
     if (selectedQty > 1) {
       const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
       const selectedRowsIds = { ids: selectedRows?.map(row => row.id) };
-      console.log(selectedRowsIds);
       await selectedRows?.map(row => row.toggleSelected(false));
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
       void deleteDataBatch(selectedRowsIds);
@@ -248,7 +241,6 @@ export const useTransactionTableHook = () => {
   };
 
   // SIDE EFFECTS
-  // TODO: do selectedColumnId = 'date' inside this function.
   useOutsideClick(reference, () => {
     if (editingRow !== '') setEditingRow('');
     if (tableReference.current && tableReference.current?.getIsSomeRowsExpanded())
@@ -256,6 +248,7 @@ export const useTransactionTableHook = () => {
     void deleteFakeRow();
     tableReference.current &&
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
+    selectedColumnId.current = 'date';
   });
 
   // COLUMNS
@@ -290,5 +283,6 @@ export const useTransactionTableHook = () => {
     handleCancelEdit,
     trigger,
     handleRowOnKeyDown,
+    selectedColumnId,
   };
 };
