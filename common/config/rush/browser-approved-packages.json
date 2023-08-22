@@ -3,6 +3,14 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@babel/plugin-proposal-decorators",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@babel/preset-typescript",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@builder.io/qwik",
       "allowedCategories": [ "production" ]
     },
@@ -111,6 +119,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/uuid",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@typescript-eslint/eslint-plugin",
       "allowedCategories": [ "production" ]
     },
@@ -120,6 +132,10 @@
     },
     {
       "name": "autoprefixer",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "babel-plugin-parameter-decorator",
       "allowedCategories": [ "production" ]
     },
     {
@@ -219,6 +235,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "node-fetch",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "normalize.css",
       "allowedCategories": [ "production" ]
     },
@@ -279,6 +299,14 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "tsyringe",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "typed-inject",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "typeorm",
       "allowedCategories": [ "production" ]
     },
@@ -296,6 +324,10 @@
     },
     {
       "name": "vite",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vite-plugin-babel",
       "allowedCategories": [ "production" ]
     },
     {
