@@ -14,6 +14,10 @@ export class SubCategoryService {
     return await this.subCategoryRepository.findAllByCategoryId(categoryId, month, year);
   }
 
+  async findAll(): Promise<SubCategory[]> {
+    return this.subCategoryRepository.findAll();
+  }
+
   async create(subCategory: SubCategory): Promise<void> {
     await this.subCategoryRepository.save(subCategory);
   }

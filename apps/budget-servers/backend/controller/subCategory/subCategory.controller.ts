@@ -1,9 +1,14 @@
-import { Body, Controller, Injectable, Post } from '@nestjs/common';
+import { Body, Controller, Get, Injectable, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MonthlyBudgetAssignOneCommand } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.command';
 import { SubCategoryCreateCommand } from '@budget/subCategory/application/useCase/create/SubCategoryCreate.command';
+import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
+import { SubCategoryDto } from '../../dto/SubCategoryDto';
+import { CategoryFindAllQuery } from '@budget/category/application/useCase/find/CategoryFindAll.query';
+import { Category } from '@budget/category/domain/Category.aggregate';
+import { SubCategoryFindAllQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindAll.query';
 
 @Controller('subCategory')
 @ApiTags('subCategories')
@@ -38,5 +43,22 @@ export class SubCategoryController {
     console.log('monthly command', bodyCommand, command);
 
     await this.commandBus.execute(command);
+  }
+
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all sub categories',
+  })
+  async findAll(): Promise<SubCategoryDto[]> {
+    const query = new SubCategoryFindAllQuery();
+
+    const subCategories = await this.queryBus.execute<SubCategoryFindAllQuery, SubCategory[]>(query);
+
+    const subCategoriesDTO = subCategories.map(async subCategory => {
+      return new SubCategoryDto(subCategory.id, subCategory.name, subCategory.categoryId, '0', '0', '0');
+    });
+
+    return await Promise.all(subCategoriesDTO);
   }
 }

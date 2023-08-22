@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-import { ExtendOfDocument } from '../../../../shared/infrastructure/mongo/utils';
+import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
 
 export const SubCategorySchema = new Schema<ExtendOfDocument<SubCategory>>(
