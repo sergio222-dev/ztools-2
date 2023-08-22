@@ -9,7 +9,7 @@ import { Table } from '@tanstack/react-table';
 import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
 import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
 
-export const useTransaction = () => {
+export const useTransactionHook = () => {
   // SERVICES
   const transactionGetAll = container.resolve(TransactionGetAll);
   const transactionUpdate = container.resolve(TransactionUpdate);

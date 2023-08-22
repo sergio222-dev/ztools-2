@@ -22,6 +22,7 @@ export function TransactionTableView() {
     setDisableDelete,
     selectedQty,
     setSelectedQty,
+    selectedColumnId,
   } = useTransactionTableHook();
 
   return (
@@ -50,6 +51,7 @@ export function TransactionTableView() {
           handleRowOnKeyDown={handleRowOnKeyDown}
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
+          selectedColumnId={selectedColumnId}
         />
       </div>
     </div>

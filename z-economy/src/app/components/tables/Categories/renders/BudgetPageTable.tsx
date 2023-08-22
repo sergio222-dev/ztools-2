@@ -8,13 +8,14 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import styles from './CategoryTable.module.scss';
+import cls from 'classnames';
 
 interface CategoryTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
   data: Array<T>;
 }
 
-export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) {
+export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
 
   const table = useReactTable<T>({
@@ -26,7 +27,7 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
     onExpandedChange: setExpanded,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    getSubRows: row => row.subRows,
+    getSubRows: row => row.subCategories,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     // debugTable: true,
@@ -61,7 +62,13 @@ export function CategoryTable<T>({ columns, data }: CategoryTableProperties<T>) 
             return (
               <tr
                 key={row.id}
-                className={row.getCanExpand() ? styles.z_table_expansible_row : styles.z_table_normal_row}
+                className={
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  row.original.subCategories
+                    ? cls(styles.z_table_expansible_row, styles.c_table_row)
+                    : styles.z_table_normal_row
+                }
               >
                 {row.getVisibleCells().map(cell => {
                   return (

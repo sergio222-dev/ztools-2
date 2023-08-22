@@ -5,7 +5,7 @@ import { MainLayout } from '@page/MainLayout';
 import { Reports } from '@page/Reports';
 import { Login } from '@page/Login';
 import { PrivateOutlet } from '@utils/router/PrivateOutlet';
-import { ResetPassword } from '../components/forms/ResetPassword/ResetPassword';
+import { ResetPasswordForm } from '../components/forms/ResetPassword/ResetPasswordForm';
 
 export const withLayout = (routes: RouteObject[]) => {
   return routes.map(r => ({
@@ -29,7 +29,7 @@ const privateRoutes: RouteObject[] = [
   },
   {
     path: '/reset-password',
-    element: <ResetPassword />,
+    element: <ResetPasswordForm />,
   },
 ];
 

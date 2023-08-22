@@ -1,0 +1,14 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.c_table_buttons_main_div {
+  display: flex;
+  border-bottom: const.$page-light-border-color 1px solid;
+  align-items: center;
+
+  *:disabled {
+    opacity: 0.5;
+    color: const.$dark-primary-color;
+  }
+}

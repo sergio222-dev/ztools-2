@@ -1,10 +1,10 @@
 import { Input } from '@supabase/ui';
-import styles from './Auth.module.scss';
-import { Button } from '../../atoms/Button/Button';
+import styles from './AuthForm.module.scss';
+import { Button } from '@atoms/Button/Button';
 import { SyntheticEvent, useRef, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router';
-import { Typography } from '../../atoms/Typography/Typography';
+import { Typography } from '@atoms/Typography/Typography';
 
 // import { Input } from '../../atoms/Input/Input';
 
@@ -16,7 +16,7 @@ const LOGIN_STATE = {
   FORGOT_PASSWORD: Symbol(),
 };
 
-export const Auth = () => {
+export const AuthForm = () => {
   const [loginState, setLoginState] = useState(LOGIN_STATE.SING_IN);
   const loginReference = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
@@ -76,6 +76,7 @@ export const Auth = () => {
     });
     if (error) return alert(error.message);
     alert('Password reset email sent!');
+    navigate('/');
   };
 
   switch (loginState) {

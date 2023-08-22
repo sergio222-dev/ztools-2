@@ -1,4 +1,3 @@
-import { Row } from '@tanstack/react-table';
 import { CancelButton, SaveButton } from '../../atoms';
 import styles from './EditableFooterButtons.module.scss';
 import { MouseEventHandler } from 'react';

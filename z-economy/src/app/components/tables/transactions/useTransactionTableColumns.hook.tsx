@@ -1,8 +1,8 @@
 import { CellContext, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { IndeterminateCheckbox } from '../../molecules/IndeterminateCheckbox/IndeterminateCheckbox';
-import { NumericTextType, OtherTextType } from '../../../utils/table/types';
-import { EditableCell } from '../../molecules/EditableCell/EditableCell';
+import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/IndeterminateCheckbox';
+import { NumericTextType, OtherTextType } from '@utils/table/types';
+import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject } from 'react';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
@@ -76,7 +76,7 @@ export function useTransactionTableColumnsHook(
     // }),
     columnHelper.accessor('date', {
       id: 'date',
-      header: () => 'DATE',
+      header: table => (table.column.getIsSorted() ? <strong> DATE </strong> : 'DATE'),
       cell: info => {
         return info.row.getIsSelected() ? (
           <EditableCell
@@ -92,7 +92,7 @@ export function useTransactionTableColumnsHook(
     }),
     columnHelper.accessor('payee', {
       id: 'payee',
-      header: () => 'PAYEE',
+      header: table => (table.column.getIsSorted() ? <strong> PAYEE </strong> : 'PAYEE'),
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
@@ -110,7 +110,7 @@ export function useTransactionTableColumnsHook(
     }),
     columnHelper.accessor('category', {
       id: 'category',
-      header: () => 'CATEGORY',
+      header: table => (table.column.getIsSorted() ? <strong> CATEGORY </strong> : 'CATEGORY'),
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
@@ -128,7 +128,7 @@ export function useTransactionTableColumnsHook(
     }),
     columnHelper.accessor('memo', {
       id: 'memo',
-      header: () => 'MEMO',
+      header: table => (table.column.getIsSorted() ? <strong> MEMO </strong> : 'MEMO'),
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell
@@ -146,7 +146,7 @@ export function useTransactionTableColumnsHook(
     }),
     columnHelper.accessor('outflow', {
       id: 'outflow',
-      header: () => 'OUTFLOW',
+      header: table => (table.column.getIsSorted() ? <strong> OUTFLOW </strong> : 'OUTFLOW'),
       cell: (info: CellContext<Transaction, any>) =>
         info.row.getIsSelected() ? (
           <EditableCell
@@ -173,7 +173,7 @@ export function useTransactionTableColumnsHook(
     }),
     columnHelper.accessor('inflow', {
       id: 'inflow',
-      header: () => 'INFLOW',
+      header: table => (table.column.getIsSorted() ? <strong> INFLOW </strong> : 'INFLOW'),
       cell: info =>
         info.row.getIsSelected() ? (
           <EditableCell

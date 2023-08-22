@@ -1,5 +1,4 @@
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { Row } from '@tanstack/react-table';
 
 export interface TransactionRepository {
   getAll(): Promise<Transaction[]>;
