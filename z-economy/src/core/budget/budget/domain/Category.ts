@@ -1,4 +1,4 @@
-import { Budget } from '@core/budget/budget/domain/Budget';
+import { SubCategory } from '@core/budget/budget/domain/SubCategory';
 
 export class Category {
   constructor(
@@ -7,6 +7,6 @@ export class Category {
     readonly assignedBudget?: string,
     readonly activity?: string,
     readonly available?: string,
-    readonly budget?: Budget,
+    readonly budget?: SubCategory,
   ) {}
 }

@@ -8,6 +8,7 @@ import { Signal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
 import { Category } from '@core/budget/budget/domain/Category';
+import { SubCategory } from '@core/budget/budget/domain/SubCategory';
 
 interface AddCategoryFormProperties {
   isOpen: Signal<boolean>;
@@ -15,12 +16,6 @@ interface AddCategoryFormProperties {
   createSubCategory?: (c: SubCategory) => Promise<void>;
   variant?: 'subCategory';
   categoryId?: string;
-}
-
-export interface SubCategory {
-  id: string;
-  name: string;
-  categoryId: string;
 }
 
 export function AddCategoryForm({

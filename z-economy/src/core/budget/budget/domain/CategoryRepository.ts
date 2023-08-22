@@ -1,5 +1,5 @@
 import { Category } from '@core/budget/budget/domain/Category';
-import { SubCategory } from '../../../../app/components/forms/AddCategory/AddCategoryForm';
+import { SubCategory } from '@core/budget/budget/domain/SubCategory';
 
 export interface CategoryRepository {
   getAll(month: string, year: string): Promise<Category[]>;

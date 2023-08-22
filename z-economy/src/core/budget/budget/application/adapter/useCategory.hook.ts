@@ -4,7 +4,7 @@ import { CategoryGroupCreate } from '@core/budget/budget/application/useCase/Cat
 import useSWR from 'swr';
 import { Category } from '@core/budget/budget/domain/Category';
 import { CategoryCreate } from '@core/budget/budget/application/useCase/CategoryCreate';
-import { SubCategory } from '../../../../../app/components/forms/AddCategory/AddCategoryForm';
+import { SubCategory } from '@core/budget/budget/domain/SubCategory';
 
 export const useCategoryHook = () => {
   // SERVICES
@@ -14,7 +14,7 @@ export const useCategoryHook = () => {
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['categories'], () =>
-    categoryGetAll.execute({ month: '07', year: '2023' }),
+    categoryGetAll.execute({ month: '08', year: '2023' }),
   );
 
   const createCategoryGroup = async (c: Category) => {
