@@ -1,4 +1,4 @@
-import { SubCategory } from '@core/budget/budget/domain/SubCategory';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export class Category {
   constructor(

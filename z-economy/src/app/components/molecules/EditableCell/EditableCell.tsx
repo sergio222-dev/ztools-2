@@ -65,14 +65,16 @@ export function EditableCell(properties: EditableCellProperties) {
   }, [shouldFocus]);
 
   return isEditable ? (
-    <Input
-      ref={inputReference}
-      onChange={type === 'numeric' ? handleOnChangeNumeric : handleOnChange}
-      onBlur={handleOnBlur}
-      defaultValue={value}
-      className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
-      onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
-    />
+    <div>
+      <Input
+        ref={inputReference}
+        onChange={type === 'numeric' ? handleOnChangeNumeric : handleOnChange}
+        onBlur={handleOnBlur}
+        defaultValue={value}
+        className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
+        onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
+      />
+    </div>
   ) : (
     <div>
       {type === 'numeric' ? currency(defaultValue as string, { separator: ',' }).format() : defaultValue}

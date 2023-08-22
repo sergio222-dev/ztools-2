@@ -1,4 +1,4 @@
-type TextType = 'other' | 'numeric' | 'text';
+type TextType = 'other' | 'numeric' | 'text' | 'category';
 
 export interface TextTypeInterface {
   getType: () => TextType;
@@ -19,5 +19,11 @@ export class TextTextType implements TextTypeInterface {
 export class OtherTextType implements TextTypeInterface {
   getType(): TextType {
     return 'other';
+  }
+}
+
+export class CategoryType implements TextTypeInterface {
+  getType(): TextType {
+    return 'category';
   }
 }

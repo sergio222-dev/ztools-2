@@ -4,7 +4,7 @@ import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
 import { NumericTextType } from '@utils/table/types';
 import { Button } from '@atoms/Button/Button';
-import { useCategoryHook } from '@core/budget/budget/application/adapter/useCategory.hook';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';

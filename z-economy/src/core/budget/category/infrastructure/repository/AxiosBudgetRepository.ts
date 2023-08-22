@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import * as axios_1 from 'axios';
-import { CategoryRepository } from '@core/budget/budget/domain/CategoryRepository';
-import { Category } from '@core/budget/budget/domain/Category';
+import { CategoryRepository } from '@core/budget/category/domain/CategoryRepository';
+import { Category } from '@core/budget/category/domain/Category';
 import { SubCategory } from '../../../../../app/components/forms/AddCategory/AddCategoryForm';
 
 @injectable()

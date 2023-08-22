@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
-import * as CategoryRepository from '@core/budget/budget/domain/CategoryRepository';
+import * as CategoryRepository from '@core/budget/category/domain/CategoryRepository';
 import { UseCase } from '@core/shared/application/UseCase';
-import { Category } from '@core/budget/budget/domain/Category';
+import { Category } from '@core/budget/category/domain/Category';
 
 @injectable()
 export class CategoryGetAll implements UseCase<unknown, Category[]> {

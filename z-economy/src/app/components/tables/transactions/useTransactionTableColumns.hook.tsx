@@ -1,7 +1,7 @@
 import { CellContext, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/IndeterminateCheckbox';
-import { NumericTextType, OtherTextType } from '@utils/table/types';
+import { CategoryType, NumericTextType, OtherTextType } from '@utils/table/types';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject } from 'react';
@@ -120,6 +120,7 @@ export function useTransactionTableColumnsHook(
             onChangeValue={value => {
               editableValue.current.category = value;
             }}
+            type={new CategoryType().getType()}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={info.getValue()} />

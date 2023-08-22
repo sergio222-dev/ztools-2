@@ -1,10 +1,10 @@
 import { container } from 'tsyringe';
-import { CategoryGetAll } from '@core/budget/budget/application/useCase/CategoryGetAll';
-import { CategoryGroupCreate } from '@core/budget/budget/application/useCase/CategoryGroupCreate';
+import { CategoryGetAll } from '@core/budget/category/application/useCase/CategoryGetAll';
+import { CategoryGroupCreate } from '@core/budget/category/application/useCase/CategoryGroupCreate';
 import useSWR from 'swr';
-import { Category } from '@core/budget/budget/domain/Category';
-import { CategoryCreate } from '@core/budget/budget/application/useCase/CategoryCreate';
-import { SubCategory } from '@core/budget/budget/domain/SubCategory';
+import { Category } from '@core/budget/category/domain/Category';
+import { CategoryCreate } from '@core/budget/category/application/useCase/CategoryCreate';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export const useCategoryHook = () => {
   // SERVICES
@@ -17,7 +17,7 @@ export const useCategoryHook = () => {
     categoryGetAll.execute({ month: '08', year: '2023' }),
   );
 
-  const createCategoryGroup = async (c: Category) => {
+  const createCategory = async (c: Category) => {
     if (!data) return;
     await categoryCreate.execute(c);
     await mutate(data);
@@ -34,7 +34,7 @@ export const useCategoryHook = () => {
     error: error,
     isLoading,
     mutate,
-    createCategoryGroup,
+    createCategoryGroup: createCategory,
     createSubCategory,
   };
 };
