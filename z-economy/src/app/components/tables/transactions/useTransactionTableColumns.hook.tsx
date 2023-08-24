@@ -119,7 +119,11 @@ export function useTransactionTableColumnsHook(
           <EditableCellSelect
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={subCats.find(item => item.id === info.row.original.subCategoryId)?.name}
+            defaultValue={
+              editingRow === info.row.id
+                ? info.getValue()
+                : subCats.find(item => item.id === info.row.original.subCategoryId)?.name
+            }
             options={subCats}
             onChangeValue={value => {
               editableValue.current.subCategoryId = value;

@@ -8,6 +8,7 @@ import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Table } from '@tanstack/react-table';
 import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
 import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
+import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 
 export const useTransactionHook = () => {
   // SERVICES
@@ -27,7 +28,6 @@ export const useTransactionHook = () => {
     setSelectedQty: Dispatch<SetStateAction<number>>,
     setDisableDelete: Dispatch<SetStateAction<boolean>>,
   ) => {
-    editableValue.current = {};
     void mutate(
       async () => {
         if (data && data[0]?.id === '') return data ?? [];
@@ -42,6 +42,7 @@ export const useTransactionHook = () => {
         tableReference.current &&
           setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
         setDisableDelete(true);
+        editableValue.current = newTransaction;
         return [newTransaction, ...(data ?? [])];
       },
       {

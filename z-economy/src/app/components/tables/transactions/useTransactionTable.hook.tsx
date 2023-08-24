@@ -63,12 +63,15 @@ export const useTransactionTableHook = () => {
       return;
     }
     if (row.getIsSelected()) {
-      editingRow !== row.id && setEditingRow(row.id);
-      editableValue.current =
-        row.id === ''
-          ? Object.assign({}, row.original, editableValue.current)
-          : Object.assign({}, editableValue.current, row.original);
-      editableValue.current.subCategoryId = editableValue.current.subCategoryId; // without this doesn't work
+      if (editingRow !== row.id) {
+        setEditingRow(row.id);
+        console.log(editingRow, 'editing id');
+        console.log(row.id, 'id');
+        editableValue.current =
+          row.id === ''
+            ? Object.assign({}, row.original, editableValue.current)
+            : Object.assign({}, editableValue.current, row.original);
+      }
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -111,6 +114,7 @@ export const useTransactionTableHook = () => {
       selectedColumnId.current = 'date';
       return;
     }
+    // console.log(editableValue.current.subCategoryId);
     void updateData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
     editableValue.current = createEmptyTransaction();
