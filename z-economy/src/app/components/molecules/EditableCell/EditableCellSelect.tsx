@@ -3,6 +3,7 @@ import currency from 'currency.js';
 import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hook';
 import { Select } from '@atoms/Select/Select';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import styles from '@molecules/EditableCell/EditableCell.module.scss';
 
 type T = SubCategory[];
 
@@ -28,7 +29,13 @@ export function EditableCellSelect(properties: EditableCellCategoryProperties) {
 
   return isEditable ? (
     <div>
-      <Select ref={inputReference} onChange={handleOnChange} defaultValue={value} onBlur={handleOnBlur}>
+      <Select
+        ref={inputReference}
+        onChange={handleOnChange}
+        defaultValue={value}
+        onBlur={handleOnBlur}
+        className={styles.z_input_text}
+      >
         {options?.map(option => (
           <option key={option.id} value={option.id}>
             {option.name}

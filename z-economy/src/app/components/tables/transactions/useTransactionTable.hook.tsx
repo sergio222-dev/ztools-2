@@ -40,7 +40,7 @@ export const useTransactionTableHook = () => {
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
   ) => {
-    console.log(editableValue.current);
+    console.log(editableValue.current); // To debug editing.
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
@@ -65,8 +65,6 @@ export const useTransactionTableHook = () => {
     if (row.getIsSelected()) {
       if (editingRow !== row.id) {
         setEditingRow(row.id);
-        console.log(editingRow, 'editing id');
-        console.log(row.id, 'id');
         editableValue.current =
           row.id === ''
             ? Object.assign({}, row.original, editableValue.current)
@@ -303,5 +301,6 @@ export const useTransactionTableHook = () => {
     trigger,
     handleRowOnKeyDown,
     selectedColumnId,
+    subCats,
   };
 };

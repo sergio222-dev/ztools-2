@@ -7,7 +7,7 @@ import styles from './TransactionTableButtons.module.scss';
 import { Typography } from '@atoms/Typography/Typography';
 import { SearchDebounceInput } from '@molecules/SearchDebounceInput/SearchDebounceInput';
 import { TransactionEditDropdown } from '@molecules/TransactionEditDropdown/TransactionEditDropdown';
-import { useSignal } from '@preact/signals-react';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 interface TransactionTableButtonsProperties {
   trigger: (
@@ -16,6 +16,7 @@ interface TransactionTableButtonsProperties {
     editableValue: MutableRefObject<Transaction>,
     setSelectedQty: Dispatch<SetStateAction<number>>,
     setDisableDelete: Dispatch<SetStateAction<boolean>>,
+    subCats: SubCategory[],
   ) => void;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   setEditingRow: Dispatch<SetStateAction<string>>;
@@ -27,6 +28,7 @@ interface TransactionTableButtonsProperties {
   selectedQty: number;
   setSelectedQty: Dispatch<SetStateAction<number>>;
   setDisableDelete: Dispatch<SetStateAction<boolean>>;
+  subCats: SubCategory[];
 }
 export function TransactionTableButtons({
   trigger,
@@ -40,10 +42,11 @@ export function TransactionTableButtons({
   selectedQty,
   setSelectedQty,
   setDisableDelete,
+  subCats,
 }: TransactionTableButtonsProperties) {
   const handleAddTransaction = () => {
     if (globalFilter !== '') setGlobalFilter('');
-    trigger(tableReference, setEditingRow, editableValue, setSelectedQty, setDisableDelete);
+    trigger(tableReference, setEditingRow, editableValue, setSelectedQty, setDisableDelete, subCats);
   };
 
   return (

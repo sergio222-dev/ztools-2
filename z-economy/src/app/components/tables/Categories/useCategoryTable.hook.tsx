@@ -109,8 +109,10 @@ export function useCategoryTableHook() {
           !info.row.original.subCategories &&
           info.table.getSelectedRowModel().rows.length === 0 ? (
           <EditableCell isEditable={true} />
+        ) : info.getValue() === undefined ? (
+          '0'
         ) : (
-          '111111'
+          info.getValue()
         );
       },
       meta: {
@@ -128,7 +130,7 @@ export function useCategoryTableHook() {
     columnHelper.accessor('available', {
       id: 'available',
       header: () => <Typography size="small">AVAILABLE</Typography>,
-      cell: info => (info.getValue() === undefined ? '123123' : info.getValue()),
+      cell: info => (info.getValue() === undefined ? '0' : info.getValue()),
       meta: {
         type: new NumericTextType(),
       },
