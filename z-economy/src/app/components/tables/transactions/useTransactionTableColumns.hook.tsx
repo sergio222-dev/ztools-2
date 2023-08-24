@@ -1,13 +1,15 @@
 import { CellContext, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import { IndeterminateCheckbox } from '@molecules/IndeterminateCheckbox/IndeterminateCheckbox';
-import { CategoryType, NumericTextType, OtherTextType } from '@utils/table/types';
+import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { format } from 'date-fns';
 import { KeyboardEvent, MutableRefObject } from 'react';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
 import styles from './renders/Table.module.scss';
 import cls from 'classnames';
+import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -19,6 +21,7 @@ export function useTransactionTableColumnsHook(
   handleClearedSorting: any,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
+  subCats: SubCategory[],
 ) {
   const columnHelper = createColumnHelper<Transaction>();
   const columns: ColumnDef<Transaction, any>[] = [
@@ -108,22 +111,25 @@ export function useTransactionTableColumnsHook(
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
-    columnHelper.accessor('category', {
+    columnHelper.accessor('subCategoryId', {
       id: 'category',
       header: table => (table.column.getIsSorted() ? <strong> CATEGORY </strong> : 'CATEGORY'),
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell
+          <EditableCellSelect
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
+            defaultValue={subCats.find(item => item.id === info.row.original.subCategoryId)?.name}
+            options={subCats}
             onChangeValue={value => {
-              editableValue.current.category = value;
+              editableValue.current.subCategoryId = value;
             }}
-            type={new CategoryType().getType()}
           />
         ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
+          <EditableCellSelect
+            isEditable={false}
+            defaultValue={subCats.find(item => item.id === info.row.original.subCategoryId)?.name}
+          />
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),

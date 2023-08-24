@@ -31,7 +31,7 @@ export const useTransactionHook = () => {
     void mutate(
       async () => {
         if (data && data[0]?.id === '') return data ?? [];
-        const newTransaction = new Transaction('', new Date().toISOString(), '', '', '', '', '', true, '');
+        const newTransaction = new Transaction('', '', '', '', '', '', new Date().toISOString(), true);
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({
           ['']: true,

@@ -30,7 +30,7 @@ export const useCategoryHook = () => {
   };
 
   return {
-    data: data ?? [],
+    cdata: data ?? [],
     error: error,
     isLoading,
     mutate,

@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -28,6 +30,8 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
 
+  const { cdata } = useCategoryHook();
+
   // HANDLERS
 
   //Row handlers
@@ -36,6 +40,7 @@ export const useTransactionTableHook = () => {
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
   ) => {
+    console.log(editableValue.current);
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
@@ -63,6 +68,7 @@ export const useTransactionTableHook = () => {
         row.id === ''
           ? Object.assign({}, row.original, editableValue.current)
           : Object.assign({}, editableValue.current, row.original);
+      editableValue.current.subCategoryId = editableValue.current.subCategoryId; // without this doesn't work
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -251,6 +257,14 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
+  const subCats: SubCategory[] = [];
+
+  for (const category of cdata) {
+    for (const subCategory of category.subCategories) {
+      subCats.push(subCategory);
+    }
+  }
+
   // COLUMNS
   const columns = useTransactionTableColumnsHook(
     data,
@@ -262,6 +276,7 @@ export const useTransactionTableHook = () => {
     handleClearedSorting,
     editableValue,
     editingRow,
+    subCats,
   );
 
   return {

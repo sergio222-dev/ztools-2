@@ -3,12 +3,12 @@ import { CategoryTableButtons } from '@molecules/CategoryTableButtons/CategoryTa
 import { BudgetPageTable } from './renders/BudgetPageTable';
 
 export function CategoryTableView() {
-  const { data, columns, createCategoryGroup } = useCategoryTableHook();
+  const { cdata, columns, createCategoryGroup } = useCategoryTableHook();
 
   return (
     <div>
       <CategoryTableButtons createCategoryGroup={createCategoryGroup} />
-      <BudgetPageTable<TableCategory> columns={columns} data={data} />
+      <BudgetPageTable<TableCategory> columns={columns} data={cdata} />
     </div>
   );
 }

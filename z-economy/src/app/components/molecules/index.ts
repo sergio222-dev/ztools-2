@@ -6,3 +6,4 @@ export { SearchDebounceInput } from '../molecules/SearchDebounceInput/SearchDebo
 export { TransactionEditDropdown } from '../molecules/TransactionEditDropdown/TransactionEditDropdown';
 export { CategoryTableButtons } from '../molecules/CategoryTableButtons/CategoryTableButtons';
 export { AddCategoryButton } from '../molecules/AddCategoryButton/AddCategoryButton';
+export { EditableCellSelect } from '../molecules/EditableCell/EditableCellSelect';

@@ -34,7 +34,7 @@ export type subCategories = {
 
 export function useCategoryTableHook() {
   // MODEL
-  const { data, createCategoryGroup, createSubCategory } = useCategoryHook();
+  const { cdata, createCategoryGroup, createSubCategory } = useCategoryHook();
   const columnHelper = createColumnHelper<TableCategory>();
 
   const columns: ColumnDef<TableCategory, any>[] = [
@@ -135,5 +135,5 @@ export function useCategoryTableHook() {
     }),
   ];
 
-  return { data, columns, createCategoryGroup };
+  return { cdata, columns, createCategoryGroup };
 }

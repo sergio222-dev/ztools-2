@@ -1,3 +1,10 @@
 export class SubCategory {
-  constructor(public id: string, public name: string, public categoryId: string) {}
+  constructor(
+    readonly id: string,
+    readonly name: string,
+    readonly categoryId: string,
+    readonly assignedBudget: string,
+    readonly activity: string,
+    readonly available: string,
+  ) {}
 }

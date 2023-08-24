@@ -21,9 +21,3 @@ export class OtherTextType implements TextTypeInterface {
     return 'other';
   }
 }
-
-export class CategoryType implements TextTypeInterface {
-  getType(): TextType {
-    return 'category';
-  }
-}
