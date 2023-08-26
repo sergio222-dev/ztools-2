@@ -67,7 +67,6 @@ export function useCategoryTableHook() {
     }
   });
 
-  console.log(cdata);
   const totalCategoryData = (id: string, key: string) => {
     const category = cdata.filter(category => category.id === id);
     const total = category[0]['subCategories'].reduce((a, subCategory) => {
