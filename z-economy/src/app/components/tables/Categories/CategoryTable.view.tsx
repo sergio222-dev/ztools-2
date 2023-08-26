@@ -1,14 +1,24 @@
-import { TableCategory, useCategoryTableHook } from './useCategoryTable.hook';
+import { useCategoryTableHook } from './useCategoryTable.hook';
 import { CategoryTableButtons } from '@molecules/CategoryTableButtons/CategoryTableButtons';
 import { BudgetPageTable } from './renders/BudgetPageTable';
+import { Category } from '@core/budget/category/domain/Category';
 
 export function CategoryTableView() {
-  const { cdata, columns, createCategoryGroup } = useCategoryTableHook();
+  const { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown } =
+    useCategoryTableHook();
 
   return (
     <div>
       <CategoryTableButtons createCategoryGroup={createCategoryGroup} />
-      <BudgetPageTable<TableCategory> columns={columns} data={cdata} />
+      <div ref={reference}>
+        <BudgetPageTable<Category>
+          columns={columns}
+          data={cdata}
+          handleOnEdit={handleOnEdit}
+          tableReference={tableReference}
+          handleRowOnKeyDown={handleRowOnKeyDown}
+        />
+      </div>
     </div>
   );
 }

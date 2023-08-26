@@ -40,7 +40,6 @@ export const useTransactionTableHook = () => {
     table: Table<Transaction>,
     cell: Cell<Transaction, string>,
   ) => {
-    console.log(editableValue.current); // To debug editing.
     if (cell.id.includes('checkbox')) {
       if (row.getIsSelected()) {
         row.getIsExpanded() && row.toggleExpanded(false);
@@ -99,7 +98,8 @@ export const useTransactionTableHook = () => {
 
   // Button handlers
   const handleSaveEdit = (row: Row<Transaction>) => {
-    if (row.id === '') {
+    const fakeRow = row.id === '';
+    if (fakeRow) {
       editableValue.current.id = uuidv4();
       // Is still possible to paste invalid characters in the inflow/outflow fields, so we replace them before sending to the server
       editableValue.current.inflow = editableValue.current.inflow.replaceAll(/[^\d.]/g, '');

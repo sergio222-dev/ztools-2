@@ -1,4 +1,4 @@
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { Cell, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
 import { AddCategoryButton, IndeterminateCheckbox } from '@molecules/index';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
@@ -8,36 +8,76 @@ import { useCategoryHook } from '@core/budget/category/application/adapter/useCa
 import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
-
-export type TableCategory = {
-  id: string;
-  name: string;
-  assignedBudget?: string;
-  activity?: string;
-  available?: string;
-  subCategories?: subCategories[];
-};
-
-export type subCategories = {
-  id: string;
-  name: string;
-  assignedBudget: string;
-  activity: string;
-  available: string;
-};
-
-// interface CategoryTableModel {
-//   data: TableCategory[];
-//   columns: ColumnDef<TableCategory, any>[];
-//   newCategoryGroup: (c: Category) => void;
-// }
+import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
+import { KeyboardEvent, useRef } from 'react';
+import { useOutsideClick } from '@utils/mouseUtils';
+import { Category } from '@core/budget/category/domain/Category';
+import currency from 'currency.js';
 
 export function useCategoryTableHook() {
   // MODEL
-  const { cdata, createCategoryGroup, createSubCategory } = useCategoryHook();
-  const columnHelper = createColumnHelper<TableCategory>();
 
-  const columns: ColumnDef<TableCategory, any>[] = [
+  // STATE
+  const editedAssignValue = useRef('');
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line unicorn/no-useless-undefined
+  const reference = useRef<HTMLDivElement>(undefined);
+  const tableReference = useRef<Table<Category>>();
+
+  // SERVICES
+  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget } = useCategoryHook();
+  const columnHelper = createColumnHelper<Category>();
+
+  // HANDLERS
+
+  const handleOnEdit = (
+    row: Row<Category>,
+    table: Table<Category>,
+    cell: Cell<Category, string>,
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+  ) => {
+    row.toggleSelected(true);
+  };
+  const handleAssignOnBlur = (subCategoryId: any) => {
+    const b: SubCategoryBudget = {
+      amount: editedAssignValue.current,
+      month: '08',
+      year: '2023',
+      subCategoryId: subCategoryId,
+    };
+
+    if (b.amount !== '') {
+      void assignSubCategoryBudget(b);
+      editedAssignValue.current = '';
+    }
+  };
+
+  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
+    if (event.key === 'Escape' || event.key === 'Enter') {
+      row.toggleSelected(false);
+    }
+  };
+
+  // SIDE EFFECTS
+
+  useOutsideClick(reference, () => {
+    if (tableReference.current && tableReference.current?.getIsSomeRowsSelected()) {
+      tableReference.current?.toggleAllRowsSelected(false);
+    }
+  });
+
+  console.log(cdata);
+  const totalCategoryData = (id: string, key: string) => {
+    const category = cdata.filter(category => category.id === id);
+    const total = category[0]['subCategories'].reduce((a, subCategory) => {
+      return currency(a).add(subCategory[key]);
+    }, 0);
+    return total;
+  };
+
+  // TODO Fix table types
+  const columns: ColumnDef<Category, any>[] = [
     {
       accessorKey: 'name',
       header: ({ table }) => (
@@ -108,11 +148,28 @@ export function useCategoryTableHook() {
         return info.row.getIsSelected() &&
           !info.row.original.subCategories &&
           info.table.getSelectedRowModel().rows.length === 0 ? (
-          <EditableCell isEditable={true} />
-        ) : info.getValue() === undefined ? (
-          '0'
+          <EditableCell
+            isEditable={true}
+            onBlur={() => {
+              handleAssignOnBlur(info.row.original.id);
+            }}
+            type={new NumericTextType().getType()}
+            defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editedAssignValue.current = value;
+            }}
+            shouldFocus={true}
+          />
         ) : (
-          info.getValue()
+          <EditableCell
+            isEditable={false}
+            type={new NumericTextType().getType()}
+            defaultValue={
+              info.row.original.subCategories
+                ? totalCategoryData(info.row.original.id, 'assignedBudget')
+                : info.getValue()
+            }
+          />
         );
       },
       meta: {
@@ -122,7 +179,17 @@ export function useCategoryTableHook() {
     columnHelper.accessor('activity', {
       id: 'activity',
       header: () => <Typography size="small">ACTIVITY</Typography>,
-      cell: info => info.getValue(),
+      cell: info => (
+        <EditableCell
+          isEditable={false}
+          type={new NumericTextType().getType()}
+          defaultValue={
+            info.row.original.subCategories
+              ? totalCategoryData(info.row.original.id, 'activity')
+              : info.getValue()
+          }
+        />
+      ),
       meta: {
         type: new NumericTextType(),
       },
@@ -130,12 +197,22 @@ export function useCategoryTableHook() {
     columnHelper.accessor('available', {
       id: 'available',
       header: () => <Typography size="small">AVAILABLE</Typography>,
-      cell: info => (info.getValue() === undefined ? '0' : info.getValue()),
+      cell: info => (
+        <EditableCell
+          isEditable={false}
+          type={new NumericTextType().getType()}
+          defaultValue={
+            info.row.original.subCategories
+              ? totalCategoryData(info.row.original.id, 'available')
+              : info.getValue()
+          }
+        />
+      ),
       meta: {
         type: new NumericTextType(),
       },
     }),
   ];
 
-  return { cdata, columns, createCategoryGroup };
+  return { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown };
 }

@@ -3,14 +3,17 @@ import { CategoryGetAll } from '@core/budget/category/application/useCase/Catego
 import { CategoryGroupCreate } from '@core/budget/category/application/useCase/CategoryGroupCreate';
 import useSWR from 'swr';
 import { Category } from '@core/budget/category/domain/Category';
-import { CategoryCreate } from '@core/budget/category/application/useCase/CategoryCreate';
+import { SubCategoryCreate } from '@core/budget/category/application/useCase/SubCategoryCreate';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
+import { SubCategoryAssign } from '@core/budget/category/application/useCase/SubCategoryAssign';
 
 export const useCategoryHook = () => {
   // SERVICES
   const categoryGetAll = container.resolve(CategoryGetAll);
   const categoryCreate = container.resolve(CategoryGroupCreate);
-  const subCategoryCreate = container.resolve(CategoryCreate);
+  const subCategoryCreate = container.resolve(SubCategoryCreate);
+  const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['categories'], () =>
@@ -29,6 +32,12 @@ export const useCategoryHook = () => {
     await mutate(data);
   };
 
+  const assignSubCategoryBudget = async (b: SubCategoryBudget) => {
+    if (!data) return;
+    await subCategoryBudgetAssign.execute(b);
+    await mutate(data);
+  };
+
   return {
     cdata: data ?? [],
     error: error,
@@ -36,5 +45,6 @@ export const useCategoryHook = () => {
     mutate,
     createCategoryGroup: createCategory,
     createSubCategory,
+    assignSubCategoryBudget,
   };
 };

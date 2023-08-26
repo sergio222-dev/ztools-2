@@ -43,6 +43,22 @@
   .z_table_expansible_row {
     background-color: const.$page-darker-background-color;
   }
+
+  %z_table_row {
+    height: 40px;
+    user-select: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+  }
+
+  .z_table_row_unselected {
+    @extend %z_table_row;
+  }
+  .z_table_row_selected {
+    @extend %z_table_row;
+    background-color: const.$selection-color;
+    cursor: text;
+  }
 }
 
 .c_table_add_button {
