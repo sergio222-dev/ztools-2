@@ -67,12 +67,14 @@ export function useCategoryTableHook() {
     }
   });
 
+  // TODO Fix types
   const totalCategoryData = (id: string, key: string) => {
+    // eslint-disable-next-line unicorn/prefer-array-find
     const category = cdata.filter(category => category.id === id);
-    const total = category[0]['subCategories'].reduce((a, subCategory) => {
+    // eslint-disable-next-line unicorn/no-array-reduce
+    return category[0]['subCategories'].reduce((a, subCategory) => {
       return currency(a).add(subCategory[key]);
     }, 0);
-    return total;
   };
 
   // TODO Fix table types
