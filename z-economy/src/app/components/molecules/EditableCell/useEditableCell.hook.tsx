@@ -7,7 +7,6 @@ import {
   useRef,
   useState,
   RefObject,
-  SetStateAction,
 } from 'react';
 
 interface useEditableCellHookProperties<T extends HTMLInputElement | HTMLSelectElement> {
