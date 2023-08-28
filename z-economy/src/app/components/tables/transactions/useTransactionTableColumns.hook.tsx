@@ -89,7 +89,6 @@ export function useTransactionTableColumnsHook(
             defaultValue={info.getValue()}
             onChangeValue={value => {
               editableValue.current.date = value;
-              console.log(value);
             }}
           />
         ) : (

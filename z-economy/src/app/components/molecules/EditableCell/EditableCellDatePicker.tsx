@@ -1,8 +1,8 @@
-import { HTMLAttributes, useState } from 'react';
+import { HTMLAttributes } from 'react';
 import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hook';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
-import DatePicker, { registerLocale } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
 
@@ -17,7 +17,7 @@ interface EditableCellCategoryProperties extends HTMLAttributes<HTMLSelectElemen
 }
 
 export function EditableCellDatePicker(properties: EditableCellCategoryProperties) {
-  const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue, options } = properties;
+  const { defaultValue, shouldFocus, onBlur, isEditable, onChangeValue, options } = properties;
   const { models, operators } = useEditableCellHook<HTMLSelectElement>({
     defaultValue,
     shouldFocus,
@@ -26,7 +26,7 @@ export function EditableCellDatePicker(properties: EditableCellCategoryPropertie
   });
 
   const { inputReference, value } = models;
-  const { handleOnChangeDate, handleOnBlur } = operators;
+  const { handleOnChangeDate } = operators;
 
   return isEditable ? (
     <div>
