@@ -7,3 +7,4 @@ export { TransactionEditDropdown } from '../molecules/TransactionEditDropdown/Tr
 export { CategoryTableButtons } from '../molecules/CategoryTableButtons/CategoryTableButtons';
 export { AddCategoryButton } from '../molecules/AddCategoryButton/AddCategoryButton';
 export { EditableCellSelect } from '../molecules/EditableCell/EditableCellSelect';
+export { EditableCellDatePicker } from '../molecules/EditableCell/EditableCellDatePicker';

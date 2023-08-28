@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   RefObject,
+  SetStateAction,
 } from 'react';
 
 interface useEditableCellHookProperties<T extends HTMLInputElement | HTMLSelectElement> {
@@ -26,6 +27,7 @@ interface useEditableCellHookReturnType<T extends HTMLInputElement | HTMLSelectE
     handleOnChange: (event: ChangeEvent<T>) => void;
     handleOnChangeNumeric: (event: ChangeEvent<T>) => void;
     handleOnKeyDown: (event: KeyboardEvent<T>) => void;
+    handleOnChangeDate: any;
   };
 }
 
@@ -61,6 +63,14 @@ export function useEditableCellHook<T extends HTMLInputElement | HTMLSelectEleme
     setValue(event.target.value);
   };
 
+  const handleOnChangeDate = (date: any, event: ChangeEvent<T>) => {
+    if (event) {
+      onChangeValue && onChangeValue(event.target.value);
+      setValue(event.target.value);
+    }
+    onChangeValue && onChangeValue(date);
+    setValue(date);
+  };
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleOnKeyDown = (event: KeyboardEvent<T>) => {
     const regex = /^[\d.]/;
@@ -102,6 +112,7 @@ export function useEditableCellHook<T extends HTMLInputElement | HTMLSelectEleme
       handleOnChange,
       handleOnChangeNumeric,
       handleOnKeyDown,
+      handleOnChangeDate,
     },
   };
 }

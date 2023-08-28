@@ -10,6 +10,7 @@ import styles from './renders/Table.module.scss';
 import cls from 'classnames';
 import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { EditableCellDatePicker } from '@molecules/EditableCell/EditableCellDatePicker';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -82,10 +83,14 @@ export function useTransactionTableColumnsHook(
       header: table => (table.column.getIsSorted() ? <strong> DATE </strong> : 'DATE'),
       cell: info => {
         return info.row.getIsSelected() ? (
-          <EditableCell
+          <EditableCellDatePicker
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
+            defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editableValue.current.date = value;
+              console.log(value);
+            }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
