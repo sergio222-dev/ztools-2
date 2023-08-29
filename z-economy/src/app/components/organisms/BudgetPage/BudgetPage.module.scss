@@ -13,14 +13,28 @@
     box-shadow: 0 0 0 1px const.$page-light-border-color;
     margin: 1px 0;
 
-    .bp_date_input {
-      border: none;
-      background-color: const.$page-darker-background-color;
-      font-weight: bold;
-      font-size: 1.2rem;
-      caret-color: transparent;
-      width: 6.3rem;
-      cursor: pointer;
+    .bp_date_buttons {
+      color: const.$primary-color;
+      padding: functions.spacing(0.5);
+    }
+    .date_input_container {
+      display: flex;
+      align-items: center;
+
+      .bp_date_input {
+        border: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        caret-color: transparent;
+        width: 6.7rem;
+        cursor: pointer;
+        background: transparent;
+        z-index: 1;
+      }
+      .date_caret_icon {
+        color: const.$primary-color;
+        margin-left: -13px;
+      }
     }
   }
 }
