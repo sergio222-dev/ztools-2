@@ -2,6 +2,29 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
 
+.budget_page {
+  background-color: const.$page-light-background-color;
+  width: 100%;
+  flex: 1;
+
+  .budget_page_date {
+    background-color: const.$page-darker-background-color;
+    padding: functions.spacing(2);
+    box-shadow: 0 0 0 1px const.$page-light-border-color;
+    margin: 1px 0;
+
+    .bp_date_input {
+      border: none;
+      background-color: const.$page-darker-background-color;
+      font-weight: bold;
+      font-size: 1.2rem;
+      caret-color: transparent;
+      width: 6.3rem;
+      cursor: pointer;
+    }
+  }
+}
+
 %category_expand_button {
   @include mixins.remove-default-button;
   background: none;
@@ -12,7 +35,6 @@
   font-size: 1rem;
 }
 
-.category_expand_button_row{
+.category_expand_button_row {
   @extend %category_expand_button;
 }
-

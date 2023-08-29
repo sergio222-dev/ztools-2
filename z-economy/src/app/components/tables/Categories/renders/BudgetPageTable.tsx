@@ -1,4 +1,4 @@
-import { KeyboardEvent, MutableRefObject, useEffect, useState } from 'react';
+import { KeyboardEvent, MutableRefObject, useEffect, useMemo, useState } from 'react';
 import {
   ColumnDef,
   ExpandedState,
@@ -29,10 +29,12 @@ export function BudgetPageTable<T>({
   handleRowOnKeyDown,
 }: CategoryTableProperties<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const memoData = useMemo(() => data, [data]);
+  const [tableData, setTableData] = useState(memoData);
 
   const table = useReactTable<T>({
     columns,
-    data: data,
+    data: tableData,
     state: {
       expanded,
     },
@@ -47,6 +49,10 @@ export function BudgetPageTable<T>({
   });
 
   if (tableReference) tableReference.current = table;
+  // SIDE EFFECT
+  useEffect(() => {
+    setTableData(memoData);
+  }, [memoData]);
 
   useEffect(() => {
     table.toggleAllRowsExpanded();

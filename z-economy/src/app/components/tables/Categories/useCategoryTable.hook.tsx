@@ -9,12 +9,12 @@ import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
-import { KeyboardEvent, useRef } from 'react';
+import { KeyboardEvent, useEffect, useRef } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 
-export function useCategoryTableHook() {
+export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
 
   // STATE
@@ -26,9 +26,13 @@ export function useCategoryTableHook() {
   const tableReference = useRef<Table<Category>>();
 
   // SERVICES
-  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget } = useCategoryHook();
+  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
+    useCategoryHook(budgetDate);
   const columnHelper = createColumnHelper<Category>();
 
+  useEffect(() => {
+    void mutate(cdata, { revalidate: true });
+  }, [budgetDate]);
   // HANDLERS
 
   const handleOnEdit = (

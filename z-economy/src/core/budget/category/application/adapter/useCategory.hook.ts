@@ -7,8 +7,9 @@ import { SubCategoryCreate } from '@core/budget/category/application/useCase/Sub
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { SubCategoryAssign } from '@core/budget/category/application/useCase/SubCategoryAssign';
+import { useEffect } from 'react';
 
-export const useCategoryHook = () => {
+export const useCategoryHook = (date: Date) => {
   // SERVICES
   const categoryGetAll = container.resolve(CategoryGetAll);
   const categoryCreate = container.resolve(CategoryGroupCreate);
@@ -17,8 +18,17 @@ export const useCategoryHook = () => {
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['categories'], () =>
-    categoryGetAll.execute({ month: '08', year: '2023' }),
+    categoryGetAll.execute({
+      month: String(date.getMonth() + 1).padStart(2, '0'),
+      year: String(date.getFullYear()),
+    }),
   );
+
+  // useEffect(() => {
+  //   return  () => {
+  //    void mutate(data);
+  //   };
+  // }, [date]);
 
   const createCategory = async (c: Category) => {
     if (!data) return;

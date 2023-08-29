@@ -30,7 +30,7 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
 
-  const { cdata } = useCategoryHook();
+  const { cdata } = useCategoryHook(new Date());
 
   // HANDLERS
 

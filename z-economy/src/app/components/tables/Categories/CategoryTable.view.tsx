@@ -3,9 +3,13 @@ import { CategoryTableButtons } from '@molecules/CategoryTableButtons/CategoryTa
 import { BudgetPageTable } from './renders/BudgetPageTable';
 import { Category } from '@core/budget/category/domain/Category';
 
-export function CategoryTableView() {
+interface CategoryTableViewProperties {
+  budgetDate: Date;
+}
+
+export function CategoryTableView({ budgetDate }: CategoryTableViewProperties) {
   const { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown } =
-    useCategoryTableHook();
+    useCategoryTableHook(budgetDate);
 
   return (
     <div>
