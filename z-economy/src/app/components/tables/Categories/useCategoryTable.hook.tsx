@@ -43,23 +43,26 @@ export function useCategoryTableHook(budgetDate: Date) {
   ) => {
     row.toggleSelected(true);
   };
-  const handleAssignOnBlur = (subCategoryId: any) => {
+  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category>) => {
     const b: SubCategoryBudget = {
       amount: editedAssignValue.current,
-      month: '08',
-      year: '2023',
+      month: String(budgetDate.getMonth() + 1).padStart(2, '0'),
+      year: String(budgetDate.getFullYear()),
       subCategoryId: subCategoryId,
     };
 
     if (b.amount !== '') {
       void assignSubCategoryBudget(b);
       editedAssignValue.current = '';
+      row.toggleSelected(false);
+      return;
     }
+    row.toggleSelected(false);
   };
 
   const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
-      row.toggleSelected(false);
+      // row.toggleSelected(false);
     }
   };
 
@@ -156,7 +159,7 @@ export function useCategoryTableHook(budgetDate: Date) {
           <EditableCell
             isEditable={true}
             onBlur={() => {
-              handleAssignOnBlur(info.row.original.id);
+              handleAssignOnBlur(info.row.original.id, info.row);
             }}
             type={new NumericTextType().getType()}
             defaultValue={info.getValue()}

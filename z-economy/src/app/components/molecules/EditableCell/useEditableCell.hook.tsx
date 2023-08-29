@@ -52,7 +52,6 @@ export function useEditableCellHook<T extends HTMLInputElement | HTMLSelectEleme
     onBlur && onBlur(event);
   };
   const handleOnChangeNumeric = (event: ChangeEvent<T>) => {
-    // se puede hacer ctrl + v y poner texto en el input pero no se manda a la DB.
     const value = event.target.value.replace(/[^\d\s.A-Za-z]/g, '');
     onChangeValue && onChangeValue(value);
     setValue(value);
@@ -73,6 +72,10 @@ export function useEditableCellHook<T extends HTMLInputElement | HTMLSelectEleme
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleOnKeyDown = (event: KeyboardEvent<T>) => {
     const regex = /^[\d.]/;
+
+    if (event.key === 'Enter') {
+      inputReference.current?.blur();
+    }
 
     if (
       !regex.test(event.key) &&
