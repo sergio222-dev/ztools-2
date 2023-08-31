@@ -9,6 +9,8 @@ interface BudgetPageModel {
 interface BudgetPageOperators {
   renderMonthContent: (monthIndex: number, shortMonthText: string, fullMonthText: string) => ReactNode;
   setBudgetDate: (date: Date) => void;
+  addMonthHandler: () => void;
+  substractMonthHandler: () => void;
 }
 
 export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
@@ -23,5 +25,13 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
     return <span title={tooltipText}>{shortMonth}</span>;
   };
 
-  return [{ budgetDate }, { renderMonthContent, setBudgetDate }];
+  const addMonthHandler = () => {
+    setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() + 1, 1));
+  };
+
+  const substractMonthHandler = () => {
+    setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() - 1, 1));
+  };
+
+  return [{ budgetDate }, { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler }];
 }

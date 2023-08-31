@@ -6,12 +6,20 @@
   background-color: const.$page-light-background-color;
   width: 100%;
   flex: 1;
+  position: relative;
+  container: bp_header / size;
 
   .budget_page_date {
     background-color: const.$page-darker-background-color;
     padding: functions.spacing(2);
     box-shadow: 0 0 0 1px const.$page-light-border-color;
     margin: 1px 0;
+    justify-content: center;
+
+    .date_picker {
+      position: absolute;
+      left: 0;
+    }
 
     .bp_date_buttons {
       color: const.$primary-color;
@@ -36,6 +44,15 @@
         margin-left: -13px;
       }
     }
+  }
+  @container bp_header (width < 515px) {
+    .global_assigned {
+      margin-left: auto;
+    }
+  }
+
+  .global_assigned {
+    background-color: red;
   }
 }
 
