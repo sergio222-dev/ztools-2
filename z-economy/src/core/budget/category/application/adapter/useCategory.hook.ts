@@ -7,7 +7,6 @@ import { SubCategoryCreate } from '@core/budget/category/application/useCase/Sub
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { SubCategoryAssign } from '@core/budget/category/application/useCase/SubCategoryAssign';
-import { useEffect } from 'react';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES

@@ -7,16 +7,18 @@ import { Input } from '@atoms/Input/Input';
 import { IconButton } from '@atoms/Button/IconButton';
 import { AiOutlineRightCircle, AiOutlineLeftCircle, AiFillCaretDown } from 'react-icons/ai';
 import { Button } from '@atoms/Button/Button';
+import { Typography } from '@atoms/Typography/Typography';
 
 export function BudgetPageView() {
   const [model, operators] = useBudgetPageHooks();
-  const { budgetDate } = model;
-  const { setBudgetDate, renderMonthContent, addMonthHandler, substractMonthHandler } = operators;
+  const { budgetDate, totalToAssign } = model;
+  const { setBudgetDate, renderMonthContent, addMonthHandler, substractMonthHandler, renderSwitch } =
+    operators;
 
   return (
     <div className={cls(styles.budget_page)}>
       <section className={cls('z_flex', styles.budget_page_date)} spellCheck="false">
-        <label className={cls(styles.date_picker, 'z_flex')}>
+        <div className={cls(styles.date_picker, 'z_flex')}>
           <IconButton className={styles.bp_date_buttons} onClick={substractMonthHandler}>
             <AiOutlineLeftCircle />
           </IconButton>
@@ -37,8 +39,11 @@ export function BudgetPageView() {
           <IconButton className={styles.bp_date_buttons} onClick={addMonthHandler}>
             <AiOutlineRightCircle />
           </IconButton>
-        </label>
-        <Button className={styles.global_assigned}>$1000.00</Button>
+        </div>
+        <Button className={styles.global_assigned}>
+          <Typography variant="balance">{totalToAssign}</Typography>
+          <Typography>{renderSwitch(totalToAssign)}</Typography>
+        </Button>
       </section>
       <section>
         <CategoryTableView budgetDate={budgetDate} />

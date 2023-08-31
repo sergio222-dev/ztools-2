@@ -1,8 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 import { ReactNode, useState } from 'react';
+import currency from 'currency.js';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 
 interface BudgetPageModel {
   budgetDate: Date;
+  totalToAssign: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -11,6 +14,7 @@ interface BudgetPageOperators {
   setBudgetDate: (date: Date) => void;
   addMonthHandler: () => void;
   substractMonthHandler: () => void;
+  renderSwitch: (totalToAssign: string) => string;
 }
 
 export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
@@ -19,7 +23,10 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   // STATE
   const [budgetDate, setBudgetDate] = useState<Date>(new Date());
 
-  // OPERATOR
+  // SERVICES
+  const { cdata } = useCategoryHook(budgetDate);
+
+  // OPERATORS
   const renderMonthContent = (month: number, shortMonth: string, longMonth: string) => {
     const tooltipText = `Tooltip for month: ${longMonth}`;
     return <span title={tooltipText}>{shortMonth}</span>;
@@ -33,5 +40,43 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
     setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() - 1, 1));
   };
 
-  return [{ budgetDate }, { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler }];
+  const renderSwitch = (totalToAssign: string) => {
+    if (Number(currency(totalToAssign).value) > 0) {
+      return 'Available to Assign';
+    }
+    if (Number(currency(totalToAssign).value) < 0) {
+      return 'Not Enough Money';
+    }
+    return 'All Money Assigned';
+  };
+
+  // SIDE EFFECTS
+  const globalAssigned = cdata
+    ?.reduce((total, category) => {
+      // eslint-disable-next-line unicorn/no-array-reduce
+      return currency(total).add(
+        category.subCategories.reduce((subTotal, subCategory) => {
+          return currency(subTotal).add(subCategory.assignedBudget);
+        }, currency(0)),
+      );
+    }, currency(0))
+    .format();
+
+  const globalAvailable = cdata
+    ?.reduce((total, category) => {
+      // eslint-disable-next-line unicorn/no-array-reduce
+      return currency(total).add(
+        category.subCategories.reduce((subTotal, subCategory) => {
+          return currency(subTotal).add(subCategory.available);
+        }, currency(0)),
+      );
+    }, currency(0))
+    .format();
+
+  const totalToAssign = currency(globalAvailable).subtract(globalAssigned).format();
+
+  return [
+    { budgetDate, totalToAssign },
+    { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler, renderSwitch },
+  ];
 }
