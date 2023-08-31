@@ -74,14 +74,16 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   });
 
-  // TODO Fix types
+  // TODO Fix type
   const totalCategoryData = (id: string, key: string) => {
     // eslint-disable-next-line unicorn/prefer-array-find
     const category = cdata.filter(category => category.id === id);
     // eslint-disable-next-line unicorn/no-array-reduce
-    return category[0]['subCategories'].reduce((a, subCategory) => {
-      return currency(a).add(subCategory[key]);
-    }, 0);
+    return category[0]['subCategories']
+      .reduce((a, subCategory) => {
+        return currency(a).add(subCategory[key]);
+      }, currency(0))
+      .format();
   };
 
   // TODO Fix table types

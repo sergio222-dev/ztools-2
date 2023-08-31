@@ -1,6 +1,7 @@
 @use '../../styles/mixins';
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
+@use 'sass:color';
 
 .budget_page {
   background-color: const.$page-light-background-color;
@@ -18,6 +19,8 @@
 
     .date_picker {
       position: absolute;
+      width: 100%;
+      //height: 100%;
       left: 0;
     }
 
@@ -52,7 +55,8 @@
   }
 
   .global_assigned {
-    background-color: red;
+    background-color: const.$budget-page-button;
+    color: const.$text-color;
   }
 }
 
