@@ -6,3 +6,5 @@ export { CancelButton } from './Button/CancelButton';
 export { SaveButton } from './Button/SaveButton';
 export { UtilityButton } from './Button/UtilityButton';
 export { Checkbox } from './Input/Checkbox';
+export { Select } from './Select/Select';
+export { IconButton } from './Button/IconButton';

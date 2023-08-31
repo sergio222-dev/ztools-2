@@ -2,9 +2,11 @@
 
 .z_input_text {
   margin-left: functions.to-negative(calc((#{functions.spacing(1)} + 2px)));
+  width: 100%;
 }
 
 .z_input_numeric {
   text-align: right;
   margin-right: functions.to-negative(calc((#{functions.spacing(1)} + 2px)));
+  width: 100%;
 }

@@ -23,6 +23,7 @@ export function TransactionTableView() {
     selectedQty,
     setSelectedQty,
     selectedColumnId,
+    subCats,
   } = useTransactionTableHook();
 
   return (
@@ -39,6 +40,7 @@ export function TransactionTableView() {
         selectedQty={selectedQty}
         setSelectedQty={setSelectedQty}
         setDisableDelete={setDisableDelete}
+        subCats={subCats}
       ></TransactionTableButtons>
       <div ref={reference} style={{ display: 'flex' }}>
         <AllAccountPageTable

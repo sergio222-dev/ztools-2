@@ -40,6 +40,7 @@ import { EventEmitter2EventBus } from '@shared/infrastructure/bus/event/EventEmi
 // listeners
 import { UpdateMonthOnTransactionActivityUpdatedListener } from '@budget/monthlyBudget/application/useCase/spent/UpdateMonthOnTransactionActivityUpdated.listener';
 import { UpdateMonthOnTransactionActivityCreatedListener } from '@budget/monthlyBudget/application/useCase/spent/UpdateMonthOnTransactionActivityCreated.listener';
+import { SubCategoryFindAllHandler } from '@budget/subCategory/application/useCase/find/SubCategoryFindAll.handler';
 
 const budget = {
   services: [
@@ -64,6 +65,7 @@ const budget = {
     SubCategoryCreateHandler,
     MonthlyBudgetAssignOneHandler,
     MonthlyBudgetFindOneHandler,
+    SubCategoryFindAllHandler,
   ],
   schemas: [
     {

@@ -47,6 +47,7 @@ export class CategoryController {
         return new SubCategoryDto(
           subCategory.id,
           subCategory.name,
+          subCategory.categoryId,
           monthlyBudget?.assigned?.amount ?? '0',
           monthlyBudget?.activity?.amount ?? '0',
           monthlyBudget?.available?.amount ?? '0',

@@ -3,9 +3,9 @@ import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
 import { supabase } from '../../forms/Auth/AuthForm';
 
-// type SidebarActiveValues = 'Budget' | 'Reports' | 'All Accounts';
+// type SidebarActiveValues = 'SubCategory' | 'Reports' | 'All Accounts';
 
-// const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['Budget', 'Reports', 'All Accounts'];
+// const SIDEBAR_BUTTON_NAMES: Array<SidebarActiveValues> = ['SubCategory', 'Reports', 'All Accounts'];
 //
 // const SIDEBAR_BUTTON_ROUTES: Array<SidebarRoutes> = ['/', '/reports', '/all-accounts'];
 

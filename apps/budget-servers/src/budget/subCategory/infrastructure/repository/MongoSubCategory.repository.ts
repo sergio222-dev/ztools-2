@@ -12,6 +12,10 @@ export class MongoSubCategoryRepository implements SubCategoryRepository {
     private readonly subCategoryModel: Model<SubCategory>,
   ) {}
 
+  async findAll(): Promise<SubCategory[]> {
+    return await this.subCategoryModel.find().exec();
+  }
+
   async findAllByCategoryId(id: string): Promise<SubCategory[]> {
     const subCategoriesDocuments = await this.subCategoryModel
       .find({

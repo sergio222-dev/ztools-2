@@ -8,6 +8,9 @@ import { KeyboardEvent, MutableRefObject } from 'react';
 import { AiFillCopyrightCircle } from 'react-icons/ai';
 import styles from './renders/Table.module.scss';
 import cls from 'classnames';
+import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { EditableCellDatePicker } from '@molecules/EditableCell/EditableCellDatePicker';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -19,6 +22,7 @@ export function useTransactionTableColumnsHook(
   handleClearedSorting: any,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
+  subCats: SubCategory[],
 ) {
   const columnHelper = createColumnHelper<Transaction>();
   const columns: ColumnDef<Transaction, any>[] = [
@@ -79,10 +83,13 @@ export function useTransactionTableColumnsHook(
       header: table => (table.column.getIsSorted() ? <strong> DATE </strong> : 'DATE'),
       cell: info => {
         return info.row.getIsSelected() ? (
-          <EditableCell
+          <EditableCellDatePicker
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')}
+            defaultValue={info.getValue()}
+            onChangeValue={value => {
+              editableValue.current.date = value;
+            }}
           />
         ) : (
           <EditableCell isEditable={false} defaultValue={format(new Date(info.getValue()), 'dd/MM/yyyy')} />
@@ -108,21 +115,29 @@ export function useTransactionTableColumnsHook(
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),
-    columnHelper.accessor('category', {
+    columnHelper.accessor('subCategoryId', {
       id: 'category',
       header: table => (table.column.getIsSorted() ? <strong> CATEGORY </strong> : 'CATEGORY'),
       cell: info =>
         info.row.getIsSelected() ? (
-          <EditableCell
+          <EditableCellSelect
             shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
             isEditable={editingRow === info.row.id}
-            defaultValue={info.getValue()}
+            defaultValue={
+              editingRow === info.row.id
+                ? info.getValue()
+                : subCats.find(item => item.id === info.row.original.subCategoryId)?.name
+            }
+            options={subCats}
             onChangeValue={value => {
-              editableValue.current.category = value;
+              editableValue.current.subCategoryId = value;
             }}
           />
         ) : (
-          <EditableCell isEditable={false} defaultValue={info.getValue()} />
+          <EditableCellSelect
+            isEditable={false}
+            defaultValue={subCats.find(item => item.id === info.row.original.subCategoryId)?.name}
+          />
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
     }),

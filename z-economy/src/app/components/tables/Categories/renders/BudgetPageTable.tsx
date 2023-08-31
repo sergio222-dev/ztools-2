@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { KeyboardEvent, MutableRefObject, useEffect, useMemo, useState } from 'react';
 import {
   ColumnDef,
   ExpandedState,
@@ -6,6 +6,9 @@ import {
   useReactTable,
   getExpandedRowModel,
   flexRender,
+  Row,
+  Table,
+  Cell,
 } from '@tanstack/react-table';
 import styles from './CategoryTable.module.scss';
 import cls from 'classnames';
@@ -13,17 +16,29 @@ import cls from 'classnames';
 interface CategoryTableProperties<T> {
   columns: ColumnDef<T, unknown>[];
   data: Array<T>;
+  handleOnEdit: (row: Row<T>, table: Table<T>, cell: Cell<T, string>) => void;
+  tableReference: MutableRefObject<Table<T> | undefined>;
+  handleRowOnKeyDown: (event: KeyboardEvent, row: Row<T>) => void;
 }
 
-export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>) {
+export function BudgetPageTable<T>({
+  columns,
+  data,
+  handleOnEdit,
+  tableReference,
+  handleRowOnKeyDown,
+}: CategoryTableProperties<T>) {
   const [expanded, setExpanded] = useState<ExpandedState>({});
+  const memoData = useMemo(() => data, [data]);
+  const [tableData, setTableData] = useState(memoData);
 
   const table = useReactTable<T>({
     columns,
-    data: data,
+    data: tableData,
     state: {
       expanded,
     },
+    enableMultiRowSelection: false,
     onExpandedChange: setExpanded,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -32,6 +47,16 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
     getExpandedRowModel: getExpandedRowModel(),
     // debugTable: true,
   });
+
+  if (tableReference) tableReference.current = table;
+  // SIDE EFFECT
+  useEffect(() => {
+    setTableData(memoData);
+  }, [memoData]);
+
+  useEffect(() => {
+    table.toggleAllRowsExpanded();
+  }, []);
 
   return (
     <div className="p-2">
@@ -67,8 +92,13 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
                   // @ts-ignore
                   row.original.subCategories
                     ? cls(styles.z_table_expansible_row, styles.c_table_row)
-                    : styles.z_table_normal_row
+                    : row.getIsSelected()
+                    ? styles.z_table_row_selected
+                    : styles.z_table_row_unselected
                 }
+                onKeyDown={event => {
+                  handleRowOnKeyDown(event, row);
+                }}
               >
                 {row.getVisibleCells().map(cell => {
                   return (
@@ -76,6 +106,9 @@ export function BudgetPageTable<T>({ columns, data }: CategoryTableProperties<T>
                       key={cell.id}
                       data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
                       className={styles.z_table_cell}
+                      onClick={() => {
+                        handleOnEdit(row, table, cell);
+                      }}
                     >
                       <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
                     </td>

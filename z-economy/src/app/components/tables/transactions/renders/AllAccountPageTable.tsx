@@ -32,7 +32,7 @@ interface TransactionTableProperties {
   data: Array<Transaction>;
   handleSaveEdit: (row: Row<Transaction>) => void;
   handleCancelEdit: (row: Row<Transaction>) => void;
-  handleOnEdit: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, string>) => void;
+  handleOnEdit: (row: Row<Transaction>, table: Table<Transaction>, cell: Cell<Transaction, unknown>) => void;
   handleRowOnKeyDown: (event: KeyboardEvent, row: Row<Transaction>) => void;
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;

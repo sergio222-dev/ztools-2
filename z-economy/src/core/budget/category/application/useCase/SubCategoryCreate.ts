@@ -1,11 +1,10 @@
 import { UseCase } from '@core/shared/application/UseCase';
-import { Category } from '@core/budget/budget/domain/Category';
 import { inject, injectable } from 'tsyringe';
-import * as CategoryRepository from '@core/budget/budget/domain/CategoryRepository';
-import { SubCategory } from '../../../../../app/components/forms/AddCategory/AddCategoryForm';
+import * as CategoryRepository from '@core/budget/category/domain/CategoryRepository';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 @injectable()
-export class CategoryCreate implements UseCase<Category, void> {
+export class SubCategoryCreate implements UseCase<SubCategory, void> {
   constructor(
     @inject('CategoryRepository')
     private categoryRepository: CategoryRepository.CategoryRepository,

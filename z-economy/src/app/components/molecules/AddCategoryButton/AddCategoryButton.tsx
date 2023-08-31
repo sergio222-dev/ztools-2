@@ -1,7 +1,8 @@
 import { useSignal } from '@preact/signals-react';
 import { UtilityButton } from '@atoms/Button/UtilityButton';
 import { AiFillPlusCircle } from 'react-icons/ai';
-import { AddCategoryForm, SubCategory } from '../../forms/AddCategory/AddCategoryForm';
+import { AddCategoryForm } from '../../forms/AddCategory/AddCategoryForm';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 interface CategoryTableButtonsProperties {
   createSubCategory: (c: SubCategory) => Promise<void>;
@@ -19,7 +20,7 @@ export function AddCategoryButton({ createSubCategory, categoryId }: CategoryTab
 
   return (
     <div>
-      <a id="add-category" onClick={handleAddCategory}>
+      <a id="add-category" onClick={handleAddCategory} title="Add Category">
         <UtilityButton StartIcon={<AiFillPlusCircle />} variant={'icon'}></UtilityButton>
       </a>
       <AddCategoryForm

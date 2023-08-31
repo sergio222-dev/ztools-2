@@ -7,6 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -27,6 +29,8 @@ export const useTransactionTableHook = () => {
   // SERVICES
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
+
+  const { cdata } = useCategoryHook(new Date());
 
   // HANDLERS
 
@@ -58,11 +62,13 @@ export const useTransactionTableHook = () => {
       return;
     }
     if (row.getIsSelected()) {
-      editingRow !== row.id && setEditingRow(row.id);
-      editableValue.current =
-        row.id === ''
-          ? Object.assign({}, row.original, editableValue.current)
-          : Object.assign({}, editableValue.current, row.original);
+      if (editingRow !== row.id) {
+        setEditingRow(row.id);
+        editableValue.current =
+          row.id === ''
+            ? Object.assign({}, row.original, editableValue.current)
+            : Object.assign({}, editableValue.current, row.original);
+      }
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -92,7 +98,8 @@ export const useTransactionTableHook = () => {
 
   // Button handlers
   const handleSaveEdit = (row: Row<Transaction>) => {
-    if (row.id === '') {
+    const fakeRow = row.id === '';
+    if (fakeRow) {
       editableValue.current.id = uuidv4();
       // Is still possible to paste invalid characters in the inflow/outflow fields, so we replace them before sending to the server
       editableValue.current.inflow = editableValue.current.inflow.replaceAll(/[^\d.]/g, '');
@@ -105,6 +112,7 @@ export const useTransactionTableHook = () => {
       selectedColumnId.current = 'date';
       return;
     }
+    // console.log(editableValue.current.subCategoryId);
     void updateData(editableValue.current as Transaction);
     editingRow !== '' && setEditingRow('');
     editableValue.current = createEmptyTransaction();
@@ -251,6 +259,14 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
+  const subCats: SubCategory[] = [];
+
+  for (const category of cdata) {
+    for (const subCategory of category.subCategories) {
+      subCats.push(subCategory);
+    }
+  }
+
   // COLUMNS
   const columns = useTransactionTableColumnsHook(
     data,
@@ -262,6 +278,7 @@ export const useTransactionTableHook = () => {
     handleClearedSorting,
     editableValue,
     editingRow,
+    subCats,
   );
 
   return {
@@ -284,5 +301,6 @@ export const useTransactionTableHook = () => {
     trigger,
     handleRowOnKeyDown,
     selectedColumnId,
+    subCats,
   };
 };

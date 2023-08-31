@@ -1,4 +1,4 @@
-type TextType = 'other' | 'numeric' | 'text';
+type TextType = 'other' | 'numeric' | 'text' | 'date';
 
 export interface TextTypeInterface {
   getType: () => TextType;

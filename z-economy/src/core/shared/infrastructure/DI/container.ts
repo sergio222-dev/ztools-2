@@ -3,8 +3,8 @@ import { container } from 'tsyringe';
 import { AxiosInstance } from '@core/shared/infrastructure/Axios/instance';
 import { TransactionRepository } from '@core/budget/transaction/domain/TransactionRepository';
 import { AxiosTransactionRepository } from '@core/budget/transaction/infrastructure/repository/AxiosTransactionRepository';
-import { CategoryRepository } from '@core/budget/budget/domain/CategoryRepository';
-import { AxiosBudgetRepository } from '@core/budget/budget/infrastructure/repository/AxiosBudgetRepository';
+import { CategoryRepository } from '@core/budget/category/domain/CategoryRepository';
+import { AxiosBudgetRepository } from '@core/budget/category/infrastructure/repository/AxiosBudgetRepository';
 
 export function buildContainer() {
   // repository
