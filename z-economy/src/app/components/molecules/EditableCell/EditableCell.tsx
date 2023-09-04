@@ -12,7 +12,7 @@ interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
 }
 
 export function EditableCell(properties: EditableCellProperties) {
-  const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue } = properties;
+  const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue, style } = properties;
 
   const { models, operators } = useEditableCellHook<HTMLInputElement>({
     defaultValue,
@@ -30,9 +30,10 @@ export function EditableCell(properties: EditableCellProperties) {
         ref={inputReference}
         onChange={type === 'numeric' ? handleOnChangeNumeric : handleOnChange}
         onBlur={handleOnBlur}
-        defaultValue={value}
+        defaultValue={type === 'numeric' ? currency(value as string).format() : value}
         className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
         onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
+        style={style ?? undefined}
       />
     </div>
   ) : (

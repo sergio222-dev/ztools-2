@@ -5,14 +5,14 @@
 .z_table {
   width: 100%;
   border-spacing: 0;
-  //font-size: 0.8rem;
+  //font-size: 1rem;
   //font-weight: 400;
 
   .z_table_head {
     text-transform: uppercase;
     font-weight: unset;
     text-align: left;
-    padding: 0 functions.spacing(1);
+    padding: 0 functions.spacing(2) 0 0;
     border: 1px none const.$page-light-border-color;
     border-bottom-style: solid;
 
@@ -22,13 +22,15 @@
 
     &[data-type='other'] {
       text-align: center;
+      padding-right: 0;
+      padding-left: functions.spacing(2);
     }
   }
 
   .z_table_cell {
     border: 1px none const.$page-light-border-color;
     border-bottom-style: solid;
-    padding: 0 functions.spacing(1);
+    padding: 0 functions.spacing(2) 0 0;
 
     &[data-type='numeric'] {
       text-align: right;
@@ -36,7 +38,9 @@
 
     &[data-type='other'] {
       text-align: center;
-      width: functions.spacing(5);
+      padding-right: 0;
+      padding-left: functions.spacing(2);
+      width: functions.spacing(0);
     }
   }
 
@@ -62,9 +66,9 @@
 }
 
 .c_table_add_button {
-  display: none;
+  visibility: hidden;
 }
 
 .c_table_row:hover .c_table_add_button {
-  display: flex;
+  visibility: visible;
 }
