@@ -14,7 +14,7 @@ interface BudgetPageOperators {
   setBudgetDate: (date: Date) => void;
   addMonthHandler: () => void;
   substractMonthHandler: () => void;
-  renderSwitch: (totalToAssign: string) => string;
+  renderSwitch: (totalToAssign: string, className?: boolean) => string;
 }
 
 export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
@@ -40,14 +40,14 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
     setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() - 1, 1));
   };
 
-  const renderSwitch = (totalToAssign: string) => {
+  const renderSwitch = (totalToAssign: string, className?: boolean) => {
     if (Number(currency(totalToAssign).value) > 0) {
-      return 'Available to Assign';
+      return className === true ? 'global_assigned_positive' : 'Ready to Assign';
     }
     if (Number(currency(totalToAssign).value) < 0) {
-      return 'Not Enough Money';
+      return className === true ? 'global_assigned_negative' : 'You assigned more than you have';
     }
-    return 'All Money Assigned';
+    return className === true ? 'global_assigned_neutral' : 'All Money Assigned';
   };
 
   // SIDE EFFECTS
