@@ -49,14 +49,33 @@
     }
   }
   @container bp_header (width < 515px) {
-    .global_assigned {
+    .global_assigned_neutral {
       margin-left: auto;
     }
   }
 
-  .global_assigned {
+  @container bp_header (width < 340px) {
+    .global_assigned_neutral {
+      display: none;
+    }
+
+    .budget_page_date .date_picker {
+      position: static;
+    }
+  }
+
+  .global_assigned_neutral {
     background-color: const.$budget-page-button;
-    color: const.$text-color;
+    color: const.$bold-text-color;
+    z-index: 999;
+  }
+
+  .global_assigned_positive {
+    background-color: const.$light-positive-background-color;
+  }
+
+  .global_assigned_negative {
+    background-color: const.$light-negative-background-color;
   }
 }
 

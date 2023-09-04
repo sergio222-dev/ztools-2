@@ -40,7 +40,7 @@ export function BudgetPageView() {
             <AiOutlineRightCircle />
           </IconButton>
         </div>
-        <Button className={styles.global_assigned}>
+        <Button className={cls(styles.global_assigned_neutral, styles[renderSwitch(totalToAssign, true)])}>
           <Typography variant="balance">{totalToAssign}</Typography>
           <Typography>{renderSwitch(totalToAssign)}</Typography>
         </Button>
