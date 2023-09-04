@@ -67,6 +67,7 @@
   .global_assigned_neutral {
     background-color: const.$budget-page-button;
     color: const.$bold-text-color;
+    z-index: 999;
   }
 
   .global_assigned_positive {
