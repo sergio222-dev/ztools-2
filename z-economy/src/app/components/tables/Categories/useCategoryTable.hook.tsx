@@ -238,7 +238,7 @@ export function useCategoryTableHook(budgetDate: Date) {
     {
       id: 'available',
       accessorKey: 'available',
-      header: () => <Typography size="small">ACTIVITY</Typography>,
+      header: () => <Typography size="small">AVAILABLE</Typography>,
       cell: info => (
         <EditableCell
           isEditable={false}
