@@ -1,4 +1,4 @@
-import { Cell, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
+import { Cell, ColumnDef, Row, Table } from '@tanstack/react-table';
 import { AddCategoryButton, IndeterminateCheckbox } from '@molecules/index';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
@@ -9,13 +9,11 @@ import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
-import { KeyboardEvent, useEffect, useRef } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
-
-export type A = Category & SubCategory;
 
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
@@ -27,6 +25,7 @@ export function useCategoryTableHook(budgetDate: Date) {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Category>>();
+  const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
   const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
@@ -37,17 +36,26 @@ export function useCategoryTableHook(budgetDate: Date) {
   }, [budgetDate]);
   // HANDLERS
 
-  const handleOnEdit = (
+  const handleOnEdit = async (
     row: Row<Category>,
     table: Table<Category>,
     cell: Cell<Category, string>,
     // eslint-disable-next-line unicorn/consistent-function-scoping
   ) => {
     if (row.subRows.length === 0) {
-      row.toggleSelected(true);
+      if (cell.id.includes('checkbox') && table.getIsSomeRowsSelected()) {
+        setEnableEditable(false);
+        return;
+      }
+      setEnableEditable(true);
+      table.toggleAllRowsSelected(false);
+      await table.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+      return;
     }
   };
-  const handleAssignOnBlur = async (subCategoryId: string, row: Row<Category>) => {
+  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category>) => {
     const b: SubCategoryBudget = {
       amount: editedAssignValue.current,
       month: String(budgetDate.getMonth() + 1).padStart(2, '0'),
@@ -180,7 +188,7 @@ export function useCategoryTableHook(budgetDate: Date) {
           !info.row.original.subCategories &&
           info.table.getSelectedRowModel().rows.length === 0 ? (
           <EditableCell
-            isEditable={true}
+            isEditable={enableEditable}
             onBlur={() => {
               handleAssignOnBlur(info.row.original.id, info.row);
             }}

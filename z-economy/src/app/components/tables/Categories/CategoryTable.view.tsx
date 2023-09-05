@@ -1,4 +1,4 @@
-import { A, useCategoryTableHook } from './useCategoryTable.hook';
+import { useCategoryTableHook } from './useCategoryTable.hook';
 import { CategoryTableButtons } from '@molecules/CategoryTableButtons/CategoryTableButtons';
 import { BudgetPageTable } from './renders/BudgetPageTable';
 import { Category } from '@core/budget/category/domain/Category';
