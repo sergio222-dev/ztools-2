@@ -24,10 +24,21 @@ export class MongoMonthlyBudgetRepository implements MonthlyBudgetRepository {
             $eq: ['$subCategoryId', subCategoryId],
           },
           {
-            $lte: ['$year', year],
-          },
-          {
-            $lt: ['$month', month],
+            $or: [
+              {
+                $lt: ['$year', year],
+              },
+              {
+                $and: [
+                  {
+                    $eq: ['$year', year],
+                  },
+                  {
+                    $lt: ['$month', month],
+                  },
+                ],
+              },
+            ],
           },
           {
             $not: {
