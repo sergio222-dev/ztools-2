@@ -38,7 +38,7 @@ export function BudgetPageTable<T>({
     state: {
       expanded,
     },
-    enableMultiRowSelection: false,
+    enableMultiRowSelection: true,
     onExpandedChange: setExpanded,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

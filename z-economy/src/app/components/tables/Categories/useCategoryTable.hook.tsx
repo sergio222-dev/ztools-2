@@ -1,18 +1,19 @@
-import { Cell, ColumnDef, createColumnHelper, Row, Table } from '@tanstack/react-table';
+import { Cell, ColumnDef, Row, Table } from '@tanstack/react-table';
 import { AddCategoryButton, IndeterminateCheckbox } from '@molecules/index';
 import { AiFillCaretDown, AiFillCaretRight } from 'react-icons/ai';
 import { Typography } from '@atoms/Typography/Typography';
-import { NumericTextType } from '@utils/table/types';
+import { NumericTextType, OtherTextType } from '@utils/table/types';
 import { Button } from '@atoms/Button/Button';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import styles from './renders/CategoryTable.module.scss';
 import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
-import { KeyboardEvent, useEffect, useRef } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
@@ -24,24 +25,35 @@ export function useCategoryTableHook(budgetDate: Date) {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Category>>();
+  const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
   const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
     useCategoryHook(budgetDate);
-  const columnHelper = createColumnHelper<Category>();
 
   useEffect(() => {
     void mutate(cdata, { revalidate: true });
   }, [budgetDate]);
   // HANDLERS
 
-  const handleOnEdit = (
+  const handleOnEdit = async (
     row: Row<Category>,
     table: Table<Category>,
     cell: Cell<Category, string>,
     // eslint-disable-next-line unicorn/consistent-function-scoping
   ) => {
-    row.toggleSelected(true);
+    if (row.subRows.length === 0) {
+      if (cell.id.includes('checkbox') && table.getIsSomeRowsSelected()) {
+        setEnableEditable(false);
+        return;
+      }
+      setEnableEditable(true);
+      table.toggleAllRowsSelected(false);
+      await table.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+      return;
+    }
   };
   const handleAssignOnBlur = (subCategoryId: string, row: Row<Category>) => {
     const b: SubCategoryBudget = {
@@ -57,12 +69,12 @@ export function useCategoryTableHook(budgetDate: Date) {
       row.toggleSelected(false);
       return;
     }
-    row.toggleSelected(false);
   };
 
   const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
-      // row.toggleSelected(false);
+      row.toggleSelected(false);
+      console.log(row.getValue('assigned'));
     }
   };
 
@@ -74,24 +86,25 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   });
 
-  // TODO Fix type
-  const totalCategoryData = (id: string, key: string) => {
+  const totalCategoryData = (id: string, key: keyof SubCategory) => {
     // eslint-disable-next-line unicorn/prefer-array-find
-    const category = cdata.filter(category => category.id === id);
-    // eslint-disable-next-line unicorn/no-array-reduce
-    return category[0]['subCategories']
-      .reduce((a, subCategory) => {
-        return currency(a).add(subCategory[key]);
-      }, currency(0))
-      .format();
+    const category = cdata.find(category => category.id === id);
+    return (
+      category?.subCategories
+        // eslint-disable-next-line unicorn/no-array-reduce
+        .reduce((a, subCategory) => {
+          return currency(a).add(subCategory[key]);
+        }, currency(0))
+        .format()
+    );
   };
 
-  // TODO Fix table types
   const columns: ColumnDef<Category, any>[] = [
     {
-      accessorKey: 'name',
+      id: 'checkbox',
+      accessorKey: 'checkbox',
       header: ({ table }) => (
-        <div className="z_flex z_flex_jc_left z_flex_ai_center">
+        <div className="z_flex z_flex_jc_center">
           <IndeterminateCheckbox
             {...{
               checked: table.getIsAllRowsSelected(),
@@ -99,6 +112,31 @@ export function useCategoryTableHook(budgetDate: Date) {
               onChange: table.getToggleAllRowsSelectedHandler(),
             }}
           />
+        </div>
+      ),
+      size: 30,
+      maxSize: 30,
+      minSize: 30,
+      cell: ({ row }) => (
+        <div className="z_flex z_flex_jc_center">
+          <IndeterminateCheckbox
+            {...{
+              checked: row.getIsSelected(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+          />
+        </div>
+      ),
+      meta: {
+        type: new OtherTextType(),
+      },
+    },
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: ({ table }) => (
+        <div className="z_flex z_flex_jc_left z_flex_ai_center">
           <Button
             variant="icon"
             onClick={table.getToggleAllRowsExpandedHandler()}
@@ -113,53 +151,44 @@ export function useCategoryTableHook(budgetDate: Date) {
       ),
       cell: ({ row, getValue }) => (
         <div className={cls('z_flex z_flex_jc_left z_flex_ai_center')}>
-          <>
-            <IndeterminateCheckbox
-              {...{
-                checked: row.getIsSelected(),
-                indeterminate: row.getIsSomeSelected(),
-                onChange: row.getToggleSelectedHandler(),
+          {row.original.subCategories && (
+            <Button
+              onClick={row.getToggleExpandedHandler()}
+              variant="icon"
+              StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
+              style={{
+                opacity: row.original.subCategories.length === 0 ? '0' : '1',
+                cursor: row.original.subCategories.length === 0 ? 'default' : 'pointer',
               }}
             />
-            {row.original.subCategories && (
-              <Button
-                onClick={row.getToggleExpandedHandler()}
-                variant="icon"
-                StartIcon={row.getIsExpanded() ? <AiFillCaretDown /> : <AiFillCaretRight />}
-                style={{
-                  opacity: row.original.subCategories.length === 0 ? '0' : '1',
-                  cursor: row.original.subCategories.length === 0 ? 'default' : 'pointer',
-                }}
-              />
-            )}
-            {row.original.subCategories ? (
-              <div className="z_flex_inline">
-                <Typography size="large" variant="bold">
-                  {getValue()}
-                </Typography>
-                <div className={styles.c_table_add_button}>
-                  <AddCategoryButton createSubCategory={createSubCategory} categoryId={row.original.id} />
-                </div>
+          )}
+          {row.original.subCategories ? (
+            <div className="z_flex_inline z_flex_ai_center">
+              <Typography size="large" variant="bold">
+                {getValue()}
+              </Typography>
+              <div className={styles.c_table_add_button}>
+                <AddCategoryButton createSubCategory={createSubCategory} categoryId={row.original.id} />
               </div>
-            ) : (
-              <div className="z_padding_left_4">
-                <Typography size="large">{getValue()}</Typography>
-              </div>
-            )}
-          </>
+            </div>
+          ) : (
+            <div className="z_padding_left_4">
+              <Typography size="large">{getValue()}</Typography>
+            </div>
+          )}
         </div>
       ),
-      // footer: props => props.column.id,
     },
-    columnHelper.accessor('assignedBudget', {
+    {
       id: 'assigned',
+      accessorKey: 'assignedBudget',
       header: () => <Typography size="small">ASSIGNED</Typography>,
       cell: info => {
         return info.row.getIsSelected() &&
           !info.row.original.subCategories &&
           info.table.getSelectedRowModel().rows.length === 0 ? (
           <EditableCell
-            isEditable={true}
+            isEditable={enableEditable}
             onBlur={() => {
               handleAssignOnBlur(info.row.original.id, info.row);
             }}
@@ -169,6 +198,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               editedAssignValue.current = value;
             }}
             shouldFocus={true}
+            style={{ width: '50%' }}
           />
         ) : (
           <EditableCell
@@ -185,9 +215,10 @@ export function useCategoryTableHook(budgetDate: Date) {
       meta: {
         type: new NumericTextType(),
       },
-    }),
-    columnHelper.accessor('activity', {
+    },
+    {
       id: 'activity',
+      accessorKey: 'activity',
       header: () => <Typography size="small">ACTIVITY</Typography>,
       cell: info => (
         <EditableCell
@@ -203,10 +234,11 @@ export function useCategoryTableHook(budgetDate: Date) {
       meta: {
         type: new NumericTextType(),
       },
-    }),
-    columnHelper.accessor('available', {
+    },
+    {
       id: 'available',
-      header: () => <Typography size="small">AVAILABLE</Typography>,
+      accessorKey: 'available',
+      header: () => <Typography size="small">ACTIVITY</Typography>,
       cell: info => (
         <EditableCell
           isEditable={false}
@@ -221,7 +253,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       meta: {
         type: new NumericTextType(),
       },
-    }),
+    },
   ];
 
   return { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown };

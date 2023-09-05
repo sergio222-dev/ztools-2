@@ -9,4 +9,5 @@
   text-align: right;
   margin-right: functions.to-negative(calc((#{functions.spacing(1)} + 2px)));
   width: 100%;
+  min-width: 100px;
 }

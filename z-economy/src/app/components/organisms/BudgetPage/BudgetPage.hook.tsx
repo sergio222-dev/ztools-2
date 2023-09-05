@@ -53,8 +53,8 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   // SIDE EFFECTS
   const globalAssigned = cdata
     ?.reduce((total, category) => {
-      // eslint-disable-next-line unicorn/no-array-reduce
       return currency(total).add(
+        // eslint-disable-next-line unicorn/no-array-reduce
         category.subCategories.reduce((subTotal, subCategory) => {
           return currency(subTotal).add(subCategory.assignedBudget);
         }, currency(0)),
@@ -64,8 +64,8 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
 
   const globalAvailable = cdata
     ?.reduce((total, category) => {
-      // eslint-disable-next-line unicorn/no-array-reduce
       return currency(total).add(
+        // eslint-disable-next-line unicorn/no-array-reduce
         category.subCategories.reduce((subTotal, subCategory) => {
           return currency(subTotal).add(subCategory.available);
         }, currency(0)),
