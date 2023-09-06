@@ -1,4 +1,8 @@
 /* eslint import/order: 0 */
+import { CategoryDeleteHandler } from '@budget/category/application/useCase/delete/CategoryDelete.handler';
+import { SubCategoryDeleteHandler } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.handler';
+import { SubCategoryDeleteBatchHandler } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.handler';
+import { SubCategoryFindOneByIdHandler } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -61,11 +65,15 @@ const budget = {
     CategoryFindAllHandler,
     CategoryUpdateHandler,
     CategoryFindOneHandler,
+    CategoryDeleteHandler,
     SubCategoryFindAllByCategoryIdHandler,
     SubCategoryCreateHandler,
     MonthlyBudgetAssignOneHandler,
     MonthlyBudgetFindOneHandler,
     SubCategoryFindAllHandler,
+    SubCategoryFindOneByIdHandler,
+    SubCategoryDeleteHandler,
+    SubCategoryDeleteBatchHandler,
   ],
   schemas: [
     {

@@ -7,4 +7,6 @@ export interface CategoryRepository {
   create(c: Category): Promise<void>;
   createSubCategory(c: SubCategory): Promise<void>;
   assignSubCategoryBudget(b: SubCategoryBudget): Promise<void>;
+  deleteCategory(id: string): Promise<void>;
+  deleteSubCategory(id: string): Promise<void>;
 }

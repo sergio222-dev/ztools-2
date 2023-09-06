@@ -1,0 +1,26 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.edit_category_form_container {
+  .c_tooltip {
+    background-color: white;
+    opacity: 1;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    border-radius: const.$radius;
+  }
+}
+
+.edit_category_form {
+  display: flex;
+  flex-direction: column;
+  margin: functions.spacing(1);
+
+  .form_buttons {
+    margin: functions.spacing(1) 0 auto auto;
+
+    button {
+      margin-left: functions.spacing(1);
+    }
+  }
+}
