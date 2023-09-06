@@ -16,6 +16,11 @@ export class AxiosBudgetRepository implements CategoryRepository {
   async createSubCategory(c: SubCategory): Promise<void> {
     await this.axios.post<SubCategory>('/subCategory/', c);
   }
+
+  async deleteSubCategory(id: string) {
+    await this.axios.delete(`/subCategory/${id}`);
+  }
+
   async getAll(month: string, year: string): Promise<Category[]> {
     const { data } = await this.axios.get<Category[]>(`/category?month=${month}&year=${year}`);
 
@@ -24,5 +29,9 @@ export class AxiosBudgetRepository implements CategoryRepository {
 
   async assignSubCategoryBudget(b: SubCategoryBudget) {
     await this.axios.post('/subCategory/assign', b);
+  }
+
+  async deleteCategory(id: string) {
+    await this.axios.delete(`/category/${id}`);
   }
 }

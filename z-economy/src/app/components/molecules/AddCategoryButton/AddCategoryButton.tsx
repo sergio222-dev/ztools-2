@@ -20,7 +20,7 @@ export function AddCategoryButton({ createSubCategory, categoryId }: CategoryTab
 
   return (
     <div>
-      <a id="add-category" onClick={handleAddCategory} title="Add Category">
+      <a id={`add-category${categoryId}`} onClick={handleAddCategory} title="Add Category">
         <UtilityButton StartIcon={<AiFillPlusCircle />} variant={'icon'}></UtilityButton>
       </a>
       <AddCategoryForm

@@ -79,4 +79,12 @@ export class MongoSubCategoryRepository implements SubCategoryRepository {
       })
       .exec();
   }
+
+  async deleteBatch(ids: string[]): Promise<void> {
+    await this.subCategoryModel.deleteMany({
+      id: {
+        $in: ids,
+      },
+    });
+  }
 }

@@ -39,6 +39,7 @@ export function AddCategoryForm({
       void createCategoryGroup({
         id: uuidv4(),
         name: newCategoryGroupName,
+        subCategories: [],
       });
     }
   };
@@ -55,6 +56,9 @@ export function AddCategoryForm({
         id: uuidv4(),
         name: newCategoryName,
         categoryId: categoryId,
+        assignedBudget: '',
+        activity: '',
+        available: '',
       });
     }
   };
@@ -69,7 +73,12 @@ export function AddCategoryForm({
 
   return variant === 'subCategory' ? (
     <div className={styles.add_category_form_container} ref={tooltipReference}>
-      <Tooltip anchorSelect="#add-category" clickable className={styles.c_tooltip} isOpen={isOpen.value}>
+      <Tooltip
+        anchorSelect={`#add-category${categoryId}`}
+        clickable
+        className={styles.c_tooltip}
+        isOpen={isOpen.value}
+      >
         <form
           name="add-category"
           className={styles.add_category_form}

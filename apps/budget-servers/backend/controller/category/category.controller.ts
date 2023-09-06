@@ -1,6 +1,22 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Injectable, Post, Query } from '@nestjs/common';
+import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
+import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
+import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
+import { TransactionDeleteBatchCommand } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.command';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Schema } from 'mongoose';
 
 import { CategoryDTO } from '../../dto/CategoryDto';
 import { SubCategoryDto } from '../../dto/SubCategoryDto';
@@ -68,6 +84,37 @@ export class CategoryController {
   })
   async create(@Body() bodyCommand: CategoryCreateCommand) {
     const command = new CategoryCreateCommand(bodyCommand.id, bodyCommand.name);
+    await this.commandBus.execute(command);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    const query = new CategoryFindOneQuery(id);
+
+    const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
+
+    if (category.id === '')
+      throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+
+    const command = new CategoryDeleteCommand(id);
+
+    const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
+      new SubCategoryFindAllByCategoryIdQuery(
+        id,
+        String(new Date().getMonth()),
+        String(new Date().getFullYear()),
+      ),
+    );
+
+    const ids = subCategories.map(subCategory => subCategory.id);
+
+    try {
+      const command = new SubCategoryDeleteBatchCommand(ids);
+      await this.commandBus.execute<SubCategoryDeleteBatchCommand>(command);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     await this.commandBus.execute(command);
   }
 }

@@ -190,3 +190,17 @@
     @include mixin.box-shadow(const.$primary-color);
   }
 }
+
+.text_button {
+  @include mixin.remove-default-button;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  color: const.$bold-text-color;
+}
+
+.variant_underline {
+  &:hover {
+    text-decoration: underline;
+  }
+}

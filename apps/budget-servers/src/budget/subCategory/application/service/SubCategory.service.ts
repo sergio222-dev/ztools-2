@@ -1,3 +1,4 @@
+import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
@@ -18,7 +19,19 @@ export class SubCategoryService {
     return this.subCategoryRepository.findAll();
   }
 
+  async findOneById(id: string): Promise<SubCategory> {
+    return await this.subCategoryRepository.findOneById(id);
+  }
+
+  async deleteOneById(id: string): Promise<void> {
+    await this.subCategoryRepository.delete(id);
+  }
+
   async create(subCategory: SubCategory): Promise<void> {
     await this.subCategoryRepository.save(subCategory);
+  }
+
+  async deleteBatch(ids: string[]): Promise<void> {
+    await this.subCategoryRepository.deleteBatch(ids);
   }
 }

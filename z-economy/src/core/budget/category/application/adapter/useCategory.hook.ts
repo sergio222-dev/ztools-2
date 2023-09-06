@@ -7,13 +7,17 @@ import { SubCategoryCreate } from '@core/budget/category/application/useCase/Sub
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { SubCategoryAssign } from '@core/budget/category/application/useCase/SubCategoryAssign';
+import { SubCategoryDelete } from '@core/budget/category/application/useCase/SubCategoryDelete';
+import { CategoryDelete } from '@core/budget/category/application/useCase/CategoryDelete';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
   const categoryGetAll = container.resolve(CategoryGetAll);
   const categoryCreate = container.resolve(CategoryGroupCreate);
+  const categoryDelete = container.resolve(CategoryDelete);
   const subCategoryCreate = container.resolve(SubCategoryCreate);
   const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
+  const subCategoryDelete = container.resolve(SubCategoryDelete);
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['categories'], () =>
@@ -35,6 +39,12 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
+  const deleteCategory = async (id: string) => {
+    if (!data) return;
+    await categoryDelete.execute(id);
+    await mutate(data);
+  };
+
   const createSubCategory = async (c: SubCategory) => {
     if (!data) return;
     await subCategoryCreate.execute(c);
@@ -47,6 +57,12 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
+  const deleteSubCategory = async (id: string) => {
+    if (!data) return;
+    await subCategoryDelete.execute(id);
+    await mutate(data);
+  };
+
   return {
     cdata: data ?? [],
     error: error,
@@ -55,5 +71,7 @@ export const useCategoryHook = (date: Date) => {
     createCategoryGroup: createCategory,
     createSubCategory,
     assignSubCategoryBudget,
+    deleteSubCategory,
+    deleteCategory,
   };
 };

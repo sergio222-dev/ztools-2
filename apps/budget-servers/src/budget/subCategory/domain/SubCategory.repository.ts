@@ -7,4 +7,5 @@ export interface SubCategoryRepository {
   update(subCategory: SubCategory): Promise<void>;
   save(subCategory: SubCategory): Promise<void>;
   delete(id: string): Promise<void>;
+  deleteBatch(ids: string[]): Promise<void>;
 }

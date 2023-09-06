@@ -1,4 +1,16 @@
-import { Body, Controller, Get, Injectable, Post } from '@nestjs/common';
+import { SubCategoryDeleteCommand } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.command';
+import { SubCategoryFindOneByIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.query';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -58,5 +70,19 @@ export class SubCategoryController {
     });
 
     return await Promise.all(subCategoriesDTO);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    const query = new SubCategoryFindOneByIdQuery(id);
+
+    const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
+
+    if (subCategory.id === '')
+      throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+
+    const command = new SubCategoryDeleteCommand(id);
+
+    await this.commandBus.execute(command);
   }
 }
