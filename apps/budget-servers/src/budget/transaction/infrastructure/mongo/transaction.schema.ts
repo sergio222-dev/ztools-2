@@ -1,7 +1,7 @@
 import { Mongoose, Schema } from 'mongoose';
 
-import { AmountType } from '../../../../shared/infrastructure/mongo/plugins';
-import { ExtendOfDocument } from '../../../../shared/infrastructure/mongo/utils';
+import { AmountType } from '@shared/infrastructure/mongo/plugins';
+import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
 import { Transaction } from '../../domain/Transaction.aggregate';
 
 export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(

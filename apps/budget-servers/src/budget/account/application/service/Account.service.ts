@@ -15,6 +15,10 @@ export class AccountService {
     return await this.accountRepository.findAll();
   }
 
+  async findOneById(id: string): Promise<Account> {
+    return await this.accountRepository.findOneById(id);
+  }
+
   async createOne(id: string, name: string): Promise<void> {
     const account = Account.CREATE(id, name);
     await this.accountRepository.createOne(account);

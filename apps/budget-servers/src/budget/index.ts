@@ -1,4 +1,5 @@
 /* eslint import/order: 0 */
+import { AccountFindOneByIdHandler } from '@budget/account/application/useCase/find/AccountFindOneById.handler';
 import { CategoryDeleteHandler } from '@budget/category/application/useCase/delete/CategoryDelete.handler';
 import { SubCategoryDeleteHandler } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.handler';
 import { SubCategoryDeleteBatchHandler } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.handler';
@@ -86,6 +87,7 @@ const budget = {
     AccountFindAllHandler,
     AccountUpdateHandler,
     AccountDeleteHandler,
+    AccountFindOneByIdHandler,
   ],
   schemas: [
     {
