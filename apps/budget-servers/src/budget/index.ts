@@ -9,6 +9,7 @@ import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/
 import { CategoryService } from '@budget/category/application/service/Category.service';
 import { SubCategoryService } from '@budget/subCategory/application/service/SubCategory.service';
 import { MonthActivityService } from '@budget/monthlyBudget/application/service/MonthActivity.service';
+import { AccountService } from '@budget/account/application/service/Account.service';
 
 // handlers
 import { TransactionFindAllHandler } from './transaction/application/useCase/find/TransactionFindAll.handler';
@@ -25,18 +26,24 @@ import { TransactionDeleteHandler } from '@budget/transaction/application/useCas
 import { TransactionDeleteBatchHandler } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.handler';
 import { TransactionFindOneByIdHandler } from '@budget/transaction/application/useCase/findOne/TransactionFindOneById.handler';
 import { TransactionUpdateHandler } from '@budget/transaction/application/useCase/update/TransactionUpdate.handler';
+import { AccountCreateHandler } from '@budget/account/application/useCase/create/AccountCreate.handler';
+import { AccountDeleteHandler } from '@budget/account/application/useCase/delete/AccountDelete.handler';
+import { AccountFindAllHandler } from '@budget/account/application/useCase/find/AccountFindAll.handler';
+import { AccountUpdateHandler } from '@budget/account/application/useCase/update/AccountUpdate.handler';
 
 // mongo schemas
 import { TransactionSchema } from './transaction/infrastructure/mongo/transaction.schema';
 import { CategorySchema } from '@budget/category/infrastructure/mongo/category.schema';
 import { MonthlyBudgetSchema } from '@budget/monthlyBudget/infrastructure/mongo/monthlyBudget.schema';
 import { SubCategorySchema } from '@budget/subCategory/infrastructure/mongo/subCategory.schema';
+import { AccountSchema } from '@budget/account/infrastructure/mongo/account.schema';
 
 // mongo repositories
 import { MongoTransactionRepository } from '@budget/transaction/infrastructure/repository/MongoTransaction.repository';
 import { MongoCategoryRepository } from '@budget/category/infrastructure/repository/MongoCategory.repository';
 import { MongoSubCategoryRepository } from '@budget/subCategory/infrastructure/repository/MongoSubCategory.repository';
 import { MongoMonthlyBudgetRepository } from '@budget/monthlyBudget/infrastructure/repository/MongoMonthlyBudget.repository';
+import { MongoAccountRepository } from '@budget/account/infrastructure/repository/MongoAccount.repository';
 
 // bus
 import { EventEmitter2EventBus } from '@shared/infrastructure/bus/event/EventEmitter2EventBus';
@@ -53,6 +60,7 @@ const budget = {
     SubCategoryService,
     MonthlyBudgetService,
     MonthActivityService,
+    AccountService,
   ],
   handlers: [
     TransactionFindAllHandler,
@@ -74,6 +82,10 @@ const budget = {
     SubCategoryFindOneByIdHandler,
     SubCategoryDeleteHandler,
     SubCategoryDeleteBatchHandler,
+    AccountCreateHandler,
+    AccountFindAllHandler,
+    AccountUpdateHandler,
+    AccountDeleteHandler,
   ],
   schemas: [
     {
@@ -92,6 +104,10 @@ const budget = {
       name: 'MonthlyBudget',
       schema: MonthlyBudgetSchema,
     },
+    {
+      name: 'Account',
+      schema: AccountSchema,
+    },
   ],
   mongoRepositories: [
     {
@@ -109,6 +125,10 @@ const budget = {
     {
       provide: 'MonthlyBudgetRepository',
       useClass: MongoMonthlyBudgetRepository,
+    },
+    {
+      provide: 'AccountRepository',
+      useClass: MongoAccountRepository,
     },
   ],
   bus: [
