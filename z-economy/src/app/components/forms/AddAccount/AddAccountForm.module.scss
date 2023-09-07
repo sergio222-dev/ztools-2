@@ -1,0 +1,10 @@
+@use '../../styles/constants' as const;
+@use '../../styles/functions';
+
+.modal_form_buttons {
+  margin: functions.spacing(1) 0 auto auto;
+
+  button {
+    margin-left: functions.spacing(1);
+  }
+}

@@ -62,6 +62,8 @@ $starting-hiding-width: 150px;
     @container sidebar (max-width: #{$starting-hiding-width}) {
       display: none;
     }
+
+    transition: background-color 200ms linear;
   }
 
   .side_bar_collapsible_container {
@@ -72,6 +74,22 @@ $starting-hiding-width: 150px;
     &:last-child {
       margin-bottom: functions.spacing(1);
     }
+  }
+  .add_account_modal {
+    position: absolute;
+    inset: 40px;
+    border: 1px solid rgb(204, 204, 204);
+    background: rgb(255, 255, 255);
+    overflow: auto;
+    border-radius: 4px;
+    outline: none;
+    padding: 20px;
+  }
+
+  .add_account_modal_overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.75);
   }
 }
 
