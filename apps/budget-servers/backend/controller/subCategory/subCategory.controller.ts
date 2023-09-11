@@ -55,23 +55,6 @@ export class SubCategoryController {
     await this.commandBus.execute(command);
   }
 
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get all sub categories',
-  })
-  async findAll(): Promise<SubCategoryDto[]> {
-    const query = new SubCategoryFindAllQuery();
-
-    const subCategories = await this.queryBus.execute<SubCategoryFindAllQuery, SubCategory[]>(query);
-
-    const subCategoriesDTO = subCategories.map(async subCategory => {
-      return new SubCategoryDto(subCategory.id, subCategory.name, subCategory.categoryId, '0', '0', '0');
-    });
-
-    return await Promise.all(subCategoriesDTO);
-  }
-
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<void> {
     const query = new SubCategoryFindOneByIdQuery(id);
@@ -79,7 +62,7 @@ export class SubCategoryController {
     const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
 
     if (subCategory.id === '')
-      throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`the subcategory with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
     const command = new SubCategoryDeleteCommand(id);
 

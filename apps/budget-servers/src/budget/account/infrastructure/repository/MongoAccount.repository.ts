@@ -1,3 +1,4 @@
+import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -28,18 +29,20 @@ export class MongoAccountRepository implements AccountRepository {
     });
   }
 
-  async findOneById(id: string): Promise<Account | undefined> {
-    const document = await this.accountModel.findOne({ id });
+  async findOneById(id: string): Promise<Account> {
+    const account = await this.accountModel.findOne({ id });
 
-    return document
-      ? Account.RETRIEVE(
-          document.id,
-          document.name,
-          new SignedAmount(0),
-          document.createdAt,
-          document.updatedAt,
-        )
-      : undefined;
+    if (!account) {
+      return Account.RETRIEVE(id, '', new SignedAmount(0), new Date(), new Date());
+    }
+
+    return Account.RETRIEVE(
+      account.id,
+      account.name,
+      new SignedAmount(0),
+      account.createdAt,
+      account.updatedAt,
+    );
   }
 
   async createOne(account: Account): Promise<void> {
