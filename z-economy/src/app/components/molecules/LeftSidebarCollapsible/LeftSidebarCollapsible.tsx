@@ -15,7 +15,7 @@ interface Collapsible {
 
 export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsible) {
   const [isContentVisible, setIsContentVisible] = useState(true);
-  const total = accounts
+  const totalBudget = accounts
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((total, account) => {
       return currency(total).add(currency(account.balance._amount).value);
@@ -39,7 +39,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
             <Typography size="large">BUDGET</Typography>
           </div>
           <div className={styles.amount}>
-            <Typography size="large">{total}</Typography>
+            <Typography size="large">{totalBudget}</Typography>
           </div>
         </div>
       </CollapsibleButton>
