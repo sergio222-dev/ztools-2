@@ -4,12 +4,14 @@ import useSWR from 'swr';
 import { AccountGetAll } from '@core/budget/account/application/useCase/AccountGetAll';
 import { Account } from '@core/budget/account/domain/Account';
 import { AccountUpdate } from '@core/budget/account/application/useCase/AccountUpdate';
+import { AccountDelete } from '@core/budget/account/application/useCase/AccountDelete';
 
 export const useAccountHook = () => {
   // SERVICES
   const accountGetAll = container.resolve(AccountGetAll);
   const accountCreate = container.resolve(AccountCreate);
   const accountUpdate = container.resolve(AccountUpdate);
+  const accountDelete = container.resolve(AccountDelete);
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['accounts'], () => accountGetAll.execute());
@@ -26,6 +28,12 @@ export const useAccountHook = () => {
     await mutate(data);
   };
 
+  const deleteAccount = async (id: string) => {
+    if (!data) return;
+    await accountDelete.execute(id);
+    await mutate(data);
+  };
+
   return {
     adata: data ?? [],
     error: error,
@@ -33,5 +41,6 @@ export const useAccountHook = () => {
     mutate,
     createAccount,
     updateAccount,
+    deleteAccount,
   };
 };

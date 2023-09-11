@@ -10,6 +10,7 @@ import { RxCross2 } from 'react-icons/rx';
 import { Input } from '@atoms/Input/Input';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Account } from '@core/budget/account/domain/Account';
+import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 
 interface EditAccountFormProperties {
   isOpen: Signal<string>;
@@ -21,7 +22,9 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
   const accountNameInputReference = useRef<HTMLInputElement>(null);
 
   //SERVICES
-  const { updateAccount } = useAccountHook();
+  const { updateAccount, deleteAccount } = useAccountHook();
+
+  // HANDLERS
   const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     isOpen.value = '';
@@ -36,6 +39,11 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
       name: newAccountName,
       balance: { _amount: newAccountWorkingBalance },
     });
+  };
+
+  const deleteAccountHandler = (accountId: string) => {
+    void deleteAccount(accountId);
+    return;
   };
 
   // EFFECTS
@@ -102,9 +110,20 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
           </div>
         </div>
         <div className={styles.edit_account_modal_footer_buttons}>
-          <ButtonFilled type="submit" className={styles.edit_account_modal_footer_save_button}>
-            Save
-          </ButtonFilled>
+          <ButtonUnfilled
+            className={styles.edit_account_modal_footer_delete_button}
+            onClick={() => {
+              deleteAccountHandler(account.id);
+            }}
+          >
+            Delete
+          </ButtonUnfilled>
+          <div className={styles.cancel_save_buttons_flex}>
+            <ButtonUnfilled className={styles.edit_account_modal_footer_cancel_button}>Cancel</ButtonUnfilled>
+            <ButtonFilled type="submit" className={styles.edit_account_modal_footer_save_button}>
+              Save
+            </ButtonFilled>
+          </div>
         </div>
       </div>
     </form>
