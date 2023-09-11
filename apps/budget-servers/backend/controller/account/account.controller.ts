@@ -1,3 +1,28 @@
+<<<<<<< HEAD
+import { AccountUpdateCommand } from '@budget/account/application/useCase/update/AccountUpdate.command';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { AccountDTO } from '../../dto/AccountDto';
+import { AccountCreateCommand } from '@budget/account/application/useCase/create/AccountCreate.command';
+import { AccountDeleteCommand } from '@budget/account/application/useCase/delete/AccountDelete.command';
+import { AccountFindAllQuery } from '@budget/account/application/useCase/find/AccountFindAll.query';
+import { AccountFindOneByIdQuery } from '@budget/account/application/useCase/find/AccountFindOneById.query';
+import { Account } from '@budget/account/domain/Account.aggregate';
+=======
 import { Controller, Get, Injectable, Param } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
 import { ApiTags } from '@nestjs/swagger';
@@ -9,6 +34,7 @@ import { Account } from '@budget/account/domain/Account.aggregate';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
+>>>>>>> 2c453ed (🦴: add account controller)
 
 @Controller('account')
 @ApiTags('accounts')
@@ -59,4 +85,49 @@ export class AccountController {
 
     return total;
   }
+    @Post()
+    @ApiResponse({
+        status: 201,
+        description: 'Create an account',
+    })
+    async create(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
+        const command = new AccountCreateCommand(bodyCommand.id, bodyCommand.name);
+        await this.commandBus.execute(command);
+    }
+
+    @Put()
+    @ApiResponse({
+        description: 'Update an account',
+    })
+    async update(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
+        const { id, name } = bodyCommand;
+        const query = new AccountFindOneByIdQuery(id);
+
+        const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
+
+        if (account.id === ' ') {
+            throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+        }
+
+        const command = new AccountUpdateCommand(id, name);
+
+        await this.commandBus.execute(command);
+    }
+
+    @Delete(':id')
+    @ApiResponse({
+        description: 'Delete an account',
+    })
+    async delete(@Param('id') id: string): Promise<void> {
+        const query = new AccountFindOneByIdQuery(id);
+
+        const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
+
+        if (account.id === '')
+            throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+
+        const command = new AccountDeleteCommand(account.id);
+
+        await this.commandBus.execute(command);
+    }
 }
