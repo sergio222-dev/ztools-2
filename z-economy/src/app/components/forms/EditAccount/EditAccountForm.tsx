@@ -43,6 +43,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   const deleteAccountHandler = (accountId: string) => {
     void deleteAccount(accountId);
+    isOpen.value = '';
     return;
   };
 
