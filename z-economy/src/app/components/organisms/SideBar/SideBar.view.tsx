@@ -12,7 +12,7 @@ import { AddAccountForm } from '../../forms/AddAccount/AddAccountForm';
 export function SideBarView() {
   const [model, operators] = useSideBarHooks();
 
-  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar, modalIsOpen } = model;
+  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar, modalIsOpen, adata } = model;
 
   const { handleSidebarButtonClick, handleSidebarCollapsibleClick, handleLogout, handleAddAccount } =
     operators;
@@ -47,16 +47,7 @@ export function SideBarView() {
       </div>
       <div>
         <LeftSidebarCollapsible
-          accounts={[
-            {
-              name: 'Santander el mejor banco du mundo',
-              total: 300_000,
-            },
-            {
-              name: 'BBVA',
-              total: 125_000,
-            },
-          ]}
+          accounts={adata}
           className={styles.side_bar_collapsible_container}
           Icon={<RiArrowDownSLine />}
         />

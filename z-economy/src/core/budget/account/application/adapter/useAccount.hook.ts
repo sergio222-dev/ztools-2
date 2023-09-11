@@ -19,7 +19,7 @@ export const useAccountHook = () => {
   };
 
   return {
-    data: data,
+    adata: data ?? [],
     error: error,
     isLoading,
     mutate,
