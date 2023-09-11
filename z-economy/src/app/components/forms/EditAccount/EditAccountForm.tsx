@@ -1,5 +1,5 @@
 import { Signal } from '@preact/signals-react';
-import { Ref, SyntheticEvent, useRef } from 'react';
+import React, { Ref, SyntheticEvent, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './EditAccountForm.module.scss';
@@ -41,7 +41,8 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
     });
   };
 
-  const deleteAccountHandler = (accountId: string) => {
+  const deleteAccountHandler = (event: React.MouseEvent<HTMLButtonElement>, accountId: string) => {
+    event.preventDefault();
     void deleteAccount(accountId);
     isOpen.value = '';
     return;
@@ -113,8 +114,8 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
         <div className={styles.edit_account_modal_footer_buttons}>
           <ButtonUnfilled
             className={styles.edit_account_modal_footer_delete_button}
-            onClick={() => {
-              deleteAccountHandler(account.id);
+            onClick={event => {
+              deleteAccountHandler(event, account.id);
             }}
           >
             Delete
