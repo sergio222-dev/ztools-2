@@ -24,8 +24,19 @@ export class TransactionService {
     subCategoryId: string,
     date: Date,
     cleared: boolean,
+    accountId: string,
   ): Promise<void> {
-    const transaction = Transaction.CREATE(id, inflow, outflow, payee, memo, subCategoryId, date, cleared);
+    const transaction = Transaction.CREATE(
+      id,
+      inflow,
+      outflow,
+      payee,
+      memo,
+      subCategoryId,
+      date,
+      cleared,
+      accountId,
+    );
 
     await this.transactionRepository.save(transaction);
     await this.eventBus.publish(transaction.pullEvents());
@@ -44,6 +55,7 @@ export class TransactionService {
     subCategoryId: string,
     date: string,
     cleared: boolean,
+    accountId: string,
   ): Promise<void> {
     const oldTransaction = await this.transactionRepository.findOneById(id);
 
@@ -58,6 +70,7 @@ export class TransactionService {
       subCategoryId,
       new Date(date),
       cleared,
+      accountId,
     );
 
     await this.transactionRepository.update(newTransaction);
@@ -67,6 +80,10 @@ export class TransactionService {
 
   async findOneById(id: string): Promise<Transaction> {
     return await this.transactionRepository.findOneById(id);
+  }
+
+  async findAllByAccountId(accountId: string): Promise<Transaction[]> {
+    return await this.transactionRepository.findAllByAccountId(accountId);
   }
 
   async deleteOneById(id: string): Promise<void> {

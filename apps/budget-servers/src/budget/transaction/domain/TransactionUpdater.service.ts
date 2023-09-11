@@ -13,6 +13,7 @@ export class TransactionUpdaterService {
     subCategoryId: string,
     date: Date,
     cleared: boolean,
+    accountId: string,
   ): Transaction {
     const newInflow = new UnsignedAmount(inflow);
     const newOutflow = new UnsignedAmount(outflow);
@@ -24,6 +25,14 @@ export class TransactionUpdaterService {
 
     if (this.transaction.subCategoryId !== newSubCategoryId) {
       this.transaction.setSubCategoryId(newSubCategoryId);
+    }
+
+    if (this.transaction.accountId !== accountId) {
+      this.transaction.setAccountId(accountId);
+    }
+
+    if (this.transaction.accountId !== accountId) {
+      this.transaction.setAccountId(accountId);
     }
 
     if (this.transaction.date.toISOString() !== date.toISOString()) {

@@ -16,7 +16,10 @@ export class AccountService {
   }
 
   async findOneById(id: string): Promise<Account> {
-    return await this.accountRepository.findOneById(id);
+    const account = await this.accountRepository.findOneById(id);
+    // TODO domain exception
+    if (!account) throw new Error(`Account with id ${id} not found`);
+    return account;
   }
 
   async createOne(id: string, name: string): Promise<void> {
