@@ -3,6 +3,8 @@ import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
 import { supabase } from '../../forms/Auth/AuthForm';
 import { Signal, useSignal } from '@preact/signals-react';
+import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { Account } from '@core/budget/account/domain/Account';
 
 // type SidebarActiveValues = 'SubCategory' | 'Reports' | 'All Accounts';
 
@@ -37,6 +39,7 @@ interface SideBarModel {
   activeButton: string;
   toggleSidebar: boolean;
   modalIsOpen: Signal<boolean>;
+  adata: Account[];
 }
 
 interface SideBarOperators {
@@ -54,6 +57,7 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
 
   // SERVICES
   const navigate = useNavigate();
+  const { adata, error, isLoading, mutate } = useAccountHook();
 
   const handleSidebarButtonClick = (buttonRoute: string) => {
     navigate(buttonRoute);
@@ -80,6 +84,7 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
       activeButton,
       toggleSidebar,
       modalIsOpen,
+      adata,
     },
     {
       handleSidebarButtonClick,
