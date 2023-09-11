@@ -58,8 +58,8 @@ export function SideBarView() {
         </Button>
         <Modal
           isOpen={modalIsOpen.value}
-          className={styles.modal_content}
-          overlayClassName={styles.modal_overlay}
+          className={styles.add_account_modal_content}
+          overlayClassName={styles.add_account_modal_overlay}
         >
           <AddAccountForm isOpen={modalIsOpen} />
         </Modal>

@@ -6,6 +6,10 @@ import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
 import { Account } from '@core/budget/account/domain/Account';
 import currency from 'currency.js';
+import { MdEdit } from 'react-icons/md';
+import Modal from 'react-modal';
+import { useSignal } from '@preact/signals-react';
+import { EditAccountForm } from '../../forms/EditAccount/EditAccountForm';
 
 interface Collapsible {
   className?: string | undefined;
@@ -15,6 +19,7 @@ interface Collapsible {
 
 export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsible) {
   const [isContentVisible, setIsContentVisible] = useState(true);
+  const modalIsOpen = useSignal('');
   const totalBudget = accounts
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((total, account) => {
@@ -47,10 +52,20 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
         <div>
           {accounts.map(account => (
             <SidebarButton
-              key={account.name}
-              className="z_stack_margin_bottom_item_1 z_padding_left_5"
+              key={account.id}
+              className={cls(styles.sidebar_button, 'z_stack_margin_bottom_item_1 z_padding_left_2')}
               variant="base"
             >
+              <a className={styles.edit_icon} onClick={() => (modalIsOpen.value = account.id)}>
+                <MdEdit />
+              </a>
+              <Modal
+                isOpen={modalIsOpen.value === account.id}
+                className={styles.edit_account_modal_content}
+                overlayClassName={styles.edit_account_modal_overlay}
+              >
+                <EditAccountForm isOpen={modalIsOpen} account={account} />
+              </Modal>
               <span className={styles.bank_name}>
                 <Typography>{account.name}</Typography>
               </span>
