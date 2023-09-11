@@ -1,7 +1,7 @@
 import styles from './AddCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
-import { CancelButton } from '@atoms/Button/CancelButton';
-import { SaveButton } from '@atoms/Button/SaveButton';
+import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
+import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { SyntheticEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal } from '@preact/signals-react';
@@ -87,8 +87,11 @@ export function AddCategoryForm({
         >
           <Input placeholder="New Category" type="text" name="categoryName" />
           <div className={styles.form_buttons}>
-            <CancelButton type="reset" onClick={formCancelHandler} />
-            <SaveButton type="submit" />
+            <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+              {' '}
+              Cancel{' '}
+            </ButtonUnfilled>
+            <ButtonFilled type="submit"> Save </ButtonFilled>
           </div>
         </form>
       </Tooltip>
@@ -104,8 +107,11 @@ export function AddCategoryForm({
         >
           <Input placeholder="New Category Group" type="text" name="categoryName" />
           <div className={styles.form_buttons}>
-            <CancelButton type="reset" onClick={formCancelHandler} />
-            <SaveButton type="submit" />
+            <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+              {' '}
+              Cancel{' '}
+            </ButtonUnfilled>
+            <ButtonFilled type="submit"> Save </ButtonFilled>
           </div>
         </form>
       </Tooltip>

@@ -1,4 +1,4 @@
-import { CancelButton, SaveButton } from '../../atoms';
+import { ButtonUnfilled, ButtonFilled } from '../../atoms';
 import styles from './EditableFooterButtons.module.scss';
 import { MouseEventHandler } from 'react';
 
@@ -16,8 +16,14 @@ export const EditableFooterButtons = <T,>({
   return (
     // <div className="z_flex z_flex_jc_right" style={{ height: '10px' }}>
     <td className={className}>
-      <CancelButton className={styles.cancel_button} onClick={onCancel} />
-      <SaveButton className={styles.save_button} onClick={onSave} />
+      <ButtonUnfilled className={styles.cancel_button} onClick={onCancel}>
+        {' '}
+        Cancel{' '}
+      </ButtonUnfilled>
+      <ButtonFilled className={styles.save_button} onClick={onSave}>
+        {' '}
+        Save{' '}
+      </ButtonFilled>
     </td>
   );
 };

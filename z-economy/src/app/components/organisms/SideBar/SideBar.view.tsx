@@ -3,7 +3,7 @@ import { IconButton } from '@atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
-import { Button, CancelButton, Input, SaveButton } from '../../atoms';
+import { Button, ButtonUnfilled, Input, ButtonFilled } from '../../atoms';
 import { useSideBarHooks } from './SideBar.hooks';
 import { Typography } from '@atoms/Typography/Typography';
 import Modal from 'react-modal';

@@ -1,7 +1,7 @@
 import styles from './AddAccountForm.module.scss';
 import { Input } from '@atoms/Input/Input';
-import { CancelButton } from '@atoms/Button/CancelButton';
-import { SaveButton } from '@atoms/Button/SaveButton';
+import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
+import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Signal } from '@preact/signals-react';
 import { Typography } from '@atoms/Typography/Typography';
 import { SyntheticEvent, useRef } from 'react';
@@ -43,8 +43,10 @@ export function AddAccountForm({ isOpen }: AddCategoryFormProperties) {
       </div>
       <Input name="accountName" />
       <div className={styles.modal_form_buttons}>
-        <CancelButton type="reset" onClick={() => (isOpen.value = false)} />
-        <SaveButton type="submit" />
+        <ButtonUnfilled type="reset" onClick={() => (isOpen.value = false)}>
+          Cancel
+        </ButtonUnfilled>
+        <ButtonFilled type="submit"> Save </ButtonFilled>
       </div>
     </form>
   );
