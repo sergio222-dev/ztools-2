@@ -10,10 +10,10 @@ import { IconButton } from '@atoms/Button/IconButton';
 import { RxCross2 } from 'react-icons/rx';
 import cls from 'classnames';
 
-interface AddCategoryFormProperties {
+interface AddAccountFormProperties {
   isOpen: Signal<boolean>;
 }
-export function AddAccountForm({ isOpen }: AddCategoryFormProperties) {
+export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
   // STATE
   const formReference = useRef(null);
 
@@ -29,6 +29,7 @@ export function AddAccountForm({ isOpen }: AddCategoryFormProperties) {
     void createAccount({
       id: uuidv4(),
       name: newAccountName,
+      balance: { _amount: '' },
     });
   };
 
@@ -63,15 +64,15 @@ export function AddAccountForm({ isOpen }: AddCategoryFormProperties) {
             </div>
             <Input name="accountName" className={styles.add_account_modal_input} />
           </div>
-          {/* // TODO: implement creating a transaction for the account initial balance */}
-          {/*<div>*/}
-          {/*  <div className={styles.add_account_modal_input_header}>*/}
-          {/*    <Typography variant='bold' size='normal'>*/}
-          {/*      What is your current account balance?*/}
-          {/*    </Typography>*/}
-          {/*  </div>*/}
-          {/*  <Input name="accountBalance" className={styles.add_account_modal_input}/>*/}
-          {/*</div>*/}
+          {/*// TODO: implement creating a transaction for the account initial balance */}
+          <div>
+            <div className={styles.add_account_modal_input_header}>
+              <Typography variant="bold" size="normal">
+                What is your current account balance?
+              </Typography>
+            </div>
+            <Input name="accountBalance" className={styles.add_account_modal_input} />
+          </div>
         </div>
         <div className={styles.add_account_modal_footer_buttons}>
           <ButtonFilled type="submit" className={styles.add_account_modal_footer_save_button}>
