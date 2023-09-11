@@ -1,10 +1,53 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
 
-.modal_form_buttons {
-  margin: functions.spacing(1) 0 auto auto;
+.add_account_modal_title {
+  display: flex;
+  padding: functions.spacing(2);
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: const.$page-light-border-color 1px solid;
+  height: 3rem;
 
-  button {
-    margin-left: functions.spacing(1);
+  .add_account_modal_cancel_button {
+    color: const.$primary-color;
+    padding: 0;
+    & > svg {
+      height: 1.5rem;
+    }
+  }
+
+  .title_text {
+    flex-grow: 1;
+    text-align: center;
+    margin-left: 2rem;
+  }
+}
+
+.add_account_modal_form_body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding: functions.spacing(2);
+  .add_account_modal_input_header {
+    margin-bottom: functions.spacing(1);
+    padding-top: functions.spacing(1);
+  }
+  & > div:first-child .add_account_modal_input_header {
+    padding-top: 0;
+  }
+  .add_account_modal_input {
+    width: 100%;
+  }
+}
+
+.add_account_modal_footer_buttons {
+  border-top: const.$page-light-border-color 1px solid;
+  padding: functions.spacing(2);
+
+  .add_account_modal_footer_save_button {
+    width: 100%;
   }
 }

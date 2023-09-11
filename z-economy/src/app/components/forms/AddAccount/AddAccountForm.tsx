@@ -1,12 +1,14 @@
 import styles from './AddAccountForm.module.scss';
 import { Input } from '@atoms/Input/Input';
-import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Signal } from '@preact/signals-react';
 import { Typography } from '@atoms/Typography/Typography';
 import { SyntheticEvent, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { v4 as uuidv4 } from 'uuid';
+import { IconButton } from '@atoms/Button/IconButton';
+import { RxCross2 } from 'react-icons/rx';
+import cls from 'classnames';
 
 interface AddCategoryFormProperties {
   isOpen: Signal<boolean>;
@@ -37,16 +39,46 @@ export function AddAccountForm({ isOpen }: AddCategoryFormProperties) {
       ref={formReference}
       onSubmit={handleFormSubmit}
     >
-      <div className="z_flex z_flex_jc_center">
-        {' '}
-        <Typography variant="bold"> Add Account </Typography>{' '}
-      </div>
-      <Input name="accountName" />
-      <div className={styles.modal_form_buttons}>
-        <ButtonUnfilled type="reset" onClick={() => (isOpen.value = false)}>
-          Cancel
-        </ButtonUnfilled>
-        <ButtonFilled type="submit"> Save </ButtonFilled>
+      <div>
+        <div className={cls(styles.add_account_modal_title)}>
+          <div className={styles.title_text}>
+            <Typography variant="bold" Component="h1" size="large">
+              Add Account
+            </Typography>
+          </div>
+          <IconButton
+            type="reset"
+            onClick={() => (isOpen.value = false)}
+            className={styles.add_account_modal_cancel_button}
+          >
+            <RxCross2 />
+          </IconButton>
+        </div>
+        <div className={styles.add_account_modal_form_body}>
+          <div>
+            <div className={styles.add_account_modal_input_header}>
+              <Typography variant="bold" size="normal">
+                Give it a nickname
+              </Typography>
+            </div>
+            <Input name="accountName" className={styles.add_account_modal_input} />
+          </div>
+          {/* // TODO: implement creating a transaction for the account initial balance */}
+          {/*<div>*/}
+          {/*  <div className={styles.add_account_modal_input_header}>*/}
+          {/*    <Typography variant='bold' size='normal'>*/}
+          {/*      What is your current account balance?*/}
+          {/*    </Typography>*/}
+          {/*  </div>*/}
+          {/*  <Input name="accountBalance" className={styles.add_account_modal_input}/>*/}
+          {/*</div>*/}
+        </div>
+        <div className={styles.add_account_modal_footer_buttons}>
+          <ButtonFilled type="submit" className={styles.add_account_modal_footer_save_button}>
+            {' '}
+            Save{' '}
+          </ButtonFilled>
+        </div>
       </div>
     </form>
   );
