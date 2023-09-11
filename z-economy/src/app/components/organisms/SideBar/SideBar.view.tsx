@@ -3,7 +3,7 @@ import { IconButton } from '@atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import { LeftSidebarCollapsible } from '../../molecules';
-import { Button, ButtonUnfilled, Input, ButtonFilled } from '../../atoms';
+import { Button } from '../../atoms';
 import { useSideBarHooks } from './SideBar.hooks';
 import { Typography } from '@atoms/Typography/Typography';
 import Modal from 'react-modal';
@@ -16,20 +16,6 @@ export function SideBarView() {
 
   const { handleSidebarButtonClick, handleSidebarCollapsibleClick, handleLogout, handleAddAccount } =
     operators;
-
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-    overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-  };
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
@@ -79,7 +65,11 @@ export function SideBarView() {
         <Button className={styles.add_btn} onClick={handleAddAccount}>
           <Typography>Add Account</Typography>
         </Button>
-        <Modal isOpen={modalIsOpen.value} style={customStyles}>
+        <Modal
+          isOpen={modalIsOpen.value}
+          className={styles.modal_content}
+          overlayClassName={styles.modal_overlay}
+        >
           <AddAccountForm isOpen={modalIsOpen} />
         </Modal>
       </div>

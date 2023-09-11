@@ -1,4 +1,4 @@
-@use '../../styles/constants' as Const;
+@use '../../styles/constants' as const;
 @use '../../styles/functions' as functions;
 @use '../../styles/mixins' as Mixins;
 
@@ -7,7 +7,7 @@ $starting-hiding-width: 150px;
 
 .side_bar {
   container: sidebar / size;
-  background-color: Const.$sidebar-background;
+  background-color: const.$sidebar-background;
   width: 100%;
   flex-shrink: 0;
   padding: functions.spacing(1);
@@ -75,15 +75,8 @@ $starting-hiding-width: 150px;
       margin-bottom: functions.spacing(1);
     }
   }
-  .add_account_modal {
-    position: absolute;
-    inset: 40px;
-    border: 1px solid rgb(204, 204, 204);
-    background: rgb(255, 255, 255);
-    overflow: auto;
-    border-radius: 4px;
-    outline: none;
-    padding: 20px;
+  .ReactModal__Content {
+    border-radius: 100px;
   }
 
   .add_account_modal_overlay {
@@ -100,4 +93,29 @@ $starting-hiding-width: 150px;
   .z_collapsible_icon_button {
     transform: rotate(180deg);
   }
+}
+
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.modal_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: const.$radius;
+  outline: none;
+  padding: 0;
 }
