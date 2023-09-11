@@ -64,15 +64,20 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
               onClick={event => {
                 handleDelete(event, row.original.id);
               }}
-              style={{ backgroundColor: 'indianred' }}
+              className={styles.edit_category_delete_button}
             >
               <Typography>Delete</Typography>
             </Button>
-            <ButtonUnfilled type="reset" onClick={formCancelHandler}>
-              {' '}
-              Cancel{' '}
-            </ButtonUnfilled>
-            <ButtonFilled type="submit"> Save </ButtonFilled>
+            <div className={styles.cancel_save_buttons}>
+              <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+                {' '}
+                Cancel{' '}
+              </ButtonUnfilled>
+              <ButtonFilled type="submit" className={styles.save_button}>
+                {' '}
+                Save{' '}
+              </ButtonFilled>
+            </div>
           </div>
         </form>
       </Tooltip>
