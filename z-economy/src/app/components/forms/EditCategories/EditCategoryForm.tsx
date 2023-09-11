@@ -1,7 +1,7 @@
 import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
-import { CancelButton } from '@atoms/Button/CancelButton';
-import { SaveButton } from '@atoms/Button/SaveButton';
+import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
+import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 // eslint-disable-next-line import/default
 import React, { useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
@@ -68,8 +68,11 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
             >
               <Typography>Delete</Typography>
             </Button>
-            <CancelButton type="reset" onClick={formCancelHandler} />
-            <SaveButton type="submit" />
+            <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+              {' '}
+              Cancel{' '}
+            </ButtonUnfilled>
+            <ButtonFilled type="submit"> Save </ButtonFilled>
           </div>
         </form>
       </Tooltip>
