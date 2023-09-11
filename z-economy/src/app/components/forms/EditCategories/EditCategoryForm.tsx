@@ -57,7 +57,12 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         isOpen={isOpen.value}
       >
         <form name="edit-category" className={styles.edit_category_form} ref={formReference}>
-          <Input defaultValue={row.getValue('name')} type="text" name="categoryName" />
+          <Input
+            defaultValue={row.getValue('name')}
+            className={styles.edit_category_input}
+            type="text"
+            name="categoryName"
+          />
           <div className={styles.form_buttons}>
             <Button
               variant="primary"
