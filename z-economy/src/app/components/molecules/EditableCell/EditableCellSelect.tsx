@@ -4,8 +4,9 @@ import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hoo
 import { Select } from '@atoms/Select/Select';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
+import { Account } from '@core/budget/account/domain/Account';
 
-type T = SubCategory[];
+type T = SubCategory[] | Account[];
 
 interface EditableCellCategoryProperties extends HTMLAttributes<HTMLSelectElement> {
   isEditable: boolean;

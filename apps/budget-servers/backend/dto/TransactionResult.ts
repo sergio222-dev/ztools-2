@@ -8,5 +8,6 @@ export class TransactionResult {
     public readonly subCategoryId: string,
     public readonly date: string,
     public readonly cleared: boolean,
+    public readonly accountId: string,
   ) {}
 }

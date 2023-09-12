@@ -25,7 +25,7 @@ export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
     },
     payee: {
       type: String,
-      required: true,
+      required: false,
     },
     memo: {
       type: String,
@@ -37,6 +37,7 @@ export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
     },
     subCategoryId: {
       type: String,
+      required: true,
     },
     cleared: {
       type: Boolean,

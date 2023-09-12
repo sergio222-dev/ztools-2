@@ -34,13 +34,17 @@ export const useAccountHook = () => {
     await mutate(data);
   };
 
+  const mutateAccountData = async () => {
+    void mutate(data, { revalidate: true });
+  };
+
   return {
     adata: data ?? [],
     error: error,
     isLoading,
-    mutate,
     createAccount,
     updateAccount,
     deleteAccount,
+    mutateAccountData,
   };
 };

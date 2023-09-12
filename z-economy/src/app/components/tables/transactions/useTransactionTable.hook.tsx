@@ -9,6 +9,7 @@ import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hoo
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -31,6 +32,8 @@ export const useTransactionTableHook = () => {
     useTransactionHook();
 
   const { cdata } = useCategoryHook(new Date());
+
+  const { mutateAccountData } = useAccountHook();
 
   // HANDLERS
 
@@ -55,7 +58,7 @@ export const useTransactionTableHook = () => {
       setSelectedQty(table.getSelectedRowModel().rows.filter(t => t.id !== '').length);
       return;
     }
-    if (cell.id.includes('cleared')) {
+    if (cell.id.includes('cleared') && row.id !== '') {
       const clearedTransaction = row.original;
       clearedTransaction.cleared = !clearedTransaction.cleared;
       void updateData(clearedTransaction as Transaction);
@@ -97,7 +100,7 @@ export const useTransactionTableHook = () => {
   };
 
   // Button handlers
-  const handleSaveEdit = (row: Row<Transaction>) => {
+  const handleSaveEdit = async (row: Row<Transaction>) => {
     const fakeRow = row.id === '';
     if (fakeRow) {
       editableValue.current.id = uuidv4();
@@ -106,14 +109,16 @@ export const useTransactionTableHook = () => {
       editableValue.current.outflow = editableValue.current.outflow.replaceAll(/[^\d.]/g, '');
       if (editableValue.current.inflow === '') editableValue.current.inflow = '0';
       if (editableValue.current.outflow === '') editableValue.current.outflow = '0';
-      void createData(editableValue.current as Transaction);
+      void (await createData(editableValue.current as Transaction));
+      void mutateAccountData();
       editingRow !== '' && setEditingRow('');
       editableValue.current = createEmptyTransaction();
       selectedColumnId.current = 'date';
       return;
     }
     // console.log(editableValue.current.subCategoryId);
-    void updateData(editableValue.current as Transaction);
+    void (await updateData(editableValue.current as Transaction));
+    void mutateAccountData();
     editingRow !== '' && setEditingRow('');
     editableValue.current = createEmptyTransaction();
     selectedColumnId.current = 'date';
@@ -139,13 +144,15 @@ export const useTransactionTableHook = () => {
       const selectedRowsIds = { ids: selectedRows?.map(row => row.id) };
       await selectedRows?.map(row => row.toggleSelected(false));
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
-      void deleteDataBatch(selectedRowsIds);
+      void (await deleteDataBatch(selectedRowsIds));
+      void mutateAccountData();
       return;
     }
     const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
     await row?.toggleSelected(false);
     setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
-    void deleteData(row?.original as Transaction);
+    void (await deleteData(row?.original as Transaction));
+    void mutateAccountData();
   };
 
   // Checkbox handlers

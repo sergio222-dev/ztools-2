@@ -48,6 +48,7 @@ export class TransactionController {
           t.subCategoryId,
           t.date.toISOString(),
           t.cleared,
+          t.accountId,
         ),
     );
   }

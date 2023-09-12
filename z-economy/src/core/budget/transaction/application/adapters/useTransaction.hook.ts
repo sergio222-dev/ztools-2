@@ -8,8 +8,8 @@ import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Table } from '@tanstack/react-table';
 import { TransactionDelete } from '@core/budget/transaction/application/useCase/TransactionDelete';
 import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
-import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 
 export const useTransactionHook = () => {
   // SERVICES
@@ -18,6 +18,8 @@ export const useTransactionHook = () => {
   const transactionCreate = container.resolve(TransactionCreate);
   const transactionDelete = container.resolve(TransactionDelete);
   const transactionDeleteBatch = container.resolve(TransactionDeleteBatch);
+
+  const { adata } = useAccountHook();
 
   // SWR
   const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
@@ -42,6 +44,7 @@ export const useTransactionHook = () => {
           subCats[0].id,
           new Date().toISOString(),
           true,
+          adata[0].id,
         );
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({

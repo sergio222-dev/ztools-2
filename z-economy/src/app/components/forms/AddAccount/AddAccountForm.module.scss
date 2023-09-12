@@ -59,5 +59,9 @@
 
   .add_account_modal_footer_save_button {
     width: 100%;
+    &:disabled {
+      background-color: const.$page-light-border-color;
+      box-shadow: 0 0 0 1px const.$page-light-border-color;
+    }
   }
 }

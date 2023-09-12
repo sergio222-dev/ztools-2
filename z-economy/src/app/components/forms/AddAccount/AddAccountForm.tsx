@@ -3,7 +3,7 @@ import { Input } from '@atoms/Input/Input';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Signal } from '@preact/signals-react';
 import { Typography } from '@atoms/Typography/Typography';
-import { SyntheticEvent, useRef } from 'react';
+import { ChangeEvent, ChangeEventHandler, SyntheticEvent, useRef, useState } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { v4 as uuidv4 } from 'uuid';
 import { IconButton } from '@atoms/Button/IconButton';
@@ -16,9 +16,14 @@ interface AddAccountFormProperties {
 export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
   // STATE
   const formReference = useRef(null);
+  const [accountName, setAccountName] = useState('');
+  const [accountBalance, setAccountBalance] = useState('');
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   //SERVICES
   const { createAccount } = useAccountHook();
+
+  //HANDLERS
   const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     isOpen.value = false;
@@ -31,6 +36,24 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
       name: newAccountName,
       balance: '',
     });
+  };
+
+  const handleAccountNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setAccountName(value);
+    updateSaveButtonState(value, accountBalance);
+  };
+
+  const handleAccountBalanceChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setAccountBalance(value);
+    updateSaveButtonState(accountName, value);
+  };
+
+  // Update the disabled state of the Save button based on input values
+  const updateSaveButtonState = (name: string, balance: string) => {
+    const isDisabled = !name.trim() || !balance.trim();
+    setIsSaveDisabled(isDisabled);
   };
 
   return (
@@ -62,7 +85,11 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
                 Give it a nickname
               </Typography>
             </div>
-            <Input name="accountName" className={styles.add_account_modal_input} />
+            <Input
+              name="accountName"
+              className={styles.add_account_modal_input}
+              onChange={handleAccountNameChange}
+            />
           </div>
           {/*// TODO: implement creating a transaction for the account initial balance */}
           <div>
@@ -71,11 +98,19 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
                 What is your current account balance?
               </Typography>
             </div>
-            <Input name="accountBalance" className={styles.add_account_modal_input} />
+            <Input
+              name="accountBalance"
+              className={styles.add_account_modal_input}
+              onChange={handleAccountBalanceChange}
+            />
           </div>
         </div>
         <div className={styles.add_account_modal_footer_buttons}>
-          <ButtonFilled type="submit" className={styles.add_account_modal_footer_save_button}>
+          <ButtonFilled
+            type="submit"
+            className={styles.add_account_modal_footer_save_button}
+            disabled={isSaveDisabled}
+          >
             {' '}
             Save{' '}
           </ButtonFilled>
