@@ -32,6 +32,10 @@ export class AccountController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'Get all accounts',
+  })
   async findAll() {
     const queryAllAccount = new AccountFindAllQuery();
     const accounts = await this.queryBus.execute<AccountFindAllQuery, Account[]>(queryAllAccount);
@@ -48,6 +52,10 @@ export class AccountController {
   }
 
   @Get('/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Get an account by id',
+  })
   async balance(@Param('id') accountId: string) {
     const accountFindByIdQuery = new AccountFindByIdQuery(accountId);
 
