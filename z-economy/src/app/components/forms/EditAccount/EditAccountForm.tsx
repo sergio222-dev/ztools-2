@@ -1,4 +1,5 @@
 import { Signal } from '@preact/signals-react';
+// eslint-disable-next-line import/default
 import React, { SyntheticEvent, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import styles from './EditAccountForm.module.scss';
@@ -10,6 +11,10 @@ import { Input } from '@atoms/Input/Input';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Account } from '@core/budget/account/domain/Account';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
+import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { v4 as uuidv4 } from 'uuid';
 
 interface EditAccountFormProperties {
   isOpen: Signal<string>;
@@ -22,6 +27,8 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   //SERVICES
   const { updateAccount, deleteAccount } = useAccountHook();
+  const { createData } = useTransactionHook();
+  const { findAdjustmentSubcategoryId } = useCategoryHook(new Date());
 
   // HANDLERS
   const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -33,11 +40,50 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
     const newAccountWorkingBalance = editAccountForm.get('accountWorkingBalance') as string;
     if (newAccountName === '') return;
     if (newAccountWorkingBalance === '') return;
+    const subCategoryId = findAdjustmentSubcategoryId();
+
     void updateAccount({
       id: account.id,
       name: newAccountName,
       balance: '',
     });
+
+    if (Number(newAccountWorkingBalance) === Number(account.balance)) return;
+
+    if (Number(newAccountWorkingBalance) > Number(account.balance)) {
+      const adjustmentBalance = Number(newAccountWorkingBalance) - Number(account.balance);
+      void createData(
+        new Transaction(
+          uuidv4(),
+          adjustmentBalance.toString(),
+          '0',
+          'Manual Balance Adjustment',
+          '',
+          subCategoryId,
+          new Date().toISOString(),
+          true,
+          account.id,
+        ),
+      );
+      return;
+    }
+    if (Number(newAccountWorkingBalance) < Number(account.balance)) {
+      const adjustmentBalance = Number(account.balance) - Number(newAccountWorkingBalance);
+      void createData(
+        new Transaction(
+          uuidv4(),
+          '0',
+          adjustmentBalance.toString().replace('-', ''),
+          'Manual Balance Adjustment',
+          '',
+          subCategoryId,
+          new Date().toISOString(),
+          true,
+          account.id,
+        ),
+      );
+    }
+    return;
   };
 
   const deleteAccountHandler = (event: React.MouseEvent<HTMLButtonElement>, accountId: string) => {

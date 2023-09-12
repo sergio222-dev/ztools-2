@@ -15,6 +15,7 @@ import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
+import { v4 as uuidv4 } from 'uuid';
 
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
@@ -32,9 +33,6 @@ export function useCategoryTableHook(budgetDate: Date) {
   const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate, mutateData } =
     useCategoryHook(budgetDate);
 
-  useEffect(() => {
-    void mutate(cdata, { revalidate: true });
-  }, [budgetDate]);
   // HANDLERS
 
   const handleOnEdit = async (
@@ -86,6 +84,10 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   });
 
+  useEffect(() => {
+    void mutate(cdata, { revalidate: true });
+  }, [budgetDate]);
+
   const totalCategoryData = (id: string, key: keyof SubCategory) => {
     // eslint-disable-next-line unicorn/prefer-array-find
     const category = cdata.find(category => category.id === id);
@@ -98,6 +100,8 @@ export function useCategoryTableHook(budgetDate: Date) {
         .format()
     );
   };
+
+  const filteredData = cdata.filter(category => category.name !== 'Adjustments');
 
   const columns: ColumnDef<Category, any>[] = [
     {
@@ -264,5 +268,13 @@ export function useCategoryTableHook(budgetDate: Date) {
     },
   ];
 
-  return { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown };
+  return {
+    filteredData,
+    columns,
+    createCategoryGroup,
+    handleOnEdit,
+    reference,
+    tableReference,
+    handleRowOnKeyDown,
+  };
 }

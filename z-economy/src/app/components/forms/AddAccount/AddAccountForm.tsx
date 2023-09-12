@@ -9,6 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { IconButton } from '@atoms/Button/IconButton';
 import { RxCross2 } from 'react-icons/rx';
 import cls from 'classnames';
+import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 
 interface AddAccountFormProperties {
   isOpen: Signal<boolean>;
@@ -22,7 +25,8 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
 
   //SERVICES
   const { createAccount } = useAccountHook();
-
+  const { createData } = useTransactionHook();
+  const { findAdjustmentSubcategoryId } = useCategoryHook(new Date());
   //HANDLERS
   const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,12 +34,31 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
     if (formReference.current === null) return;
     const addAccountForm = new FormData(formReference.current);
     const newAccountName = addAccountForm.get('accountName') as string;
+    const newAccountBalance = addAccountForm.get('accountBalance') as string;
     if (newAccountName === '') return;
+    if (newAccountBalance === '') return;
+    const accountId = uuidv4();
+    const subCategoryId = findAdjustmentSubcategoryId();
+    const isBalanceNegative = newAccountBalance.includes('-');
+
     void createAccount({
-      id: uuidv4(),
+      id: accountId,
       name: newAccountName,
       balance: '',
     });
+    void createData(
+      new Transaction(
+        uuidv4(),
+        isBalanceNegative ? '0' : newAccountBalance,
+        isBalanceNegative ? newAccountBalance.replace('-', '') : '0',
+        'Starting Balance',
+        '',
+        subCategoryId,
+        new Date().toISOString(),
+        true,
+        accountId,
+      ),
+    );
   };
 
   const handleAccountNameChange = (event: ChangeEvent<HTMLInputElement>) => {

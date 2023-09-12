@@ -44,7 +44,7 @@ export const useTransactionHook = () => {
           subCats[0].id,
           new Date().toISOString(),
           true,
-          adata[0].id,
+          adata.length > 0 ? adata[0].id : '',
         );
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({
@@ -78,7 +78,7 @@ export const useTransactionHook = () => {
   };
 
   // HANDLERS
-  const updateData = async (updatedTransaction: Transaction) => {
+  const updateTransaction = async (updatedTransaction: Transaction) => {
     if (!data) return;
 
     const newData = [...data];
@@ -90,19 +90,19 @@ export const useTransactionHook = () => {
     await mutate(data);
   };
 
-  const createData = async (t: Transaction) => {
+  const createTransaction = async (t: Transaction) => {
     if (!data) return;
     await deleteFakeRow(true);
     await transactionCreate.execute(t);
   };
 
-  const deleteData = async (t: Transaction) => {
+  const deleteTransaction = async (t: Transaction) => {
     if (!data) return;
     await transactionDelete.execute(t);
     await mutate(data);
   };
 
-  const deleteDataBatch = async (t: { ids: string[] }) => {
+  const deleteTransactionBatch = async (t: { ids: string[] }) => {
     if (!data) return;
     await transactionDeleteBatch.execute(t);
     await mutate(data);
@@ -112,11 +112,11 @@ export const useTransactionHook = () => {
     data: data ?? [],
     error: error,
     isLoading,
-    updateData,
-    createData,
-    deleteData,
+    updateData: updateTransaction,
+    createData: createTransaction,
+    deleteData: deleteTransaction,
     trigger,
     deleteFakeRow,
-    deleteDataBatch,
+    deleteDataBatch: deleteTransactionBatch,
   };
 };

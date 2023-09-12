@@ -67,6 +67,21 @@ export const useCategoryHook = (date: Date) => {
     void mutate(data, { revalidate: true });
   };
 
+  const findAdjustmentSubcategoryId = () => {
+    const adjustmentsCategory = data?.find(category => category.name === 'Adjustments');
+
+    if (adjustmentsCategory) {
+      const adjustmentSubcategory = adjustmentsCategory.subCategories.find(
+        s => s.name === 'Inflow: Ready to Assign',
+      );
+      if (adjustmentSubcategory) {
+        return adjustmentSubcategory.id;
+      }
+      return '';
+    }
+    return '';
+  };
+
   return {
     cdata: data ?? [],
     error: error,
@@ -78,5 +93,6 @@ export const useCategoryHook = (date: Date) => {
     assignSubCategoryBudget,
     deleteSubCategory,
     deleteCategory,
+    findAdjustmentSubcategoryId,
   };
 };

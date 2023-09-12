@@ -8,8 +8,15 @@ interface CategoryTableViewProperties {
 }
 
 export function CategoryTableView({ budgetDate }: CategoryTableViewProperties) {
-  const { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown } =
-    useCategoryTableHook(budgetDate);
+  const {
+    filteredData,
+    columns,
+    createCategoryGroup,
+    handleOnEdit,
+    reference,
+    tableReference,
+    handleRowOnKeyDown,
+  } = useCategoryTableHook(budgetDate);
 
   return (
     <div>
@@ -17,7 +24,7 @@ export function CategoryTableView({ budgetDate }: CategoryTableViewProperties) {
       <div ref={reference}>
         <BudgetPageTable<Category>
           columns={columns}
-          data={cdata}
+          data={filteredData}
           handleOnEdit={handleOnEdit}
           tableReference={tableReference}
           handleRowOnKeyDown={handleRowOnKeyDown}
