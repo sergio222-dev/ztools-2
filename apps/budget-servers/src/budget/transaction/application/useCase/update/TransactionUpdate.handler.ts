@@ -8,8 +8,18 @@ export class TransactionUpdateHandler implements ICommandHandler<TransactionUpda
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(command: TransactionUpdateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared } = command;
+    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = command;
 
-    await this.transactionService.update(id, inflow, outflow, payee, memo, subCategoryId, date, cleared);
+    await this.transactionService.update(
+      id,
+      inflow,
+      outflow,
+      payee,
+      memo,
+      subCategoryId,
+      date,
+      cleared,
+      accountId,
+    );
   }
 }
