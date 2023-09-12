@@ -204,7 +204,6 @@ export function useCategoryTableHook(budgetDate: Date) {
             defaultValue={info.getValue()}
             onChangeValue={value => {
               editedAssignValue.current = value;
-              console.log(editedAssignValue.current);
             }}
             shouldFocus={true}
             style={{ width: '50%' }}
