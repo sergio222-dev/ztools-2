@@ -15,8 +15,6 @@ import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
-import { v4 as uuidv4 } from 'uuid';
-
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
 
@@ -30,7 +28,7 @@ export function useCategoryTableHook(budgetDate: Date) {
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
-  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate, mutateData } =
+  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
     useCategoryHook(budgetDate);
 
   // HANDLERS
