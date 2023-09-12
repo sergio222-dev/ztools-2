@@ -17,7 +17,6 @@ import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
-
   // STATE
   const editedAssignValue = useRef('');
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

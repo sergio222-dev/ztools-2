@@ -135,6 +135,8 @@ export const useTransactionTableHook = () => {
   };
 
   // TODO: delete button doesn't disable after usage.
+
+  // TODO: when deleting transactions should reassign its subcategory monthly budget
   const handleDelete = async () => {
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
