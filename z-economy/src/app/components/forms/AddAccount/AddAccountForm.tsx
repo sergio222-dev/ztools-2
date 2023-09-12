@@ -3,7 +3,7 @@ import { Input } from '@atoms/Input/Input';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Signal } from '@preact/signals-react';
 import { Typography } from '@atoms/Typography/Typography';
-import { ChangeEvent, ChangeEventHandler, SyntheticEvent, useRef, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useRef, useState } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { v4 as uuidv4 } from 'uuid';
 import { IconButton } from '@atoms/Button/IconButton';

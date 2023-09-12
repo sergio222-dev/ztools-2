@@ -20,7 +20,7 @@ export function useTransactionTableColumnsHook(
   handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
-  handleClearedSorting: any,
+  handleClearedSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
   subCats: SubCategory[],
