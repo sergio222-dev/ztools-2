@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 import { TransactionRepository } from '@budget/transaction/domain/Transaction.repository';
 import { TransactionUpdaterService } from '@budget/transaction/domain/TransactionUpdater.service';
 import { EventBus } from '@shared/domain/bus/event/EventBus';
-import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 
 @Injectable()
 export class TransactionService {

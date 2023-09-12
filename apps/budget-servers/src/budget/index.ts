@@ -1,4 +1,5 @@
 /* eslint import/order: 0 */
+import { AccountFindByIdHandler } from '@budget/account/application/useCase/find/AccountFindById.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -9,6 +10,7 @@ import { AccountService } from '@budget/account/application/service/Account.serv
 
 // handlers
 import { CategoryDeleteHandler } from '@budget/category/application/useCase/delete/CategoryDelete.handler';
+import { TransactionFindAllByAccountHandler } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.handler';
 import { TransactionFindAllHandler } from './transaction/application/useCase/find/TransactionFindAll.handler';
 import { CategoryFindAllHandler } from '@budget/category/application/useCase/find/CategoryFindAll.handler';
 import { CategoryUpdateHandler } from '@budget/category/application/useCase/update/CategoryUpdate.handler';
@@ -69,6 +71,7 @@ const budget = {
     TransactionFindOneByIdHandler,
     TransactionDeleteHandler,
     TransactionDeleteBatchHandler,
+    TransactionFindAllByAccountHandler,
     CategoryCreateHandler,
     CategoryFindAllHandler,
     CategoryUpdateHandler,
@@ -86,6 +89,7 @@ const budget = {
     AccountFindAllHandler,
     AccountUpdateHandler,
     AccountDeleteHandler,
+    AccountFindByIdHandler,
   ],
   schemas: [
     {

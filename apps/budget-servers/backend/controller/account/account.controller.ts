@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-import { AccountUpdateCommand } from '@budget/account/application/useCase/update/AccountUpdate.command';
 import {
   Body,
   Controller,
@@ -11,36 +9,27 @@ import {
   Param,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AccountDTO } from '../../dto/AccountDto';
+import { AccountResult } from '../../dto/AccountResult';
 import { AccountCreateCommand } from '@budget/account/application/useCase/create/AccountCreate.command';
 import { AccountDeleteCommand } from '@budget/account/application/useCase/delete/AccountDelete.command';
 import { AccountFindAllQuery } from '@budget/account/application/useCase/find/AccountFindAll.query';
-import { AccountFindOneByIdQuery } from '@budget/account/application/useCase/find/AccountFindOneById.query';
-import { Account } from '@budget/account/domain/Account.aggregate';
-=======
-import { Controller, Get, Injectable, Param } from '@nestjs/common';
-import { QueryBus } from '@nestjs/cqrs';
-import { ApiTags } from '@nestjs/swagger';
-
-import { AccountResult } from '../../dto/AccountResult';
-import { AccountFindAllQuery } from '@budget/account/application/useCase/find/AccountFindAll.query';
 import { AccountFindByIdQuery } from '@budget/account/application/useCase/find/AccountFindById.query';
+import { AccountFindOneByIdQuery } from '@budget/account/application/useCase/find/AccountFindOneById.query';
+import { AccountUpdateCommand } from '@budget/account/application/useCase/update/AccountUpdate.command';
 import { Account } from '@budget/account/domain/Account.aggregate';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
->>>>>>> 2c453ed (🦴: add account controller)
 
 @Controller('account')
 @ApiTags('accounts')
 @Injectable()
 export class AccountController {
-  constructor(private readonly queryBus: QueryBus) {}
+  constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
   async findAll() {
@@ -85,49 +74,49 @@ export class AccountController {
 
     return total;
   }
-    @Post()
-    @ApiResponse({
-        status: 201,
-        description: 'Create an account',
-    })
-    async create(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
-        const command = new AccountCreateCommand(bodyCommand.id, bodyCommand.name);
-        await this.commandBus.execute(command);
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Create an account',
+  })
+  async create(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
+    const command = new AccountCreateCommand(bodyCommand.id, bodyCommand.name);
+    await this.commandBus.execute(command);
+  }
+
+  @Put()
+  @ApiResponse({
+    description: 'Update an account',
+  })
+  async update(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
+    const { id, name } = bodyCommand;
+    const query = new AccountFindOneByIdQuery(id);
+
+    const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
+
+    if (account.id === ' ') {
+      throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
     }
 
-    @Put()
-    @ApiResponse({
-        description: 'Update an account',
-    })
-    async update(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
-        const { id, name } = bodyCommand;
-        const query = new AccountFindOneByIdQuery(id);
+    const command = new AccountUpdateCommand(id, name);
 
-        const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
+    await this.commandBus.execute(command);
+  }
 
-        if (account.id === ' ') {
-            throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
-        }
+  @Delete(':id')
+  @ApiResponse({
+    description: 'Delete an account',
+  })
+  async delete(@Param('id') id: string): Promise<void> {
+    const query = new AccountFindOneByIdQuery(id);
 
-        const command = new AccountUpdateCommand(id, name);
+    const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
 
-        await this.commandBus.execute(command);
-    }
+    if (account.id === '')
+      throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    @Delete(':id')
-    @ApiResponse({
-        description: 'Delete an account',
-    })
-    async delete(@Param('id') id: string): Promise<void> {
-        const query = new AccountFindOneByIdQuery(id);
+    const command = new AccountDeleteCommand(account.id);
 
-        const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
-
-        if (account.id === '')
-            throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
-
-        const command = new AccountDeleteCommand(account.id);
-
-        await this.commandBus.execute(command);
-    }
+    await this.commandBus.execute(command);
+  }
 }

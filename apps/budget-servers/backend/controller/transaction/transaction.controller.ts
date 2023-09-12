@@ -71,7 +71,8 @@ export class TransactionController {
     status: 201,
   })
   async create(
-    @Body() { id, date, outflow, payee, memo, subCategoryId, inflow, cleared }: TransactionCreateCommand,
+    @Body()
+    { id, date, outflow, payee, memo, subCategoryId, inflow, cleared, accountId }: TransactionCreateCommand,
   ): Promise<void> {
     const command = new TransactionCreateCommand(
       id,
@@ -82,6 +83,7 @@ export class TransactionController {
       subCategoryId,
       date,
       cleared,
+      accountId,
     );
     await this.commandBus.execute(command);
   }
@@ -91,7 +93,7 @@ export class TransactionController {
     status: 201,
   })
   async update(@Body() bodyCommand: TransactionUpdateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared } = bodyCommand;
+    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = bodyCommand;
     const query = new TransactionFindOneByIdQuery(id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
@@ -108,6 +110,7 @@ export class TransactionController {
       subCategoryId,
       date,
       cleared,
+      accountId,
     );
 
     await this.commandBus.execute(command);
