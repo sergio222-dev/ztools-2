@@ -23,7 +23,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
   const totalBudget = accounts
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((total, account) => {
-      return currency(total).add(currency(account.balance._amount).value);
+      return currency(total).add(currency(account.balance).value);
     }, currency(0))
     .format();
 
@@ -70,7 +70,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
                 <Typography>{account.name}</Typography>
               </span>
               <span className={styles.amount}>
-                <Typography>{currency(account.balance._amount).format()}</Typography>
+                <Typography>{currency(account.balance).format()}</Typography>
               </span>
             </SidebarButton>
           ))}

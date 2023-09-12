@@ -66,10 +66,7 @@ export class AccountController {
     let total = new SignedAmount(0);
 
     for (const transaction of transactions) {
-      const amount = transaction.inflow.isEqualTo(new SignedAmount(0))
-        ? transaction.outflow
-        : transaction.inflow;
-      total = amount.isPositive() ? total.plus(amount) : total.minus(amount);
+      total = total.plus(transaction.inflow).minus(transaction.outflow);
     }
 
     return total;

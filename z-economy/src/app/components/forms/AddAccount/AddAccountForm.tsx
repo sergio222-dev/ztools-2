@@ -29,7 +29,7 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
     void createAccount({
       id: uuidv4(),
       name: newAccountName,
-      balance: { _amount: '' },
+      balance: '',
     });
   };
 

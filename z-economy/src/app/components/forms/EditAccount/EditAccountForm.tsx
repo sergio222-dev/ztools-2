@@ -1,7 +1,6 @@
 import { Signal } from '@preact/signals-react';
-import React, { Ref, SyntheticEvent, useRef } from 'react';
+import React, { SyntheticEvent, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
-import { v4 as uuidv4 } from 'uuid';
 import styles from './EditAccountForm.module.scss';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
@@ -37,7 +36,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
     void updateAccount({
       id: account.id,
       name: newAccountName,
-      balance: { _amount: newAccountWorkingBalance },
+      balance: '',
     });
   };
 
@@ -104,7 +103,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             <Input
               name="accountWorkingBalance"
               className={styles.edit_account_modal_input}
-              defaultValue={account.balance._amount}
+              defaultValue={account.balance}
             />
             <Typography variant="info" size="small">
               An adjustment transaction will be created automatically if you change this amount.
@@ -113,6 +112,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
         </div>
         <div className={styles.edit_account_modal_footer_buttons}>
           <ButtonUnfilled
+            type="reset"
             className={styles.edit_account_modal_footer_delete_button}
             onClick={event => {
               deleteAccountHandler(event, account.id);
@@ -121,7 +121,13 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             Delete
           </ButtonUnfilled>
           <div className={styles.cancel_save_buttons_flex}>
-            <ButtonUnfilled className={styles.edit_account_modal_footer_cancel_button}>Cancel</ButtonUnfilled>
+            <ButtonUnfilled
+              type="reset"
+              className={styles.edit_account_modal_footer_cancel_button}
+              onClick={() => (isOpen.value = '')}
+            >
+              Cancel
+            </ButtonUnfilled>
             <ButtonFilled type="submit" className={styles.edit_account_modal_footer_save_button}>
               Save
             </ButtonFilled>

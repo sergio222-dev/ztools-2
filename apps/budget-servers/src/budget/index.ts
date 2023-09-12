@@ -1,5 +1,6 @@
 /* eslint import/order: 0 */
 import { AccountFindByIdHandler } from '@budget/account/application/useCase/find/AccountFindById.handler';
+import { AccountFindOneByIdHandler } from '@budget/account/application/useCase/find/AccountFindOneById.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -90,6 +91,7 @@ const budget = {
     AccountUpdateHandler,
     AccountDeleteHandler,
     AccountFindByIdHandler,
+    AccountFindOneByIdHandler,
   ],
   schemas: [
     {
