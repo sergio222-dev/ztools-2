@@ -14,7 +14,6 @@ import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
-import { TextButton } from '@atoms/Button/TextButton';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
 
 export function useCategoryTableHook(budgetDate: Date) {
@@ -30,14 +29,8 @@ export function useCategoryTableHook(budgetDate: Date) {
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
-  const {
-    cdata,
-    createCategoryGroup,
-    createSubCategory,
-    assignSubCategoryBudget,
-    deleteSubCategory,
-    mutate,
-  } = useCategoryHook(budgetDate);
+  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate, mutateData } =
+    useCategoryHook(budgetDate);
 
   useEffect(() => {
     void mutate(cdata, { revalidate: true });
@@ -82,7 +75,6 @@ export function useCategoryTableHook(budgetDate: Date) {
   const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
       row.toggleSelected(false);
-      console.log(row.getValue('assigned'));
     }
   };
 
@@ -212,6 +204,7 @@ export function useCategoryTableHook(budgetDate: Date) {
             defaultValue={info.getValue()}
             onChangeValue={value => {
               editedAssignValue.current = value;
+              console.log(editedAssignValue.current);
             }}
             shouldFocus={true}
             style={{ width: '50%' }}

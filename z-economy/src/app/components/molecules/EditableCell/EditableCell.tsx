@@ -30,7 +30,7 @@ export function EditableCell(properties: EditableCellProperties) {
         ref={inputReference}
         onChange={type === 'numeric' ? handleOnChangeNumeric : handleOnChange}
         onBlur={handleOnBlur}
-        defaultValue={type === 'numeric' ? currency(value as string).format() : value}
+        defaultValue={type === 'numeric' ? currency(defaultValue as string).format() : defaultValue}
         className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
         onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
         style={style ?? undefined}

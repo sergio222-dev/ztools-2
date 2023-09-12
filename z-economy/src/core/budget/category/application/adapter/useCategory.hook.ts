@@ -63,11 +63,16 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
+  const mutateData = async () => {
+    void mutate(data, { revalidate: true });
+  };
+
   return {
     cdata: data ?? [],
     error: error,
     isLoading,
     mutate,
+    mutateData,
     createCategoryGroup: createCategory,
     createSubCategory,
     assignSubCategoryBudget,
