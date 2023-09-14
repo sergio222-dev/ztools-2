@@ -93,7 +93,7 @@ export function useTransactionTableColumnsHook(
             defaultValue={
               editingRow === info.row.id
                 ? info.getValue()
-                : adata.find(item => item.id === info.row.original.accountId)?.name
+                : adata.find(item => item.id === info.row.original.accountId)?.name ?? 'Deleted account'
             }
             options={adata}
             onChangeValue={value => {
@@ -103,7 +103,9 @@ export function useTransactionTableColumnsHook(
         ) : (
           <EditableCellSelect
             isEditable={false}
-            defaultValue={adata.find(item => item.id === info.row.original.accountId)?.name}
+            defaultValue={
+              adata.find(item => item.id === info.row.original.accountId)?.name ?? 'Deleted account'
+            }
           />
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),

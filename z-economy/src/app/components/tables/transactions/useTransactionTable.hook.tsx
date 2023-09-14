@@ -33,7 +33,7 @@ export const useTransactionTableHook = () => {
 
   const { cdata } = useCategoryHook(new Date());
 
-  const { mutateAccountData } = useAccountHook();
+  const { adata, mutateAccountData } = useAccountHook();
 
   // HANDLERS
 
@@ -72,6 +72,8 @@ export const useTransactionTableHook = () => {
             ? Object.assign({}, row.original, editableValue.current)
             : Object.assign({}, editableValue.current, row.original);
       }
+      // console.log(editableValue.current.accountId);
+      // if (!adata.some(a => a.id === editableValue.current.accountId)) editableValue.current.accountId = adata[0].id;
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
