@@ -1,20 +1,23 @@
 import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import currency from 'currency.js';
 interface AllAccountPageModel {
-  workingBalance: string;
-  totalCleared: string;
-  totalUncleared: string;
+  workingBalance: WorkingBalance;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AllAccountPageOperators {}
 
+export type WorkingBalance = {
+  totalWorkingBalance: string;
+  totalCleared: string;
+  totalUncleared: string;
+};
+
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
   const { data } = useTransactionHook();
-
-  // eslint-disable-next-line unicorn/no-array-reduce
   const totalCleared = data
+    // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((a, transaction) => {
       if (transaction.cleared) {
         return currency(a).add(transaction.inflow).subtract(transaction.outflow);
@@ -22,8 +25,8 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       return currency(a);
     }, currency(0))
     .format();
-  // eslint-disable-next-line unicorn/no-array-reduce
   const totalUncleared = data
+    // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((a, transaction) => {
       if (!transaction.cleared) {
         return currency(a).add(transaction.inflow).subtract(transaction.outflow);
@@ -32,17 +35,17 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
     }, currency(0))
     .format();
 
-  const workingBalance = currency(totalCleared).add(totalUncleared).format();
+  const totalWorkingBalance = currency(totalCleared).add(totalUncleared).format();
 
-  // console.log(totalCleared.format());
-  // console.log(totalUncleared.format());
-  // console.log(workingBalance);
+  const workingBalance = {
+    totalWorkingBalance,
+    totalCleared,
+    totalUncleared,
+  };
 
   return [
     {
       workingBalance,
-      totalCleared,
-      totalUncleared,
     },
     {},
   ];

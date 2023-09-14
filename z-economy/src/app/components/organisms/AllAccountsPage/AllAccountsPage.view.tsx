@@ -3,11 +3,11 @@ import cls from 'classnames';
 import { useAllAccountPageHooks } from './AllAccountPage.hook';
 import { Typography } from '@atoms/Typography/Typography';
 import { TransactionTableView } from '../../tables/transactions/TransactionTable.view';
-import { WorkingBalance } from '@molecules/WorkingBalance/WorkingBalance';
+import { TotalWorkingBalance } from '@molecules/WorkingBalance/TotalWorkingBalance';
 
 export function AllAccountsPage() {
   const [model, operators] = useAllAccountPageHooks();
-  const { workingBalance, totalCleared, totalUncleared } = model;
+  const { workingBalance } = model;
 
   return (
     <div className={cls(styles.all_accounts_page)}>
@@ -17,11 +17,7 @@ export function AllAccountsPage() {
         </Typography>
       </section>
       <section className={cls('z_flex', styles.balances)}>
-        <WorkingBalance
-          workingBalance={workingBalance}
-          totalCleared={totalCleared}
-          totalUncleared={totalUncleared}
-        />
+        <TotalWorkingBalance workingBalance={workingBalance} />
       </section>
       <section>
         <TransactionTableView />
