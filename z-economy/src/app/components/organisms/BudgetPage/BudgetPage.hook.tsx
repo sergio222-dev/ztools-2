@@ -5,7 +5,7 @@ import { useCategoryHook } from '@core/budget/category/application/adapter/useCa
 
 interface BudgetPageModel {
   budgetDate: Date;
-  totalToAssign: string;
+  totalAssigned: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -24,7 +24,7 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   const [budgetDate, setBudgetDate] = useState<Date>(new Date());
 
   // SERVICES
-  const { cdata } = useCategoryHook(budgetDate);
+  const { cdata, totalAssigned } = useCategoryHook(budgetDate);
 
   // OPERATORS
   const renderMonthContent = (month: number, shortMonth: string, longMonth: string) => {
@@ -50,33 +50,8 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
     return className === true ? 'global_assigned_neutral' : 'All Money Assigned';
   };
 
-  // SIDE EFFECTS
-  const globalAssigned = cdata
-    ?.reduce((total, category) => {
-      return currency(total).add(
-        // eslint-disable-next-line unicorn/no-array-reduce
-        category.subCategories.reduce((subTotal, subCategory) => {
-          return currency(subTotal).add(subCategory.assignedBudget);
-        }, currency(0)),
-      );
-    }, currency(0))
-    .format();
-
-  const globalAvailable = cdata
-    ?.reduce((total, category) => {
-      return currency(total).add(
-        // eslint-disable-next-line unicorn/no-array-reduce
-        category.subCategories.reduce((subTotal, subCategory) => {
-          return currency(subTotal).add(subCategory.available);
-        }, currency(0)),
-      );
-    }, currency(0))
-    .format();
-
-  const totalToAssign = currency(globalAvailable).subtract(globalAssigned).format();
-
   return [
-    { budgetDate, totalToAssign },
+    { budgetDate, totalAssigned },
     { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler, renderSwitch },
   ];
 }

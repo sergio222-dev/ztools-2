@@ -11,7 +11,7 @@ import { Typography } from '@atoms/Typography/Typography';
 
 export function BudgetPageView() {
   const [model, operators] = useBudgetPageHooks();
-  const { budgetDate, totalToAssign } = model;
+  const { budgetDate, totalAssigned } = model;
   const { setBudgetDate, renderMonthContent, addMonthHandler, substractMonthHandler, renderSwitch } =
     operators;
 
@@ -40,9 +40,9 @@ export function BudgetPageView() {
             <AiOutlineRightCircle />
           </IconButton>
         </div>
-        <Button className={cls(styles.global_assigned_neutral, styles[renderSwitch(totalToAssign, true)])}>
-          <Typography variant="balance">{totalToAssign}</Typography>
-          <Typography>{renderSwitch(totalToAssign)}</Typography>
+        <Button className={cls(styles.global_assigned_neutral, styles[renderSwitch(totalAssigned, true)])}>
+          <Typography variant="balance">{totalAssigned}</Typography>
+          <Typography>{renderSwitch(totalAssigned)}</Typography>
         </Button>
       </section>
       <section>
