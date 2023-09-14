@@ -2,6 +2,7 @@ import { Transaction } from './Transaction.aggregate';
 
 export interface TransactionRepository {
   findAll(): Promise<Transaction[]>;
+  findByIds(ids: string[]): Promise<Transaction[]>;
   findOneById(id: string): Promise<Transaction>;
   findAllByAccountId(id: string): Promise<Transaction[]>;
   save(transaction: Transaction): Promise<void>;

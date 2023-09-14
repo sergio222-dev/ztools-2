@@ -41,6 +41,36 @@ export class MongoTransactionRepository extends MongoRepository implements Trans
     return transactions;
   }
 
+  async findByIds(ids: string[]): Promise<Transaction[]> {
+    const transactionDocuments = await this.transactionModel.find({
+      id: {
+        $in: ids,
+      },
+    });
+
+    const transactions: Transaction[] = [];
+
+    for (const transactionDocument of transactionDocuments) {
+      const transaction = Transaction.RETRIEVE(
+        transactionDocument.id,
+        transactionDocument.inflow,
+        transactionDocument.outflow,
+        transactionDocument.payee,
+        transactionDocument.memo,
+        transactionDocument.subCategoryId,
+        transactionDocument.date,
+        transactionDocument.cleared,
+        transactionDocument.accountId,
+        transactionDocument.createdAt,
+        transactionDocument.updatedAt,
+      );
+
+      transactions.push(transaction);
+    }
+
+    return transactions;
+  }
+
   async save(transaction: Transaction): Promise<void> {
     const simpleTransaction = this.convertToSimple(transaction);
     const createdTransaction = new this.transactionModel(simpleTransaction);

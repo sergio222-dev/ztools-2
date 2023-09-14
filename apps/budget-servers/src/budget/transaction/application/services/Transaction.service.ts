@@ -5,6 +5,8 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 import { TransactionRepository } from '@budget/transaction/domain/Transaction.repository';
 import { TransactionUpdaterService } from '@budget/transaction/domain/TransactionUpdater.service';
 import { EventBus } from '@shared/domain/bus/event/EventBus';
+import { TransactionDeletedEvent } from '@budget/transaction/domain/event/TransactionDeleted.event';
+import { DomainEvent } from '@shared/domain/bus/event/DomainEvent';
 
 @Injectable()
 export class TransactionService {
@@ -87,10 +89,40 @@ export class TransactionService {
   }
 
   async deleteOneById(id: string): Promise<void> {
+    const transaction = await this.transactionRepository.findOneById(id);
+    const transactionService = new TransactionUpdaterService(transaction);
+    const signedAmount = transactionService.getSignedAmount();
+
+    const deletedEvent = new TransactionDeletedEvent(
+      transaction.id,
+      signedAmount.negated().amount,
+      transaction.subCategoryId,
+      transaction.accountId,
+      transaction.date.toISOString(),
+    );
+
     await this.transactionRepository.delete(id);
+    await this.eventBus.publish([deletedEvent]);
   }
 
   async deleteBatch(ids: string[]): Promise<void> {
+    const transactions = await this.transactionRepository.findByIds(ids);
+    const deleteEvents: DomainEvent[] = [];
+    for (const transaction of transactions) {
+      const transactionService = new TransactionUpdaterService(transaction);
+      const signedAmount = transactionService.getSignedAmount();
+      deleteEvents.push(
+        new TransactionDeletedEvent(
+          transaction.id,
+          signedAmount.negated().amount,
+          transaction.subCategoryId,
+          transaction.accountId,
+          transaction.date.toISOString(),
+        ),
+      );
+    }
+
     await this.transactionRepository.deleteBatch(ids);
+    await this.eventBus.publish(deleteEvents);
   }
 }

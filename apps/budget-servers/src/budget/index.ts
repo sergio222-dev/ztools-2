@@ -1,6 +1,4 @@
 /* eslint import/order: 0 */
-import { AccountFindByIdHandler } from '@budget/account/application/useCase/find/AccountFindById.handler';
-import { AccountFindOneByIdHandler } from '@budget/account/application/useCase/find/AccountFindOneById.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -10,6 +8,8 @@ import { MonthActivityService } from '@budget/monthlyBudget/application/service/
 import { AccountService } from '@budget/account/application/service/Account.service';
 
 // handlers
+import { AccountFindByIdHandler } from '@budget/account/application/useCase/find/AccountFindById.handler';
+import { AccountFindOneByIdHandler } from '@budget/account/application/useCase/find/AccountFindOneById.handler';
 import { CategoryDeleteHandler } from '@budget/category/application/useCase/delete/CategoryDelete.handler';
 import { TransactionFindAllByAccountHandler } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.handler';
 import { TransactionFindAllHandler } from './transaction/application/useCase/find/TransactionFindAll.handler';
@@ -55,6 +55,7 @@ import { EventEmitter2EventBus } from '@shared/infrastructure/bus/event/EventEmi
 import { UpdateMonthOnTransactionActivityUpdatedListener } from '@budget/monthlyBudget/application/useCase/spent/UpdateMonthOnTransactionActivityUpdated.listener';
 import { UpdateMonthOnTransactionActivityCreatedListener } from '@budget/monthlyBudget/application/useCase/spent/UpdateMonthOnTransactionActivityCreated.listener';
 import { SubCategoryFindAllHandler } from '@budget/subCategory/application/useCase/find/SubCategoryFindAll.handler';
+import { UpdateMonthOnTransactionDeletedListener } from '@budget/monthlyBudget/application/useCase/delete/UpdateMonthOnTransactionDeleted.listener';
 
 const budget = {
   services: [
@@ -146,6 +147,7 @@ const budget = {
   listeners: [
     UpdateMonthOnTransactionActivityUpdatedListener,
     UpdateMonthOnTransactionActivityCreatedListener,
+    UpdateMonthOnTransactionDeletedListener,
   ],
 };
 

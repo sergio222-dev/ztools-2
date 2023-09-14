@@ -1,3 +1,5 @@
+import { FlowTypeValue } from '@budget/shared/domain/enums/FlowType';
+import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
@@ -44,5 +46,22 @@ export class TransactionUpdaterService {
     this.transaction.setCleared(cleared);
 
     return this.transaction;
+  }
+
+  getSignedAmount() {
+    const { flowType, inflow, outflow } = this.transaction;
+
+    switch (flowType) {
+      case FlowTypeValue.IN: {
+        return inflow;
+      }
+      case FlowTypeValue.OUT: {
+        // eslint-disable-next-line unicorn/consistent-destructuring
+        return outflow.negated();
+      }
+      default: {
+        return new SignedAmount(0);
+      }
+    }
   }
 }
