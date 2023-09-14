@@ -1,5 +1,6 @@
 @use '../../styles/functions' as functions;
 @use '../../styles/constants' as constants;
+@use '../../styles/constants' as const;
 
 %collapsible-container {
   position: relative;
@@ -25,6 +26,29 @@
   .icon {
     transform: rotate(0);
   }
+
+  .sidebar_button {
+    align-items: center;
+    line-height: 1rem;
+
+    .edit_icon {
+      visibility: hidden;
+      opacity: 0.5;
+      line-height: 0.5rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &:hover .edit_icon {
+      visibility: visible;
+    }
+
+    &:focus-visible .edit_icon {
+      visibility: visible;
+    }
+  }
 }
 
 .collapsible_container_contracted {
@@ -33,4 +57,30 @@
   .icon {
     transform: rotate(-90deg);
   }
+}
+
+.edit_account_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.edit_account_modal_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: const.$radius;
+  outline: none;
+  padding: 0;
+  width: 31rem;
 }

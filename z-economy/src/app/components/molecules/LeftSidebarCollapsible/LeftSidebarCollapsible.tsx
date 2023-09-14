@@ -4,23 +4,28 @@ import { ReactNode, useState } from 'react';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
-
-type AccountType = {
-  name: string;
-  total: number;
-};
+import { Account } from '@core/budget/account/domain/Account';
+import currency from 'currency.js';
+import { MdEdit } from 'react-icons/md';
+import Modal from 'react-modal';
+import { useSignal } from '@preact/signals-react';
+import { EditAccountForm } from '../../forms/EditAccount/EditAccountForm';
 
 interface Collapsible {
   className?: string | undefined;
   Icon?: ReactNode | undefined;
-  accounts: AccountType[];
+  accounts: Account[];
 }
 
 export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsible) {
   const [isContentVisible, setIsContentVisible] = useState(true);
-  const total = accounts.reduce((a, c) => {
-    return a + c.total;
-  }, 0);
+  const modalIsOpen = useSignal('');
+  const totalBudget = accounts
+    // eslint-disable-next-line unicorn/no-array-reduce
+    .reduce((total, account) => {
+      return currency(total).add(currency(account.balance).value);
+    }, currency(0))
+    .format();
 
   const handleContentVisible = () => {
     setIsContentVisible(!isContentVisible);
@@ -39,23 +44,33 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
             <Typography size="large">BUDGET</Typography>
           </div>
           <div className={styles.amount}>
-            <Typography size="large">${total}</Typography>
+            <Typography size="large">{totalBudget}</Typography>
           </div>
         </div>
       </CollapsibleButton>
       {isContentVisible && (
         <div>
-          {accounts.map(a => (
+          {accounts.map(account => (
             <SidebarButton
-              key={a.name}
-              className="z_stack_margin_bottom_item_1 z_padding_left_5"
+              key={account.id}
+              className={cls(styles.sidebar_button, 'z_stack_margin_bottom_item_1 z_padding_left_2')}
               variant="base"
             >
+              <a className={styles.edit_icon} onClick={() => (modalIsOpen.value = account.id)}>
+                <MdEdit />
+              </a>
+              <Modal
+                isOpen={modalIsOpen.value === account.id}
+                className={styles.edit_account_modal_content}
+                overlayClassName={styles.edit_account_modal_overlay}
+              >
+                <EditAccountForm isOpen={modalIsOpen} account={account} />
+              </Modal>
               <span className={styles.bank_name}>
-                <Typography>{a.name}</Typography>
+                <Typography>{account.name}</Typography>
               </span>
               <span className={styles.amount}>
-                <Typography>${a.total}</Typography>
+                <Typography>{currency(account.balance).format()}</Typography>
               </span>
             </SidebarButton>
           ))}

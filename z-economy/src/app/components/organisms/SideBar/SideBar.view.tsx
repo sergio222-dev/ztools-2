@@ -6,19 +6,21 @@ import { LeftSidebarCollapsible } from '../../molecules';
 import { Button } from '../../atoms';
 import { useSideBarHooks } from './SideBar.hooks';
 import { Typography } from '@atoms/Typography/Typography';
+import Modal from 'react-modal';
+import { AddAccountForm } from '../../forms/AddAccount/AddAccountForm';
 
 export function SideBarView() {
   const [model, operators] = useSideBarHooks();
 
-  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar } = model;
+  const { SIDEBAR_BUTTONS, activeButton, toggleSidebar, modalIsOpen, adata } = model;
 
-  const { handleSidebarButtonClick, handleSidebarCollapsibleClick, handleLogout } = operators;
+  const { handleSidebarButtonClick, handleSidebarCollapsibleClick, handleLogout, handleAddAccount } =
+    operators;
 
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
       <div className={styles.side_bar_header}>
         <Button variant="primary" onClick={handleLogout} style={{ backgroundColor: 'indianred' }}>
-          {' '}
           Log out
         </Button>
       </div>
@@ -45,24 +47,22 @@ export function SideBarView() {
       </div>
       <div>
         <LeftSidebarCollapsible
-          accounts={[
-            {
-              name: 'Santander el mejor banco du mundo',
-              total: 300_000,
-            },
-            {
-              name: 'BBVA',
-              total: 125_000,
-            },
-          ]}
+          accounts={adata}
           className={styles.side_bar_collapsible_container}
           Icon={<RiArrowDownSLine />}
         />
       </div>
       <div>
-        <Button className={styles.add_btn}>
+        <Button className={styles.add_btn} onClick={handleAddAccount}>
           <Typography>Add Account</Typography>
         </Button>
+        <Modal
+          isOpen={modalIsOpen.value}
+          className={styles.add_account_modal_content}
+          overlayClassName={styles.add_account_modal_overlay}
+        >
+          <AddAccountForm isOpen={modalIsOpen} />
+        </Modal>
       </div>
       <IconButton className={styles.z_collapsible_icon_button} onClick={handleSidebarCollapsibleClick}>
         <TbLayoutSidebarLeftCollapse />

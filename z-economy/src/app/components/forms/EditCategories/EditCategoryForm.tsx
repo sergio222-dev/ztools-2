@@ -1,7 +1,7 @@
 import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
-import { CancelButton } from '@atoms/Button/CancelButton';
-import { SaveButton } from '@atoms/Button/SaveButton';
+import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
+import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 // eslint-disable-next-line import/default
 import React, { useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
@@ -57,19 +57,32 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         isOpen={isOpen.value}
       >
         <form name="edit-category" className={styles.edit_category_form} ref={formReference}>
-          <Input defaultValue={row.getValue('name')} type="text" name="categoryName" />
+          <Input
+            defaultValue={row.getValue('name')}
+            className={styles.edit_category_input}
+            type="text"
+            name="categoryName"
+          />
           <div className={styles.form_buttons}>
             <Button
               variant="primary"
               onClick={event => {
                 handleDelete(event, row.original.id);
               }}
-              style={{ backgroundColor: 'indianred' }}
+              className={styles.edit_category_delete_button}
             >
               <Typography>Delete</Typography>
             </Button>
-            <CancelButton type="reset" onClick={formCancelHandler} />
-            <SaveButton type="submit" />
+            <div className={styles.cancel_save_buttons}>
+              <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+                {' '}
+                Cancel{' '}
+              </ButtonUnfilled>
+              <ButtonFilled type="submit" className={styles.save_button}>
+                {' '}
+                Save{' '}
+              </ButtonFilled>
+            </div>
           </div>
         </form>
       </Tooltip>

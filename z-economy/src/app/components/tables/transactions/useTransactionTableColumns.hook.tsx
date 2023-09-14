@@ -11,6 +11,7 @@ import cls from 'classnames';
 import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditableCellDatePicker } from '@molecules/EditableCell/EditableCellDatePicker';
+import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -19,12 +20,15 @@ export function useTransactionTableColumnsHook(
   handleCellCheckboxOnChange: (row: Row<Transaction>) => void,
   handleCheckboxOnKeyDown: (event: KeyboardEvent<HTMLInputElement>, row: Row<Transaction>) => void,
   handleSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
-  handleClearedSorting: any,
+  handleClearedSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
   subCats: SubCategory[],
 ) {
+  // SERVICES
   const columnHelper = createColumnHelper<Transaction>();
+  const { adata } = useAccountHook();
+
   const columns: ColumnDef<Transaction, any>[] = [
     {
       accessorKey: 'checkbox',
@@ -78,6 +82,34 @@ export function useTransactionTableColumnsHook(
     //     type: new OtherTextType(),
     //   },
     // }),
+    columnHelper.accessor('accountId', {
+      id: 'account',
+      header: table => (table.column.getIsSorted() ? <strong> ACCOUNT </strong> : 'ACCOUNT'),
+      cell: info =>
+        info.row.getIsSelected() ? (
+          <EditableCellSelect
+            shouldFocus={info.shouldFocus && info.selectedColumnId?.current === info.column.id}
+            isEditable={editingRow === info.row.id}
+            defaultValue={
+              editingRow === info.row.id
+                ? info.getValue()
+                : adata.find(item => item.id === info.row.original.accountId)?.name ?? 'Deleted account'
+            }
+            options={adata}
+            onChangeValue={value => {
+              editableValue.current.accountId = value;
+            }}
+          />
+        ) : (
+          <EditableCellSelect
+            isEditable={false}
+            defaultValue={
+              adata.find(item => item.id === info.row.original.accountId)?.name ?? 'Deleted account'
+            }
+          />
+        ),
+      sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
+    }),
     columnHelper.accessor('date', {
       id: 'date',
       header: table => (table.column.getIsSorted() ? <strong> DATE </strong> : 'DATE'),

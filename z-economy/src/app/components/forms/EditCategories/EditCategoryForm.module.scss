@@ -15,12 +15,45 @@
   display: flex;
   flex-direction: column;
   margin: functions.spacing(1);
+  width: 22rem;
+
+  .edit_category_input {
+    font-size: 1rem;
+  }
 
   .form_buttons {
-    margin: functions.spacing(1) 0 auto auto;
+    margin: functions.spacing(1) 0 0 0;
+    display: flex;
+    justify-content: flex-start;
 
-    button {
-      margin-left: functions.spacing(1);
+    .edit_category_delete_button {
+      box-shadow: 0 0 0 1px const.$page-light-border-color;
+      color: const.$delete-button-color;
+
+      &:hover {
+        background-color: const.$delete-button-color;
+        color: const.$secondary-text-color;
+      }
+
+      &:focus {
+        background-color: const.$delete-button-color;
+        color: const.$secondary-text-color;
+      }
+
+      &:focus-visible {
+        background-color: const.$delete-button-color;
+        color: const.$secondary-text-color;
+      }
+    }
+
+    .cancel_save_buttons {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: flex-end;
+
+      .save_button {
+        margin-left: functions.spacing(1);
+      }
     }
   }
 }

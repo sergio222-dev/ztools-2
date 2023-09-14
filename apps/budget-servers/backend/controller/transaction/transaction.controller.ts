@@ -1,3 +1,4 @@
+import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import {
   Body,
   Controller,
@@ -48,6 +49,31 @@ export class TransactionController {
           t.subCategoryId,
           t.date.toISOString(),
           t.cleared,
+          t.accountId,
+        ),
+    );
+  }
+
+  @Get('/:accountId')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all transactions by accountId',
+  })
+  async findAllByAccountId(@Param('accountId') accountId: string): Promise<TransactionResult[]> {
+    const query = new TransactionFindAllByAccountQuery(accountId);
+    const transactions = await this.queryBus.execute<TransactionFindAllByAccountQuery, Transaction[]>(query);
+    return transactions.map(
+      t =>
+        new TransactionResult(
+          t.id,
+          t.inflow.amount,
+          t.outflow.amount,
+          t.payee,
+          t.memo,
+          t.subCategoryId,
+          t.date.toISOString(),
+          t.cleared,
+          t.accountId,
         ),
     );
   }
@@ -55,15 +81,26 @@ export class TransactionController {
   @Get(':id')
   @ApiResponse({
     status: 200,
+    description: 'Get a transaction by id',
   })
-  async findOneById(@Param('id') id: string): Promise<Transaction> {
+  async findOneById(@Param('id') id: string): Promise<TransactionResult> {
     const query = new TransactionFindOneByIdQuery(id);
-    const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
+    const transactionIsolated = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
-    if (transaction.id === '')
+    if (transactionIsolated.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    return transaction;
+    return new TransactionResult(
+      transactionIsolated.id,
+      transactionIsolated.inflow.amount,
+      transactionIsolated.outflow.amount,
+      transactionIsolated.payee,
+      transactionIsolated.memo,
+      transactionIsolated.subCategoryId,
+      transactionIsolated.date.toISOString(),
+      transactionIsolated.cleared,
+      transactionIsolated.accountId,
+    );
   }
 
   @Post()
@@ -71,7 +108,8 @@ export class TransactionController {
     status: 201,
   })
   async create(
-    @Body() { id, date, outflow, payee, memo, subCategoryId, inflow, cleared }: TransactionCreateCommand,
+    @Body()
+    { id, date, outflow, payee, memo, subCategoryId, inflow, cleared, accountId }: TransactionCreateCommand,
   ): Promise<void> {
     const command = new TransactionCreateCommand(
       id,
@@ -82,6 +120,7 @@ export class TransactionController {
       subCategoryId,
       date,
       cleared,
+      accountId,
     );
     await this.commandBus.execute(command);
   }
@@ -91,7 +130,7 @@ export class TransactionController {
     status: 201,
   })
   async update(@Body() bodyCommand: TransactionUpdateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared } = bodyCommand;
+    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = bodyCommand;
     const query = new TransactionFindOneByIdQuery(id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
@@ -108,6 +147,7 @@ export class TransactionController {
       subCategoryId,
       date,
       cleared,
+      accountId,
     );
 
     await this.commandBus.execute(command);

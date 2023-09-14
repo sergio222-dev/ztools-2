@@ -9,5 +9,6 @@ export class Transaction {
     public subCategoryId: string,
     public date: string,
     public cleared: boolean,
+    public accountId: string,
   ) {}
 }

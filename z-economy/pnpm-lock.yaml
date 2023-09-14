@@ -43,6 +43,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  react-modal:
+    specifier: ^3.16.1
+    version: 3.16.1(react-dom@18.2.0)(react@18.2.0)
   react-router:
     specifier: ^6.9.0
     version: 6.9.0(react@18.2.0)
@@ -105,6 +108,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.0.10
     version: 18.0.11
+  '@types/react-modal':
+    specifier: ^3.16.0
+    version: 3.16.0
   '@types/testing-library__jest-dom':
     specifier: ^5.14.5
     version: 5.14.5
@@ -4429,6 +4435,12 @@ packages:
       '@types/react': 18.0.28
     dev: true
 
+  /@types/react-modal@3.16.0:
+    resolution: {integrity: sha512-iphdqXAyUfByLbxJn5j6d+yh93dbMgshqGP0IuBeaKbZXx0aO+OXsvEkt6QctRdxjeM9/bR+Gp3h9F9djVWTQQ==}
+    dependencies:
+      '@types/react': 18.0.28
+    dev: true
+
   /@types/react@18.0.28:
     resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
     dependencies:
@@ -7806,6 +7818,10 @@ packages:
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
     dev: true
+
+  /exenv@1.2.2:
+    resolution: {integrity: sha512-Z+ktTxTwv9ILfgKCk32OX3n/doe+OcLTRtqK9pcL+JsP3J1/VW8Uvl4ZjLlKqeW4rzK4oesDOGMEMRIZqtP4Iw==}
+    dev: false
 
   /exit@0.1.2:
     resolution: {integrity: sha512-Zk/eNKV2zbjpKzrsQ+n1G6poVbErQxJ0LBOJXaKZ1EViLzH+hrLu9cdXI4zw9dBQJslwBEpbQ2P1oS7nDxs6jQ==}
@@ -12090,9 +12106,28 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
 
+  /react-lifecycles-compat@3.0.4:
+    resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
+    dev: false
+
   /react-merge-refs@1.1.0:
     resolution: {integrity: sha512-alTKsjEL0dKH/ru1Iyn7vliS2QRcBp9zZPGoWxUOvRGWPUYgjo+V01is7p04It6KhgrzhJGnIj9GgX8W4bZoCQ==}
     dev: true
+
+  /react-modal@3.16.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-VStHgI3BVcGo7OXczvnJN7yT2TWHJPDXZWyI/a0ssFNhGZWsPmB8cF0z33ewDXq4VfYMO1vXgiv/g8Nj9NDyWg==}
+    engines: {node: '>=8'}
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
+      react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18
+    dependencies:
+      exenv: 1.2.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-lifecycles-compat: 3.0.4
+      warning: 4.0.3
+    dev: false
 
   /react-onclickoutside@6.13.0(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ty8So6tcUpIb+ZE+1HAhbLROvAIJYyJe/1vRrrcmW+jLsaM+/powDRqxzo6hSh9CuRZGSL1Q8mvcF5WRD93a0A==}

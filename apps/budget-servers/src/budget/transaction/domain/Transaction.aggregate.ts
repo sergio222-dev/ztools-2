@@ -39,6 +39,10 @@ export class Transaction extends AggregateRoot {
     return this._cleared;
   }
 
+  get accountId(): string {
+    return this._accountId;
+  }
+
   get createdAt(): Date {
     return this._createdAt;
   }
@@ -74,6 +78,7 @@ export class Transaction extends AggregateRoot {
     private _subCategoryId: string,
     private _date: Date,
     private _cleared: boolean,
+    private _accountId: string,
     private _createdAt: Date,
     private _updatedAt: Date,
   ) {
@@ -102,6 +107,7 @@ export class Transaction extends AggregateRoot {
     subCategoryId: string,
     date: Date,
     cleared: boolean,
+    accountId: string,
   ) {
     const transaction = new Transaction(
       id,
@@ -112,6 +118,7 @@ export class Transaction extends AggregateRoot {
       subCategoryId,
       date,
       cleared,
+      accountId,
       new Date(),
       new Date(),
     );
@@ -161,6 +168,7 @@ export class Transaction extends AggregateRoot {
     subCategoryId: string,
     date: Date,
     cleared: boolean,
+    accountId: string,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -173,6 +181,7 @@ export class Transaction extends AggregateRoot {
       subCategoryId,
       date,
       cleared,
+      accountId,
       createdAt,
       updatedAt,
     );
@@ -213,6 +222,8 @@ export class Transaction extends AggregateRoot {
             this.id,
             newActivityValue.amount,
             previousActivityValue.amount,
+            event.accountId,
+            event.previousAccountId,
             event.subCategoryId,
             event.previousSubCategoryId,
             event.date,
@@ -229,6 +240,8 @@ export class Transaction extends AggregateRoot {
           this.id,
           newActivityValue.amount,
           previousActivityValue.amount,
+          this.accountId,
+          this.accountId,
           this.subCategoryId,
           this.subCategoryId,
           this.date.toISOString(),
@@ -249,6 +262,8 @@ export class Transaction extends AggregateRoot {
             this.id,
             event.amount,
             event.previousAmount,
+            event.accountId,
+            event.previousAccountId,
             event.subCategoryId,
             event.previousSubCategoryId,
             newDate.toISOString(),
@@ -265,6 +280,8 @@ export class Transaction extends AggregateRoot {
           this.id,
           this.getCurrentActivityValue().amount,
           this.getCurrentActivityValue().amount,
+          this.accountId,
+          this.accountId,
           this.subCategoryId,
           this.subCategoryId,
           newDate.toISOString(),
@@ -297,6 +314,8 @@ export class Transaction extends AggregateRoot {
             this.id,
             event.amount,
             event.previousAmount,
+            event.accountId,
+            event.previousAccountId,
             newSubCategoryId,
             previousSubCategoryId,
             event.date,
@@ -312,8 +331,49 @@ export class Transaction extends AggregateRoot {
           this.id,
           this.getCurrentActivityValue().amount,
           this.getCurrentActivityValue().amount,
+          this.accountId,
+          this.accountId,
           newSubCategoryId,
           previousSubCategoryId,
+          this.date.toISOString(),
+          this.date.toISOString(),
+        ),
+      );
+    }
+  }
+
+  public setAccountId(newAccountId: string) {
+    const previousAccountId = this.accountId;
+    this._accountId = newAccountId;
+
+    if (this.eventExist(TransactionActivityUpdatedEvent)) {
+      this.domainEvents = this.domainEvents.map(event => {
+        if (event instanceof TransactionActivityUpdatedEvent) {
+          return new TransactionActivityUpdatedEvent(
+            this.id,
+            event.amount,
+            event.previousAmount,
+            event.accountId,
+            event.previousAccountId,
+            event.subCategoryId,
+            event.previousSubCategoryId,
+            event.date,
+            event.previousDate,
+          );
+        }
+
+        return event;
+      });
+    } else {
+      this.record(
+        new TransactionActivityUpdatedEvent(
+          this.id,
+          this.getCurrentActivityValue().amount,
+          this.getCurrentActivityValue().amount,
+          newAccountId,
+          previousAccountId,
+          this.subCategoryId,
+          this.subCategoryId,
           this.date.toISOString(),
           this.date.toISOString(),
         ),

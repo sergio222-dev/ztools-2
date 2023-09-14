@@ -14,12 +14,9 @@ import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
-import { TextButton } from '@atoms/Button/TextButton';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
-
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
-
   // STATE
   const editedAssignValue = useRef('');
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -30,18 +27,9 @@ export function useCategoryTableHook(budgetDate: Date) {
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
-  const {
-    cdata,
-    createCategoryGroup,
-    createSubCategory,
-    assignSubCategoryBudget,
-    deleteSubCategory,
-    mutate,
-  } = useCategoryHook(budgetDate);
+  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
+    useCategoryHook(budgetDate);
 
-  useEffect(() => {
-    void mutate(cdata, { revalidate: true });
-  }, [budgetDate]);
   // HANDLERS
 
   const handleOnEdit = async (
@@ -82,7 +70,6 @@ export function useCategoryTableHook(budgetDate: Date) {
   const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
       row.toggleSelected(false);
-      console.log(row.getValue('assigned'));
     }
   };
 
@@ -93,6 +80,10 @@ export function useCategoryTableHook(budgetDate: Date) {
       tableReference.current?.toggleAllRowsSelected(false);
     }
   });
+
+  useEffect(() => {
+    void mutate(cdata, { revalidate: true });
+  }, [budgetDate]);
 
   const totalCategoryData = (id: string, key: keyof SubCategory) => {
     // eslint-disable-next-line unicorn/prefer-array-find
@@ -106,6 +97,8 @@ export function useCategoryTableHook(budgetDate: Date) {
         .format()
     );
   };
+
+  const filteredData = cdata.filter(category => category.name !== 'Adjustments');
 
   const columns: ColumnDef<Category, any>[] = [
     {
@@ -272,5 +265,13 @@ export function useCategoryTableHook(budgetDate: Date) {
     },
   ];
 
-  return { cdata, columns, createCategoryGroup, handleOnEdit, reference, tableReference, handleRowOnKeyDown };
+  return {
+    filteredData,
+    columns,
+    createCategoryGroup,
+    handleOnEdit,
+    reference,
+    tableReference,
+    handleRowOnKeyDown,
+  };
 }

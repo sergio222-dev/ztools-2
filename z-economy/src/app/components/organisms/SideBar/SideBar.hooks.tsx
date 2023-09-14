@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { BsBank2, IoMdCash, RiBarChart2Fill } from 'react-icons/all';
 import { useNavigate } from 'react-router';
 import { supabase } from '../../forms/Auth/AuthForm';
+import { Signal, useSignal } from '@preact/signals-react';
+import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { Account } from '@core/budget/account/domain/Account';
 
 // type SidebarActiveValues = 'SubCategory' | 'Reports' | 'All Accounts';
 
@@ -35,18 +38,26 @@ interface SideBarModel {
   }>;
   activeButton: string;
   toggleSidebar: boolean;
+  modalIsOpen: Signal<boolean>;
+  adata: Account[];
 }
 
 interface SideBarOperators {
   handleSidebarButtonClick: (buttonRoute: string) => void;
   handleSidebarCollapsibleClick: () => void;
   handleLogout: () => void;
+  handleAddAccount: () => void;
 }
 export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
   // MODEL
+  // STATES
   const [activeButton, setActiveButton] = useState<string>(location.pathname);
   const [toggleSidebar, setToggleSidebar] = useState(true);
+  const modalIsOpen = useSignal(false);
+
+  // SERVICES
   const navigate = useNavigate();
+  const { adata, error, isLoading, mutate } = useAccountHook();
 
   const handleSidebarButtonClick = (buttonRoute: string) => {
     navigate(buttonRoute);
@@ -63,16 +74,23 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
     navigate('/login');
   };
 
+  const handleAddAccount = () => {
+    modalIsOpen.value = true;
+  };
+
   return [
     {
       SIDEBAR_BUTTONS,
       activeButton,
       toggleSidebar,
+      modalIsOpen,
+      adata,
     },
     {
       handleSidebarButtonClick,
       handleSidebarCollapsibleClick,
       handleLogout,
+      handleAddAccount,
     },
   ];
 }

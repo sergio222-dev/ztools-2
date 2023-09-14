@@ -10,6 +10,7 @@ export class TransactionUpdateCommand {
     private readonly _subCategoryId: string,
     private readonly _date: string,
     private readonly _cleared: boolean,
+    private readonly _accountId: string,
   ) {}
 
   @ApiProperty()
@@ -50,5 +51,10 @@ export class TransactionUpdateCommand {
   @ApiProperty()
   get cleared(): boolean {
     return this._cleared;
+  }
+
+  @ApiProperty()
+  get accountId(): string {
+    return this._accountId;
   }
 }

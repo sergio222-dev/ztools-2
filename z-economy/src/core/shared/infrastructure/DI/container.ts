@@ -5,6 +5,8 @@ import { TransactionRepository } from '@core/budget/transaction/domain/Transacti
 import { AxiosTransactionRepository } from '@core/budget/transaction/infrastructure/repository/AxiosTransactionRepository';
 import { CategoryRepository } from '@core/budget/category/domain/CategoryRepository';
 import { AxiosBudgetRepository } from '@core/budget/category/infrastructure/repository/AxiosBudgetRepository';
+import { AxiosAccountRepository } from '@core/budget/account/infrastructure/repository/AxiosAccountRepository';
+import { AccountRepository } from '@core/budget/account/domain/AccountRepository';
 
 export function buildContainer() {
   // repository
@@ -22,5 +24,8 @@ function axiosImplementation() {
   });
   container.register<CategoryRepository>('CategoryRepository', {
     useClass: AxiosBudgetRepository,
+  });
+  container.register<AccountRepository>('AccountRepository', {
+    useClass: AxiosAccountRepository,
   });
 }

@@ -1,21 +1,22 @@
 import styles from './WorkingBalance.module.scss';
-import { Typography } from '../../atoms/Typography/Typography';
+import { Typography } from '@atoms/Typography/Typography';
 import cls from 'classnames';
+import { WorkingBalance } from '@organisms/AllAccountsPage/AllAccountPage.hook';
 
 interface WorkingBalanceProperties {
-  workingBalance: string;
-  totalCleared: string;
-  totalUncleared: string;
+  workingBalance: WorkingBalance;
 }
 
-export function WorkingBalance({ workingBalance, totalCleared, totalUncleared }: WorkingBalanceProperties) {
+export function TotalWorkingBalance({ workingBalance }: WorkingBalanceProperties) {
   return (
     <>
       <div className={styles.balance_contents}>
         <div
-          className={cls(styles.positive_amount, { [styles.negative_amount]: totalCleared.includes('-') })}
+          className={cls(styles.positive_amount, {
+            [styles.negative_amount]: workingBalance.totalCleared.includes('-'),
+          })}
         >
-          <Typography variant="balance">{totalCleared}</Typography>
+          <Typography variant="balance">{workingBalance.totalCleared}</Typography>
         </div>
         <div className={styles.balance_text}>
           <Typography variant="info" size="small">
@@ -28,9 +29,11 @@ export function WorkingBalance({ workingBalance, totalCleared, totalUncleared }:
       </div>
       <div className={styles.balance_contents}>
         <div
-          className={cls(styles.positive_amount, { [styles.negative_amount]: totalUncleared.includes('-') })}
+          className={cls(styles.positive_amount, {
+            [styles.negative_amount]: workingBalance.totalUncleared.includes('-'),
+          })}
         >
-          <Typography variant="balance">{totalUncleared}</Typography>
+          <Typography variant="balance">{workingBalance.totalUncleared}</Typography>
         </div>
         <div className={styles.balance_text}>
           <Typography variant="info" size="small">
@@ -43,10 +46,12 @@ export function WorkingBalance({ workingBalance, totalCleared, totalUncleared }:
       </div>
       <div className={styles.balance_contents}>
         <div
-          className={cls(styles.positive_amount, { [styles.negative_amount]: workingBalance.includes('-') })}
+          className={cls(styles.positive_amount, {
+            [styles.negative_amount]: workingBalance.totalWorkingBalance.includes('-'),
+          })}
         >
           <Typography variant="balance" Component="p">
-            {workingBalance}
+            {workingBalance.totalWorkingBalance}
           </Typography>
         </div>
         <div className={styles.balance_text}>

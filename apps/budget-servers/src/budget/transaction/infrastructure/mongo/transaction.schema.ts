@@ -1,8 +1,8 @@
-import { Mongoose, Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 
-import { AmountType } from '../../../../shared/infrastructure/mongo/plugins';
-import { ExtendOfDocument } from '../../../../shared/infrastructure/mongo/utils';
 import { Transaction } from '../../domain/Transaction.aggregate';
+import { AmountType } from '@shared/infrastructure/mongo/plugins';
+import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
 
 export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
   {
@@ -25,7 +25,7 @@ export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
     },
     payee: {
       type: String,
-      required: true,
+      required: false,
     },
     memo: {
       type: String,
@@ -37,10 +37,15 @@ export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
     },
     subCategoryId: {
       type: String,
+      required: true,
     },
     cleared: {
       type: Boolean,
       required: false,
+    },
+    accountId: {
+      type: String,
+      required: true,
     },
     createdAt: {
       type: Date,

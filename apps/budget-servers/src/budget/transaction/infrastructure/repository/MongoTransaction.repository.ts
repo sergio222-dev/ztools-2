@@ -30,6 +30,7 @@ export class MongoTransactionRepository extends MongoRepository implements Trans
         transactionDocument.subCategoryId,
         transactionDocument.date,
         transactionDocument.cleared,
+        transactionDocument.accountId,
         transactionDocument.createdAt,
         transactionDocument.updatedAt,
       );
@@ -64,6 +65,7 @@ export class MongoTransactionRepository extends MongoRepository implements Trans
         '',
         new Date(),
         true,
+        '',
         new Date(),
         new Date(),
       );
@@ -78,9 +80,32 @@ export class MongoTransactionRepository extends MongoRepository implements Trans
       transaction.subCategoryId,
       new Date(transaction.date),
       transaction.cleared,
+      transaction.accountId,
       transaction.createdAt,
       transaction.updatedAt,
     );
+  }
+
+  async findAllByAccountId(id: string): Promise<Transaction[]> {
+    const transactionsDocuments = await this.transactionModel.find({
+      accountId: id,
+    });
+
+    return transactionsDocuments.map(t => {
+      return Transaction.RETRIEVE(
+        t.id,
+        t.inflow,
+        t.outflow,
+        t.payee,
+        t.memo,
+        t.subCategoryId,
+        new Date(t.date),
+        t.cleared,
+        t.accountId,
+        t.createdAt,
+        t.updatedAt,
+      );
+    });
   }
 
   async delete(id: string): Promise<void> {

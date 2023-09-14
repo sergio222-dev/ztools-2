@@ -1,7 +1,6 @@
 import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
 import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
 import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
-import { TransactionDeleteBatchCommand } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.command';
 import {
   Body,
   Controller,
