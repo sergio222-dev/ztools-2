@@ -70,7 +70,8 @@ typings/
 
 # dotenv environment variables file
 .*.env
-configs/budget/.env
+.env
+.env.*
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)

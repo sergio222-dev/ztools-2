@@ -3,12 +3,10 @@ this monorepo contains general purpose projects
 
 ## Folder structure
 - 📁 apps/
-    - 📁 [budget-servers/](#budget-servers)
+    - 📁 [budget-servers/](#budget)
     - 📁 zdm/
 - 📁 tools/
   - 📁 [ztemplates/](#z-templates)
-- 📁 configs/
-  - 📁 budget/
 - 📁 z-economy/
 
 ### Requirements
@@ -22,7 +20,7 @@ To install all dependencies you can use the update target
 make update
 ```
 ---
-## Budget Servers
+## Budget
 Project for tracking personal finances, made with Vite(react) in frontend and Nestjs in backend
 
 ### Build
