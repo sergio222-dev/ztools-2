@@ -1,1 +1,0 @@
-ztools = db.getSiblingDB('ztools');
