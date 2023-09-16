@@ -1,0 +1,15 @@
+{
+  "LABEL": {
+    "name": "title needs formatting",
+    "color": "EEEEEE"
+  },
+  "CHECKS": {
+    "prefixes": ["🌟", "🐞", "🚀"],
+    "regexpFlags": "i"
+  },
+  "MESSAGES": {
+    "success": "All OK",
+    "failure": "Failing PR",
+    "notice": ""
+  }
+}
