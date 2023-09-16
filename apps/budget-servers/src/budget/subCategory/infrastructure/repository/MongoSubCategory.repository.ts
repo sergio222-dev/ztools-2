@@ -23,19 +23,15 @@ export class MongoSubCategoryRepository implements SubCategoryRepository {
       })
       .exec();
 
-    const subCategories = subCategoriesDocuments.map(subCategoryDocument => {
-      const newSubCategory = SubCategory.RETRIEVE(
+    return subCategoriesDocuments.map(subCategoryDocument => {
+      return SubCategory.RETRIEVE(
         subCategoryDocument.id,
         subCategoryDocument.name,
         subCategoryDocument.categoryId,
         subCategoryDocument.createdAt,
         subCategoryDocument.updatedAt,
       );
-
-      return newSubCategory;
     });
-
-    return subCategories;
   }
 
   async delete(id: string): Promise<void> {

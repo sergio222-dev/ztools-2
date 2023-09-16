@@ -4,7 +4,22 @@ import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 export class TransactionUpdaterService {
-  constructor(private readonly transaction: Transaction) {}
+  private readonly transaction: Transaction;
+  constructor(transaction: Transaction) {
+    this.transaction = Transaction.RETRIEVE(
+      transaction.id,
+      transaction.inflow,
+      transaction.outflow,
+      transaction.payee,
+      transaction.memo,
+      transaction.subCategoryId,
+      transaction.date,
+      transaction.cleared,
+      transaction.accountId,
+      transaction.createdAt,
+      new Date(),
+    );
+  }
 
   updateTransaction(
     id: string,
