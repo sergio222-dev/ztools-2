@@ -1,0 +1,15 @@
+name: PR_CHECKER
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - labeled
+      - unlabeled
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: thehanimo/pr-title-checker@v1.4.0
+        name: Check PR Title
