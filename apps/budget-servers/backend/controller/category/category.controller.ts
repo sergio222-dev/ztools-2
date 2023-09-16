@@ -1,32 +1,25 @@
-import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
-import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
-import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Injectable, Post, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Schema } from 'mongoose';
 
 import { CategoryDTO } from '../../dto/CategoryDto';
+import { CategoryDeleteRequest } from '../../dto/CategoryDeleteRequest';
 import { SubCategoryDto } from '../../dto/SubCategoryDto';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
+import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
 import { CategoryFindAllQuery } from '@budget/category/application/useCase/find/CategoryFindAll.query';
+import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
 import { Category } from '@budget/category/domain/Category.aggregate';
+import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
 import { MonthlyBudgetFindOneQuery } from '@budget/monthlyBudget/application/useCase/find/MonthlyBudgetFindOne.query';
 import { MonthlyBudget } from '@budget/monthlyBudget/domain/MonthlyBudget.aggregate';
+import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
 import { SubCategoryFindAllByCategoryIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindAllByCategoryId.query';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
+import { TransactionFindAllBySubCategoryIdQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllBySubCategoryId.query';
+import { TransactionUpdateCommand } from '@budget/transaction/application/useCase/update/TransactionUpdate.command';
+import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @Controller('category')
 @ApiTags('categories')
@@ -49,7 +42,7 @@ export class CategoryController {
 
     const categoriesDTO = categories.map(async category => {
       const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
-        new SubCategoryFindAllByCategoryIdQuery(category.id, month, year),
+        new SubCategoryFindAllByCategoryIdQuery(category.id),
       );
       const subCategoriesDtoPromises = subCategories.map(async subCategory => {
         const queryMonthlyBudget = new MonthlyBudgetFindOneQuery(year, month, subCategory.id);
@@ -86,34 +79,60 @@ export class CategoryController {
     await this.commandBus.execute(command);
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
-    const query = new CategoryFindOneQuery(id);
+  @Post('/delete')
+  async delete(@Body() deleteCategoryRequest: CategoryDeleteRequest): Promise<void> {
+    const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
+    const query = new CategoryFindOneQuery(categoryId);
 
     const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
 
     if (category.id === '')
-      throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`the category with id ${categoryId} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new CategoryDeleteCommand(id);
+    const queryForAllSubCategories = new SubCategoryFindAllByCategoryIdQuery(categoryId);
 
     const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
-      new SubCategoryFindAllByCategoryIdQuery(
-        id,
-        String(new Date().getMonth()),
-        String(new Date().getFullYear()),
-      ),
+      queryForAllSubCategories,
     );
 
-    const ids = subCategories.map(subCategory => subCategory.id);
+    const subCategoriesId = subCategories.map(subCategory => subCategory.id);
 
-    try {
-      const command = new SubCategoryDeleteBatchCommand(ids);
-      await this.commandBus.execute<SubCategoryDeleteBatchCommand>(command);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    for (const subCategoryId of subCategoriesId) {
+      const commandForDeleteMonthlyBudgetBySubCategoryId = new MonthlyBudgetDeleteAllBySubCategoryIdCommand(
+        subCategoryId,
+      );
+
+      await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
+
+      const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId);
+
+      const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
+        queryForTransactions,
+      );
+
+      for (const transaction of transactions) {
+        const commandForUpdateTransaction = new TransactionUpdateCommand(
+          transaction.id,
+          transaction.inflow.amount,
+          transaction.outflow.amount,
+          transaction.payee,
+          transaction.memo,
+          moveToSubCategoryId,
+          transaction.date.toISOString(),
+          transaction.cleared,
+          transaction.accountId,
+        );
+
+        await this.commandBus.execute(commandForUpdateTransaction);
+      }
     }
 
-    await this.commandBus.execute(command);
+    const commandForDeleteSubCategories = new SubCategoryDeleteBatchCommand(subCategoriesId);
+
+    await this.commandBus.execute(commandForDeleteSubCategories);
+
+    const commandForDeleteCategory = new CategoryDeleteCommand(categoryId);
+
+    await this.commandBus.execute(commandForDeleteCategory);
   }
 }

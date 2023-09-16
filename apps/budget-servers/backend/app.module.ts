@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AccountController } from './controller/account/account.controller';
 
+import { AccountController } from './controller/account/account.controller';
 import { CategoryController } from './controller/category/category.controller';
 import { SubCategoryController } from './controller/subCategory/subCategory.controller';
 import { TransactionController } from './controller/transaction/transaction.controller';
@@ -10,7 +10,7 @@ import { BudgetModule } from '../src/budget.module';
 
 const controllers = [TransactionController, CategoryController, SubCategoryController, AccountController];
 
-const environmentFileName = `.${process.env.NODE_ENV || 'development'}.env`;
+const environmentFileName = `.env.${process.env.NODE_ENV || 'development'}`;
 
 @Module({
   imports: [

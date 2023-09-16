@@ -81,18 +81,15 @@ export class MonthActivityService {
 
     const monthlyBudget = await this.monthlyBudgetRepository.findOne(fromYear, fromMonth, fromSubCategoryId);
 
-    if (!monthlyBudget) {
-      // TODO should be an domain exception
-      throw new Error('Inconsistent data, no monthly budget found');
-    }
+    if (monthlyBudget) {
+      if (amountToMove.isPositive()) {
+        monthlyBudget.decrementActivity(amountToMove);
+      } else {
+        monthlyBudget.incrementActivity(amountToMove.negated());
+      }
 
-    if (amountToMove.isPositive()) {
-      monthlyBudget.decrementActivity(amountToMove);
-    } else {
-      monthlyBudget.incrementActivity(amountToMove.negated());
+      await this.monthlyBudgetRepository.update(monthlyBudget);
     }
-
-    await this.monthlyBudgetRepository.update(monthlyBudget);
 
     let newMonthlyBudget = await this.monthlyBudgetRepository.findOne(toYear, toMonth, toSubCategoryId);
 

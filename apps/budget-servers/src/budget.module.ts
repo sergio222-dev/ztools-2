@@ -6,7 +6,12 @@ import { Implementation } from '@shared/infrastructure/enum';
 import { ImplementationModule } from '@shared/infrastructure/implementation.module';
 
 @Module({
-  imports: [ImplementationModule.register(Implementation.mongo), EventEmitterModule.forRoot()],
+  imports: [
+    ImplementationModule.register(Implementation.mongo),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+    }),
+  ],
   providers: [...budget.services, ...budget.handlers, ...budget.bus, ...budget.listeners],
 })
 export class BudgetModule {}

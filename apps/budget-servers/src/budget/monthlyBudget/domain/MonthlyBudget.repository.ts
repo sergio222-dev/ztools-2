@@ -7,4 +7,5 @@ export interface MonthlyBudgetRepository {
   update(monthlyBudget: MonthlyBudget): Promise<void>;
   findOne(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget | undefined>;
   findAllAvailableBefore(year: string, month: string, subCategoryId: string): Promise<MonthlyBudget[]>;
+  deleteBySubCategoryId(subCategoryId: string): Promise<void>;
 }
