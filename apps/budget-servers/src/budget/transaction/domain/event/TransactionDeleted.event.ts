@@ -1,12 +1,27 @@
 import { DomainEvent } from '@shared/domain/bus/event/DomainEvent';
 
 export class TransactionDeletedEvent extends DomainEvent {
+  get amount(): string {
+    return this._amount;
+  }
+
+  get subCategoryId(): string {
+    return this._subCategoryId;
+  }
+
+  get accountId(): string {
+    return this._accountId;
+  }
+
+  get date(): string {
+    return this._date;
+  }
   constructor(
     id: string,
-    public readonly amount: string,
-    public readonly subCategoryId: string,
-    public readonly accountId: string,
-    public readonly date: string,
+    private readonly _amount: string,
+    private readonly _subCategoryId: string,
+    private readonly _accountId: string,
+    private readonly _date: string,
     eventId?: string,
     occurredOn?: string,
   ) {

@@ -11,6 +11,6 @@ export class SubCategoryFindAllByCategoryIdHandler
   constructor(private readonly subCategoryService: SubCategoryService) {}
 
   async execute(query: SubCategoryFindAllByCategoryIdQuery): Promise<SubCategory[]> {
-    return await this.subCategoryService.findAllByCategoryId(query.categoryId, query.month, query.year);
+    return await this.subCategoryService.findAllByCategoryId(query.categoryId);
   }
 }

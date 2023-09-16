@@ -163,4 +163,10 @@ export class MongoMonthlyBudgetRepository implements MonthlyBudgetRepository {
       monthlyBudget,
     );
   }
+
+  async deleteBySubCategoryId(subCategoryId: string): Promise<void> {
+    await this.monthlyBudgetModel.deleteMany({
+      subCategoryId,
+    });
+  }
 }

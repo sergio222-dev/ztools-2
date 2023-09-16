@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import budget from '@budget/index';
-import { Connection } from 'mongoose';
 
 const mongoSchemasModule = MongooseModule.forFeature(budget.schemas);
 
