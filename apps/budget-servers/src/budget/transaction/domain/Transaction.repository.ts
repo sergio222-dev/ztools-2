@@ -5,6 +5,7 @@ export interface TransactionRepository {
   findByIds(ids: string[]): Promise<Transaction[]>;
   findOneById(id: string): Promise<Transaction>;
   findAllByAccountId(id: string): Promise<Transaction[]>;
+  findAllBySubCategoryId(id: string): Promise<Transaction[]>;
   save(transaction: Transaction): Promise<void>;
   update(transaction: Transaction): Promise<void>;
   delete(id: string): Promise<void>;

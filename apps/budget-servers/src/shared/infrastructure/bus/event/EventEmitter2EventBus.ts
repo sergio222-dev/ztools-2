@@ -11,7 +11,6 @@ export class EventEmitter2EventBus implements EventBus {
 
   async publish(events: DomainEvent[]): Promise<void> {
     for (const event of events) {
-      console.log(`publishing this event ${getEventNameFromEvent(event)}`);
       const eventName = getEventNameFromEvent(event);
       this.eventEmitter.emit(eventName, event);
     }

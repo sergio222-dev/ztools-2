@@ -88,6 +88,10 @@ export class TransactionService {
     return await this.transactionRepository.findAllByAccountId(accountId);
   }
 
+  async findAllBySubCategoryId(subCategoryId: string): Promise<Transaction[]> {
+    return await this.transactionRepository.findAllBySubCategoryId(subCategoryId);
+  }
+
   async deleteOneById(id: string): Promise<void> {
     const transaction = await this.transactionRepository.findOneById(id);
     const transactionService = new TransactionUpdaterService(transaction);

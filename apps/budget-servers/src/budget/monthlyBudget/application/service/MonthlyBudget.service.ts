@@ -89,4 +89,8 @@ export class MonthlyBudgetService {
   async createOne(monthlyBudget: MonthlyBudget): Promise<void> {
     await this.monthlyBudgetRepository.createOne(monthlyBudget);
   }
+
+  async deleteBySubCategoryId(subCategoryId: string): Promise<void> {
+    await this.monthlyBudgetRepository.deleteBySubCategoryId(subCategoryId);
+  }
 }

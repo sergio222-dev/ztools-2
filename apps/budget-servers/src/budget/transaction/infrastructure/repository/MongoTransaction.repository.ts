@@ -138,6 +138,28 @@ export class MongoTransactionRepository extends MongoRepository implements Trans
     });
   }
 
+  async findAllBySubCategoryId(id: string): Promise<Transaction[]> {
+    const transactionsDocuments = await this.transactionModel.find({
+      subCategoryId: id,
+    });
+
+    return transactionsDocuments.map(t => {
+      return Transaction.RETRIEVE(
+        t.id,
+        t.inflow,
+        t.outflow,
+        t.payee,
+        t.memo,
+        t.subCategoryId,
+        new Date(t.date),
+        t.cleared,
+        t.accountId,
+        t.createdAt,
+        t.updatedAt,
+      );
+    });
+  }
+
   async delete(id: string): Promise<void> {
     await this.transactionModel.findByIdAndDelete(id).exec();
   }
