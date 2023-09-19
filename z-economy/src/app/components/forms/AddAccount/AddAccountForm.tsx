@@ -103,12 +103,15 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
         </div>
         <div className={styles.add_account_modal_form_body}>
           <div>
-            <div className={styles.add_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                Give it a nickname
-              </Typography>
-            </div>
+            <label htmlFor="accountName">
+              <div className={styles.add_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  Give it a nickname
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountName"
               name="accountName"
               className={styles.add_account_modal_input}
               onChange={handleAccountNameChange}
@@ -116,12 +119,15 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
           </div>
           {/*// TODO: implement creating a transaction for the account initial balance */}
           <div>
-            <div className={styles.add_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                What is your current account balance?
-              </Typography>
-            </div>
+            <label htmlFor="accountBalance">
+              <div className={styles.add_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  What is your current account balance?
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountBalance"
               name="accountBalance"
               className={styles.add_account_modal_input}
               onChange={handleAccountBalanceChange}

@@ -27,4 +27,8 @@
     font-weight: bold;
   }
 
+  &.variant_semi-bold {
+    @include mixins.font-size-variant(0.9);
+    font-weight: 500;
+  }
 }

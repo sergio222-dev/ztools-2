@@ -126,12 +126,15 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             </Typography>
           </div>
           <div>
-            <div className={styles.edit_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                Account Nickname
-              </Typography>
-            </div>
+            <label htmlFor="accountName">
+              <div className={styles.edit_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  Account Nickname
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountName"
               name="accountName"
               className={styles.edit_account_modal_input}
               defaultValue={account.name}
@@ -141,12 +144,15 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
           <hr style={{ width: '100%' }} />
           <div>
             {/* // TODO: implement creating a transaction for account balance readjustment on edit*/}
-            <div className={styles.edit_account_modal_input_header}>
-              <Typography variant="bold" size="large">
-                Working Balance
-              </Typography>
-            </div>
+            <label htmlFor="accountWorkingBalance">
+              <div className={styles.edit_account_modal_input_header}>
+                <Typography variant="bold" size="large">
+                  Working Balance
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountWorkingBalance"
               name="accountWorkingBalance"
               className={styles.edit_account_modal_input}
               defaultValue={account.balance}
