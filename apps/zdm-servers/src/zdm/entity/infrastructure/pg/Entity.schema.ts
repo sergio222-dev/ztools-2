@@ -57,9 +57,21 @@ export const EntitySchema = new PgSchema<EntitySchemaType>({
   name: 'entity',
   // relationIds: {
   //   parent_id: {
-  //     relationName: 'id',
+  //     relationName: 'parent_id',
   //     alias: 'entity',
+  //     queryBuilderFactory: (queryBuilder) => {
+  //       queryBuilder.printSql()
+  //       return queryBuilder.from('entity', 'entity');
+  //     }
   //   },
+  // },
+  // relations: {
+  //   "parent_id": {
+  //     treeParent: true,
+  //     treeChildren: true,
+  //     type: 'many-to-one',
+  //     target: 'entity',
+  //   }
   // },
   columns: {
     id: {
@@ -80,4 +92,26 @@ export const EntitySchema = new PgSchema<EntitySchemaType>({
     },
     ...ownershipInfo,
   },
+  relations: {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    parent_: {
+      treeParent: true,
+      treeChildren: true,
+      type: 'many-to-one',
+      target: 'entity',
+    },
+  },
+  //   relationIds: {
+  //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // // @ts-ignore
+  //     parent_: {
+  //       relationName: 'entity',
+  //       alias: 'entity',
+  //       queryBuilderFactory: (queryBuilder) => {
+  //         queryBuilder.printSql()
+  //         return queryBuilder.from('entity', 'entity');
+  //       }
+  //     },
+  //   },
 });

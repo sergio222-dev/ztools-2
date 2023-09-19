@@ -1,4 +1,4 @@
-import { routeLoader$ } from '@builder.io/qwik-city';
+import { RequestHandler, routeLoader$ } from '@builder.io/qwik-city';
 import type { InitialValues } from '@modular-forms/qwik';
 import type { IFormLogin, IFormLoginResponse } from '~/components/form/login';
 import { component$ } from '@builder.io/qwik';
@@ -35,6 +35,12 @@ export const useLogin = formAction$<IFormLogin, IFormLoginResponse>(async (data,
     };
   }
 }, zodForm$(LoginSchema));
+
+export const onGet: RequestHandler = async ({ cookie, redirect }) => {
+  if (cookie.has('token')) {
+    throw redirect(302, '/');
+  }
+};
 
 export default component$(() => {
   const loader = useLoginLoader();

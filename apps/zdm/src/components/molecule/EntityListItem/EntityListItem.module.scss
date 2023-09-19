@@ -1,0 +1,16 @@
+.entity-list-item {
+  @apply w-[100%] pl-[8px] pr-[8px];
+
+  .entity-list-button {
+    @apply w-[100%] text-white;
+    text-align: left;
+
+    &:hover {
+      @apply bg-gray-700;
+    }
+
+    &:active {
+      @apply bg-gray-700 text-white;
+    }
+  }
+}

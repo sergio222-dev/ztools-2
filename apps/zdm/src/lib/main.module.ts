@@ -7,6 +7,7 @@ import { FetchEntityRepository } from "~/lib/entity/infrastructure/repository/Fe
 import { CreateEntity } from "~/lib/entity/application/createEntity";
 import { FetchEntityObjectRepository } from "~/lib/entityObject/infrastructure/repository/FetchEntityObject.repository";
 import { CreateEntityObject } from "~/lib/entityObject/application/createEntityObject";
+import { FetchEntity } from "~/lib/entity/application/fetchEntity";
 
 
 const buildContainer = () => {
@@ -20,6 +21,7 @@ const buildContainer = () => {
     // services
     .provideClass('signIn', SignIn)
     .provideClass('fetchAllEntity', FetchAllEntity)
+    .provideClass('fetchEntity', FetchEntity)
     .provideClass('createEntity', CreateEntity)
     .provideClass('createEntityObject', CreateEntityObject)
 }

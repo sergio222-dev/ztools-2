@@ -18,7 +18,7 @@ update:
 build: update
 	@rush build --to $(PROJECT_NAME)
 
-deploy:
+deploy: build
 	@if [ -d $(DEPLOY_CONTAINER) ]; then \
 		rush deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER) --overwrite; \
 	else \

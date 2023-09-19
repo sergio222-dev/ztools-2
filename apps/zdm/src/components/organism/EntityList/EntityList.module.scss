@@ -1,0 +1,9 @@
+.entity-list-container {
+  @apply select-none;
+
+  .item {
+    text-align: center;
+    padding: 8px 0;
+    @apply font-bold;
+  }
+}
