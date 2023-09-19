@@ -1,9 +1,9 @@
 version: '3.7'
-
+name: 'budget'
 services:
   budget-server:
     build:
-      context: .
+      context: ./../../
       dockerfile: apps/budget-servers/Dockerfile
       target: budget-server
     profiles:
@@ -26,7 +26,7 @@ services:
     ports:
       - '${MONGO_PORT}:${MONGO_PORT}'
     volumes:
-      - './scripts/db/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
+      - './scripts/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -46,31 +46,5 @@ services:
       ME_CONFIG_MONGODB_PORT: 27017
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-  zdm-db:
-    image: postgres
-    profiles:
-      - zdm
-      - zdm-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - '${POSTGRES_PORT}:5432'
-    volumes:
-      -
-  adminer:
-    image: adminer
-    profiles:
-      - zdm
-      - zdm-postgres
-    restart: always
-    environment:
-      ADMINER_DEFAULT_SERVER: zdm-db
-      ADMINER_DESIGN: dracula
-    ports:
-      - '${ADMINER_PORT}:8080'
-
 volumes:
   data:
