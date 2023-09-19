@@ -23,6 +23,8 @@ import { UserSchema } from '@zdm/user/infrastructure/pg/User.schema';
 import { PgEntityRepository } from '@zdm/entity/infrastructure/repository/PgEntity.repository';
 import { PgEntityObjectRepository } from '@zdm/entityObject/infrastructure/repository/PgEntityObject.repository';
 import { PgUserRepository } from '@zdm/user/infrastructure/repository/PgUser.repository';
+import { FindEntityHandler } from '@zdm/entity/application/find/FindEntity.handler';
+import { FindEntity } from '@zdm/entity/application/find/FindEntity';
 
 const zdm = {
   services: [
@@ -30,6 +32,7 @@ const zdm = {
     CreateEntityObject,
     FindByUserName,
     ListEntity,
+    FindEntity,
     ListEntityObject,
     DeleteEntity,
   ],
@@ -37,6 +40,7 @@ const zdm = {
     CreateEntityHandler,
     CreateEntityObjectHandler,
     ListEntityHandler,
+    FindEntityHandler,
     FindByUserNameHandler,
     ListEntityObjectHandler,
     DeleteEntityHandler,

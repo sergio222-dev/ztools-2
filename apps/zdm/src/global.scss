@@ -1,0 +1,18 @@
+//@use "bootstrap/dist/css/bootstrap-grid.css";
+
+/**
+ * Tailwind CSS imports
+ * View the full documentation at https://tailwindcss.com
+ */
+//@tailwind base;
+//@tailwind components;
+@tailwind utilities;
+
+.main-screen {
+  @apply h-screen;
+
+  .main-view {
+    @apply flex;
+    height: calc(theme('height.screen') - 48px);
+  }
+}

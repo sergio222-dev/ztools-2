@@ -20,17 +20,31 @@ export class FetchEntityRepository implements EntityRepository {
     });
   }
 
+  async fetch(id: string): Promise<EntityAggregate> {
+    const route = `${ENTITY_ROUTES.entity}/${id}`;
+    const response = await this.fetcherInstance.fetch(route, {
+      method: 'GET',
+    });
+
+    if ( !response.ok ) {
+      const data = await response.json();
+      throw new Error(response.statusText, {cause: data});
+    }
+
+    return await responseToJson<EntityAggregate>(response);
+  }
+
   async fetchAll(): Promise<EntityAggregate[]> {
     const route = ENTITY_ROUTES.entity;
     const response = await this.fetcherInstance.fetch(route, {
       method: 'GET',
     });
 
-    if (!response.ok) {
+    if ( !response.ok ) {
       const data = await response.json();
-      throw new Error(response.statusText, { cause: data });
+      throw new Error(response.statusText, {cause: data});
     }
 
     return await responseToJson<EntityAggregate[]>(response);
-}
+  }
 }

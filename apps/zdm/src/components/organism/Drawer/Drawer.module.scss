@@ -1,0 +1,29 @@
+.drawer-properties {
+  @apply md:w-[300px] md:min-w-[300px] w-[100vw] min-w-[100vw];
+}
+
+.drawer-container {
+  @apply overflow-hidden transition-all ease-out duration-100 bg-gray-900;
+  @extend .drawer-properties;
+
+  .drawer-item {
+    @apply h-[100%] overflow-y-auto;
+    @extend .drawer-properties;
+
+    &::-webkit-scrollbar {
+      @apply w-[8px];
+    }
+
+    &::-webkit-scrollbar-track {
+      @apply bg-gray-500 rounded-[8px];
+    }
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-gray-700 rounded-[8px];
+    }
+  }
+
+  &.collapse {
+    @apply w-[0] min-w-[0];
+  }
+}
