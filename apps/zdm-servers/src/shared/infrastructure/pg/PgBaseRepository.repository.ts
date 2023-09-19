@@ -6,6 +6,10 @@ import {
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
+import {
+  EntitySchema as EntitySchemas,
+  EntitySchemaType as EntitySchemasType,
+} from '@zdm/entity/infrastructure/pg/Entity.schema';
 import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 
 type BaseSchema = {

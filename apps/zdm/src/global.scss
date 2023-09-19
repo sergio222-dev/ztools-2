@@ -8,6 +8,11 @@
 //@tailwind components;
 @tailwind utilities;
 
-//.bootstrap-container {
-//  @extend .container;
-//}
+.main-screen {
+  @apply h-screen;
+
+  .main-view {
+    @apply flex;
+    height: calc(theme('height.screen') - 48px);
+  }
+}
