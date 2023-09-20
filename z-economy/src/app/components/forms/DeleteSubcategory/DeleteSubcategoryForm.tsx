@@ -9,7 +9,7 @@ import { Select } from '@atoms/Select/Select';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
-import { SubCategoryDeleteBody } from '@core/budget/category/domain/SubCategoryDeleteBody';
+import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 
 interface DeleteSubcategoryFormProperties {
   isOpen: Signal<boolean>;
@@ -29,8 +29,8 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
     if (formReference.current === null) return;
     const formData = new FormData(formReference.current);
     const subCategoryId = formData.get('selectCategory') as string;
-    variant === 'category' && void deleteCategory(id);
-    variant === 'subCategory' && void deleteSubCategory(new SubCategoryDeleteBody(id, subCategoryId));
+    variant === 'category' && void deleteCategory(new CategoryDeleteRequest(id, subCategoryId));
+    variant === 'subCategory' && void deleteSubCategory(new CategoryDeleteRequest(id, subCategoryId));
     isOpen.value = false;
   };
 

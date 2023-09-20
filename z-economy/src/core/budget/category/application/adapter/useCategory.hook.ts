@@ -11,7 +11,7 @@ import { SubCategoryDelete } from '@core/budget/category/application/useCase/Sub
 import { CategoryDelete } from '@core/budget/category/application/useCase/CategoryDelete';
 import { useMemo } from 'react';
 import currency from 'currency.js';
-import { SubCategoryDeleteBody } from '@core/budget/category/domain/SubCategoryDeleteBody';
+import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
@@ -61,9 +61,9 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
-  const deleteCategory = async (id: string) => {
+  const deleteCategory = async (ids: CategoryDeleteRequest) => {
     if (!data) return;
-    await categoryDelete.execute(id);
+    await categoryDelete.execute(ids);
     await mutate(data);
   };
 
@@ -79,7 +79,7 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
-  const deleteSubCategory = async (ids: SubCategoryDeleteBody) => {
+  const deleteSubCategory = async (ids: CategoryDeleteRequest) => {
     if (!data) return;
     await subCategoryDelete.execute(ids);
     await mutate(data);
