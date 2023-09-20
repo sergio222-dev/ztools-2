@@ -24,35 +24,6 @@
   padding: functions.spacing(0.9);
 }
 
-@mixin delete-button {
-  display: flex;
-  justify-content: flex-end;
-
-  & > button:last-child {
-    margin-left: functions.spacing(1);
-  }
-
-  .delete_subcategory_form_footer_delete_button {
-    box-shadow: 0 0 0 1px constants.$page-light-border-color;
-    color: constants.$delete-button-color;
-
-    &:hover {
-      background-color: constants.$delete-button-color;
-      color: constants.$secondary-text-color;
-    }
-
-    &:focus {
-      background-color: constants.$delete-button-color;
-      color: constants.$secondary-text-color;
-    }
-
-    &:focus-visible {
-      background-color: constants.$delete-button-color;
-      color: constants.$secondary-text-color;
-    }
-  }
-}
-
 @mixin media-breakpoint-up($name, $breakpoints: constants.$grid-breakpoints) {
   $min: functions.breakpoint-min($name, $breakpoints);
 
