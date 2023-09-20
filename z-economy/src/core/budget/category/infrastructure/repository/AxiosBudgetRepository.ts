@@ -4,6 +4,7 @@ import { CategoryRepository } from '@core/budget/category/domain/CategoryReposit
 import { Category } from '@core/budget/category/domain/Category';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { SubCategoryDeleteBody } from '@core/budget/category/domain/SubCategoryDeleteBody';
 
 @injectable()
 export class AxiosBudgetRepository implements CategoryRepository {
@@ -17,8 +18,8 @@ export class AxiosBudgetRepository implements CategoryRepository {
     await this.axios.post<SubCategory>('/subCategory/', c);
   }
 
-  async deleteSubCategory(id: string) {
-    await this.axios.delete(`/subCategory/${id}`);
+  async deleteSubCategory(ids: SubCategoryDeleteBody) {
+    await this.axios.post(`/subCategory/delete`, ids);
   }
 
   async getAll(month: string, year: string): Promise<Category[]> {

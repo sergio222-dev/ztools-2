@@ -9,7 +9,6 @@ import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { Button } from '@atoms/Button/Button';
 import { Typography } from '@atoms/Typography/Typography';
-import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { Row } from '@tanstack/react-table';
 import { Category } from '@core/budget/category/domain/Category';
@@ -28,16 +27,13 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   const tooltipReference = useRef(null);
   const modalIsOpen = useSignal(false);
 
-  // SERVICES
-  const { deleteSubCategory, deleteCategory } = useCategoryHook(new Date());
-
   // HANDLERS
 
   const formCancelHandler = () => {
     isOpen.value = false;
   };
 
-  const handleDelete = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     isOpen.value = false;
     modalIsOpen.value = true;
@@ -69,7 +65,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
             <Button
               variant="primary"
               onClick={event => {
-                handleDelete(event, row.original.id);
+                handleDelete(event);
               }}
               className={styles.edit_category_delete_button}
             >
@@ -89,12 +85,11 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         </form>
       </Tooltip>
       <Modal
-        // isOpen={modalIsOpen.value}
-        isOpen={true}
+        isOpen={modalIsOpen.value}
         className={styles.delete_subcategory_modal_content}
         overlayClassName={styles.delete_subcategory_modal_overlay}
       >
-        <DeleteSubcategoryForm isOpen={modalIsOpen} id={''} variant={variant} />
+        <DeleteSubcategoryForm isOpen={modalIsOpen} id={row.original.id} variant={variant} />
       </Modal>
     </div>
   );

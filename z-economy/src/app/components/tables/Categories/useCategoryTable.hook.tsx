@@ -75,11 +75,12 @@ export function useCategoryTableHook(budgetDate: Date) {
 
   // SIDE EFFECTS
 
-  useOutsideClick(reference, () => {
-    if (tableReference.current && tableReference.current?.getIsSomeRowsSelected()) {
-      tableReference.current?.toggleAllRowsSelected(false);
-    }
-  });
+  // Breaks subcategory delete modal because deselects the row
+  // useOutsideClick(reference, () => {
+  //   if (tableReference.current && tableReference.current?.getIsSomeRowsSelected()) {
+  //     tableReference.current?.toggleAllRowsSelected(false);
+  //   }
+  // });
 
   useEffect(() => {
     void mutate(cdata, { revalidate: true });

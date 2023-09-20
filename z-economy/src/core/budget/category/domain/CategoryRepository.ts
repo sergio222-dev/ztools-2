@@ -1,6 +1,7 @@
 import { Category } from '@core/budget/category/domain/Category';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
+import { SubCategoryDeleteBody } from '@core/budget/category/domain/SubCategoryDeleteBody';
 
 export interface CategoryRepository {
   getAll(month: string, year: string): Promise<Category[]>;
@@ -8,5 +9,5 @@ export interface CategoryRepository {
   createSubCategory(c: SubCategory): Promise<void>;
   assignSubCategoryBudget(b: SubCategoryBudget): Promise<void>;
   deleteCategory(id: string): Promise<void>;
-  deleteSubCategory(id: string): Promise<void>;
+  deleteSubCategory(ids: SubCategoryDeleteBody): Promise<void>;
 }
