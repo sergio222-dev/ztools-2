@@ -1,5 +1,5 @@
 import styles from './DeleteSubcategoryForm.module.scss';
-import React, { SyntheticEvent, useRef } from 'react';
+import { SyntheticEvent, useRef } from 'react';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
 import { IconButton } from '@atoms/Button/IconButton';
@@ -34,7 +34,11 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
     isOpen.value = false;
   };
 
-  const filteredSubcats = subCats.filter(subCat => subCat.name !== 'Inflow: Ready to Assign');
+  const filteredSubcats = subCats.filter(subCat =>
+    variant === 'category'
+      ? subCat.categoryId !== id && subCat.name !== 'Inflow: Ready to Assign'
+      : subCat.name !== 'Inflow: Ready to Assign',
+  );
 
   return (
     <form name="delete-subcategory" ref={formReference} onSubmit={handleSubmit}>
