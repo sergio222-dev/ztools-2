@@ -1,5 +1,6 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
+@use '../../styles/mixins';
 
 .delete_subcategory_modal_title {
   display: flex;
@@ -22,5 +23,33 @@
     flex-grow: 1;
     text-align: left;
     //margin-left: 1.5rem;
+  }
+}
+
+.delete_subcategory_modal_form_body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding: functions.spacing(2);
+
+  .disclaimer_text {
+    margin-bottom: functions.spacing(1);
+    width: 28rem;
+  }
+
+  .select_text {
+    margin-top: functions.spacing(1);
+    margin-bottom: functions.spacing(1);
+  }
+
+  .select_subcategory {
+    margin-bottom: functions.spacing(2);
+    width: 100%;
+  }
+
+  .delete_subcategory_form_footer_buttons {
+    @include mixins.delete-button;
   }
 }

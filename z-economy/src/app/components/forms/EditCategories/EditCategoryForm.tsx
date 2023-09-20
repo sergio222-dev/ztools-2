@@ -89,7 +89,8 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         </form>
       </Tooltip>
       <Modal
-        isOpen={modalIsOpen.value}
+        // isOpen={modalIsOpen.value}
+        isOpen={true}
         className={styles.delete_subcategory_modal_content}
         overlayClassName={styles.delete_subcategory_modal_overlay}
       >

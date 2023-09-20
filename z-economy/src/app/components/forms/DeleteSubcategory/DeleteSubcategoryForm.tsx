@@ -51,8 +51,8 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
           <RxCross2 />
         </IconButton>
       </div>
-      <div>
-        <div>
+      <div className={styles.delete_subcategory_modal_form_body}>
+        <div className={styles.disclaimer_text}>
           <Typography Component="span" variant="normal" size="normal">
             Before you can delete the category
             <strong> Health & Wellness</strong>, you&apos;ll need to reassign your past activity to a new
@@ -61,13 +61,13 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
         </div>
         <div>
           <label>
-            <div>
-              <Typography Component="p" variant="semi-bold" size="normal">
+            <div className={styles.select_text}>
+              <Typography Component="p" variant="bold" size="normal">
                 Select category
               </Typography>
             </div>
           </label>
-          <Select id="selectCategory" name="selectCategory">
+          <Select id="selectCategory" name="selectCategory" className={styles.select_subcategory}>
             {filteredSubcats?.map(subCategory => (
               <option key={subCategory.id} value={subCategory.id}>
                 {subCategory.name}
@@ -87,11 +87,13 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
             <li>Any remaining available amount</li>
           </ul>
         </div>
-        <div>
+        <div className={styles.delete_subcategory_form_footer_buttons}>
           <ButtonUnfilled type="reset" onClick={() => (isOpen.value = false)}>
             Cancel
           </ButtonUnfilled>
-          <ButtonUnfilled type="submit">Delete</ButtonUnfilled>
+          <ButtonUnfilled type="submit" className={styles.delete_subcategory_form_footer_delete_button}>
+            Delete
+          </ButtonUnfilled>
         </div>
       </div>
     </form>
