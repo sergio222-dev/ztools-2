@@ -3,7 +3,7 @@ import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 // eslint-disable-next-line import/default
-import React, { useRef } from 'react';
+import { MouseEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
@@ -23,7 +23,7 @@ interface EditCategoryFormProperties {
 
 export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormProperties) {
   // STATE
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
   const modalIsOpen = useSignal(false);
 
@@ -33,7 +33,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
     isOpen.value = false;
   };
 
-  const handleDelete = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     isOpen.value = false;
     modalIsOpen.value = true;
@@ -64,6 +64,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           <div className={styles.form_buttons}>
             <Button
               variant="primary"
+              type="reset"
               onClick={event => {
                 handleDelete(event);
               }}
@@ -85,6 +86,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         </form>
       </Tooltip>
       <Modal
+        // id={row.original.id}
         isOpen={modalIsOpen.value}
         className={styles.delete_subcategory_modal_content}
         overlayClassName={styles.delete_subcategory_modal_overlay}
