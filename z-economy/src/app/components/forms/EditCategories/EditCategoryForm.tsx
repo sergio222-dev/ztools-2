@@ -5,7 +5,7 @@ import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 // eslint-disable-next-line import/default
 import React, { useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { Signal } from '@preact/signals-react';
+import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { Button } from '@atoms/Button/Button';
 import { Typography } from '@atoms/Typography/Typography';
@@ -13,6 +13,8 @@ import { useCategoryHook } from '@core/budget/category/application/adapter/useCa
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { Row } from '@tanstack/react-table';
 import { Category } from '@core/budget/category/domain/Category';
+import Modal from 'react-modal';
+import { DeleteSubcategoryForm } from '../DeleteSubcategory/DeleteSubcategoryForm';
 
 interface EditCategoryFormProperties {
   isOpen: Signal<boolean>;
@@ -24,6 +26,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   // STATE
   const formReference = useRef(null);
   const tooltipReference = useRef(null);
+  const modalIsOpen = useSignal(false);
 
   // SERVICES
   const { deleteSubCategory, deleteCategory } = useCategoryHook(new Date());
@@ -36,9 +39,8 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
 
   const handleDelete = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
     event.preventDefault();
-    variant === 'category' && void deleteCategory(id);
-    variant === 'subCategory' && void deleteSubCategory(id);
     isOpen.value = false;
+    modalIsOpen.value = true;
     return;
   };
 
@@ -86,6 +88,13 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           </div>
         </form>
       </Tooltip>
+      <Modal
+        isOpen={modalIsOpen.value}
+        className={styles.delete_subcategory_modal_content}
+        overlayClassName={styles.delete_subcategory_modal_overlay}
+      >
+        <DeleteSubcategoryForm isOpen={modalIsOpen} id={''} variant={variant} />
+      </Modal>
     </div>
   );
 }

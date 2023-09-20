@@ -103,6 +103,16 @@ export const useCategoryHook = (date: Date) => {
     return '';
   };
 
+  const subCats: SubCategory[] = [];
+
+  if (data) {
+    for (const category of data) {
+      for (const subCategory of category.subCategories) {
+        subCats.push(subCategory);
+      }
+    }
+  }
+
   return {
     cdata: data ?? [],
     error: error,
@@ -116,5 +126,6 @@ export const useCategoryHook = (date: Date) => {
     deleteSubCategory,
     deleteCategory,
     findAdjustmentSubcategoryId,
+    subCats,
   };
 };

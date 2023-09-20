@@ -25,7 +25,7 @@ export function AddCategoryForm({
   variant,
   categoryId,
 }: AddCategoryFormProperties) {
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
 
   const categoryGroupSubmitHandler = (event: SyntheticEvent<HTMLFormElement>) => {

@@ -1,0 +1,26 @@
+@use '../../styles/constants' as const;
+@use '../../styles/functions';
+
+.delete_subcategory_modal_title {
+  display: flex;
+  padding: functions.spacing(2);
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: const.$page-light-border-color 1px solid;
+  height: 3rem;
+
+  .delete_subcategory_modal_cancel_button {
+    color: const.$primary-color;
+    padding: 0;
+    margin-right: -(functions.spacing(1));
+    & > svg {
+      height: 1.5rem;
+    }
+  }
+
+  .title_text {
+    flex-grow: 1;
+    text-align: left;
+    //margin-left: 1.5rem;
+  }
+}

@@ -57,7 +57,7 @@ export function useSideBarHooks(): [SideBarModel, SideBarOperators] {
 
   // SERVICES
   const navigate = useNavigate();
-  const { adata, error, isLoading, mutate } = useAccountHook();
+  const { adata } = useAccountHook();
 
   const handleSidebarButtonClick = (buttonRoute: string) => {
     navigate(buttonRoute);

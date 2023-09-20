@@ -8,7 +8,6 @@ import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
-import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 
 export const useTransactionTableHook = () => {
@@ -31,9 +30,9 @@ export const useTransactionTableHook = () => {
   const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
 
-  const { cdata } = useCategoryHook(new Date());
+  const { subCats } = useCategoryHook(new Date());
 
-  const { adata, mutateAccountData } = useAccountHook();
+  const { mutateAccountData } = useAccountHook();
 
   // HANDLERS
 
@@ -269,14 +268,6 @@ export const useTransactionTableHook = () => {
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
     selectedColumnId.current = 'date';
   });
-
-  const subCats: SubCategory[] = [];
-
-  for (const category of cdata) {
-    for (const subCategory of category.subCategories) {
-      subCats.push(subCategory);
-    }
-  }
 
   // COLUMNS
   const columns = useTransactionTableColumnsHook(

@@ -1,6 +1,6 @@
 import { Signal } from '@preact/signals-react';
 // eslint-disable-next-line import/default
-import React, { SyntheticEvent, useRef } from 'react';
+import React, { SyntheticEvent, useEffect, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import styles from './EditAccountForm.module.scss';
 import cls from 'classnames';
@@ -22,7 +22,7 @@ interface EditAccountFormProperties {
 }
 export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) {
   // STATE
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
   const accountNameInputReference = useRef<HTMLInputElement>(null);
 
   //SERVICES
@@ -95,7 +95,9 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   // EFFECTS
 
-  accountNameInputReference.current?.focus();
+  useEffect(() => {
+    accountNameInputReference.current?.focus();
+  }, []);
 
   return (
     <form
