@@ -31,7 +31,7 @@ export function SideBarView() {
               key={button.name}
               aria-selected={activeButton === button.route}
               active={activeButton === button.route}
-              onClick={() => {
+              onClick={event => {
                 handleSidebarButtonClick(button.route);
               }}
               StartIcon={button.icon}

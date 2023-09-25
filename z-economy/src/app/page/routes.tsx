@@ -20,7 +20,11 @@ const privateRoutes: RouteObject[] = [
     element: <Home />,
   },
   {
-    path: '/all-accounts',
+    path: '/accounts',
+    element: <AllAccounts />,
+  },
+  {
+    path: '/accounts/:accountId',
     element: <AllAccounts />,
   },
   {

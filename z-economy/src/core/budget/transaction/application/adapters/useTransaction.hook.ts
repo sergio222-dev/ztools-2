@@ -116,7 +116,7 @@ export const useTransactionHook = () => {
   };
 
   return {
-    data: data ?? [],
+    tdata: data ?? [],
     error: error,
     isLoading,
     updateData: updateTransaction,

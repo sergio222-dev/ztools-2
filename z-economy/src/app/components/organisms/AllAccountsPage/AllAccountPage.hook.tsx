@@ -15,8 +15,8 @@ export type WorkingBalance = {
 
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
-  const { data } = useTransactionHook();
-  const totalCleared = data
+  const { tdata } = useTransactionHook();
+  const totalCleared = tdata
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((a, transaction) => {
       if (transaction.cleared) {
@@ -25,7 +25,7 @@ export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOp
       return currency(a);
     }, currency(0))
     .format();
-  const totalUncleared = data
+  const totalUncleared = tdata
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((a, transaction) => {
       if (!transaction.cleared) {

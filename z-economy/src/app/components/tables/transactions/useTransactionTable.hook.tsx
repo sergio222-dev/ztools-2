@@ -9,6 +9,7 @@ import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hoo
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { useParams } from 'react-router';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -27,12 +28,11 @@ export const useTransactionTableHook = () => {
   const selectedColumnId = useRef('date');
 
   // SERVICES
-  const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
+  const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
-
   const { subCats } = useCategoryHook(new Date());
-
   const { mutateAccountData } = useAccountHook();
+  const { accountId } = useParams();
 
   // HANDLERS
 
@@ -267,6 +267,11 @@ export const useTransactionTableHook = () => {
     tableReference.current &&
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.filter(t => t.id !== '').length);
     selectedColumnId.current = 'date';
+  });
+
+  const data = tdata.filter(transaction => {
+    if (!accountId) return transaction;
+    return transaction.accountId === accountId;
   });
 
   // COLUMNS

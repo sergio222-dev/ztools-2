@@ -1,6 +1,6 @@
 import styles from './LeftSidebarCollapsible.module.scss';
 import { CollapsibleButton } from '../../atoms';
-import { ReactNode, useState } from 'react';
+import { MouseEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
@@ -10,6 +10,7 @@ import { MdEdit } from 'react-icons/md';
 import Modal from 'react-modal';
 import { useSignal } from '@preact/signals-react';
 import { EditAccountForm } from '../../forms/EditAccount/EditAccountForm';
+import { useNavigate } from 'react-router';
 
 interface Collapsible {
   className?: string | undefined;
@@ -18,8 +19,15 @@ interface Collapsible {
 }
 
 export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsible) {
+  // STATE
   const [isContentVisible, setIsContentVisible] = useState(true);
   const modalIsOpen = useSignal('');
+  const overlayReference = useRef<HTMLDivElement>();
+
+  // SERVICES
+  const navigate = useNavigate();
+
+  // FUNCTIONS
   const totalBudget = accounts
     // eslint-disable-next-line unicorn/no-array-reduce
     .reduce((total, account) => {
@@ -29,6 +37,20 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
 
   const handleContentVisible = () => {
     setIsContentVisible(!isContentVisible);
+  };
+
+  const handleAccountButtonClick = (
+    accountId: string,
+    event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+  ) => {
+    if (event.target === overlayReference.current) return;
+    navigate('/accounts/' + accountId);
+  };
+
+  const handleAccountEditOnCLick = (event: MouseEvent<HTMLAnchorElement>, accountId: string) => {
+    event.preventDefault();
+    modalIsOpen.value = accountId;
+    event.stopPropagation();
   };
 
   const containerClassname = isContentVisible
@@ -55,16 +77,28 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
               key={account.id}
               className={cls(styles.sidebar_button, 'z_stack_margin_bottom_item_1 z_padding_left_2')}
               variant="base"
+              onClick={event => {
+                handleAccountButtonClick(account.id, event);
+              }}
             >
-              <a className={styles.edit_icon} onClick={() => (modalIsOpen.value = account.id)}>
+              <a
+                className={styles.edit_icon}
+                onClick={event => {
+                  handleAccountEditOnCLick(event, account.id);
+                }}
+              >
                 <MdEdit />
               </a>
               <Modal
                 isOpen={modalIsOpen.value === account.id}
                 className={styles.edit_account_modal_content}
                 overlayClassName={styles.edit_account_modal_overlay}
+                overlayRef={node => (overlayReference.current = node)}
+                // contentRef={node => (contentReference.current = node)}
               >
-                <EditAccountForm isOpen={modalIsOpen} account={account} />
+                <div onClick={event => event.stopPropagation()}>
+                  <EditAccountForm isOpen={modalIsOpen} account={account} />
+                </div>
               </Modal>
               <span className={styles.bank_name}>
                 <Typography>{account.name}</Typography>
