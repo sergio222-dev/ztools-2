@@ -56,25 +56,5 @@
     & > button:last-child {
       margin-left: functions.spacing(1);
     }
-
-    .delete_subcategory_form_footer_delete_button {
-      box-shadow: 0 0 0 1px const.$page-light-border-color;
-      color: const.$delete-button-color;
-
-      &:hover {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-
-      &:focus {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-
-      &:focus-visible {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-    }
   }
 }

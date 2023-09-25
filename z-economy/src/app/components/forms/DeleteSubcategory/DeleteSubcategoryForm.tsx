@@ -94,7 +94,7 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
           <ButtonUnfilled type="reset" onClick={() => (isOpen.value = false)}>
             Cancel
           </ButtonUnfilled>
-          <ButtonUnfilled type="submit" className={styles.delete_subcategory_form_footer_delete_button}>
+          <ButtonUnfilled variant="delete" type="submit">
             Delete
           </ButtonUnfilled>
         </div>

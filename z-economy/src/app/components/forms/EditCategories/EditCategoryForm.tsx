@@ -62,18 +62,18 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
             name="categoryName"
           />
           <div className={styles.form_buttons}>
-            <Button
-              variant="primary"
+            <ButtonUnfilled
+              variant="delete"
               type="reset"
               onClick={event => {
                 handleDelete(event);
               }}
-              className={styles.edit_category_delete_button}
+              // className={styles.edit_category_delete_button}
             >
               <Typography>Delete</Typography>
-            </Button>
+            </ButtonUnfilled>
             <div className={styles.cancel_save_buttons}>
-              <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+              <ButtonUnfilled type="reset" onClick={formCancelHandler} variant="normal">
                 {' '}
                 Cancel{' '}
               </ButtonUnfilled>

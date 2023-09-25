@@ -166,8 +166,8 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
         </div>
         <div className={styles.edit_account_modal_footer_buttons}>
           <ButtonUnfilled
+            variant="delete"
             type="reset"
-            className={styles.edit_account_modal_footer_delete_button}
             onClick={event => {
               deleteAccountHandler(event, account.id);
             }}
@@ -175,11 +175,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             Delete
           </ButtonUnfilled>
           <div className={styles.cancel_save_buttons_flex}>
-            <ButtonUnfilled
-              type="reset"
-              className={styles.edit_account_modal_footer_cancel_button}
-              onClick={() => (isOpen.value = '')}
-            >
+            <ButtonUnfilled type="reset" onClick={() => (isOpen.value = '')}>
               Cancel
             </ButtonUnfilled>
             <ButtonFilled type="submit" className={styles.edit_account_modal_footer_save_button}>

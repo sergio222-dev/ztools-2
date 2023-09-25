@@ -151,17 +151,45 @@
   }
 }
 
-.z_button_cancel {
-  @include mixin.remove-default-button;
-  @include mixin.box-shadow(const.$primary-color);
+.z_button_unfilled {
+  &.variant_normal {
+    @include mixin.remove-default-button;
+    @include mixin.box-shadow(const.$primary-color);
 
-  background: none;
-  border: none;
-  border-radius: const.$radius;
-  color: const.$primary-color;
-  width: functions.spacing(10);
+    background: none;
+    border: none;
+    border-radius: const.$radius;
+    color: const.$primary-color;
+    width: functions.spacing(10);
 
-  @extend %edit_buttons_focus-visible_active_hover;
+    @extend %edit_buttons_focus-visible_active_hover;
+  }
+
+  &.variant_delete {
+    @include mixin.remove-default-button;
+    background: none;
+    border: none;
+    border-radius: const.$radius;
+    width: functions.spacing(10);
+
+    box-shadow: 0 0 0 1px const.$page-light-border-color;
+    color: const.$delete-button-color;
+
+    &:hover {
+      background-color: const.$delete-button-color;
+      color: const.$secondary-text-color;
+    }
+
+    &:focus {
+      background-color: const.$delete-button-color;
+      color: const.$secondary-text-color;
+    }
+
+    &:focus-visible {
+      background-color: const.$delete-button-color;
+      color: const.$secondary-text-color;
+    }
+  }
 }
 
 .z_button_save {
