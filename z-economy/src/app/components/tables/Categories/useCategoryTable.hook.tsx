@@ -208,7 +208,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               editedAssignValue.current = value;
             }}
             shouldFocus={true}
-            style={{ width: '50%' }}
+            className={styles.c_table_assign_input}
           />
         ) : (
           <EditableCell

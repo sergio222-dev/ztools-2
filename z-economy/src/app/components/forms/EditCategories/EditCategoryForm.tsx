@@ -35,8 +35,8 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
 
   const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    isOpen.value = false;
     modalIsOpen.value = true;
+    isOpen.value = false;
     return;
   };
 
