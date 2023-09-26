@@ -16,6 +16,7 @@
     padding: 0 functions.spacing(2) 0 0;
     border: 1px none const.$page-light-border-color;
     border-bottom-style: solid;
+    height: 2.5rem;
 
     &[data-type='numeric'] {
       text-align: right;
