@@ -55,70 +55,67 @@ export function BudgetPageTable<T>({
   }, [memoData]);
 
   useEffect(() => {
-    table.toggleAllRowsExpanded();
+    table.toggleAllRowsExpanded(true);
   }, []);
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
-      <table className={styles.z_table}>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+    <table className={styles.z_table}>
+      <thead>
+        {table.getHeaderGroups().map(headerGroup => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map(header => {
+              return (
+                <th
+                  className={styles.z_table_head}
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
+                >
+                  {header.isPlaceholder ? undefined : (
+                    <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                  )}
+                </th>
+              );
+            })}
+          </tr>
+        ))}
+      </thead>
+      <tbody>
+        {table.getRowModel().rows.map(row => {
+          return (
+            <tr
+              key={row.id}
+              className={
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                row.original.subCategories
+                  ? cls(styles.z_table_expansible_row, styles.c_table_row)
+                  : row.getIsSelected()
+                  ? styles.z_table_row_selected
+                  : styles.z_table_row_unselected
+              }
+              onKeyDown={event => {
+                handleRowOnKeyDown(event, row);
+              }}
+            >
+              {row.getVisibleCells().map(cell => {
                 return (
-                  <th
-                    className={styles.z_table_head}
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
+                  <td
+                    key={cell.id}
+                    data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
+                    className={styles.z_table_cell}
+                    onClick={() => {
+                      handleOnEdit(row, table, cell);
+                    }}
                   >
-                    {header.isPlaceholder ? undefined : (
-                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    )}
-                  </th>
+                    <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                  </td>
                 );
               })}
             </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => {
-            return (
-              <tr
-                key={row.id}
-                className={
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  row.original.subCategories
-                    ? cls(styles.z_table_expansible_row, styles.c_table_row)
-                    : row.getIsSelected()
-                    ? styles.z_table_row_selected
-                    : styles.z_table_row_unselected
-                }
-                onKeyDown={event => {
-                  handleRowOnKeyDown(event, row);
-                }}
-              >
-                {row.getVisibleCells().map(cell => {
-                  return (
-                    <td
-                      key={cell.id}
-                      data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
-                      className={styles.z_table_cell}
-                      onClick={() => {
-                        handleOnEdit(row, table, cell);
-                      }}
-                    >
-                      <div>{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
