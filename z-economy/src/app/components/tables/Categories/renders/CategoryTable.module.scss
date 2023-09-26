@@ -52,11 +52,12 @@
   }
 
   .z_table_expansible_row {
+    height: 2.5rem;
     background-color: const.$page-darker-background-color;
   }
 
   %z_table_row {
-    height: 40px;
+    height: 2rem;
     user-select: none;
     cursor: pointer;
     font-size: 0.8rem;
