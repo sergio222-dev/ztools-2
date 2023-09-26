@@ -21,7 +21,7 @@ export function CategoryTableView({ budgetDate }: CategoryTableViewProperties) {
   return (
     <div>
       <CategoryTableButtons createCategoryGroup={createCategoryGroup} />
-      <div ref={reference}>
+      <div ref={reference} style={{ display: 'flex' }}>
         <BudgetPageTable<Category>
           columns={columns}
           data={filteredData}
