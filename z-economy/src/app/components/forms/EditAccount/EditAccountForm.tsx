@@ -1,6 +1,6 @@
 import { Signal } from '@preact/signals-react';
 // eslint-disable-next-line import/default
-import React, { SyntheticEvent, useRef } from 'react';
+import React, { SyntheticEvent, useEffect, useRef } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import styles from './EditAccountForm.module.scss';
 import cls from 'classnames';
@@ -22,7 +22,7 @@ interface EditAccountFormProperties {
 }
 export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) {
   // STATE
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
   const accountNameInputReference = useRef<HTMLInputElement>(null);
 
   //SERVICES
@@ -95,7 +95,9 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   // EFFECTS
 
-  accountNameInputReference.current?.focus();
+  useEffect(() => {
+    accountNameInputReference.current?.focus();
+  }, [accountNameInputReference]);
 
   return (
     <form
@@ -126,12 +128,15 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             </Typography>
           </div>
           <div>
-            <div className={styles.edit_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                Account Nickname
-              </Typography>
-            </div>
+            <label htmlFor="accountName">
+              <div className={styles.edit_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  Account Nickname
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountName"
               name="accountName"
               className={styles.edit_account_modal_input}
               defaultValue={account.name}
@@ -140,13 +145,15 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
           </div>
           <hr style={{ width: '100%' }} />
           <div>
-            {/* // TODO: implement creating a transaction for account balance readjustment on edit*/}
-            <div className={styles.edit_account_modal_input_header}>
-              <Typography variant="bold" size="large">
-                Working Balance
-              </Typography>
-            </div>
+            <label htmlFor="accountWorkingBalance">
+              <div className={styles.edit_account_modal_input_header}>
+                <Typography variant="bold" size="large">
+                  Working Balance
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountWorkingBalance"
               name="accountWorkingBalance"
               className={styles.edit_account_modal_input}
               defaultValue={account.balance}
@@ -158,8 +165,8 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
         </div>
         <div className={styles.edit_account_modal_footer_buttons}>
           <ButtonUnfilled
+            variant="delete"
             type="reset"
-            className={styles.edit_account_modal_footer_delete_button}
             onClick={event => {
               deleteAccountHandler(event, account.id);
             }}
@@ -167,11 +174,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
             Delete
           </ButtonUnfilled>
           <div className={styles.cancel_save_buttons_flex}>
-            <ButtonUnfilled
-              type="reset"
-              className={styles.edit_account_modal_footer_cancel_button}
-              onClick={() => (isOpen.value = '')}
-            >
+            <ButtonUnfilled type="reset" onClick={() => (isOpen.value = '')}>
               Cancel
             </ButtonUnfilled>
             <ButtonFilled type="submit" className={styles.edit_account_modal_footer_save_button}>

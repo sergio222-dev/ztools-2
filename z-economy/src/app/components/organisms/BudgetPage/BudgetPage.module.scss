@@ -8,7 +8,7 @@
   width: 100%;
   flex: 1;
   position: relative;
-  container: bp_header / size;
+  container: bp_header / inline-size;
 
   .budget_page_date {
     background-color: const.$page-darker-background-color;

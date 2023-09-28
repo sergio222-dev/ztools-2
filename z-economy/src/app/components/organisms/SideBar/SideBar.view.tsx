@@ -56,13 +56,20 @@ export function SideBarView() {
         <Button className={styles.add_btn} onClick={handleAddAccount}>
           <Typography>Add Account</Typography>
         </Button>
-        <Modal
-          isOpen={modalIsOpen.value}
-          className={styles.add_account_modal_content}
-          overlayClassName={styles.add_account_modal_overlay}
-        >
-          <AddAccountForm isOpen={modalIsOpen} />
-        </Modal>
+        {modalIsOpen && (
+          <Modal
+            isOpen={modalIsOpen.value}
+            className={styles.add_account_modal_content}
+            overlayClassName={styles.add_account_modal_overlay}
+            shouldCloseOnEsc={true}
+            onRequestClose={() => {
+              modalIsOpen.value = false;
+            }}
+            shouldCloseOnOverlayClick={false}
+          >
+            <AddAccountForm isOpen={modalIsOpen} />
+          </Modal>
+        )}
       </div>
       <IconButton className={styles.z_collapsible_icon_button} onClick={handleSidebarCollapsibleClick}>
         <TbLayoutSidebarLeftCollapse />

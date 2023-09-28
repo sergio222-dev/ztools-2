@@ -39,6 +39,12 @@
   & > div:first-child .add_account_modal_input_header {
     padding-top: 0;
   }
+
+  .add_account_modal_input_header {
+    margin-bottom: functions.spacing(1);
+    padding-top: functions.spacing(1);
+  }
+
   .add_account_modal_input {
     width: 100%;
     border-color: const.$page-light-border-color;

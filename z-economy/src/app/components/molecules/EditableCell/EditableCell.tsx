@@ -3,6 +3,7 @@ import { Input } from '@atoms/Input/Input';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
 import currency from 'currency.js';
 import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hook';
+import cls from 'classnames';
 
 interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
   isEditable: boolean;
@@ -12,7 +13,7 @@ interface EditableCellProperties extends HTMLAttributes<HTMLInputElement> {
 }
 
 export function EditableCell(properties: EditableCellProperties) {
-  const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue, style } = properties;
+  const { defaultValue, shouldFocus, onBlur, isEditable, type, onChangeValue, style, className } = properties;
 
   const { models, operators } = useEditableCellHook<HTMLInputElement>({
     defaultValue,
@@ -31,7 +32,7 @@ export function EditableCell(properties: EditableCellProperties) {
         onChange={type === 'numeric' ? handleOnChangeNumeric : handleOnChange}
         onBlur={handleOnBlur}
         defaultValue={type === 'numeric' ? currency(defaultValue as string).format() : defaultValue}
-        className={type === 'numeric' ? styles.z_input_numeric : styles.z_input_text}
+        className={cls(type === 'numeric' ? styles.z_input_numeric : styles.z_input_text, className)}
         onKeyDown={type === 'numeric' ? handleOnKeyDown : undefined}
         style={style ?? undefined}
       />

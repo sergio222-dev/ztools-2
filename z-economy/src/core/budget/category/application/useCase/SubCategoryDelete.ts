@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { UseCase } from '@core/shared/application/UseCase';
 import * as CategoryRepository from '@core/budget/category/domain/CategoryRepository';
+import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 
 @injectable()
 export class SubCategoryDelete implements UseCase<unknown, void> {
@@ -9,7 +10,7 @@ export class SubCategoryDelete implements UseCase<unknown, void> {
     private categoryRepository: CategoryRepository.CategoryRepository,
   ) {}
 
-  async execute(id: string): Promise<void> {
-    return await this.categoryRepository.deleteSubCategory(id);
+  async execute(ids: CategoryDeleteRequest): Promise<void> {
+    return await this.categoryRepository.deleteSubCategory(ids);
   }
 }

@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 import { CategoryGetAll } from '@core/budget/category/application/useCase/CategoryGetAll';
-import { CategoryGroupCreate } from '@core/budget/category/application/useCase/CategoryGroupCreate';
+import { CategoryCreate } from '@core/budget/category/application/useCase/CategoryCreate';
 import useSWR from 'swr';
 import { Category } from '@core/budget/category/domain/Category';
 import { SubCategoryCreate } from '@core/budget/category/application/useCase/SubCategoryCreate';
@@ -9,18 +9,25 @@ import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudge
 import { SubCategoryAssign } from '@core/budget/category/application/useCase/SubCategoryAssign';
 import { SubCategoryDelete } from '@core/budget/category/application/useCase/SubCategoryDelete';
 import { CategoryDelete } from '@core/budget/category/application/useCase/CategoryDelete';
+import { useMemo } from 'react';
+import currency from 'currency.js';
+import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
+import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
+import { SubCategoryUpdate } from '@core/budget/category/application/useCase/SubCategoryUpdate';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
   const categoryGetAll = container.resolve(CategoryGetAll);
-  const categoryCreate = container.resolve(CategoryGroupCreate);
+  const categoryCreate = container.resolve(CategoryCreate);
+  const categoryUpdate = container.resolve(CategoryUpdate);
   const categoryDelete = container.resolve(CategoryDelete);
   const subCategoryCreate = container.resolve(SubCategoryCreate);
   const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
+  const subCategoryUpdate = container.resolve(SubCategoryUpdate);
   const subCategoryDelete = container.resolve(SubCategoryDelete);
 
   // SWR
-  const { data, error, isLoading, mutate } = useSWR(['categories'], () =>
+  const { data, error, isLoading, mutate, isValidating } = useSWR(['categories'], () =>
     categoryGetAll.execute({
       month: String(date.getMonth() + 1).padStart(2, '0'),
       year: String(date.getFullYear()),
@@ -33,15 +40,40 @@ export const useCategoryHook = (date: Date) => {
   //   };
   // }, [date]);
 
+  // STATE
+  const totalAssigned = useMemo(() => {
+    if (!data) return currency(0);
+
+    const available = data[0].subCategories[0].available;
+
+    const assigned =
+      data?.reduce((total, category) => {
+        return currency(total).add(
+          // eslint-disable-next-line unicorn/no-array-reduce
+          category.subCategories.reduce((subTotal, subCategory) => {
+            return currency(subTotal).add(subCategory.assignedBudget);
+          }, currency(0)),
+        );
+      }, currency(0)) || currency(0);
+
+    return currency(available).subtract(assigned).format();
+  }, [isValidating]);
+
   const createCategory = async (c: Category) => {
     if (!data) return;
     await categoryCreate.execute(c);
     await mutate(data);
   };
 
-  const deleteCategory = async (id: string) => {
+  const updateCategory = async (c: Category) => {
     if (!data) return;
-    await categoryDelete.execute(id);
+    await categoryUpdate.execute(c);
+    await mutate(data);
+  };
+
+  const deleteCategory = async (ids: CategoryDeleteRequest) => {
+    if (!data) return;
+    await categoryDelete.execute(ids);
     await mutate(data);
   };
 
@@ -57,9 +89,15 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
-  const deleteSubCategory = async (id: string) => {
+  const updateSubCategory = async (c: SubCategory) => {
     if (!data) return;
-    await subCategoryDelete.execute(id);
+    await subCategoryUpdate.execute(c);
+    await mutate(data);
+  };
+
+  const deleteSubCategory = async (ids: CategoryDeleteRequest) => {
+    if (!data) return;
+    await subCategoryDelete.execute(ids);
     await mutate(data);
   };
 
@@ -82,17 +120,31 @@ export const useCategoryHook = (date: Date) => {
     return '';
   };
 
+  const subCats: SubCategory[] = [];
+
+  if (data) {
+    for (const category of data) {
+      for (const subCategory of category.subCategories) {
+        subCats.push(subCategory);
+      }
+    }
+  }
+
   return {
     cdata: data ?? [],
     error: error,
     isLoading,
     mutate,
+    totalAssigned: totalAssigned.toString(),
     mutateData,
     createCategoryGroup: createCategory,
+    updateCategory,
+    updateSubCategory,
     createSubCategory,
     assignSubCategoryBudget,
     deleteSubCategory,
     deleteCategory,
     findAdjustmentSubcategoryId,
+    subCats,
   };
 };

@@ -4,13 +4,13 @@ import { inject, injectable } from 'tsyringe';
 import * as CategoryRepository from '@core/budget/category/domain/CategoryRepository';
 
 @injectable()
-export class CategoryGroupCreate implements UseCase<Category, void> {
+export class CategoryUpdate implements UseCase<Category, void> {
   constructor(
     @inject('CategoryRepository')
     private categoryRepository: CategoryRepository.CategoryRepository,
   ) {}
 
   async execute(c: Category): Promise<void> {
-    return await this.categoryRepository.create(c);
+    return await this.categoryRepository.update(c);
   }
 }

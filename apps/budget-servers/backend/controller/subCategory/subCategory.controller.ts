@@ -1,5 +1,10 @@
+import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
+import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
+import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
+import { Category } from '@budget/category/domain/Category.aggregate';
 import { SubCategoryDeleteCommand } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.command';
 import { SubCategoryFindOneByIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.query';
+import { SubCategoryUpdateCommand } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.command';
 import {
   Body,
   Controller,
@@ -10,6 +15,7 @@ import {
   Injectable,
   Param,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -38,6 +44,24 @@ export class SubCategoryController {
   })
   async create(@Body() bodyCommand: SubCategoryCreateCommand): Promise<void> {
     const command = new SubCategoryCreateCommand(bodyCommand.id, bodyCommand.name, bodyCommand.categoryId);
+
+    await this.commandBus.execute(command);
+  }
+
+  @Put()
+  @ApiResponse({
+    status: 201,
+  })
+  async update(@Body() bodyCommand: SubCategoryCreateCommand): Promise<void> {
+    const { name, id, categoryId } = bodyCommand;
+    const query = new SubCategoryFindOneByIdQuery(id);
+    const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
+
+    if (subCategory.id === '') {
+      throw new HttpException(`the subcategory with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+    }
+
+    const command = new SubCategoryUpdateCommand(id, name, categoryId);
 
     await this.commandBus.execute(command);
   }

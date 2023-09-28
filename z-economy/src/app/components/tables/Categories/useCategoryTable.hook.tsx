@@ -23,7 +23,7 @@ export function useCategoryTableHook(budgetDate: Date) {
   // @ts-ignore
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
-  const tableReference = useRef<Table<Category>>();
+  const tableReference = useRef<Table<Category & SubCategory>>();
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
@@ -33,9 +33,9 @@ export function useCategoryTableHook(budgetDate: Date) {
   // HANDLERS
 
   const handleOnEdit = async (
-    row: Row<Category>,
-    table: Table<Category>,
-    cell: Cell<Category, string>,
+    row: Row<Category & SubCategory>,
+    table: Table<Category & SubCategory>,
+    cell: Cell<Category & SubCategory, string>,
     // eslint-disable-next-line unicorn/consistent-function-scoping
   ) => {
     if (row.subRows.length === 0) {
@@ -51,7 +51,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       return;
     }
   };
-  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category>) => {
+  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category & SubCategory>) => {
     const b: SubCategoryBudget = {
       amount: editedAssignValue.current,
       month: String(budgetDate.getMonth() + 1).padStart(2, '0'),
@@ -67,7 +67,7 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   };
 
-  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
+  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category & SubCategory>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
       row.toggleSelected(false);
     }
@@ -75,11 +75,12 @@ export function useCategoryTableHook(budgetDate: Date) {
 
   // SIDE EFFECTS
 
-  useOutsideClick(reference, () => {
-    if (tableReference.current && tableReference.current?.getIsSomeRowsSelected()) {
-      tableReference.current?.toggleAllRowsSelected(false);
-    }
-  });
+  // Breaks subcategory delete modal because deselects the row
+  // useOutsideClick(reference, () => {
+  //   if (tableReference.current && tableReference.current?.getIsSomeRowsSelected()) {
+  //     tableReference.current?.toggleAllRowsSelected(false);
+  //   }
+  // });
 
   useEffect(() => {
     void mutate(cdata, { revalidate: true });
@@ -98,9 +99,11 @@ export function useCategoryTableHook(budgetDate: Date) {
     );
   };
 
-  const filteredData = cdata.filter(category => category.name !== 'Adjustments');
+  const filteredData: (Category & SubCategory)[] = cdata.filter(
+    category => category.name !== 'Adjustments',
+  ) as (Category & SubCategory)[];
 
-  const columns: ColumnDef<Category, any>[] = [
+  const columns: ColumnDef<Category & SubCategory, any>[] = [
     {
       id: 'checkbox',
       accessorKey: 'checkbox',
@@ -152,6 +155,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       ),
       cell: ({ row, getValue }) => (
         <div className={cls('z_flex z_flex_jc_left z_flex_ai_center')}>
+          {/*CARET BUTTON*/}
           {row.original.subCategories && (
             <Button
               onClick={row.getToggleExpandedHandler()}
@@ -163,6 +167,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               }}
             />
           )}
+          {/*CATEGORY NAME BUTTON*/}
           {row.original.subCategories ? (
             <div className="z_flex_inline z_flex_ai_center">
               <EditCategoryButton variant="category" row={row}>
@@ -173,7 +178,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               </div>
             </div>
           ) : (
-            <div className="z_padding_left_4">
+            <div className="z_padding_left_4 ">
               {row.getIsSelected() ? (
                 <EditCategoryButton variant="subCategory" row={row}>
                   {getValue()}
@@ -207,7 +212,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               editedAssignValue.current = value;
             }}
             shouldFocus={true}
-            style={{ width: '50%' }}
+            className={styles.c_table_assign_input}
           />
         ) : (
           <EditableCell

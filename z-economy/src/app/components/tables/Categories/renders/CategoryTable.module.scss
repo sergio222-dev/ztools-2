@@ -5,6 +5,7 @@
 .z_table {
   width: 100%;
   border-spacing: 0;
+  flex: 1 1 auto;
   //font-size: 1rem;
   //font-weight: 400;
 
@@ -15,6 +16,7 @@
     padding: 0 functions.spacing(2) 0 0;
     border: 1px none const.$page-light-border-color;
     border-bottom-style: solid;
+    height: 2.5rem;
 
     &[data-type='numeric'] {
       text-align: right;
@@ -42,14 +44,21 @@
       padding-left: functions.spacing(2);
       width: functions.spacing(0);
     }
+
+    .c_table_assign_input {
+      width: 50%;
+      min-height: 0.1rem;
+      height: 1.5rem;
+    }
   }
 
   .z_table_expansible_row {
+    height: 2.5rem;
     background-color: const.$page-darker-background-color;
   }
 
   %z_table_row {
-    height: 40px;
+    height: 2rem;
     user-select: none;
     cursor: pointer;
     font-size: 0.8rem;

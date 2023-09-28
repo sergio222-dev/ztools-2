@@ -8,8 +8,8 @@ import { chunkify, normalizeText } from '@utils/textUtils';
 import { useTransactionTableColumnsHook } from './useTransactionTableColumns.hook';
 import { createEmptyTransaction } from '@core/budget/transaction/domain/TransactionUtils';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
-import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { useParams } from 'react-router';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -28,12 +28,11 @@ export const useTransactionTableHook = () => {
   const selectedColumnId = useRef('date');
 
   // SERVICES
-  const { data, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
+  const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
-
-  const { cdata } = useCategoryHook(new Date());
-
-  const { adata, mutateAccountData } = useAccountHook();
+  const { subCats } = useCategoryHook(new Date());
+  const { mutateAccountData } = useAccountHook();
+  const { accountId } = useParams();
 
   // HANDLERS
 
@@ -270,13 +269,10 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
-  const subCats: SubCategory[] = [];
-
-  for (const category of cdata) {
-    for (const subCategory of category.subCategories) {
-      subCats.push(subCategory);
-    }
-  }
+  const data = tdata.filter(transaction => {
+    if (!accountId) return transaction;
+    return transaction.accountId === accountId;
+  });
 
   // COLUMNS
   const columns = useTransactionTableColumnsHook(

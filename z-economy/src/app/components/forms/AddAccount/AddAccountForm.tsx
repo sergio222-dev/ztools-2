@@ -3,7 +3,7 @@ import { Input } from '@atoms/Input/Input';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
 import { Signal } from '@preact/signals-react';
 import { Typography } from '@atoms/Typography/Typography';
-import { ChangeEvent, SyntheticEvent, useRef, useState } from 'react';
+import { ChangeEvent, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { v4 as uuidv4 } from 'uuid';
 import { IconButton } from '@atoms/Button/IconButton';
@@ -18,7 +18,8 @@ interface AddAccountFormProperties {
 }
 export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
   // STATE
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
+  const accountNameInputReference = useRef<HTMLInputElement>(null);
   const [accountName, setAccountName] = useState('');
   const [accountBalance, setAccountBalance] = useState('');
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -79,6 +80,10 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
     setIsSaveDisabled(isDisabled);
   };
 
+  useEffect(() => {
+    accountNameInputReference.current?.focus();
+  }, []);
+
   return (
     <form
       name="add-account"
@@ -103,25 +108,31 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
         </div>
         <div className={styles.add_account_modal_form_body}>
           <div>
-            <div className={styles.add_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                Give it a nickname
-              </Typography>
-            </div>
+            <label htmlFor="accountName">
+              <div className={styles.add_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  Give it a nickname
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountName"
               name="accountName"
               className={styles.add_account_modal_input}
               onChange={handleAccountNameChange}
+              ref={accountNameInputReference}
             />
           </div>
-          {/*// TODO: implement creating a transaction for the account initial balance */}
           <div>
-            <div className={styles.add_account_modal_input_header}>
-              <Typography variant="bold" size="normal">
-                What is your current account balance?
-              </Typography>
-            </div>
+            <label htmlFor="accountBalance">
+              <div className={styles.add_account_modal_input_header}>
+                <Typography variant="semi-bold" size="normal">
+                  What is your current account balance?
+                </Typography>
+              </div>
+            </label>
             <Input
+              id="accountBalance"
               name="accountBalance"
               className={styles.add_account_modal_input}
               onChange={handleAccountBalanceChange}

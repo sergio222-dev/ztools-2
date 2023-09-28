@@ -10,6 +10,7 @@ import { TransactionDelete } from '@core/budget/transaction/application/useCase/
 import { TransactionDeleteBatch } from '@core/budget/transaction/application/useCase/TransactionDeleteBatch';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { TransactionGetAllByCategoryId } from '@core/budget/transaction/application/useCase/TransactionGetAllByCategoryId';
 
 export const useTransactionHook = () => {
   // SERVICES
@@ -18,6 +19,7 @@ export const useTransactionHook = () => {
   const transactionCreate = container.resolve(TransactionCreate);
   const transactionDelete = container.resolve(TransactionDelete);
   const transactionDeleteBatch = container.resolve(TransactionDeleteBatch);
+  const transactionGetAllByCategoryId = container.resolve(TransactionGetAllByCategoryId);
 
   const { adata } = useAccountHook();
 
@@ -108,8 +110,13 @@ export const useTransactionHook = () => {
     await mutate(data);
   };
 
+  const getAllTransactionsByCategoryId = async (accountId: string) => {
+    if (!data) return;
+    return await transactionGetAllByCategoryId.execute(accountId);
+  };
+
   return {
-    data: data ?? [],
+    tdata: data ?? [],
     error: error,
     isLoading,
     updateData: updateTransaction,
@@ -118,5 +125,6 @@ export const useTransactionHook = () => {
     trigger,
     deleteFakeRow,
     deleteDataBatch: deleteTransactionBatch,
+    getAllTransactionsByCategoryId,
   };
 };

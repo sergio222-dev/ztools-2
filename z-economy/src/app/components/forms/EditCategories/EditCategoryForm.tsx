@@ -2,42 +2,56 @@ import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
-// eslint-disable-next-line import/default
-import React, { useRef } from 'react';
+import { MouseEvent, SyntheticEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { Signal } from '@preact/signals-react';
+import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
-import { Button } from '@atoms/Button/Button';
 import { Typography } from '@atoms/Typography/Typography';
-import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { Row } from '@tanstack/react-table';
 import { Category } from '@core/budget/category/domain/Category';
+import Modal from 'react-modal';
+import { DeleteSubcategoryForm } from '../DeleteSubcategory/DeleteSubcategoryForm';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 interface EditCategoryFormProperties {
   isOpen: Signal<boolean>;
   variant?: EditCategoryVariants;
-  row: Row<Category>;
+  row: Row<Category & SubCategory>;
 }
 
 export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormProperties) {
   // STATE
-  const formReference = useRef(null);
+  const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
+  const modalIsOpen = useSignal('');
 
   // SERVICES
-  const { deleteSubCategory, deleteCategory } = useCategoryHook(new Date());
+  const { updateCategory, updateSubCategory } = useCategoryHook(new Date());
 
   // HANDLERS
+
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (formReference.current === null) return;
+    const formData = new FormData(formReference.current);
+    const categoryName = formData.get('name') as string;
+    if (categoryName === '') return;
+    variant === 'category' && updateCategory(new Category(row.original.id, categoryName, []));
+    variant === 'subCategory' &&
+      updateSubCategory(new SubCategory(row.original.id, categoryName, row.original.categoryId, '', '', ''));
+    isOpen.value = false;
+    return;
+  };
 
   const formCancelHandler = () => {
     isOpen.value = false;
   };
 
-  const handleDelete = (event: React.MouseEvent<HTMLButtonElement>, id: string) => {
+  const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    variant === 'category' && void deleteCategory(id);
-    variant === 'subCategory' && void deleteSubCategory(id);
+    modalIsOpen.value = row.original.id;
     isOpen.value = false;
     return;
   };
@@ -56,25 +70,31 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         className={styles.c_tooltip}
         isOpen={isOpen.value}
       >
-        <form name="edit-category" className={styles.edit_category_form} ref={formReference}>
+        <form
+          name="edit-category"
+          className={styles.edit_category_form}
+          ref={formReference}
+          onSubmit={handleSubmit}
+        >
           <Input
             defaultValue={row.getValue('name')}
             className={styles.edit_category_input}
             type="text"
-            name="categoryName"
+            name="name"
           />
           <div className={styles.form_buttons}>
-            <Button
-              variant="primary"
+            <ButtonUnfilled
+              variant="delete"
+              // type="reset"
               onClick={event => {
-                handleDelete(event, row.original.id);
+                handleDelete(event);
               }}
-              className={styles.edit_category_delete_button}
+              // className={styles.edit_category_delete_button}
             >
               <Typography>Delete</Typography>
-            </Button>
+            </ButtonUnfilled>
             <div className={styles.cancel_save_buttons}>
-              <ButtonUnfilled type="reset" onClick={formCancelHandler}>
+              <ButtonUnfilled type="reset" onClick={formCancelHandler} variant="normal">
                 {' '}
                 Cancel{' '}
               </ButtonUnfilled>
@@ -86,6 +106,19 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           </div>
         </form>
       </Tooltip>
+      {modalIsOpen.value === row.original.id && (
+        <Modal
+          key={row.original.id}
+          isOpen={modalIsOpen.value === row.original.id}
+          className={styles.delete_subcategory_modal_content}
+          overlayClassName={styles.delete_subcategory_modal_overlay}
+          shouldCloseOnEsc={true}
+          shouldCloseOnOverlayClick={false}
+          onRequestClose={() => (modalIsOpen.value = '')}
+        >
+          <DeleteSubcategoryForm modalIsOpen={modalIsOpen} id={row.original.id} variant={variant} />
+        </Modal>
+      )}
     </div>
   );
 }

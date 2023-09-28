@@ -9,11 +9,15 @@ export class AxiosTransactionRepository implements TransactionRepository {
 
   async getAll(): Promise<Transaction[]> {
     const { data } = await this.axios.get<Transaction[]>('/transaction');
-
     return data;
   }
 
-  async save(t: Transaction): Promise<void> {
+  async getAllByCategoryId(accountId: string): Promise<Transaction[]> {
+    const { data } = await this.axios.get<Transaction[]>(`/transaction/${accountId}`);
+    return data;
+  }
+
+  async create(t: Transaction): Promise<void> {
     await this.axios.post('/transaction', t);
     return;
   }

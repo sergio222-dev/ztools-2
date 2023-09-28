@@ -2,6 +2,7 @@ import { useCategoryTableHook } from './useCategoryTable.hook';
 import { CategoryTableButtons } from '@molecules/CategoryTableButtons/CategoryTableButtons';
 import { BudgetPageTable } from './renders/BudgetPageTable';
 import { Category } from '@core/budget/category/domain/Category';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 interface CategoryTableViewProperties {
   budgetDate: Date;
@@ -21,8 +22,8 @@ export function CategoryTableView({ budgetDate }: CategoryTableViewProperties) {
   return (
     <div>
       <CategoryTableButtons createCategoryGroup={createCategoryGroup} />
-      <div ref={reference}>
-        <BudgetPageTable<Category>
+      <div ref={reference} style={{ display: 'flex' }}>
+        <BudgetPageTable<Category & SubCategory>
           columns={columns}
           data={filteredData}
           handleOnEdit={handleOnEdit}

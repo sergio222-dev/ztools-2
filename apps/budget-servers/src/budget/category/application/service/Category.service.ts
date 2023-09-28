@@ -18,9 +18,7 @@ export class CategoryService {
   }
 
   async findAll(): Promise<Category[]> {
-    const categories = await this.categoryRepository.findAll();
-
-    return categories;
+    return await this.categoryRepository.findAll();
 
     // const arrayPromises = categories.map(async (category) => {
     //   const subCategories = await this.subCategoryRepository.findAllByCategoryId(category.id);

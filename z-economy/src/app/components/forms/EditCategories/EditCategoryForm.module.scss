@@ -24,27 +24,7 @@
   .form_buttons {
     margin: functions.spacing(1) 0 0 0;
     display: flex;
-    justify-content: flex-start;
-
-    .edit_category_delete_button {
-      box-shadow: 0 0 0 1px const.$page-light-border-color;
-      color: const.$delete-button-color;
-
-      &:hover {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-
-      &:focus {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-
-      &:focus-visible {
-        background-color: const.$delete-button-color;
-        color: const.$secondary-text-color;
-      }
-    }
+    //justify-content: flex-start;
 
     .cancel_save_buttons {
       display: flex;
@@ -56,4 +36,30 @@
       }
     }
   }
+}
+
+.delete_subcategory_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.delete_subcategory_modal_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  border: 1px solid #ccc;
+  background: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: const.$radius;
+  outline: none;
+  padding: 0;
+  //width: 30rem;
 }
