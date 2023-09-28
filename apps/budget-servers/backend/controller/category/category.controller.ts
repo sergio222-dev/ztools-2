@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Injectable, Post, Query } from '@nestjs/common';
+import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -76,6 +87,25 @@ export class CategoryController {
   })
   async create(@Body() bodyCommand: CategoryCreateCommand) {
     const command = new CategoryCreateCommand(bodyCommand.id, bodyCommand.name);
+    await this.commandBus.execute(command);
+  }
+
+  @Put()
+  @ApiResponse({
+    status: 201,
+  })
+  async update(@Body() bodyCommand: CategoryCreateCommand): Promise<void> {
+    const { name, id } = bodyCommand;
+    const query = new CategoryFindOneQuery(id);
+
+    const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
+
+    if (category.id === '') {
+      throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+    }
+
+    const command = new CategoryUpdateCommand(id, name);
+
     await this.commandBus.execute(command);
   }
 

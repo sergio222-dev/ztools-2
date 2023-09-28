@@ -99,7 +99,7 @@ export class AccountController {
 
     const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
 
-    if (account.id === ' ') {
+    if (account.id === '') {
       throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
     }
 
