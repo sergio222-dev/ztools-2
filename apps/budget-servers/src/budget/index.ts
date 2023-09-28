@@ -1,4 +1,5 @@
 /* eslint import/order: 0 */
+import { SubCategoryUpdateHandler } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -94,6 +95,7 @@ const budget = {
     MonthlyBudgetDeleteAllBySubCategoryIdHandler,
     SubCategoryFindAllHandler,
     SubCategoryFindOneByIdHandler,
+    SubCategoryUpdateHandler,
     SubCategoryDeleteHandler,
     SubCategoryDeleteBatchHandler,
     AccountCreateHandler,

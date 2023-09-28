@@ -1,4 +1,3 @@
-import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
@@ -31,6 +30,9 @@ export class SubCategoryService {
     await this.subCategoryRepository.save(subCategory);
   }
 
+  async update(subCategory: SubCategory): Promise<void> {
+    await this.subCategoryRepository.update(subCategory);
+  }
   async deleteBatch(ids: string[]): Promise<void> {
     await this.subCategoryRepository.deleteBatch(ids);
   }

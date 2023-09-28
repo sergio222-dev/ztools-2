@@ -101,7 +101,7 @@ export class CategoryController {
     const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
 
     if (category.id === '') {
-      throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+      throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
     }
 
     const command = new CategoryUpdateCommand(id, name);
