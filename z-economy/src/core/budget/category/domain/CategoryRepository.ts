@@ -10,5 +10,6 @@ export interface CategoryRepository {
   update(c: Category): Promise<void>;
   createSubCategory(c: SubCategory): Promise<void>;
   assignSubCategoryBudget(b: SubCategoryBudget): Promise<void>;
+  updateSubCategory(c: SubCategory): Promise<void>;
   deleteSubCategory(ids: CategoryDeleteRequest): Promise<void>;
 }

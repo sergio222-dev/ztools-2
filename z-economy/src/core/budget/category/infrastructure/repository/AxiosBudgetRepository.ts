@@ -22,6 +22,10 @@ export class AxiosBudgetRepository implements CategoryRepository {
     await this.axios.post<SubCategory>('/subCategory/', c);
   }
 
+  async updateSubCategory(c: SubCategory): Promise<void> {
+    await this.axios.put<SubCategory>('/subCategory/', c);
+  }
+
   async deleteSubCategory(ids: CategoryDeleteRequest) {
     await this.axios.post(`/subCategory/delete`, ids);
   }

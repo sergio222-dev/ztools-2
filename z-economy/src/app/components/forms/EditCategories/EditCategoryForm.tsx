@@ -13,11 +13,12 @@ import { Category } from '@core/budget/category/domain/Category';
 import Modal from 'react-modal';
 import { DeleteSubcategoryForm } from '../DeleteSubcategory/DeleteSubcategoryForm';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 
 interface EditCategoryFormProperties {
   isOpen: Signal<boolean>;
   variant?: EditCategoryVariants;
-  row: Row<Category>;
+  row: Row<Category & SubCategory>;
 }
 
 export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormProperties) {
@@ -27,7 +28,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   const modalIsOpen = useSignal('');
 
   // SERVICES
-  const { updateCategory } = useCategoryHook(new Date());
+  const { updateCategory, updateSubCategory } = useCategoryHook(new Date());
 
   // HANDLERS
 
@@ -38,7 +39,8 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
     const categoryName = formData.get('name') as string;
     if (categoryName === '') return;
     variant === 'category' && updateCategory(new Category(row.original.id, categoryName, []));
-
+    variant === 'subCategory' &&
+      updateSubCategory(new SubCategory(row.original.id, categoryName, row.original.categoryId, '', '', ''));
     isOpen.value = false;
     return;
   };
@@ -59,8 +61,6 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   useOutsideClick(tooltipReference, () => {
     isOpen.value = false;
   });
-
-  // console.log(modalIsOpen.value, 'mounting');
 
   return (
     <div className={styles.edit_category_form_container} ref={tooltipReference}>

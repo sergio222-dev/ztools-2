@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 import currency from 'currency.js';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
+import { SubCategoryUpdate } from '@core/budget/category/application/useCase/SubCategoryUpdate';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
@@ -22,6 +23,7 @@ export const useCategoryHook = (date: Date) => {
   const categoryDelete = container.resolve(CategoryDelete);
   const subCategoryCreate = container.resolve(SubCategoryCreate);
   const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
+  const subCategoryUpdate = container.resolve(SubCategoryUpdate);
   const subCategoryDelete = container.resolve(SubCategoryDelete);
 
   // SWR
@@ -87,6 +89,12 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
+  const updateSubCategory = async (c: SubCategory) => {
+    if (!data) return;
+    await subCategoryUpdate.execute(c);
+    await mutate(data);
+  };
+
   const deleteSubCategory = async (ids: CategoryDeleteRequest) => {
     if (!data) return;
     await subCategoryDelete.execute(ids);
@@ -131,6 +139,7 @@ export const useCategoryHook = (date: Date) => {
     mutateData,
     createCategoryGroup: createCategory,
     updateCategory,
+    updateSubCategory,
     createSubCategory,
     assignSubCategoryBudget,
     deleteSubCategory,

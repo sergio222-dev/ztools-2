@@ -23,7 +23,7 @@ export function useCategoryTableHook(budgetDate: Date) {
   // @ts-ignore
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
-  const tableReference = useRef<Table<Category>>();
+  const tableReference = useRef<Table<Category & SubCategory>>();
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
@@ -33,9 +33,9 @@ export function useCategoryTableHook(budgetDate: Date) {
   // HANDLERS
 
   const handleOnEdit = async (
-    row: Row<Category>,
-    table: Table<Category>,
-    cell: Cell<Category, string>,
+    row: Row<Category & SubCategory>,
+    table: Table<Category & SubCategory>,
+    cell: Cell<Category & SubCategory, string>,
     // eslint-disable-next-line unicorn/consistent-function-scoping
   ) => {
     if (row.subRows.length === 0) {
@@ -51,7 +51,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       return;
     }
   };
-  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category>) => {
+  const handleAssignOnBlur = (subCategoryId: string, row: Row<Category & SubCategory>) => {
     const b: SubCategoryBudget = {
       amount: editedAssignValue.current,
       month: String(budgetDate.getMonth() + 1).padStart(2, '0'),
@@ -67,7 +67,7 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   };
 
-  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category>) => {
+  const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category & SubCategory>) => {
     if (event.key === 'Escape' || event.key === 'Enter') {
       row.toggleSelected(false);
     }
@@ -99,9 +99,11 @@ export function useCategoryTableHook(budgetDate: Date) {
     );
   };
 
-  const filteredData = cdata.filter(category => category.name !== 'Adjustments');
+  const filteredData: (Category & SubCategory)[] = cdata.filter(
+    category => category.name !== 'Adjustments',
+  ) as (Category & SubCategory)[];
 
-  const columns: ColumnDef<Category, any>[] = [
+  const columns: ColumnDef<Category & SubCategory, any>[] = [
     {
       id: 'checkbox',
       accessorKey: 'checkbox',
