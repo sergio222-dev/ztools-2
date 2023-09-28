@@ -14,6 +14,10 @@ export class AxiosBudgetRepository implements CategoryRepository {
     await this.axios.post<Category>(`/category/`, c);
   }
 
+  async update(c: Category): Promise<void> {
+    await this.axios.put<Category>(`/category/`, c);
+  }
+
   async createSubCategory(c: SubCategory): Promise<void> {
     await this.axios.post<SubCategory>('/subCategory/', c);
   }

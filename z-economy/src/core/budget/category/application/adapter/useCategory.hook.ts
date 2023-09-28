@@ -1,6 +1,6 @@
 import { container } from 'tsyringe';
 import { CategoryGetAll } from '@core/budget/category/application/useCase/CategoryGetAll';
-import { CategoryGroupCreate } from '@core/budget/category/application/useCase/CategoryGroupCreate';
+import { CategoryCreate } from '@core/budget/category/application/useCase/CategoryCreate';
 import useSWR from 'swr';
 import { Category } from '@core/budget/category/domain/Category';
 import { SubCategoryCreate } from '@core/budget/category/application/useCase/SubCategoryCreate';
@@ -12,11 +12,13 @@ import { CategoryDelete } from '@core/budget/category/application/useCase/Catego
 import { useMemo } from 'react';
 import currency from 'currency.js';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
+import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
   const categoryGetAll = container.resolve(CategoryGetAll);
-  const categoryCreate = container.resolve(CategoryGroupCreate);
+  const categoryCreate = container.resolve(CategoryCreate);
+  const categoryUpdate = container.resolve(CategoryUpdate);
   const categoryDelete = container.resolve(CategoryDelete);
   const subCategoryCreate = container.resolve(SubCategoryCreate);
   const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
@@ -58,6 +60,12 @@ export const useCategoryHook = (date: Date) => {
   const createCategory = async (c: Category) => {
     if (!data) return;
     await categoryCreate.execute(c);
+    await mutate(data);
+  };
+
+  const updateCategory = async (c: Category) => {
+    if (!data) return;
+    await categoryUpdate.execute(c);
     await mutate(data);
   };
 
@@ -122,6 +130,7 @@ export const useCategoryHook = (date: Date) => {
     totalAssigned: totalAssigned.toString(),
     mutateData,
     createCategoryGroup: createCategory,
+    updateCategory,
     createSubCategory,
     assignSubCategoryBudget,
     deleteSubCategory,

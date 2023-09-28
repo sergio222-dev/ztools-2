@@ -2,7 +2,7 @@ import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
-import { MouseEvent, useRef } from 'react';
+import { MouseEvent, SyntheticEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
@@ -12,6 +12,7 @@ import { Row } from '@tanstack/react-table';
 import { Category } from '@core/budget/category/domain/Category';
 import Modal from 'react-modal';
 import { DeleteSubcategoryForm } from '../DeleteSubcategory/DeleteSubcategoryForm';
+import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 
 interface EditCategoryFormProperties {
   isOpen: Signal<boolean>;
@@ -25,7 +26,22 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   const tooltipReference = useRef(null);
   const modalIsOpen = useSignal('');
 
+  // SERVICES
+  const { updateCategory } = useCategoryHook(new Date());
+
   // HANDLERS
+
+  const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (formReference.current === null) return;
+    const formData = new FormData(formReference.current);
+    const categoryName = formData.get('name') as string;
+    if (categoryName === '') return;
+    variant === 'category' && updateCategory(new Category(row.original.id, categoryName, []));
+
+    isOpen.value = false;
+    return;
+  };
 
   const formCancelHandler = () => {
     isOpen.value = false;
@@ -54,12 +70,17 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
         className={styles.c_tooltip}
         isOpen={isOpen.value}
       >
-        <form name="edit-category" className={styles.edit_category_form} ref={formReference}>
+        <form
+          name="edit-category"
+          className={styles.edit_category_form}
+          ref={formReference}
+          onSubmit={handleSubmit}
+        >
           <Input
             defaultValue={row.getValue('name')}
             className={styles.edit_category_input}
             type="text"
-            name="categoryName"
+            name="name"
           />
           <div className={styles.form_buttons}>
             <ButtonUnfilled
