@@ -96,6 +96,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
                   overlayClassName={styles.edit_account_modal_overlay}
                   overlayRef={node => (overlayReference.current = node)}
                   shouldCloseOnEsc={true}
+                  shouldCloseOnOverlayClick={false}
                   onRequestClose={() => {
                     modalIsOpen.value = '';
                   }}

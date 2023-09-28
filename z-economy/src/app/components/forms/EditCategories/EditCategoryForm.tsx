@@ -113,6 +113,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           className={styles.delete_subcategory_modal_content}
           overlayClassName={styles.delete_subcategory_modal_overlay}
           shouldCloseOnEsc={true}
+          shouldCloseOnOverlayClick={false}
           onRequestClose={() => (modalIsOpen.value = '')}
         >
           <DeleteSubcategoryForm modalIsOpen={modalIsOpen} id={row.original.id} variant={variant} />

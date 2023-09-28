@@ -65,6 +65,7 @@ export function SideBarView() {
             onRequestClose={() => {
               modalIsOpen.value = false;
             }}
+            shouldCloseOnOverlayClick={false}
           >
             <AddAccountForm isOpen={modalIsOpen} />
           </Modal>
