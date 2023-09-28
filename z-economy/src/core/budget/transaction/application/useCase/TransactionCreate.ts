@@ -11,6 +11,6 @@ export class TransactionCreate implements UseCase<unknown, void> {
   ) {}
 
   async execute(t: Transaction): Promise<void> {
-    return await this.transactionRepository.save(t);
+    return await this.transactionRepository.create(t);
   }
 }

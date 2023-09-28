@@ -6,8 +6,8 @@ import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDele
 export interface CategoryRepository {
   getAll(month: string, year: string): Promise<Category[]>;
   create(c: Category): Promise<void>;
+  deleteCategory(ids: CategoryDeleteRequest): Promise<void>;
   createSubCategory(c: SubCategory): Promise<void>;
   assignSubCategoryBudget(b: SubCategoryBudget): Promise<void>;
-  deleteCategory(ids: CategoryDeleteRequest): Promise<void>;
   deleteSubCategory(ids: CategoryDeleteRequest): Promise<void>;
 }
