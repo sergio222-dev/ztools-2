@@ -136,6 +136,7 @@ export class CategoryController {
 
       const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId);
 
+
       const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
         queryForTransactions,
       );
