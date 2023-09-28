@@ -153,6 +153,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       ),
       cell: ({ row, getValue }) => (
         <div className={cls('z_flex z_flex_jc_left z_flex_ai_center')}>
+          {/*CARET BUTTON*/}
           {row.original.subCategories && (
             <Button
               onClick={row.getToggleExpandedHandler()}
@@ -164,6 +165,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               }}
             />
           )}
+          {/*CATEGORY NAME BUTTON*/}
           {row.original.subCategories ? (
             <div className="z_flex_inline z_flex_ai_center">
               <EditCategoryButton variant="category" row={row}>
@@ -174,7 +176,7 @@ export function useCategoryTableHook(budgetDate: Date) {
               </div>
             </div>
           ) : (
-            <div className="z_padding_left_4">
+            <div className="z_padding_left_4 ">
               {row.getIsSelected() ? (
                 <EditCategoryButton variant="subCategory" row={row}>
                   {getValue()}

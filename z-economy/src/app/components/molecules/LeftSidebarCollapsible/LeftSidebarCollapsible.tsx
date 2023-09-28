@@ -1,6 +1,6 @@
 import styles from './LeftSidebarCollapsible.module.scss';
 import { CollapsibleButton } from '../../atoms';
-import { MouseEvent, ReactNode, useEffect, useRef, useState } from 'react';
+import { MouseEvent, ReactNode, useRef, useState } from 'react';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
@@ -89,17 +89,22 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
               >
                 <MdEdit />
               </a>
-              <Modal
-                isOpen={modalIsOpen.value === account.id}
-                className={styles.edit_account_modal_content}
-                overlayClassName={styles.edit_account_modal_overlay}
-                overlayRef={node => (overlayReference.current = node)}
-                // contentRef={node => (contentReference.current = node)}
-              >
-                <div onClick={event => event.stopPropagation()}>
-                  <EditAccountForm isOpen={modalIsOpen} account={account} />
-                </div>
-              </Modal>
+              {modalIsOpen.value === account.id && (
+                <Modal
+                  isOpen={modalIsOpen.value === account.id}
+                  className={styles.edit_account_modal_content}
+                  overlayClassName={styles.edit_account_modal_overlay}
+                  overlayRef={node => (overlayReference.current = node)}
+                  shouldCloseOnEsc={true}
+                  onRequestClose={() => {
+                    modalIsOpen.value = '';
+                  }}
+                >
+                  <div onClick={event => event.stopPropagation()}>
+                    <EditAccountForm isOpen={modalIsOpen} account={account} />
+                  </div>
+                </Modal>
+              )}
               <span className={styles.bank_name}>
                 <Typography>{account.name}</Typography>
               </span>

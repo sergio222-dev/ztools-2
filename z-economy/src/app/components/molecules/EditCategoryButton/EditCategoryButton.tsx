@@ -14,14 +14,14 @@ interface EditCategoryButtonProperties extends ButtonHTMLAttributes<HTMLButtonEl
 
 export function EditCategoryButton({ row, variant, children }: EditCategoryButtonProperties) {
   const isOpen = useSignal(false);
-  const handleAddCategory = () => {
+  const handleEditCategory = () => {
     isOpen.value = !isOpen.value;
     return;
   };
 
   return (
     <div>
-      <a id={`edit-category${row.original.id}`} onClick={handleAddCategory}>
+      <a id={`edit-category${row.original.id}`} onClick={handleEditCategory}>
         {variant === 'subCategory' ? (
           <TextButton variant="underline">
             <Typography size="large" variant="normal">

@@ -97,7 +97,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   useEffect(() => {
     accountNameInputReference.current?.focus();
-  }, []);
+  }, [accountNameInputReference]);
 
   return (
     <form
@@ -145,7 +145,6 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
           </div>
           <hr style={{ width: '100%' }} />
           <div>
-            {/* // TODO: implement creating a transaction for account balance readjustment on edit*/}
             <label htmlFor="accountWorkingBalance">
               <div className={styles.edit_account_modal_input_header}>
                 <Typography variant="bold" size="large">

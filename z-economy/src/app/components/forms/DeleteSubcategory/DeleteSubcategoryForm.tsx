@@ -1,5 +1,5 @@
 import styles from './DeleteSubcategoryForm.module.scss';
-import { SyntheticEvent, useRef } from 'react';
+import { MouseEvent, SyntheticEvent, useRef } from 'react';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
 import { IconButton } from '@atoms/Button/IconButton';
@@ -10,13 +10,12 @@ import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
-
 interface DeleteSubcategoryFormProperties {
-  isOpen: Signal<boolean>;
+  modalIsOpen: Signal<string>;
   id: string;
   variant?: EditCategoryVariants;
 }
-export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategoryFormProperties) {
+export function DeleteSubcategoryForm({ modalIsOpen, id, variant }: DeleteSubcategoryFormProperties) {
   // STATE
   const formReference = useRef<HTMLFormElement>(null);
 
@@ -31,7 +30,7 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
     const subCategoryId = formData.get('selectCategory') as string;
     variant === 'category' && void deleteCategory(new CategoryDeleteRequest(id, subCategoryId));
     variant === 'subCategory' && void deleteSubCategory(new CategoryDeleteRequest(id, subCategoryId));
-    isOpen.value = false;
+    modalIsOpen.value = '';
   };
 
   const filteredSubcats = subCats.filter(subCat =>
@@ -41,7 +40,7 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
   );
 
   return (
-    <form name="delete-subcategory" ref={formReference} onSubmit={handleSubmit}>
+    <form name="delete-subcategory" ref={formReference} onSubmit={handleSubmit} key={id}>
       <div className={cls(styles.delete_subcategory_modal_title)}>
         <div className={styles.title_text}>
           <Typography variant="bold" Component="h1" size="large">
@@ -50,7 +49,7 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
         </div>
         <IconButton
           type="reset"
-          onClick={() => (isOpen.value = false)}
+          onClick={() => (modalIsOpen.value = '')}
           className={styles.delete_subcategory_modal_cancel_button}
         >
           <RxCross2 />
@@ -91,7 +90,7 @@ export function DeleteSubcategoryForm({ isOpen, id, variant }: DeleteSubcategory
           </ul>
         </div>
         <div className={styles.delete_subcategory_form_footer_buttons}>
-          <ButtonUnfilled type="reset" onClick={() => (isOpen.value = false)}>
+          <ButtonUnfilled type="reset" onClick={() => (modalIsOpen.value = '')}>
             Cancel
           </ButtonUnfilled>
           <ButtonUnfilled variant="delete" type="submit">

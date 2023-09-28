@@ -2,12 +2,10 @@ import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
-// eslint-disable-next-line import/default
 import { MouseEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
-import { Button } from '@atoms/Button/Button';
 import { Typography } from '@atoms/Typography/Typography';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { Row } from '@tanstack/react-table';
@@ -25,7 +23,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   // STATE
   const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
-  const modalIsOpen = useSignal(false);
+  const modalIsOpen = useSignal('');
 
   // HANDLERS
 
@@ -35,7 +33,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
 
   const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    modalIsOpen.value = true;
+    modalIsOpen.value = row.original.id;
     isOpen.value = false;
     return;
   };
@@ -45,6 +43,8 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
   useOutsideClick(tooltipReference, () => {
     isOpen.value = false;
   });
+
+  // console.log(modalIsOpen.value, 'mounting');
 
   return (
     <div className={styles.edit_category_form_container} ref={tooltipReference}>
@@ -64,7 +64,7 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           <div className={styles.form_buttons}>
             <ButtonUnfilled
               variant="delete"
-              type="reset"
+              // type="reset"
               onClick={event => {
                 handleDelete(event);
               }}
@@ -85,14 +85,18 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           </div>
         </form>
       </Tooltip>
-      <Modal
-        // id={row.original.id}
-        isOpen={modalIsOpen.value}
-        className={styles.delete_subcategory_modal_content}
-        overlayClassName={styles.delete_subcategory_modal_overlay}
-      >
-        <DeleteSubcategoryForm isOpen={modalIsOpen} id={row.original.id} variant={variant} />
-      </Modal>
+      {modalIsOpen.value === row.original.id && (
+        <Modal
+          key={row.original.id}
+          isOpen={modalIsOpen.value === row.original.id}
+          className={styles.delete_subcategory_modal_content}
+          overlayClassName={styles.delete_subcategory_modal_overlay}
+          shouldCloseOnEsc={true}
+          onRequestClose={() => (modalIsOpen.value = '')}
+        >
+          <DeleteSubcategoryForm modalIsOpen={modalIsOpen} id={row.original.id} variant={variant} />
+        </Modal>
+      )}
     </div>
   );
 }
