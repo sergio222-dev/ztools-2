@@ -10,7 +10,6 @@ import cls from 'classnames';
 import { EditableCell } from '@molecules/EditableCell/EditableCell';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { KeyboardEvent, useEffect, useRef, useState } from 'react';
-import { useOutsideClick } from '@utils/mouseUtils';
 import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
@@ -27,8 +26,18 @@ export function useCategoryTableHook(budgetDate: Date) {
   const [enableEditable, setEnableEditable] = useState(true);
 
   // SERVICES
-  const { cdata, createCategoryGroup, createSubCategory, assignSubCategoryBudget, mutate } =
-    useCategoryHook(budgetDate);
+  const {
+    cdata,
+    createCategoryGroup,
+    createSubCategory,
+    assignSubCategoryBudget,
+    mutate,
+    updateCategory,
+    updateSubCategory,
+    deleteCategory,
+    deleteSubCategory,
+    subCats,
+  } = useCategoryHook(budgetDate);
 
   // HANDLERS
 
@@ -170,7 +179,13 @@ export function useCategoryTableHook(budgetDate: Date) {
           {/*CATEGORY NAME BUTTON*/}
           {row.original.subCategories ? (
             <div className="z_flex_inline z_flex_ai_center">
-              <EditCategoryButton variant="category" row={row}>
+              <EditCategoryButton
+                variant="category"
+                row={row}
+                deleteCategory={deleteCategory}
+                updateCategory={updateCategory}
+                subCats={subCats}
+              >
                 {getValue()}
               </EditCategoryButton>
               <div className={styles.c_table_add_button}>
@@ -180,7 +195,13 @@ export function useCategoryTableHook(budgetDate: Date) {
           ) : (
             <div className="z_padding_left_4 ">
               {row.getIsSelected() ? (
-                <EditCategoryButton variant="subCategory" row={row}>
+                <EditCategoryButton
+                  variant="subCategory"
+                  row={row}
+                  deleteSubCategory={deleteSubCategory}
+                  updateSubCategory={updateSubCategory}
+                  subCats={subCats}
+                >
                   {getValue()}
                 </EditCategoryButton>
               ) : (

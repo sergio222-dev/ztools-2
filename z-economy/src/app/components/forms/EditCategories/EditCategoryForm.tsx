@@ -12,23 +12,34 @@ import { Row } from '@tanstack/react-table';
 import { Category } from '@core/budget/category/domain/Category';
 import Modal from 'react-modal';
 import { DeleteSubcategoryForm } from '../DeleteSubcategory/DeleteSubcategoryForm';
-import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 
 interface EditCategoryFormProperties {
   isOpen: Signal<boolean>;
   variant?: EditCategoryVariants;
   row: Row<Category & SubCategory>;
+  updateCategory?: (c: Category) => void;
+  updateSubCategory?: (c: SubCategory) => void;
+  deleteCategory?: (ids: CategoryDeleteRequest) => void;
+  deleteSubCategory?: (ids: CategoryDeleteRequest) => void;
+  subCats: SubCategory[];
 }
 
-export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormProperties) {
+export function EditCategoryForm({
+  isOpen,
+  variant,
+  row,
+  updateCategory,
+  updateSubCategory,
+  deleteCategory,
+  deleteSubCategory,
+  subCats,
+}: EditCategoryFormProperties) {
   // STATE
   const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
   const modalIsOpen = useSignal('');
-
-  // SERVICES
-  const { updateCategory, updateSubCategory } = useCategoryHook(new Date());
 
   // HANDLERS
 
@@ -38,9 +49,15 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
     const formData = new FormData(formReference.current);
     const categoryName = formData.get('name') as string;
     if (categoryName === '') return;
-    variant === 'category' && updateCategory(new Category(row.original.id, categoryName, []));
-    variant === 'subCategory' &&
-      updateSubCategory(new SubCategory(row.original.id, categoryName, row.original.categoryId, '', '', ''));
+    if (updateCategory) {
+      variant === 'category' && updateCategory(new Category(row.original.id, categoryName, []));
+    }
+    if (updateSubCategory) {
+      variant === 'subCategory' &&
+        updateSubCategory(
+          new SubCategory(row.original.id, categoryName, row.original.categoryId, '', '', ''),
+        );
+    }
     isOpen.value = false;
     return;
   };
@@ -116,7 +133,14 @@ export function EditCategoryForm({ isOpen, variant, row }: EditCategoryFormPrope
           shouldCloseOnOverlayClick={false}
           onRequestClose={() => (modalIsOpen.value = '')}
         >
-          <DeleteSubcategoryForm modalIsOpen={modalIsOpen} id={row.original.id} variant={variant} />
+          <DeleteSubcategoryForm
+            modalIsOpen={modalIsOpen}
+            id={row.original.id}
+            variant={variant}
+            deleteCategory={deleteCategory}
+            deleteSubCategory={deleteSubCategory}
+            subCats={subCats}
+          />
         </Modal>
       )}
     </div>

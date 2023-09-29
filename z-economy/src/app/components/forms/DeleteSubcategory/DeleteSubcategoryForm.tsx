@@ -1,5 +1,5 @@
 import styles from './DeleteSubcategoryForm.module.scss';
-import { MouseEvent, SyntheticEvent, useRef } from 'react';
+import { SyntheticEvent, useRef } from 'react';
 import cls from 'classnames';
 import { Typography } from '@atoms/Typography/Typography';
 import { IconButton } from '@atoms/Button/IconButton';
@@ -7,20 +7,28 @@ import { RxCross2 } from 'react-icons/rx';
 import { Signal } from '@preact/signals-react';
 import { Select } from '@atoms/Select/Select';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
-import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { EditCategoryVariants } from '@molecules/EditCategoryButton/EditCategoryButton';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
+import { SubCategory } from '@core/budget/category/domain/SubCategory';
 interface DeleteSubcategoryFormProperties {
   modalIsOpen: Signal<string>;
   id: string;
   variant?: EditCategoryVariants;
+  deleteCategory?: (ids: CategoryDeleteRequest) => void;
+  deleteSubCategory?: (ids: CategoryDeleteRequest) => void;
+  subCats: SubCategory[];
 }
-export function DeleteSubcategoryForm({ modalIsOpen, id, variant }: DeleteSubcategoryFormProperties) {
+
+export function DeleteSubcategoryForm({
+  modalIsOpen,
+  id,
+  variant,
+  deleteCategory,
+  deleteSubCategory,
+  subCats,
+}: DeleteSubcategoryFormProperties) {
   // STATE
   const formReference = useRef<HTMLFormElement>(null);
-
-  // SERVICES
-  const { subCats, deleteSubCategory, deleteCategory } = useCategoryHook(new Date());
 
   // HANDLERS
   const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
@@ -28,8 +36,12 @@ export function DeleteSubcategoryForm({ modalIsOpen, id, variant }: DeleteSubcat
     if (formReference.current === null) return;
     const formData = new FormData(formReference.current);
     const subCategoryId = formData.get('selectCategory') as string;
-    variant === 'category' && void deleteCategory(new CategoryDeleteRequest(id, subCategoryId));
-    variant === 'subCategory' && void deleteSubCategory(new CategoryDeleteRequest(id, subCategoryId));
+    if (deleteCategory) {
+      variant === 'category' && deleteCategory(new CategoryDeleteRequest(id, subCategoryId));
+    }
+    if (deleteSubCategory) {
+      variant === 'subCategory' && deleteSubCategory(new CategoryDeleteRequest(id, subCategoryId));
+    }
     modalIsOpen.value = '';
   };
 
