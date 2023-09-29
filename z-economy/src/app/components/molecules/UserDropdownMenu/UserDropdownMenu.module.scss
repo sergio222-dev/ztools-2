@@ -4,10 +4,17 @@
 
 .user_menu_button {
   height: 2.7rem;
+
+  .user_menu_dropdown_caret {
+    flex: 1;
+    text-align: right;
+    padding-right: functions.spacing(1);
+  }
 }
 
 .user_menu_dropdown {
   .user_menu_tooltip {
+    position: absolute;
     width: 14.25rem;
     background-color: white;
     opacity: 1;

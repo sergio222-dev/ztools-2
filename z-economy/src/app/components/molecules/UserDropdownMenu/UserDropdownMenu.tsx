@@ -7,7 +7,8 @@ import { useRef } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { FaUser } from 'react-icons/fa';
 import { Button } from '@atoms/Button/Button';
-import { ImExit } from 'react-icons/all';
+import { ImExit, TfiMenuAlt } from 'react-icons/all';
+import { AiFillCaretDown } from 'react-icons/ai';
 
 interface UserDropdownMenuProperties {
   handleLogout: () => void;
@@ -39,21 +40,32 @@ export function UserDropdownMenu({ handleLogout }: UserDropdownMenuProperties) {
 
   return (
     <div ref={tooltipReference}>
-      <a data-tooltip-id="user-dropdown-menu">
-        <SidebarButton onClick={() => (isOpen.value = !isOpen.value)} className={styles.user_menu_button}>
-          <div className="z_text_a_left">
-            <Typography variant="title" size="normal">
-              My Budget
-            </Typography>
-          </div>
-        </SidebarButton>
-      </a>
+      <div>
+        <a data-tooltip-id="user-dropdown-menu">
+          <SidebarButton
+            StartIcon={<TfiMenuAlt />}
+            onClick={() => (isOpen.value = !isOpen.value)}
+            className={styles.user_menu_button}
+          >
+            <div className="z_text_a_left">
+              <Typography variant="title" size="normal">
+                My Budget
+              </Typography>
+            </div>
+            <div className={styles.user_menu_dropdown_caret}>
+              <i style={{ fontSize: '1.1rem' }}>
+                <AiFillCaretDown />
+              </i>
+            </div>
+          </SidebarButton>
+        </a>
+      </div>
       <div className={styles.user_menu_dropdown}>
         <Tooltip
           id="user-dropdown-menu"
           clickable
           noArrow
-          place="bottom"
+          place="bottom-start"
           className={styles.user_menu_tooltip}
           isOpen={isOpen.value}
         >
