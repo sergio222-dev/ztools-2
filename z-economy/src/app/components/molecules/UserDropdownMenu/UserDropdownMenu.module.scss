@@ -1,0 +1,63 @@
+@use '../../styles/constants.scss' as const;
+@use '../../styles/mixins' as mixin;
+@use '../../styles/functions';
+
+.user_menu_button {
+  height: 2.7rem;
+}
+
+.user_menu_dropdown {
+  .user_menu_tooltip {
+    width: 14.25rem;
+    background-color: white;
+    opacity: 1;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    border-radius: const.$radius;
+    z-index: 999;
+    padding: 0;
+    color: const.$bold-text-color;
+
+    .user_menu_dropdown_ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+
+.dropdown_buttons {
+  display: inline-flex;
+  column-gap: functions.spacing(1);
+  width: 100%;
+  padding: functions.spacing(1) functions.spacing(2);
+
+  &[disabled] {
+    &:hover {
+      background-color: const.$page-darker-background-color;
+    }
+  }
+  &:hover {
+    background-color: const.$page-darker-background-color;
+    border-radius: 0;
+  }
+
+  &:focus-visible {
+    @include mixin.box-shadow(const.$primary-color);
+  }
+}
+
+.user_menu_dropdown_buttons_container {
+  padding-top: functions.spacing(1);
+  padding-bottom: functions.spacing(1);
+}
+
+.user_menu_dropdown_hr {
+  height: 1px;
+  background-color: const.$page-light-border-color;
+  border: none;
+}
+
+.user_menu_dropdown_list_header {
+  padding: functions.spacing(1) functions.spacing(1) functions.spacing(1) functions.spacing(2);
+}

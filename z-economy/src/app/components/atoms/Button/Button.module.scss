@@ -6,6 +6,7 @@
   border: none;
   outline: none;
   padding: functions.spacing(1);
+  color: const.$bold-text-color;
 
   &:hover {
     cursor: pointer;
