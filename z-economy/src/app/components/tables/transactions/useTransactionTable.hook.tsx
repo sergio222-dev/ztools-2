@@ -11,7 +11,6 @@ import { useCategoryHook } from '@core/budget/category/application/adapter/useCa
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { useParams } from 'react-router';
 import { Signal } from '@preact/signals-react';
-import { mutate } from 'swr';
 
 export const useTransactionTableHook = () => {
   // STATE
