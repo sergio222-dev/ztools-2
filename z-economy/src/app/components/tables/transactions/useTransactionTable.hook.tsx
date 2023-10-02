@@ -10,6 +10,8 @@ import { createEmptyTransaction } from '@core/budget/transaction/domain/Transact
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { useParams } from 'react-router';
+import { Signal } from '@preact/signals-react';
+import { mutate } from 'swr';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -138,7 +140,7 @@ export const useTransactionTableHook = () => {
   // TODO: delete button doesn't disable after usage.
 
   // TODO: when deleting transactions should reassign its subcategory monthly budget
-  const handleDelete = async () => {
+  const handleDelete = async (isOpen: Signal<boolean>) => {
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
@@ -149,6 +151,7 @@ export const useTransactionTableHook = () => {
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
       void (await deleteDataBatch(selectedRowsIds));
       void mutateAccountData();
+      isOpen.value = false;
       return;
     }
     const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
@@ -156,9 +159,10 @@ export const useTransactionTableHook = () => {
     setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
     void (await deleteData(row?.original as Transaction));
     void mutateAccountData();
+    isOpen.value = false;
   };
 
-  const handleDuplicate = async () => {
+  const handleDuplicate = async (isOpen: Signal<boolean>) => {
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
@@ -179,6 +183,8 @@ export const useTransactionTableHook = () => {
           ),
         ),
     );
+    void mutateAccountData();
+    isOpen.value = false;
   };
 
   // Checkbox handlers
