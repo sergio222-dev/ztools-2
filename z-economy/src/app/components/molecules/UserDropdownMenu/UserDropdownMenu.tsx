@@ -3,12 +3,14 @@ import { Typography } from '@atoms/Typography/Typography';
 import { Tooltip } from 'react-tooltip';
 import { useSignal } from '@preact/signals-react';
 import styles from './UserDropdownMenu.module.scss';
+import sidebarStyles from '../../organisms/SideBar/SideBar.module.scss';
 import { useRef } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { FaUser } from 'react-icons/fa';
 import { Button } from '@atoms/Button/Button';
 import { ImExit, TfiMenuAlt } from 'react-icons/all';
 import { AiFillCaretDown } from 'react-icons/ai';
+import cls from 'classnames';
 
 interface UserDropdownMenuProperties {
   handleLogout: () => void;
@@ -45,7 +47,7 @@ export function UserDropdownMenu({ handleLogout }: UserDropdownMenuProperties) {
           <SidebarButton
             StartIcon={<TfiMenuAlt />}
             onClick={() => (isOpen.value = !isOpen.value)}
-            className={styles.user_menu_button}
+            className={cls(styles.user_menu_button, sidebarStyles.user_menu_button)}
           >
             <div className="z_text_a_left">
               <Typography variant="title" size="normal">

@@ -15,9 +15,28 @@ $starting-hiding-width: 150px;
   transition: width 300ms ease-in-out;
   overflow: hidden;
   height: 100vh;
+  text-overflow: ellipsis;
+  //white-space: nowrap;
 
   .side_bar_header {
     margin-bottom: functions.spacing(1);
+    .user_menu_button {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      @container sidebar (max-width: #{$starting-hiding-width}) {
+        & > *:first-child {
+          display: flex;
+        }
+        & > * {
+          display: none;
+        }
+      }
+    }
+    //  @container sidebar (max-width: #{$starting-hiding-width}) {
+    //    & > div > div > a > button & > div > p {
+    //      display: none;
+    //  }
+    //}
   }
 
   @include Mixins.media-breakpoint-up('sm') {
