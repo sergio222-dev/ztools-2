@@ -33,6 +33,7 @@ export function BudgetPageView() {
               onKeyDown={event => {
                 event.preventDefault();
               }}
+              preventOpenOnFocus={true}
             />
             <AiFillCaretDown className={styles.date_caret_icon} />
           </div>
