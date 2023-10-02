@@ -158,6 +158,29 @@ export const useTransactionTableHook = () => {
     void mutateAccountData();
   };
 
+  const handleDuplicate = async () => {
+    if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
+      return;
+    }
+    const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
+    selectedRows?.map(
+      row =>
+        void createData(
+          new Transaction(
+            uuidv4(),
+            row.original.inflow,
+            row.original.outflow,
+            row.original.payee,
+            row.original.memo,
+            row.original.subCategoryId,
+            row.original.date,
+            row.original.cleared,
+            row.original.accountId,
+          ),
+        ),
+    );
+  };
+
   // Checkbox handlers
   const handleCellCheckboxOnChange = (row: Row<Transaction>) => {
     if (editingRow !== '' && editingRow === row.id) {
@@ -309,5 +332,6 @@ export const useTransactionTableHook = () => {
     handleRowOnKeyDown,
     selectedColumnId,
     subCats,
+    handleDuplicate,
   };
 };

@@ -29,6 +29,7 @@ interface TransactionTableButtonsProperties {
   setSelectedQty: Dispatch<SetStateAction<number>>;
   setDisableDelete: Dispatch<SetStateAction<boolean>>;
   subCats: SubCategory[];
+  handleDuplicate: () => void;
 }
 export function TransactionTableButtons({
   trigger,
@@ -43,6 +44,7 @@ export function TransactionTableButtons({
   setSelectedQty,
   setDisableDelete,
   subCats,
+  handleDuplicate,
 }: TransactionTableButtonsProperties) {
   const handleAddTransaction = () => {
     if (globalFilter !== '') setGlobalFilter('');
@@ -58,6 +60,7 @@ export function TransactionTableButtons({
         handleDelete={handleDelete}
         disableDelete={disableDelete}
         selectedQty={selectedQty}
+        handleDuplicate={handleDuplicate}
       />
       <SearchDebounceInput
         value={globalFilter ?? ''}

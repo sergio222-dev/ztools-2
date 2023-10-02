@@ -13,10 +13,11 @@ interface TransactionEditDropdownProperties {
   handleDelete: () => void;
   disableDelete: boolean;
   selectedQty: number;
+  handleDuplicate: () => void;
 }
 
 export function TransactionEditDropdown(props: TransactionEditDropdownProperties) {
-  const { handleDelete, disableDelete, selectedQty } = props;
+  const { handleDelete, disableDelete, selectedQty, handleDuplicate } = props;
   const isOpen = useSignal(false);
   const tooltipReference = useRef(null);
   const handleEditClick = () => {
@@ -33,11 +34,16 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     isOpen.value = false;
   };
 
+  const localHandleDuplicate = () => {
+    handleDuplicate();
+    isOpen.value = false;
+  };
+
   const DROPDOWN_BUTTONS = [
     {
       name: 'Duplicate',
       icon: <FaCopy />,
-      onClick: undefined,
+      onClick: localHandleDuplicate,
       disabled: disableDelete,
     },
     {
