@@ -55,8 +55,7 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
           <Typography>Edit {selectedQty !== 0 && `(${selectedQty})`}</Typography>
         </UtilityButton>
       </a>
-      {/*<div className={styles.t_table_dropdown}>*/}
-      <div className={styles.t_table_buttons} ref={tooltipReference}>
+      <div className={styles.t_table_dropdown} ref={tooltipReference}>
         <Tooltip
           id="edit-tooltip"
           clickable
@@ -83,7 +82,6 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
           </div>
         </Tooltip>
       </div>
-      {/*</div>*/}
     </div>
   );
 }

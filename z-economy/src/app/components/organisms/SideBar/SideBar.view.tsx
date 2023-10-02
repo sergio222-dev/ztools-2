@@ -2,7 +2,7 @@ import styles from './SideBar.module.scss';
 import { IconButton } from '@atoms/Button/IconButton';
 import { TbLayoutSidebarLeftCollapse, RiArrowDownSLine } from 'react-icons/all';
 import { SidebarButton } from '@atoms/Button/SidebarButton';
-import { LeftSidebarCollapsible } from '../../molecules';
+import { LeftSidebarCollapsible, UserDropdownMenu } from '../../molecules';
 import { Button } from '../../atoms';
 import { useSideBarHooks } from './SideBar.hooks';
 import { Typography } from '@atoms/Typography/Typography';
@@ -20,9 +20,7 @@ export function SideBarView() {
   return (
     <nav className={`${styles.side_bar} ${toggleSidebar ? '' : styles.side_bar_contracted}`}>
       <div className={styles.side_bar_header}>
-        <Button variant="primary" onClick={handleLogout} style={{ backgroundColor: 'indianred' }}>
-          Log out
-        </Button>
+        <UserDropdownMenu handleLogout={handleLogout} />
       </div>
       <div className={styles.menu_button_container}>
         {SIDEBAR_BUTTONS.map(button => {
