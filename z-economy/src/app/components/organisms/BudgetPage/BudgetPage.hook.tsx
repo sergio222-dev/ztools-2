@@ -2,10 +2,12 @@
 import { ReactNode, useState } from 'react';
 import currency from 'currency.js';
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
+import { Signal, useSignal } from '@preact/signals-react';
 
 interface BudgetPageModel {
   budgetDate: Date;
   totalAssigned: string;
+  isOpen: Signal<boolean>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -22,6 +24,7 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
 
   // STATE
   const [budgetDate, setBudgetDate] = useState<Date>(new Date());
+  const isOpen = useSignal(false);
 
   // SERVICES
   const { cdata, totalAssigned } = useCategoryHook(budgetDate);
@@ -51,7 +54,7 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   };
 
   return [
-    { budgetDate, totalAssigned },
+    { budgetDate, totalAssigned, isOpen },
     { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler, renderSwitch },
   ];
 }
