@@ -14,8 +14,7 @@ import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
-import { UtilityButton } from '@atoms/Button/UtilityButton';
-import { Transaction } from '@core/budget/transaction/domain/Transaction';
+
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
   // STATE
