@@ -55,7 +55,7 @@ export function useCategoryTableHook(budgetDate: Date) {
       }
       setEnableEditable(true);
       table.toggleAllRowsSelected(false);
-      await table.setRowSelection(() => ({
+      table.setRowSelection(() => ({
         [row.id]: true,
       }));
       return;
@@ -83,30 +83,27 @@ export function useCategoryTableHook(budgetDate: Date) {
     }
   };
 
-  const handleCheckboxOnKeyDown = async (
+  const handleCheckboxOnKeyDown = (
     event: KeyboardEvent<HTMLInputElement>,
     row: Row<Category & SubCategory>,
   ) => {
     if (event.key === 'Enter') {
-      tableReference.current?.toggleAllRowsSelected(false);
-      tableReference.current?.setRowSelection(() => ({
-        [row.id]: true,
-      }));
+      row.toggleSelected();
       return;
     }
   };
 
-  const handleHeaderCheckboxOnKeyDown = async (
+  const handleHeaderCheckboxOnKeyDown = (
     event: KeyboardEvent<HTMLInputElement>,
     table: Table<Category & SubCategory>,
   ) => {
     if (event.key === 'Enter') {
-      await handleHeaderCheckboxOnChange(table);
+      handleHeaderCheckboxOnChange(table);
       return;
     }
   };
 
-  const handleHeaderCheckboxOnChange = async (table: Table<Category & SubCategory>) => {
+  const handleHeaderCheckboxOnChange = (table: Table<Category & SubCategory>) => {
     table.toggleAllRowsSelected();
   };
 
