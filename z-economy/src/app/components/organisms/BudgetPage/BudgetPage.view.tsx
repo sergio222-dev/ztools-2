@@ -42,7 +42,7 @@ export function BudgetPageView() {
               onSelect={() => (isOpen.value = false)}
               onClickOutside={() => (isOpen.value = false)}
             />
-            <AiFillCaretDown className={styles.date_caret_icon} />
+            <Button variant={'icon'} StartIcon={<AiFillCaretDown />} className={styles.date_caret_icon} />
           </div>
           <IconButton className={styles.bp_date_buttons} onClick={addMonthHandler}>
             <AiOutlineRightCircle />

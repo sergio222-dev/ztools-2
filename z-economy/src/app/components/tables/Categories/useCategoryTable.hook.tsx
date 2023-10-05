@@ -14,6 +14,8 @@ import { Category } from '@core/budget/category/domain/Category';
 import currency from 'currency.js';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditCategoryButton } from '@molecules/EditCategoryButton/EditCategoryButton';
+import { UtilityButton } from '@atoms/Button/UtilityButton';
+import { Transaction } from '@core/budget/transaction/domain/Transaction';
 export function useCategoryTableHook(budgetDate: Date) {
   // MODEL
   // STATE
@@ -77,9 +79,40 @@ export function useCategoryTableHook(budgetDate: Date) {
   };
 
   const handleRowOnKeyDown = (event: KeyboardEvent, row: Row<Category & SubCategory>) => {
-    if (event.key === 'Escape' || event.key === 'Enter') {
+    if (event.key === 'Escape') {
       row.toggleSelected(false);
     }
+  };
+
+  const handleCheckboxOnKeyDown = async (
+    event: KeyboardEvent<HTMLInputElement>,
+    row: Row<Category & SubCategory>,
+  ) => {
+    if (event.key === 'Enter') {
+      tableReference.current?.toggleAllRowsSelected(false);
+      tableReference.current?.setRowSelection(() => ({
+        [row.id]: true,
+      }));
+      return;
+    }
+  };
+
+  const handleHeaderCheckboxOnKeyDown = async (
+    event: KeyboardEvent<HTMLInputElement>,
+    table: Table<Category & SubCategory>,
+  ) => {
+    if (event.key === 'Enter') {
+      await handleHeaderCheckboxOnChange(table);
+      return;
+    }
+  };
+
+  const handleHeaderCheckboxOnChange = async (table: Table<Category & SubCategory>) => {
+    table.toggleAllRowsSelected();
+  };
+
+  const handleCellCheckboxOnChange = (row: Row<Category & SubCategory>) => {
+    row.toggleSelected();
   };
 
   // SIDE EFFECTS
@@ -122,7 +155,12 @@ export function useCategoryTableHook(budgetDate: Date) {
             {...{
               checked: table.getIsAllRowsSelected(),
               indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
+              onKeyDown: event => {
+                handleHeaderCheckboxOnKeyDown(event, table);
+              },
+              onChange: () => {
+                handleHeaderCheckboxOnChange(table);
+              },
             }}
           />
         </div>
@@ -136,7 +174,12 @@ export function useCategoryTableHook(budgetDate: Date) {
             {...{
               checked: row.getIsSelected(),
               indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
+              onKeyDown: event => {
+                handleCheckboxOnKeyDown(event, row);
+              },
+              onChange: () => {
+                handleCellCheckboxOnChange(row);
+              },
             }}
           />
         </div>
