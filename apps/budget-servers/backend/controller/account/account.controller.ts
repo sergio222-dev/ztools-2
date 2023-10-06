@@ -11,7 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { AccountResult } from '../../dto/AccountResult';
 import { AccountCreateCommand } from '@budget/account/application/useCase/create/AccountCreate.command';
@@ -36,6 +36,7 @@ export class AccountController {
     status: 200,
     description: 'Get all accounts',
   })
+  @ApiBearerAuth('JWT')
   async findAll() {
     const queryAllAccount = new AccountFindAllQuery();
     const accounts = await this.queryBus.execute<AccountFindAllQuery, Account[]>(queryAllAccount);
@@ -56,6 +57,7 @@ export class AccountController {
     status: 200,
     description: 'Get an account by id',
   })
+  @ApiBearerAuth('JWT')
   async balance(@Param('id') accountId: string) {
     const accountFindByIdQuery = new AccountFindByIdQuery(accountId);
 
@@ -84,6 +86,7 @@ export class AccountController {
     status: 201,
     description: 'Create an account',
   })
+  @ApiBearerAuth('JWT')
   async create(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
     const command = new AccountCreateCommand(bodyCommand.id, bodyCommand.name);
     await this.commandBus.execute(command);
@@ -93,6 +96,7 @@ export class AccountController {
   @ApiResponse({
     description: 'Update an account',
   })
+  @ApiBearerAuth('JWT')
   async update(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
     const { id, name } = bodyCommand;
     const query = new AccountFindOneByIdQuery(id);
@@ -112,6 +116,7 @@ export class AccountController {
   @ApiResponse({
     description: 'Delete an account',
   })
+  @ApiBearerAuth('JWT')
   async delete(@Param('id') id: string): Promise<void> {
     const query = new AccountFindOneByIdQuery(id);
 

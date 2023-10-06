@@ -1,4 +1,3 @@
-import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
 import {
   Body,
   Controller,
@@ -11,16 +10,17 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CategoryDTO } from '../../dto/CategoryDto';
 import { CategoryDeleteRequest } from '../../dto/CategoryDeleteRequest';
+import { CategoryDTO } from '../../dto/CategoryDto';
 import { SubCategoryDto } from '../../dto/SubCategoryDto';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
 import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
 import { CategoryFindAllQuery } from '@budget/category/application/useCase/find/CategoryFindAll.query';
 import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
+import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
 import { MonthlyBudgetFindOneQuery } from '@budget/monthlyBudget/application/useCase/find/MonthlyBudgetFindOne.query';
@@ -39,6 +39,7 @@ export class CategoryController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get this month categories',
@@ -82,6 +83,7 @@ export class CategoryController {
   }
 
   @Post()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
@@ -91,6 +93,7 @@ export class CategoryController {
   }
 
   @Put()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
@@ -110,6 +113,7 @@ export class CategoryController {
   }
 
   @Post('/delete')
+  @ApiBearerAuth('JWT')
   async delete(@Body() deleteCategoryRequest: CategoryDeleteRequest): Promise<void> {
     const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
     const query = new CategoryFindOneQuery(categoryId);
@@ -135,7 +139,6 @@ export class CategoryController {
       await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
       const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId);
-
 
       const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
         queryForTransactions,

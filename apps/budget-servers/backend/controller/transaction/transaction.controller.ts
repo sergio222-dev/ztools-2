@@ -1,4 +1,3 @@
-import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import {
   Body,
   Controller,
@@ -12,13 +11,14 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { TransactionResult } from '../../dto/TransactionResult';
 import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
 import { TransactionDeleteCommand } from '@budget/transaction/application/useCase/delete/TransactionDelete.command';
 import { TransactionDeleteBatchCommand } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.command';
 import { TransactionFindAllQuery } from '@budget/transaction/application/useCase/find/TransactionFindAll.query';
+import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import { TransactionFindOneByIdQuery } from '@budget/transaction/application/useCase/findOne/TransactionFindOneById.query';
 import { TransactionUpdateCommand } from '@budget/transaction/application/useCase/update/TransactionUpdate.command';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
@@ -30,6 +30,7 @@ export class TransactionController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions',
@@ -55,6 +56,7 @@ export class TransactionController {
   }
 
   @Get('/:accountId')
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions by accountId',
@@ -79,6 +81,7 @@ export class TransactionController {
   }
 
   @Get(':id')
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get a transaction by id',
@@ -104,6 +107,7 @@ export class TransactionController {
   }
 
   @Post()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
@@ -126,6 +130,7 @@ export class TransactionController {
   }
 
   @Put()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
@@ -154,6 +159,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth('JWT')
   async delete(@Param('id') id: string): Promise<void> {
     const query = new TransactionFindOneByIdQuery(id);
 
@@ -168,6 +174,7 @@ export class TransactionController {
   }
 
   @Post('/delete')
+  @ApiBearerAuth('JWT')
   async deleteBatch(@Body() { ids }: TransactionDeleteBatchCommand): Promise<void> {
     try {
       const command = new TransactionDeleteBatchCommand(ids);

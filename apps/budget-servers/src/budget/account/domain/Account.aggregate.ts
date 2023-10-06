@@ -2,10 +2,6 @@ import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 
 export class Account extends AggregateRoot {
-  get id(): string {
-    return this._id;
-  }
-
   get name(): string {
     return this._name;
   }
@@ -14,22 +10,14 @@ export class Account extends AggregateRoot {
     return this._balance || new SignedAmount(0);
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
   private constructor(
-    private readonly _id: string,
+    _id: string,
     private readonly _name: string,
-    private readonly _createdAt: Date,
-    private readonly _updatedAt: Date,
+    _createdAt: Date,
+    _updatedAt: Date,
     private _balance?: SignedAmount,
   ) {
-    super();
+    super(_id, _createdAt, _updatedAt);
   }
 
   public static CREATE(id: string, name: string, balance?: SignedAmount) {

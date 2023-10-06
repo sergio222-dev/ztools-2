@@ -1,35 +1,18 @@
-import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
-import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
-import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
-import { Category } from '@budget/category/domain/Category.aggregate';
+import { Body, Controller, HttpException, HttpStatus, Injectable, Post, Put } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+import { SubCategoryDeleteRequest } from '../../dto/SubCategoryDeleteRequest';
+import { MonthlyBudgetAssignOneCommand } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.command';
+import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
+import { SubCategoryCreateCommand } from '@budget/subCategory/application/useCase/create/SubCategoryCreate.command';
 import { SubCategoryDeleteCommand } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.command';
 import { SubCategoryFindOneByIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.query';
 import { SubCategoryUpdateCommand } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.command';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-
-import { SubCategoryDto } from '../../dto/SubCategoryDto';
-import { MonthlyBudgetAssignOneCommand } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.command';
-import { SubCategoryCreateCommand } from '@budget/subCategory/application/useCase/create/SubCategoryCreate.command';
-import { SubCategoryFindAllQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindAll.query';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
-import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
 import { TransactionFindAllBySubCategoryIdQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllBySubCategoryId.query';
-import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 import { TransactionUpdateCommand } from '@budget/transaction/application/useCase/update/TransactionUpdate.command';
-import { SubCategoryDeleteRequest } from '../../dto/SubCategoryDeleteRequest';
+import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @Controller('subCategory')
 @ApiTags('subCategories')
@@ -38,6 +21,7 @@ export class SubCategoryController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Post()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
     description: 'Create a sub category',
@@ -49,6 +33,7 @@ export class SubCategoryController {
   }
 
   @Put()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
@@ -67,6 +52,7 @@ export class SubCategoryController {
   }
 
   @Post('/assign')
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
     description: 'Assign budget to sub category',
@@ -83,6 +69,7 @@ export class SubCategoryController {
   }
 
   @Post('/delete')
+  @ApiBearerAuth('JWT')
   async delete(@Body() bodyCommand: SubCategoryDeleteRequest): Promise<void> {
     const { id, subCategoryId } = bodyCommand;
 

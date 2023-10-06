@@ -4,13 +4,9 @@ import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { TransactionActivityCreatedEvent } from '@budget/transaction/domain/event/TransactionActivityCreated.event';
 import { TransactionActivityUpdatedEvent } from '@budget/transaction/domain/event/TransactionActivityUpdated.event';
-import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
+import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
-export class Transaction extends AggregateRoot {
-  get id(): string {
-    return this._id;
-  }
-
+export class Transaction extends AggregateRootOwnership {
   get inflow(): UnsignedAmount {
     return this._inflow;
   }
@@ -43,14 +39,6 @@ export class Transaction extends AggregateRoot {
     return this._accountId;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
   get flowType(): FlowType {
     return this.determineFlowType();
   }
@@ -70,7 +58,7 @@ export class Transaction extends AggregateRoot {
   }
 
   private constructor(
-    private _id: string,
+    _id: string,
     private _inflow: UnsignedAmount,
     private _outflow: UnsignedAmount,
     private _payee: string,
@@ -79,10 +67,11 @@ export class Transaction extends AggregateRoot {
     private _date: Date,
     private _cleared: boolean,
     private _accountId: string,
-    private _createdAt: Date,
-    private _updatedAt: Date,
+    _userId: string,
+    _createdAt: Date,
+    _updatedAt: Date,
   ) {
-    super();
+    super(_id, _userId, _createdAt, _updatedAt);
   }
 
   private determineFlowType(): FlowType {
@@ -108,6 +97,7 @@ export class Transaction extends AggregateRoot {
     date: Date,
     cleared: boolean,
     accountId: string,
+    userId: string,
   ) {
     const transaction = new Transaction(
       id,
@@ -119,6 +109,7 @@ export class Transaction extends AggregateRoot {
       date,
       cleared,
       accountId,
+      userId,
       new Date(),
       new Date(),
     );
@@ -169,6 +160,7 @@ export class Transaction extends AggregateRoot {
     date: Date,
     cleared: boolean,
     accountId: string,
+    userId: string,
     createdAt: Date,
     updatedAt: Date,
   ) {
@@ -182,6 +174,7 @@ export class Transaction extends AggregateRoot {
       date,
       cleared,
       accountId,
+      userId,
       createdAt,
       updatedAt,
     );

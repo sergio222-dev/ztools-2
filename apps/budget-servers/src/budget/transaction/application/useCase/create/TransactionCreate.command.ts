@@ -11,50 +11,46 @@ export class TransactionCreateCommand {
     private readonly _date: string,
     private readonly _cleared = true,
     private readonly _accountId: string,
+    private readonly _userId: string,
   ) {}
 
-  @ApiProperty()
   get id(): string {
     return this._id;
   }
 
-  @ApiProperty()
   get inflow(): string {
     return this._inflow;
   }
 
-  @ApiProperty()
   get outflow(): string {
     return this._outflow;
   }
 
-  @ApiProperty()
   get payee(): string {
     return this._payee;
   }
 
-  @ApiProperty()
   get memo(): string {
     return this._memo;
   }
 
-  @ApiProperty()
   get subCategoryId(): string {
     return this._subCategoryId;
   }
 
-  @ApiProperty()
   get date(): string {
     return this._date;
   }
 
-  @ApiProperty()
   get cleared(): boolean {
     return this._cleared;
   }
 
-  @ApiProperty()
   get accountId(): string {
     return this._accountId;
+  }
+
+  get userId(): string {
+    return this._userId;
   }
 }

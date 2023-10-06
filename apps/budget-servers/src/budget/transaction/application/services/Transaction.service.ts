@@ -27,6 +27,7 @@ export class TransactionService {
     date: Date,
     cleared: boolean,
     accountId: string,
+    userId: string,
   ): Promise<void> {
     const transaction = Transaction.CREATE(
       id,
@@ -38,6 +39,7 @@ export class TransactionService {
       date,
       cleared,
       accountId,
+      userId,
     );
 
     await this.transactionRepository.save(transaction);

@@ -47,6 +47,10 @@ export const TransactionSchema = new Schema<ExtendOfDocument<Transaction>>(
       type: String,
       required: true,
     },
+    userId: {
+      type: String,
+      required: true,
+    },
     createdAt: {
       type: Date,
       required: true,

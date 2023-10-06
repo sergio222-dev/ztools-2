@@ -10,8 +10,19 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Budget Server')
-    .setDescription('Busdget Server API')
+    .setDescription('Budget Server API')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
