@@ -9,5 +9,10 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react({
+      jsxRuntime: 'classic',
+    }),
+    tsconfigPaths(),
+  ],
 });
