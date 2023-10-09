@@ -1,5 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
-
 export class TransactionCreateCommand {
   constructor(
     private readonly _id: string,

@@ -12,4 +12,10 @@ export abstract class AggregateRootOwnership extends AggregateRoot {
   ) {
     super(_id, _createdAt, _updatedAt);
   }
+
+  static isAggregateRootOwnership(
+    subject: AggregateRootOwnership | AggregateRoot,
+  ): subject is AggregateRootOwnership {
+    return subject['userId'] !== undefined;
+  }
 }

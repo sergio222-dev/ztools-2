@@ -1,23 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { CategoryRepository } from '@budget/category/domain/Category.repository';
-import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
+import {
+  CategorySchemaType,
+  mapToCategoryDomain,
+  mapToCategorySchema,
+} from '@budget/category/infrastructure/mongo/category.schema';
+import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
 
 @Injectable()
-export class MongoCategoryRepository implements CategoryRepository {
-  constructor(
-    @InjectModel('Category')
-    private readonly categoryModel: Model<Category>,
-    @InjectModel('SubCategory')
-    private readonly subCategoryModel: Model<SubCategory>,
-  ) {}
-
-  async findAll(): Promise<Category[]> {
-    return await this.categoryModel.find().exec();
+export class MongoCategoryRepository
+  extends MongoRepository<Category, CategorySchemaType>
+  implements CategoryRepository
+{
+  constructor(@InjectConnection() connection: Connection) {
+    super(connection);
   }
+
+  protected collectionName(): string {
+    return 'Category';
+  }
+
+  protected getMapperToSchema() {
+    return mapToCategorySchema;
+  }
+
+  protected getMapperToDomain() {
+    return mapToCategoryDomain;
+  }
+
+  async findAll(): Promise<Category[]> {}
 
   async save(category: Category): Promise<void> {
     const createdCategory = new this.categoryModel(category);

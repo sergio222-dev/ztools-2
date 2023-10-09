@@ -1,1 +1,3 @@
-export class AccountFindAllQuery {}
+export class AccountFindAllQuery {
+  constructor(public readonly userId: string) {}
+}

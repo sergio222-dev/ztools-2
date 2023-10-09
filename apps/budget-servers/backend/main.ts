@@ -1,12 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { patchNestJsSwagger } from 'nestjs-zod';
 
 import { AppModule } from './app.module';
+import { AllExceptionFilter } from './middleware/filter/AllExceptionFilter';
+import { CustomZodValidationExceptionFilter } from './middleware/filter/CustomZodValidationExceptionFilter';
 
 async function bootstrap() {
+  patchNestJsSwagger();
   const app = await NestFactory.create(AppModule, {
     cors: true,
   });
+
+  app.useGlobalFilters(new AllExceptionFilter(), new CustomZodValidationExceptionFilter());
 
   const config = new DocumentBuilder()
     .setTitle('Budget Server')

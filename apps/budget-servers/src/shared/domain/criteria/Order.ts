@@ -28,4 +28,16 @@ export class Order {
   static none(): Order {
     return new Order('', OrderTypes.NONE);
   }
+
+  static desc(orderBy: string): Order {
+    return new Order(orderBy, OrderTypes.DESC);
+  }
+
+  static asc(orderBy: string): Order {
+    return new Order(orderBy, OrderTypes.ASC);
+  }
+
+  hasOrder() {
+    return this.orderType !== OrderTypes.NONE;
+  }
 }

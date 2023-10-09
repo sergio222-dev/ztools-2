@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, HttpStatus, Injectable, Post, Put } from '@nestjs/common';
+import { Body, Controller, HttpException, HttpStatus, Injectable, Post, Put, Req } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -13,6 +13,7 @@ import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
 import { TransactionFindAllBySubCategoryIdQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllBySubCategoryId.query';
 import { TransactionUpdateCommand } from '@budget/transaction/application/useCase/update/TransactionUpdate.command';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
+import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 
 @Controller('subCategory')
 @ApiTags('subCategories')
@@ -70,7 +71,11 @@ export class SubCategoryController {
 
   @Post('/delete')
   @ApiBearerAuth('JWT')
-  async delete(@Body() bodyCommand: SubCategoryDeleteRequest): Promise<void> {
+  async delete(
+    @Body() bodyCommand: SubCategoryDeleteRequest,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<void> {
+    const { user } = request;
     const { id, subCategoryId } = bodyCommand;
 
     const query = new SubCategoryFindOneByIdQuery(id);
@@ -83,7 +88,7 @@ export class SubCategoryController {
 
     await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
-    const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(id);
+    const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(id, user.id);
 
     const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
       queryForAllTransactions,

@@ -9,6 +9,6 @@ export class TransactionFindAllByAccountHandler implements IQueryHandler<Transac
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(query: TransactionFindAllByAccountQuery): Promise<Transaction[]> {
-    return this.transactionService.findAllByAccountId(query.accountId);
+    return this.transactionService.findAllByAccountId(query.accountId, query.userId);
   }
 }

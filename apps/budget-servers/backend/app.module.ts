@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 import { AccountController } from './controller/account/account.controller';
 import { CategoryController } from './controller/category/category.controller';
@@ -38,6 +39,10 @@ const controllers = [TransactionController, CategoryController, SubCategoryContr
   controllers: [...controllers],
   providers: [
     SupabaseService,
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
     {
       provide: APP_GUARD,
       useClass: SupabaseGuard,

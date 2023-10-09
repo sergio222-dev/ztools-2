@@ -11,6 +11,6 @@ export class TransactionFindAllBySubCategoryIdHandler
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(query: TransactionFindAllBySubCategoryIdQuery): Promise<Transaction[]> {
-    return this.transactionService.findAllBySubCategoryId(query.subCategoryId);
+    return this.transactionService.findAllBySubCategoryId(query.subCategoryId, query.userId);
   }
 }

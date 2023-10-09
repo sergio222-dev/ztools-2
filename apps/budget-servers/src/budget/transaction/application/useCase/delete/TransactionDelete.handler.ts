@@ -8,7 +8,7 @@ export class TransactionDeleteHandler implements ICommandHandler<TransactionDele
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(command: TransactionDeleteCommand): Promise<void> {
-    const { id } = command;
-    await this.transactionService.deleteOneById(id);
+    const { id, userId } = command;
+    await this.transactionService.deleteOneById(id, userId);
   }
 }

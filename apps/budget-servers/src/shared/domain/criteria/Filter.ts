@@ -5,6 +5,7 @@ export enum Operator {
   LT = '<',
   CONTAINS = 'CONTAINS',
   NOT_CONTAINS = 'NOT_CONTAINS',
+  IN = 'IN',
 }
 
 export class FilterOperator {
@@ -28,8 +29,8 @@ export class FilterOperator {
 export class Filter {
   constructor(
     public readonly field: string,
-    public readonly filterOperator: FilterOperator,
-    public readonly value: string,
+    public readonly operator: FilterOperator,
+    public readonly value: string | string[],
   ) {}
 
   static fromValue(values: Map<string, string>) {

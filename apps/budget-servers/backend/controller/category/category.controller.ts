@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoryDeleteRequest } from '../../dto/CategoryDeleteRequest';
 import { CategoryDTO } from '../../dto/CategoryDto';
 import { SubCategoryDto } from '../../dto/SubCategoryDto';
+import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
 import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
@@ -114,7 +116,11 @@ export class CategoryController {
 
   @Post('/delete')
   @ApiBearerAuth('JWT')
-  async delete(@Body() deleteCategoryRequest: CategoryDeleteRequest): Promise<void> {
+  async delete(
+    @Body() deleteCategoryRequest: CategoryDeleteRequest,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<void> {
+    const { user } = request;
     const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
     const query = new CategoryFindOneQuery(categoryId);
 
@@ -138,7 +144,7 @@ export class CategoryController {
 
       await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
-      const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId);
+      const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId, user.id);
 
       const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
         queryForTransactions,
@@ -147,6 +153,7 @@ export class CategoryController {
       for (const transaction of transactions) {
         const commandForUpdateTransaction = new TransactionUpdateCommand(
           transaction.id,
+          transaction.userId,
           transaction.inflow.amount,
           transaction.outflow.amount,
           transaction.payee,

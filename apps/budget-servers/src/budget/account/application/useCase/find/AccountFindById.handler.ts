@@ -9,6 +9,6 @@ export class AccountFindByIdHandler implements IQueryHandler<AccountFindByIdQuer
   constructor(private readonly accountService: AccountService) {}
 
   async execute(query: AccountFindByIdQuery): Promise<Account> {
-    return this.accountService.findOneById(query.id);
+    return this.accountService.findOneById(query.id, query.userId);
   }
 }

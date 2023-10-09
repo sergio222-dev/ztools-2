@@ -9,6 +9,9 @@ const mongoSchemasModule = MongooseModule.forFeature(budget.schemas);
 const mongoConnectionModule = async () => {
   // await for env loaded
   await ConfigModule.envVariablesLoaded;
+  console.log(
+    `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_SERVER}:${process.env.MONGO_PORT}`,
+  );
   return MongooseModule.forRoot(
     `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_SERVER}:${process.env.MONGO_PORT}`,
     {

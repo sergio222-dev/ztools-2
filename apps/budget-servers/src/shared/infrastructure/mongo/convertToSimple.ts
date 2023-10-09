@@ -21,7 +21,15 @@ export function convertToSimple<T>(value: T): T {
 
 const eventKeys = new Set(['aggregateId', 'eventId', 'occurredOn']);
 
-export function convertToSimpleEvent<T>(value: T): T {
+type SimpleEventDocument = {
+  id: string;
+  aggregateId: string;
+  eventId: string;
+  occurredOn: string;
+  data: string;
+};
+
+export function convertToSimpleEvent<T>(value: T): SimpleEventDocument {
   const keys = Object.entries(value)
     .filter(([, descriptor]) => typeof descriptor.get !== 'function')
     .map(([key]) => key.slice(1));
