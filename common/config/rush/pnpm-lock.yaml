@@ -47,6 +47,7 @@ importers:
       jsonwebtoken: ~9.0.2
       mongodb: ~5.1.0
       mongoose: ~7.0.3
+      nestjs-zod: ~2.3.3
       reflect-metadata: ^0.1.13
       rxjs: ^7.5.5
       source-map-support: ^0.5.21
@@ -57,6 +58,7 @@ importers:
       typeorm: ~0.3.12
       typescript: ^4.9.3
       uuid: ~9.0.0
+      zod: ~3.21.4
     dependencies:
       '@faker-js/faker': 7.6.0
       '@nestjs/common': 9.4.3_04c5f9d35258f4cdb55c3b2ca837d019
@@ -71,9 +73,11 @@ importers:
       '@supabase/supabase-js': 2.23.0
       bignumber.js: 9.1.1
       mongoose: 7.0.5
+      nestjs-zod: 2.3.3_a822547d2c823f301f151b77d42edce7
       reflect-metadata: 0.1.13
       rxjs: 7.8.1
       uuid: 9.0.0
+      zod: 3.21.4
     devDependencies:
       '@jest/globals': 29.5.0
       '@nestjs/cli': 9.5.0
@@ -6578,9 +6582,9 @@ packages:
       '@nestjs/swagger':
         optional: true
     dependencies:
-      '@nestjs/common': 9.4.3_4ee63e19ab32bfd7441e77a5477b41c6
+      '@nestjs/common': 9.4.3_04c5f9d35258f4cdb55c3b2ca837d019
       '@nestjs/core': 9.4.3_170a61bffdd203f1c8d15b67f2cac511
-      '@nestjs/swagger': 6.2.1_297d73fd5e66d42b9f20c2a686d4e3bf
+      '@nestjs/swagger': 6.2.1_8a58faca1c4e4f40738cce46e9e35225
       merge-deep: 3.0.3
       zod: 3.21.4
     dev: false

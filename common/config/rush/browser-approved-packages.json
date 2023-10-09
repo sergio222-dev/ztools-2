@@ -347,6 +347,10 @@
       "allowedCategories": [ "tools" ]
     },
     {
+      "name": "z",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "zod",
       "allowedCategories": [ "production" ]
     }
