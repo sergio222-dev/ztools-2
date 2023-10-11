@@ -3,7 +3,7 @@ import { Typography } from '@atoms/Typography/Typography';
 import { Tooltip } from 'react-tooltip';
 import { useSignal } from '@preact/signals-react';
 import styles from './UserDropdownMenu.module.scss';
-import { useRef } from 'react';
+import { KeyboardEvent, useRef } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { FaUser } from 'react-icons/fa';
 import { Button } from '@atoms/Button/Button';
@@ -33,6 +33,13 @@ export function UserDropdownMenu({ handleLogout }: UserDropdownMenuProperties) {
     onClick: handleLogout,
   };
 
+  // HANDLERS
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      isOpen.value = false;
+    }
+  };
+
   // SIDE EFFECTS
   useOutsideClick(tooltipReference, () => {
     isOpen.value = false;
@@ -40,7 +47,7 @@ export function UserDropdownMenu({ handleLogout }: UserDropdownMenuProperties) {
 
   return (
     <div ref={tooltipReference}>
-      <div>
+      <div onKeyDown={event => handleKeyDown(event)}>
         <a data-tooltip-id="user-dropdown-menu">
           <SidebarButton
             StartIcon={<TfiMenuAlt />}
@@ -60,7 +67,7 @@ export function UserDropdownMenu({ handleLogout }: UserDropdownMenuProperties) {
           </SidebarButton>
         </a>
       </div>
-      <div className={styles.user_menu_dropdown}>
+      <div className={styles.user_menu_dropdown} onKeyDown={event => handleKeyDown(event)}>
         <Tooltip
           id="user-dropdown-menu"
           clickable
