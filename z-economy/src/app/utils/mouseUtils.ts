@@ -9,7 +9,8 @@ export const useOutsideClick = <T extends Element = Element>(
       if (!event.target) return;
       if (!reference.current) return;
       if (reference.current.contains(event.target as Node)) return;
-      if ('key' in event && event.type === 'keydown' && event.key !== 'Escape') return;
+      if ('key' in event && event.type === 'keydown' && event.key !== 'Enter' && event.key !== 'Escape')
+        return;
 
       callback();
     };
