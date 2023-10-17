@@ -59,7 +59,7 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
           className={styles.t_table_tooltip}
           isOpen={isOpen.value}
         >
-          <div>
+          <div className={styles.t_edit_dropdown_buttons_container}>
             <ul className={styles.edit_ul}>
               {DROPDOWN_BUTTONS.map(button => (
                 <li key={button.name}>
