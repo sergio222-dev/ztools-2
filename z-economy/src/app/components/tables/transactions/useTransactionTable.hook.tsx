@@ -314,7 +314,6 @@ export const useTransactionTableHook = () => {
     editableValue,
     editingRow,
     cdata,
-    subCats,
   );
 
   return {

@@ -25,7 +25,6 @@ export function useTransactionTableColumnsHook(
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
   cdata: Category[],
-  subCats: SubCategory[],
 ) {
   // SERVICES
   const columnHelper = createColumnHelper<Transaction>();
