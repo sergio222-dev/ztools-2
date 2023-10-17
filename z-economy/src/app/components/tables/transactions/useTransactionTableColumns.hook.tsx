@@ -25,6 +25,7 @@ export function useTransactionTableColumnsHook(
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
   cdata: Category[],
+  subCats: SubCategory[],
 ) {
   // SERVICES
   const columnHelper = createColumnHelper<Transaction>();
@@ -159,7 +160,20 @@ export function useTransactionTableColumnsHook(
             defaultValue={
               editingRow === info.row.id
                 ? info.getValue()
-                : cdata.find(item => item.id === info.row.original.subCategoryId)?.name
+                : cdata.find(category =>
+                    category.subCategories.find(
+                      subcategory => subcategory.id === info.row.original.subCategoryId,
+                    ),
+                  )?.name +
+                  ': ' +
+                  cdata
+                    .find(category =>
+                      category.subCategories.find(
+                        subcategory => subcategory.id === info.row.original.subCategoryId,
+                      ),
+                    )
+                    ?.subCategories.find(subcategory => subcategory.id === info.row.original.subCategoryId)
+                    ?.name
             }
             options={cdata}
             onChangeValue={value => {
@@ -169,7 +183,21 @@ export function useTransactionTableColumnsHook(
         ) : (
           <EditableCellSelect
             isEditable={false}
-            defaultValue={cdata.find(item => item.id === info.row.original.subCategoryId)?.name}
+            defaultValue={
+              cdata.find(category =>
+                category.subCategories.find(
+                  subcategory => subcategory.id === info.row.original.subCategoryId,
+                ),
+              )?.name +
+              ': ' +
+              cdata
+                .find(category =>
+                  category.subCategories.find(
+                    subcategory => subcategory.id === info.row.original.subCategoryId,
+                  ),
+                )
+                ?.subCategories.find(subcategory => subcategory.id === info.row.original.subCategoryId)?.name
+            }
           />
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
