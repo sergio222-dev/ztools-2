@@ -31,7 +31,7 @@ export const useTransactionTableHook = () => {
   // SERVICES
   const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
-  const { subCats } = useCategoryHook(new Date());
+  const { subCats, cdata } = useCategoryHook(new Date());
   const { mutateAccountData } = useAccountHook();
   const { accountId } = useParams();
 
@@ -313,7 +313,7 @@ export const useTransactionTableHook = () => {
     handleClearedSorting,
     editableValue,
     editingRow,
-    subCats,
+    cdata,
   );
 
   return {
