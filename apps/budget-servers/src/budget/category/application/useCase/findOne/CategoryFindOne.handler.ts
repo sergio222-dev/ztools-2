@@ -6,9 +6,9 @@ import { Category } from '@budget/category/domain/Category.aggregate';
 
 @QueryHandler(CategoryFindOneQuery)
 export class CategoryFindOneHandler implements IQueryHandler<CategoryFindOneQuery> {
-  constructor(private readonly categoryService: CategoryService) {}
+    constructor(private readonly categoryService: CategoryService) {}
 
-  async execute(query: CategoryFindOneQuery): Promise<Category> {
-    return await this.categoryService.findOneById(query.id);
-  }
+    async execute(query: CategoryFindOneQuery): Promise<Category> {
+        return await this.categoryService.findOneById(query.id, query.userId);
+    }
 }

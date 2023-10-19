@@ -5,9 +5,9 @@ import { CategoryDeleteCommand } from '@budget/category/application/useCase/dele
 
 @CommandHandler(CategoryDeleteCommand)
 export class CategoryDeleteHandler implements ICommandHandler<CategoryDeleteCommand> {
-  constructor(private readonly categoryService: CategoryService) {}
+    constructor(private readonly categoryService: CategoryService) {}
 
-  async execute(command: CategoryDeleteCommand): Promise<void> {
-    await this.categoryService.delete(command.id);
-  }
+    async execute(command: CategoryDeleteCommand): Promise<void> {
+        await this.categoryService.deleteOneById(command.id, command.userId);
+    }
 }
