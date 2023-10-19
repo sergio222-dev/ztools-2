@@ -12,6 +12,7 @@ import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditableCellDatePicker } from '@molecules/EditableCell/EditableCellDatePicker';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
+import { Category } from '@core/budget/category/domain/Category';
 
 export function useTransactionTableColumnsHook(
   data: Transaction[],
@@ -23,7 +24,7 @@ export function useTransactionTableColumnsHook(
   handleClearedSorting: (rowA: Row<Transaction>, rowB: Row<Transaction>, columnId: string) => number,
   editableValue: MutableRefObject<Transaction>,
   editingRow: string,
-  subCats: SubCategory[],
+  cdata: Category[],
 ) {
   // SERVICES
   const columnHelper = createColumnHelper<Transaction>();
@@ -158,9 +159,22 @@ export function useTransactionTableColumnsHook(
             defaultValue={
               editingRow === info.row.id
                 ? info.getValue()
-                : subCats.find(item => item.id === info.row.original.subCategoryId)?.name
+                : cdata.find(category =>
+                    category.subCategories.find(
+                      subcategory => subcategory.id === info.row.original.subCategoryId,
+                    ),
+                  )?.name +
+                  ': ' +
+                  cdata
+                    .find(category =>
+                      category.subCategories.find(
+                        subcategory => subcategory.id === info.row.original.subCategoryId,
+                      ),
+                    )
+                    ?.subCategories.find(subcategory => subcategory.id === info.row.original.subCategoryId)
+                    ?.name
             }
-            options={subCats}
+            options={cdata}
             onChangeValue={value => {
               editableValue.current.subCategoryId = value;
             }}
@@ -168,7 +182,21 @@ export function useTransactionTableColumnsHook(
         ) : (
           <EditableCellSelect
             isEditable={false}
-            defaultValue={subCats.find(item => item.id === info.row.original.subCategoryId)?.name}
+            defaultValue={
+              cdata.find(category =>
+                category.subCategories.find(
+                  subcategory => subcategory.id === info.row.original.subCategoryId,
+                ),
+              )?.name +
+              ': ' +
+              cdata
+                .find(category =>
+                  category.subCategories.find(
+                    subcategory => subcategory.id === info.row.original.subCategoryId,
+                  ),
+                )
+                ?.subCategories.find(subcategory => subcategory.id === info.row.original.subCategoryId)?.name
+            }
           />
         ),
       sortingFn: (rowA, rowB, columnId) => handleSorting(rowA, rowB, columnId),
