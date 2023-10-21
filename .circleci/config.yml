@@ -18,7 +18,7 @@ jobs:
           path: ~/project
       - run:
           name: My files
-          command: ls
+          command: rush -h
       - run:
           name: Build Project
           command: make build
