@@ -1,4 +1,4 @@
-name: budget-servers workflow
+name: budget-servers-workflow
 run-name: {{ github.actor }} is running {{ github.workflow }}
 on:
   pull_request:
