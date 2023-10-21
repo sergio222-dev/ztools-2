@@ -9,7 +9,7 @@ jobs:
     steps:
       - run:
           name: Install Rush
-          command: npm install -g @microsoft/rush
+          command: npm install --prefix=$HOME/.local --global @microsoft/rush
   update-and-build:
     executor: node-rush
     working_directory: ~/project/apps/budget-servers
