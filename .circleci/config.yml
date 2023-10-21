@@ -20,7 +20,7 @@ jobs:
 workflows:
   build:
     when:
-      equal: [develop, << parameter.git.branch >>]
+      equal: [develop, << pipeline.git.branch >>]
     jobs:
       - install-rush
       - update-and-build:
