@@ -7,7 +7,7 @@ PROJECT_NAME_PATH = budget-servers
 DEPLOY_CONTAINER = '$(BASE_PROJECT_CONTAINER)\$(PROJECT_NAME_PATH)'
 
 # CI
-RUSH_INSTALL_SCRIPT = ..\..\common\scripts\install-run-rush.js
+RUSH_INSTALL_SCRIPT = ../../common/scripts/install-run-rush.js
 
 # Docker
 DOCKER_PROFILE = budget-server
