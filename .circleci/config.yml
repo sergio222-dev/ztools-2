@@ -17,6 +17,9 @@ jobs:
       - checkout:
           path: ~/project
       - run:
+          name: My files
+          command: ls
+      - run:
           name: Build Project
           command: make build
 
