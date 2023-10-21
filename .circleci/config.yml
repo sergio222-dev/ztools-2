@@ -1,4 +1,17 @@
 version: 2.1
+parameters:
+  GHA_Event:
+    type: string
+    default: ""
+  GHA_Actor:
+    type: string
+    default: ""
+  GHA_Action:
+    type: string
+    default: ""
+  GHA_Meta:
+    type: string
+    default: ""
 executors:
   node-rush:
     docker:
@@ -22,7 +35,6 @@ jobs:
 
 workflows:
   build:
-    when:
-      equal: [develop, << pipeline.git.branch >>]
+    when: << pipeline.parameters.GHA_Action >>
     jobs:
       - update-and-build
