@@ -8,11 +8,11 @@ jobs:
     executor: node-rush
     working_directory: ~/project/apps/budget-servers
     steps:
+      - checkout:
+          path: ~/project
       - run:
           name: Install Rush
           command: npm install --prefix=$HOME/.local --global @microsoft/rush
-      - checkout:
-          path: ~/project
       - run:
           name: My files
           command: rush -h
