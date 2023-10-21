@@ -1,0 +1,31 @@
+version: 2.1
+executors:
+  node-rush:
+    docker:
+      - image: cimg/node:19.5.0
+jobs:
+  install-rush:
+    executor: node-rush
+    steps:
+      - run:
+          name: Install Rush
+          command: npm install -g @microsoft/rush
+  update-and-build:
+    executor: node-rush
+    working_directory: ~/project/apps/budget-servers
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Build Project
+          command: make build
+
+workflows:
+  build:
+    when:
+      equal: [develop, << pipeline.git.branch >>]
+    jobs:
+      - install-rush
+      - update-and-build:
+          requires:
+            - install-rush
