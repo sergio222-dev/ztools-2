@@ -24,14 +24,11 @@ jobs:
       - checkout:
           path: ~/project
       - run:
-          name: Install Rush
-          command: npm install --prefix=$HOME/.local --global @microsoft/rush
-      - run:
-          name: My files
-          command: rush -h
+          name: Install deps
+          command: make ci-install
       - run:
           name: Build Project
-          command: make build
+          command: make ci-build
 
 workflows:
   build:
