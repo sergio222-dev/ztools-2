@@ -14,6 +14,7 @@ const mongoConnectionModule = async () => {
       ? `${process.env.MONGO_SERVER}:${process.env.MONGO_PORT}`
       : process.env.MONGO_SERVER;
   const mongoString = `${process.env.MONGO_PROTOCOL}://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${mongoServer}`;
+
   return MongooseModule.forRoot(mongoString, {
     dbName: process.env.MONGO_INITDB_DATABASE,
     authSource: process.env.MONGO_AUTH_SOURCE,
