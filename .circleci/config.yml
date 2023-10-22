@@ -42,17 +42,14 @@ jobs:
           name: Build Project
           command: make ci-build
       - run:
-          name: Install fly cli
+          name: Move files to deploy folder
+          command: make ci-pre-deploy
+      - run:
+          name: Deploy Project
           command: |
             curl -L https://fly.io/install.sh | sh
             export FLYCTL_INSTALL="/home/circleci/.fly"
             export PATH="$FLYCTL_INSTALL/bin:$PATH"
-      - run:
-          name: Move files to deploy folder
-          command: make ci-pre-deploy
-      - run:
-          name: Deploy project
-          command: |
             flyctl auth token
             flyctl deploy ~/project --config ~/project/apps/budget-servers/fly.toml --image-label v1 --no-cache
 
