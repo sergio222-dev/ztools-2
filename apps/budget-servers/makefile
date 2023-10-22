@@ -37,10 +37,10 @@ ci-build:
 
 ci-pre-deploy:
 	@if [ -d $(DEPLOY_CONTAINER) ]; then \
-		@node $(RUSH_INSTALL_SCRIPT) deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER); \
+		node $(RUSH_INSTALL_SCRIPT) deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER); \
 	else \
 		mkdir -p $(DEPLOY_CONTAINER); \
-		@node $(RUSH_INSTALL_SCRIPT) deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER); \
+		node $(RUSH_INSTALL_SCRIPT) deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER); \
 	fi
 
 ci-deploy:
