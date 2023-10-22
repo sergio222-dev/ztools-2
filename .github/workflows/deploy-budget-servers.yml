@@ -1,5 +1,5 @@
 name: deploy-budget-server
-run-name: {{ github.actor }} is running {{ github.workflow }}
+run-name: ${{ github.actor }} is running ${{ github.workflow }}
 on:
   pull_request:
     types:
