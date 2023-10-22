@@ -43,8 +43,6 @@ ci-pre-deploy:
 		node $(RUSH_INSTALL_SCRIPT) deploy --project $(PROJECT_NAME) --target-folder $(DEPLOY_CONTAINER); \
 	fi
 
-ci-deploy:
-	@flyctl deploy ../../ --config ./apps/budget-servers/fly.toml --image-label v1 --no-cache
 
 docker:
 	docker compose --profile $(DOCKER_PROFILE) --env-file $(ENV_CONFIG_FILE) up -d --build
