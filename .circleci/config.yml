@@ -49,7 +49,7 @@ jobs:
           command: make ci-pre-deploy
       - run:
           name: Deploy project
-          command: make ci-deploy
+          command: flyctl deploy ~/project --config ~/project/apps/budget-servers/fly.toml --image-label v1 --no-cache
 
 workflows:
   build:
