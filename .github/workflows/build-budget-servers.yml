@@ -1,16 +1,20 @@
-name: budget-servers-workflow
+name: build-budget-server
 run-name: '{{ github.actor }} is running {{ github.workflow }}'
 on:
-  pull_request:
+  pull_request_review:
     types:
-      - closed
+      - submitted
+      - edited
     paths:
       - 'apps/budget-servers/**'
+      - '!apps/budget-servers/.github/**'
+      - '!apps/budget-servers/.circleci/**'
 jobs:
   build:
+    if: ${{ github.event.review.state == 'APPROVED' && github.event.review.pull_request.base.ref == 'develop' }}
     runs-on: ubuntu-latest
     steps:
-      - name: budget-servers-build
+      - name: trigger-circle-cli-pipeline
         id: dev-budget-server-build-step
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
         env:
