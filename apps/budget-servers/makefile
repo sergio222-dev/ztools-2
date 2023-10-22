@@ -1,4 +1,4 @@
-.PHONY: build deploy docker cleanup setup
+.PHONY: build deploy docker cleanup setup ci-build ci-install ci-pre-deploy
 
 # Project Data
 BASE_PROJECT_CONTAINER = ../../common/deploy/containers
