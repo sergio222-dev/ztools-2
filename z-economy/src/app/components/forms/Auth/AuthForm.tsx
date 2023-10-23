@@ -6,8 +6,6 @@ import { createClient } from '@supabase/supabase-js';
 import { useNavigate } from 'react-router';
 import { Typography } from '@atoms/Typography/Typography';
 
-// import { Input } from '../../atoms/Input/Input';
-
 export const supabase = createClient(import.meta.env.VITE_PROJECT_URL, import.meta.env.VITE_ANON_API_KEY);
 
 const LOGIN_STATE = {

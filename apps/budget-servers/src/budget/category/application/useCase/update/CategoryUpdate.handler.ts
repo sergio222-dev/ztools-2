@@ -6,10 +6,10 @@ import { Category } from '@budget/category/domain/Category.aggregate';
 
 @CommandHandler(CategoryUpdateCommand)
 export class CategoryUpdateHandler implements ICommandHandler<CategoryUpdateCommand> {
-  constructor(private readonly categoryService: CategoryService) {}
+    constructor(private readonly categoryService: CategoryService) {}
 
-  async execute(command: CategoryUpdateCommand): Promise<void> {
-    const category = Category.CREATE(command.id, command.name, new Date(), new Date());
-    void (await this.categoryService.update(category));
-  }
+    async execute(command: CategoryUpdateCommand): Promise<void> {
+        const category = Category.CREATE(command.id, command.name, command.userId, new Date(), new Date());
+        void (await this.categoryService.update(category));
+    }
 }

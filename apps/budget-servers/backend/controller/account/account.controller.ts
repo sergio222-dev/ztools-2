@@ -9,11 +9,16 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AccountResult } from '../../dto/AccountResult';
+import { AccountBalanceResponse } from '../../dto/Account/AccountBalanceResponse';
+import { AccountCreateRequest } from '../../dto/Account/AccountCreateRequest';
+import { AccountFindAllResponse } from '../../dto/Account/AccountFindAllResponse';
+import { AccountUpdateRequest } from '../../dto/Account/AccountUpdateRequest';
+import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { AccountCreateCommand } from '@budget/account/application/useCase/create/AccountCreate.command';
 import { AccountDeleteCommand } from '@budget/account/application/useCase/delete/AccountDelete.command';
 import { AccountFindAllQuery } from '@budget/account/application/useCase/find/AccountFindAll.query';
@@ -35,17 +40,24 @@ export class AccountController {
   @ApiResponse({
     status: 200,
     description: 'Get all accounts',
+    type: [AccountFindAllResponse],
   })
-  async findAll() {
-    const queryAllAccount = new AccountFindAllQuery();
+  @ApiBearerAuth('JWT')
+  async findAll(@Req() request: AuthenticatedRequest): Promise<AccountFindAllResponse[]> {
+    const { user } = request;
+    const queryAllAccount = new AccountFindAllQuery(user.id);
     const accounts = await this.queryBus.execute<AccountFindAllQuery, Account[]>(queryAllAccount);
 
-    const results: AccountResult[] = [];
+    const results: AccountFindAllResponse[] = [];
 
     for (const account of accounts) {
-      const total = await this.calculateBalance(account);
+      const total = await this.calculateBalance(account, user.id);
 
-      results.push(new AccountResult(account.id, account.name, total.amount));
+      results.push({
+        id: account.id,
+        name: account.name,
+        balance: total.amount,
+      });
     }
 
     return results;
@@ -55,18 +67,29 @@ export class AccountController {
   @ApiResponse({
     status: 200,
     description: 'Get an account by id',
+    type: AccountBalanceResponse,
   })
-  async balance(@Param('id') accountId: string) {
-    const accountFindByIdQuery = new AccountFindByIdQuery(accountId);
+  @ApiBearerAuth('JWT')
+  async balance(
+    @Param('id') accountId: string,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<AccountBalanceResponse> {
+    const { user } = request;
+    const accountFindByIdQuery = new AccountFindByIdQuery(accountId, user.id);
 
     const account = await this.queryBus.execute<AccountFindByIdQuery, Account>(accountFindByIdQuery);
-    const total = await this.calculateBalance(account);
+    const total = await this.calculateBalance(account, user.id);
 
-    return new AccountResult(account.id, account.name, total.amount);
+    return {
+      id: account.id,
+      name: account.name,
+      balance: total.amount,
+    };
   }
 
-  private async calculateBalance(account: Account): Promise<SignedAmount> {
-    const queryAllTransactionByAccountId = new TransactionFindAllByAccountQuery(account.id);
+  // TODO this should be stored in the database
+  private async calculateBalance(account: Account, userId: string): Promise<SignedAmount> {
+    const queryAllTransactionByAccountId = new TransactionFindAllByAccountQuery(account.id, userId);
     const transactions = await this.queryBus.execute<TransactionFindAllByAccountQuery, Transaction[]>(
       queryAllTransactionByAccountId,
     );
@@ -79,13 +102,16 @@ export class AccountController {
 
     return total;
   }
+
   @Post()
   @ApiResponse({
     status: 201,
     description: 'Create an account',
   })
-  async create(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
-    const command = new AccountCreateCommand(bodyCommand.id, bodyCommand.name);
+  @ApiBearerAuth('JWT')
+  async create(@Body() body: AccountCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
+    const command = new AccountCreateCommand(body.id, body.name, user.id);
     await this.commandBus.execute(command);
   }
 
@@ -93,9 +119,10 @@ export class AccountController {
   @ApiResponse({
     description: 'Update an account',
   })
-  async update(@Body() bodyCommand: AccountCreateCommand): Promise<void> {
-    const { id, name } = bodyCommand;
-    const query = new AccountFindOneByIdQuery(id);
+  @ApiBearerAuth('JWT')
+  async update(@Body() bodyCommand: AccountUpdateRequest): Promise<void> {
+    const { id, name, userId } = bodyCommand;
+    const query = new AccountFindOneByIdQuery(id, userId);
 
     const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
 
@@ -103,7 +130,7 @@ export class AccountController {
       throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
     }
 
-    const command = new AccountUpdateCommand(id, name);
+    const command = new AccountUpdateCommand(id, name, userId);
 
     await this.commandBus.execute(command);
   }
@@ -112,15 +139,17 @@ export class AccountController {
   @ApiResponse({
     description: 'Delete an account',
   })
-  async delete(@Param('id') id: string): Promise<void> {
-    const query = new AccountFindOneByIdQuery(id);
+  @ApiBearerAuth('JWT')
+  async delete(@Param('id') id: string, @Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
+    const query = new AccountFindOneByIdQuery(id, user.id);
 
     const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
 
     if (account.id === '')
       throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new AccountDeleteCommand(account.id);
+    const command = new AccountDeleteCommand(account.id, user.id);
 
     await this.commandBus.execute(command);
   }

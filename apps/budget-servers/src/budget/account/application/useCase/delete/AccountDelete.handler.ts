@@ -8,7 +8,7 @@ export class AccountDeleteHandler implements ICommandHandler<AccountDeleteComman
   constructor(private readonly accountService: AccountService) {}
 
   async execute(command: AccountDeleteCommand): Promise<void> {
-    const { id } = command;
-    await this.accountService.delete(id);
+    const { id, userId } = command;
+    await this.accountService.delete(id, userId);
   }
 }

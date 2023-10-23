@@ -3,10 +3,6 @@ import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount
 import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
 
 export class MonthlyBudget extends AggregateRoot {
-  get id(): string {
-    return this._id;
-  }
-
   get month(): string {
     return this._month;
   }
@@ -31,26 +27,18 @@ export class MonthlyBudget extends AggregateRoot {
     return this._available;
   }
 
-  get createdAt(): Date {
-    return this._createdAt;
-  }
-
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
-
   private constructor(
-    private readonly _id: string,
+    _id: string,
     private readonly _month: string,
     private readonly _year: string,
     private readonly _subCategoryId: string,
     private _assigned: UnsignedAmount,
     private _activity: SignedAmount,
     private _available: SignedAmount,
-    private readonly _createdAt: Date,
-    private readonly _updatedAt: Date,
+    _createdAt: Date,
+    _updatedAt: Date,
   ) {
-    super();
+    super(_id, _createdAt, _updatedAt);
   }
 
   public static CREATE(

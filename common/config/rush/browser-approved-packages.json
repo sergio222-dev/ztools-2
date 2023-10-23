@@ -103,6 +103,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/jsonwebtoken",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@types/node",
       "allowedCategories": [ "production" ]
     },
@@ -216,6 +220,10 @@
     },
     {
       "name": "jest-mock-extended",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "jsonwebtoken",
       "allowedCategories": [ "production" ]
     },
     {
@@ -337,6 +345,10 @@
     {
       "name": "yargs",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "z",
+      "allowedCategories": [ "production" ]
     },
     {
       "name": "zod",

@@ -6,17 +6,18 @@
     "node": "19.5.0"
   },
   "files": [
-    "dist"
+    "dist/**/*"
   ],
   "scripts": {
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "start": "env-cmd -f .env.local nest start",
+    "start:dev": "env-cmd -f .env.development nest start --watch",
+    "start:debug": "env-cmd -f .env.local nest start --debug --watch",
     "start:prod": "node dist/main.js",
     "test:unit": "jest",
     "test:unit:watch": "jest --watch",
     "test:unit:coverage": "jest --coverage",
-    "build": "nest build",
+    "build": "env-cmd -f .env.production nest build",
+    "build:docker": "env-cmd -f .env.docker nest build",
     "lint:code": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint:code:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix"
   },
@@ -35,7 +36,10 @@
     "@supabase/supabase-js": "~2.23.0",
     "bignumber.js": "~9.1.1",
     "uuid": "~9.0.0",
-    "@nestjs/event-emitter": "~2.0.0"
+    "@nestjs/event-emitter": "~2.0.0",
+    "@nestjs/jwt": "~10.1.0",
+    "nestjs-zod": "~2.3.3",
+    "zod": "~3.21.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -68,6 +72,9 @@
     "jest-mock-extended": "~3.0.4",
     "faker": "~6.6.6",
     "@jest/globals": "~29.5.0",
-    "expect": "~29.5.0"
+    "expect": "~29.5.0",
+    "jsonwebtoken": "~9.0.2",
+    "@types/jsonwebtoken": "~9.0.3",
+    "env-cmd": "~10.1.0"
   }
 }

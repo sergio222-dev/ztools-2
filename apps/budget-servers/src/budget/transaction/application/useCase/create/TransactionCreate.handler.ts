@@ -9,7 +9,7 @@ export class TransactionCreateHandler implements ICommandHandler<TransactionCrea
   constructor(private transactionService: TransactionService) {}
 
   async execute(command: TransactionCreateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = command;
+    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId, userId } = command;
     const inflowMoney = new UnsignedAmount(inflow);
     const outflowMoney = new UnsignedAmount(outflow);
 
@@ -23,6 +23,7 @@ export class TransactionCreateHandler implements ICommandHandler<TransactionCrea
       new Date(date),
       cleared,
       accountId,
+      userId,
     );
   }
 }

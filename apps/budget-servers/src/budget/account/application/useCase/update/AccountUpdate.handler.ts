@@ -8,7 +8,7 @@ export class AccountUpdateHandler implements ICommandHandler<AccountUpdateComman
   constructor(private readonly accountService: AccountService) {}
 
   async execute(command: AccountUpdateCommand): Promise<void> {
-    const { id, name } = command;
-    await this.accountService.update(id, name);
+    const { id, name, userId } = command;
+    await this.accountService.update(id, name, userId);
   }
 }
