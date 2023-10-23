@@ -10,6 +10,7 @@ import { createEmptyTransaction } from '@core/budget/transaction/domain/Transact
 import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { useParams } from 'react-router';
+import { Signal } from '@preact/signals-react';
 
 export const useTransactionTableHook = () => {
   // STATE
@@ -30,7 +31,7 @@ export const useTransactionTableHook = () => {
   // SERVICES
   const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
     useTransactionHook();
-  const { subCats } = useCategoryHook(new Date());
+  const { subCats, cdata } = useCategoryHook(new Date());
   const { mutateAccountData } = useAccountHook();
   const { accountId } = useParams();
 
@@ -138,7 +139,7 @@ export const useTransactionTableHook = () => {
   // TODO: delete button doesn't disable after usage.
 
   // TODO: when deleting transactions should reassign its subcategory monthly budget
-  const handleDelete = async () => {
+  const handleDelete = async (isOpen: Signal<boolean>) => {
     if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
       return;
     }
@@ -149,6 +150,7 @@ export const useTransactionTableHook = () => {
       setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
       void (await deleteDataBatch(selectedRowsIds));
       void mutateAccountData();
+      isOpen.value = false;
       return;
     }
     const row = tableReference.current?.getRowModel().rows.find(row => row.getIsSelected());
@@ -156,6 +158,32 @@ export const useTransactionTableHook = () => {
     setSelectedQty(tableReference.current?.getSelectedRowModel().rows.length);
     void (await deleteData(row?.original as Transaction));
     void mutateAccountData();
+    isOpen.value = false;
+  };
+
+  const handleDuplicate = async (isOpen: Signal<boolean>) => {
+    if (!tableReference.current?.getIsSomeRowsSelected() && !tableReference.current?.getIsAllRowsSelected()) {
+      return;
+    }
+    const selectedRows = tableReference.current?.getRowModel().rows.filter(row => row.getIsSelected());
+    selectedRows?.map(
+      row =>
+        void createData(
+          new Transaction(
+            uuidv4(),
+            row.original.inflow,
+            row.original.outflow,
+            row.original.payee,
+            row.original.memo,
+            row.original.subCategoryId,
+            row.original.date,
+            row.original.cleared,
+            row.original.accountId,
+          ),
+        ),
+    );
+    void mutateAccountData();
+    isOpen.value = false;
   };
 
   // Checkbox handlers
@@ -285,7 +313,7 @@ export const useTransactionTableHook = () => {
     handleClearedSorting,
     editableValue,
     editingRow,
-    subCats,
+    cdata,
   );
 
   return {
@@ -309,5 +337,6 @@ export const useTransactionTableHook = () => {
     handleRowOnKeyDown,
     selectedColumnId,
     subCats,
+    handleDuplicate,
   };
 };

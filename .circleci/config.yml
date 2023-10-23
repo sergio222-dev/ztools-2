@@ -1,0 +1,66 @@
+version: 2.1
+parameters:
+  GHA_Event:
+    type: string
+    default: ""
+  GHA_Actor:
+    type: string
+    default: ""
+  GHA_Action:
+    type: string
+    default: ""
+  GHA_Meta:
+    type: string
+    default: ""
+executors:
+  node-rush:
+    docker:
+      - image: cimg/node:19.5.0
+jobs:
+  build-project:
+    executor: node-rush
+    working_directory: ~/project/apps/budget-servers
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Install deps
+          command: make ci-install
+      - run:
+          name: Build Project
+          command: make ci-build
+  deploy-project:
+    executor: node-rush
+    working_directory: ~/project/apps/budget-servers
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Install deps
+          command: make ci-install
+      - run:
+          name: Build Project
+          command: make ci-build
+      - run:
+          name: Move files to deploy folder
+          command: make ci-pre-deploy
+      - run:
+          name: Deploy Project
+          command: |
+            curl -L https://fly.io/install.sh | sh
+            export FLYCTL_INSTALL="/home/circleci/.fly"
+            export PATH="$FLYCTL_INSTALL/bin:$PATH"
+            flyctl auth token
+            flyctl deploy ~/project --config ~/project/apps/budget-servers/fly.toml --image-label v1 --no-cache
+
+workflows:
+  build:
+    when:
+      equal: [<< pipeline.parameters.GHA_Action >>, "dev-budget-server-build-step"]
+    jobs:
+      - build-project
+  deploy:
+    when:
+      equal: [<< pipeline.parameters.GHA_Action >>, "dev-budget-server-deploy-step"]
+    jobs:
+      - deploy-project

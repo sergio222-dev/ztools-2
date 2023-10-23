@@ -96,6 +96,7 @@ export const useTransactionHook = () => {
     if (!data) return;
     await deleteFakeRow(true);
     await transactionCreate.execute(t);
+    await mutate(data);
   };
 
   const deleteTransaction = async (t: Transaction) => {

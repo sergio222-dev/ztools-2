@@ -5,18 +5,19 @@ import { FaCopy } from 'react-icons/fa';
 import { Typography } from '@atoms/Typography/Typography';
 import { Button } from '@atoms/Button/Button';
 import { Tooltip } from 'react-tooltip';
-import { useSignal } from '@preact/signals-react';
+import { Signal, useSignal } from '@preact/signals-react';
 import { useRef } from 'react';
 import { useOutsideClick } from '@utils/mouseUtils';
 
 interface TransactionEditDropdownProperties {
-  handleDelete: () => void;
+  handleDelete: (isOpen: Signal<boolean>) => void;
   disableDelete: boolean;
   selectedQty: number;
+  handleDuplicate: (isOpen: Signal<boolean>) => void;
 }
 
 export function TransactionEditDropdown(props: TransactionEditDropdownProperties) {
-  const { handleDelete, disableDelete, selectedQty } = props;
+  const { handleDelete, disableDelete, selectedQty, handleDuplicate } = props;
   const isOpen = useSignal(false);
   const tooltipReference = useRef(null);
   const handleEditClick = () => {
@@ -28,22 +29,17 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
     isOpen.value = false;
   });
 
-  const localHandleDelete = () => {
-    handleDelete();
-    isOpen.value = false;
-  };
-
   const DROPDOWN_BUTTONS = [
     {
       name: 'Duplicate',
       icon: <FaCopy />,
-      onClick: undefined,
+      onClick: () => handleDuplicate(isOpen),
       disabled: disableDelete,
     },
     {
       name: 'Delete',
       icon: <MdDeleteForever />,
-      onClick: localHandleDelete,
+      onClick: () => handleDelete(isOpen),
       disabled: disableDelete,
     },
   ];
@@ -63,7 +59,7 @@ export function TransactionEditDropdown(props: TransactionEditDropdownProperties
           className={styles.t_table_tooltip}
           isOpen={isOpen.value}
         >
-          <div>
+          <div className={styles.t_edit_dropdown_buttons_container}>
             <ul className={styles.edit_ul}>
               {DROPDOWN_BUTTONS.map(button => (
                 <li key={button.name}>
