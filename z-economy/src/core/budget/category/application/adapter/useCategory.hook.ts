@@ -14,6 +14,8 @@ import currency from 'currency.js';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
 import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
 import { SubCategoryUpdate } from '@core/budget/category/application/useCase/SubCategoryUpdate';
+import { CategoryAnalyticsGetAll } from '@core/budget/category/application/useCase/CategoryAnalyticsGetAll';
+import { CategoryAnalytics } from '@core/budget/category/domain/CategoryAnalytics';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
@@ -25,6 +27,7 @@ export const useCategoryHook = (date: Date) => {
   const subCategoryBudgetAssign = container.resolve(SubCategoryAssign);
   const subCategoryUpdate = container.resolve(SubCategoryUpdate);
   const subCategoryDelete = container.resolve(SubCategoryDelete);
+  const categoryGetAllAnalytics = container.resolve(CategoryAnalyticsGetAll);
 
   // SWR
   const { data, error, isLoading, mutate, isValidating } = useSWR(['categories'], () =>
@@ -101,6 +104,10 @@ export const useCategoryHook = (date: Date) => {
     await mutate(data);
   };
 
+  const getAllCategoryAnalytics = async () => {
+    return await categoryGetAllAnalytics.execute();
+  };
+
   const mutateData = async () => {
     void mutate(data, { revalidate: true });
   };
@@ -144,6 +151,7 @@ export const useCategoryHook = (date: Date) => {
     assignSubCategoryBudget,
     deleteSubCategory,
     deleteCategory,
+    getAllCategoryAnalytics,
     findAdjustmentSubcategoryId,
     subCats,
   };
