@@ -58,7 +58,7 @@ export class CategoryController {
         if (!isValidMonth(month) || !isValidYear(year))
             throw new HttpException('invalid month or year', HttpStatus.BAD_REQUEST);
 
-        const query = new CategoryFindAllQuery(user.id);
+        const query = new CategoryFindAllQuery(user.sub);
 
         const categories = await this.queryBus.execute<CategoryFindAllQuery, Category[]>(query);
 
@@ -106,7 +106,7 @@ export class CategoryController {
     })
     async create(@Body() body: CategoryCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
         const { user } = request;
-        const command = new CategoryCreateCommand(body.id, body.name, user.id);
+        const command = new CategoryCreateCommand(body.id, body.name, user.sub);
         await this.commandBus.execute(command);
     }
 
@@ -118,7 +118,7 @@ export class CategoryController {
     async update(@Body() body: CategoryCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
         const { user } = request;
         const { name, id } = body;
-        const query = new CategoryFindOneQuery(id, user.id);
+        const query = new CategoryFindOneQuery(id, user.sub);
 
         const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
 
@@ -126,7 +126,7 @@ export class CategoryController {
             throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
         }
 
-        const command = new CategoryUpdateCommand(id, name, user.id);
+        const command = new CategoryUpdateCommand(id, name, user.sub);
 
         await this.commandBus.execute(command);
     }
@@ -139,7 +139,7 @@ export class CategoryController {
     ): Promise<void> {
         const { user } = request;
         const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
-        const query = new CategoryFindOneQuery(categoryId, user.id);
+        const query = new CategoryFindOneQuery(categoryId, user.sub);
 
         const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
 
@@ -163,7 +163,7 @@ export class CategoryController {
 
             await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
-            const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId, user.id);
+            const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId, user.sub);
 
             const transactions = await this.queryBus.execute<
                 TransactionFindAllBySubCategoryIdQuery,
@@ -192,7 +192,7 @@ export class CategoryController {
 
         await this.commandBus.execute(commandForDeleteSubCategories);
 
-        const commandForDeleteCategory = new CategoryDeleteCommand(categoryId, user.id);
+        const commandForDeleteCategory = new CategoryDeleteCommand(categoryId, user.sub);
 
         await this.commandBus.execute(commandForDeleteCategory);
     }
