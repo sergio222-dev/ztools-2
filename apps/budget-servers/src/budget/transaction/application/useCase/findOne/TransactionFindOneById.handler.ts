@@ -11,6 +11,6 @@ export class TransactionFindOneByIdHandler
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(query: TransactionFindOneByIdQuery): Promise<Transaction> {
-    return this.transactionService.findOneById(query.id);
+    return this.transactionService.findOneById(query.id, query.userId);
   }
 }

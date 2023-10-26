@@ -1,4 +1,3 @@
-import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import {
   Body,
   Controller,
@@ -10,15 +9,23 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { TransactionResult } from '../../dto/TransactionResult';
+import { TransactionCreateRequest } from '../../dto/Transaction/TransactionCreateRequest';
+import { TransactionDeleteBatchRequest } from '../../dto/Transaction/TransactionDeleteBatchRequest';
+import { TransactionFindAllByAccountResponse } from '../../dto/Transaction/TransactionFindAllByAccountResponse';
+import { TransactionFindAllResponse } from '../../dto/Transaction/TransactionFindAllResponse';
+import { TransactionFindOneByIdResponse } from '../../dto/Transaction/TransactionFindOneByIdResponse';
+import { TransactionUpdateRequest } from '../../dto/Transaction/TransactionUpdateRequest';
+import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
 import { TransactionDeleteCommand } from '@budget/transaction/application/useCase/delete/TransactionDelete.command';
 import { TransactionDeleteBatchCommand } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.command';
 import { TransactionFindAllQuery } from '@budget/transaction/application/useCase/find/TransactionFindAll.query';
+import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import { TransactionFindOneByIdQuery } from '@budget/transaction/application/useCase/findOne/TransactionFindOneById.query';
 import { TransactionUpdateCommand } from '@budget/transaction/application/useCase/update/TransactionUpdate.command';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
@@ -30,108 +37,120 @@ export class TransactionController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
   @Get()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions',
+    type: [TransactionFindAllResponse],
   })
-  async findAll(): Promise<TransactionResult[]> {
+  async findAll(@Req() request: AuthenticatedRequest): Promise<TransactionFindAllResponse[]> {
+    const { user } = request;
+    const userId = user.id;
     const transactions = await this.queryBus.execute<TransactionFindAllQuery, Transaction[]>(
-      new TransactionFindAllQuery(),
+      new TransactionFindAllQuery(userId),
     );
-    return transactions.map(
-      t =>
-        new TransactionResult(
-          t.id,
-          t.inflow.amount,
-          t.outflow.amount,
-          t.payee,
-          t.memo,
-          t.subCategoryId,
-          t.date.toISOString(),
-          t.cleared,
-          t.accountId,
-        ),
-    );
+    return transactions.map(t => ({
+      id: t.id,
+      inflow: t.inflow.amount,
+      outflow: t.outflow.amount,
+      payee: t.payee,
+      memo: t.memo,
+      subCategoryId: t.subCategoryId,
+      date: t.date.toISOString(),
+      cleared: t.cleared,
+      accountId: t.accountId,
+    }));
   }
 
-  @Get('/:accountId')
+  @Get('account/:accountId')
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get all transactions by accountId',
+    type: [TransactionFindAllByAccountResponse],
   })
-  async findAllByAccountId(@Param('accountId') accountId: string): Promise<TransactionResult[]> {
-    const query = new TransactionFindAllByAccountQuery(accountId);
+  async findAllByAccountId(
+    @Param('accountId') accountId: string,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<TransactionFindAllByAccountResponse[]> {
+    const { user } = request;
+    const query = new TransactionFindAllByAccountQuery(accountId, user.id);
     const transactions = await this.queryBus.execute<TransactionFindAllByAccountQuery, Transaction[]>(query);
-    return transactions.map(
-      t =>
-        new TransactionResult(
-          t.id,
-          t.inflow.amount,
-          t.outflow.amount,
-          t.payee,
-          t.memo,
-          t.subCategoryId,
-          t.date.toISOString(),
-          t.cleared,
-          t.accountId,
-        ),
-    );
+    return transactions.map(t => ({
+      id: t.id,
+      inflow: t.inflow.amount,
+      outflow: t.outflow.amount,
+      payee: t.payee,
+      memo: t.memo,
+      subCategoryId: t.subCategoryId,
+      date: t.date.toISOString(),
+      cleared: t.cleared,
+      accountId: t.accountId,
+    }));
   }
 
   @Get(':id')
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 200,
     description: 'Get a transaction by id',
+    type: TransactionFindOneByIdResponse,
   })
-  async findOneById(@Param('id') id: string): Promise<TransactionResult> {
-    const query = new TransactionFindOneByIdQuery(id);
+  async findOneById(
+    @Param('id') id: string,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<TransactionFindOneByIdResponse> {
+    const { user } = request;
+    const query = new TransactionFindOneByIdQuery(id, user.id);
     const transactionIsolated = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
     if (transactionIsolated.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    return new TransactionResult(
-      transactionIsolated.id,
-      transactionIsolated.inflow.amount,
-      transactionIsolated.outflow.amount,
-      transactionIsolated.payee,
-      transactionIsolated.memo,
-      transactionIsolated.subCategoryId,
-      transactionIsolated.date.toISOString(),
-      transactionIsolated.cleared,
-      transactionIsolated.accountId,
-    );
+    return {
+      id: transactionIsolated.id,
+      inflow: transactionIsolated.inflow.amount,
+      outflow: transactionIsolated.outflow.amount,
+      payee: transactionIsolated.payee,
+      memo: transactionIsolated.memo,
+      subCategoryId: transactionIsolated.subCategoryId,
+      date: transactionIsolated.date.toISOString(),
+      cleared: transactionIsolated.cleared,
+      accountId: transactionIsolated.accountId,
+    };
   }
 
   @Post()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
-  async create(
-    @Body()
-    { id, date, outflow, payee, memo, subCategoryId, inflow, cleared, accountId }: TransactionCreateCommand,
-  ): Promise<void> {
+  async create(@Body() body: TransactionCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
     const command = new TransactionCreateCommand(
-      id,
-      inflow,
-      outflow,
-      payee,
-      memo,
-      subCategoryId,
-      date,
-      cleared,
-      accountId,
+      body.id,
+      body.inflow,
+      body.outflow,
+      body.payee,
+      body.memo,
+      body.subCategoryId,
+      body.date,
+      body.cleared,
+      body.accountId,
+      user.id,
     );
     await this.commandBus.execute(command);
   }
 
   @Put()
+  @ApiBearerAuth('JWT')
   @ApiResponse({
     status: 201,
   })
-  async update(@Body() bodyCommand: TransactionUpdateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = bodyCommand;
-    const query = new TransactionFindOneByIdQuery(id);
+  async update(@Body() body: TransactionUpdateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
+    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = body;
+    const query = new TransactionFindOneByIdQuery(id, user.id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
@@ -140,6 +159,7 @@ export class TransactionController {
 
     const command = new TransactionUpdateCommand(
       id,
+      user.id,
       inflow,
       outflow,
       payee,
@@ -154,23 +174,30 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
-    const query = new TransactionFindOneByIdQuery(id);
+  @ApiBearerAuth('JWT')
+  async delete(@Param('id') id: string, @Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
+    const query = new TransactionFindOneByIdQuery(id, user.id);
 
     const transaction = await this.queryBus.execute<TransactionFindOneByIdQuery, Transaction>(query);
 
     if (transaction.id === '')
       throw new HttpException(`the transaction with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const command = new TransactionDeleteCommand(id);
+    const command = new TransactionDeleteCommand(id, user.id);
 
     await this.commandBus.execute(command);
   }
 
   @Post('/delete')
-  async deleteBatch(@Body() { ids }: TransactionDeleteBatchCommand): Promise<void> {
+  @ApiBearerAuth('JWT')
+  async deleteBatch(
+    @Body() { ids }: TransactionDeleteBatchRequest,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<void> {
+    const { user } = request;
     try {
-      const command = new TransactionDeleteBatchCommand(ids);
+      const command = new TransactionDeleteBatchCommand(ids, user.id);
       await this.commandBus.execute<TransactionDeleteBatchCommand>(command);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);

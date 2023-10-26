@@ -1,0 +1,19 @@
+name: deploy-budget-server
+run-name: ${{ github.actor }} is running ${{ github.workflow }}
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - develop
+    paths:
+      - 'apps/budget-servers/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: trigger-circle-cli-pipeline
+        id: dev-budget-server-deploy-step
+        uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
+        env:
+          CCI_TOKEN: ${{ secrets.CCI_TOKEN }}

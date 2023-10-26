@@ -1,9 +1,13 @@
 import { Schema } from 'mongoose';
 
-import { ExtendOfDocument } from '../../../../shared/infrastructure/mongo/utils';
 import { Category } from '@budget/category/domain/Category.aggregate';
+import { OwnershipSchema } from '@shared/infrastructure/mongo/OwnershipSchema';
 
-export const CategorySchema = new Schema<ExtendOfDocument<Category>>(
+export interface CategorySchemaType extends OwnershipSchema {
+  name: string;
+}
+
+export const CategorySchema = new Schema<CategorySchemaType>(
   {
     _id: {
       type: String,
@@ -31,3 +35,24 @@ export const CategorySchema = new Schema<ExtendOfDocument<Category>>(
     _id: false,
   },
 );
+
+export function mapToCategorySchema(category: Category): CategorySchemaType {
+  return {
+    _id: category.id,
+    id: category.id,
+    name: category.name,
+    userId: category.userId,
+    createdAt: category.createdAt,
+    updatedAt: category.updatedAt,
+  };
+}
+
+export function mapToCategoryDomain(category: CategorySchemaType): Category {
+  return Category.RETRIEVE(
+    category._id,
+    category.name,
+    category.userId,
+    category.createdAt,
+    category.updatedAt,
+  );
+}

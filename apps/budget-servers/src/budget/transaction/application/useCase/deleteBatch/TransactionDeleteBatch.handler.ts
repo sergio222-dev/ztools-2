@@ -8,7 +8,7 @@ export class TransactionDeleteBatchHandler implements ICommandHandler<Transactio
   constructor(private readonly transactionService: TransactionService) {}
 
   async execute(command: TransactionDeleteBatchCommand): Promise<void> {
-    const { ids } = command;
-    await this.transactionService.deleteBatch(ids);
+    const { ids, userId } = command;
+    await this.transactionService.deleteBatch(ids, userId);
   }
 }

@@ -5,6 +5,7 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 export class TransactionUpdaterService {
   private readonly transaction: Transaction;
+
   constructor(transaction: Transaction) {
     this.transaction = Transaction.RETRIEVE(
       transaction.id,
@@ -16,6 +17,7 @@ export class TransactionUpdaterService {
       transaction.date,
       transaction.cleared,
       transaction.accountId,
+      transaction.userId,
       transaction.createdAt,
       new Date(),
     );

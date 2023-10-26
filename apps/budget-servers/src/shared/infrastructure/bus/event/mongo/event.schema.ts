@@ -1,9 +1,18 @@
 import { Schema } from 'mongoose';
 
 import { DomainEvent } from '@shared/domain/bus/event/DomainEvent';
-import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
+import { convertToSimpleEvent } from '@shared/infrastructure/mongo/convertToSimple';
 
-export const EventSchema = new Schema<ExtendOfDocument<DomainEvent & { data: string }>>(
+export interface DomainEventSchemaType {
+  _id: string;
+  id: string;
+  aggregateId: string;
+  eventId: string;
+  occurredOn: string;
+  data: string;
+}
+
+export const EventSchema = new Schema<DomainEventSchemaType>(
   {
     _id: {
       type: String,
@@ -35,3 +44,16 @@ export const EventSchema = new Schema<ExtendOfDocument<DomainEvent & { data: str
     _id: false,
   },
 );
+
+export function mapToSchema(value: DomainEvent): DomainEventSchemaType {
+  const simpleEvent = convertToSimpleEvent(value);
+
+  return {
+    _id: simpleEvent.id,
+    id: simpleEvent.id,
+    aggregateId: value.id,
+    eventId: value.eventId,
+    occurredOn: value.occurredOn,
+    data: simpleEvent.data,
+  };
+}

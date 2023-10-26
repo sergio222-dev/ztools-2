@@ -3,53 +3,61 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { CategoryRepository } from '@budget/category/domain/Category.repository';
 import { SubCategoryRepository } from '@budget/subCategory/domain/SubCategory.repository';
+import { Criteria } from '@shared/domain/criteria/Criteria';
+import { Filters } from '@shared/domain/criteria/Filters';
+import { Order } from '@shared/domain/criteria/Order';
+import { FilterByUser } from '@shared/domain/filter/FilterByUser';
 
 @Injectable()
 export class CategoryService {
-  constructor(
-    @Inject('CategoryRepository')
-    private readonly categoryRepository: CategoryRepository,
-    @Inject('SubCategoryRepository')
-    private readonly subCategoryRepository: SubCategoryRepository,
-  ) {}
+    constructor(
+        @Inject('CategoryRepository')
+        private readonly categoryRepository: CategoryRepository,
+        @Inject('SubCategoryRepository')
+        private readonly subCategoryRepository: SubCategoryRepository,
+    ) {}
 
-  async createOne(category: Category): Promise<void> {
-    await this.categoryRepository.save(category);
-  }
+    async createOne(category: Category): Promise<void> {
+        await this.categoryRepository.save(category);
+    }
 
-  async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.findAll();
+    async findAll(userId: string): Promise<Category[]> {
+        // return await this.categoryRepository.findAll();
+        const filters = new Filters([FilterByUser.fromValue(userId)]);
 
-    // const arrayPromises = categories.map(async (category) => {
-    //   const subCategories = await this.subCategoryRepository.findAllByCategoryId(category.id);
-    //
-    //   const subCategoriesDto = subCategories.map((subCategory) => {
-    //     let assigned = new BigNumber(0);
-    //     let spent = new BigNumber(0);
-    //
-    //     for (const monthlyBudget of subCategory.monthlyBudgets) {
-    //       assigned = assigned.plus(new BigNumber(monthlyBudget.assigned));
-    //       spent = spent.plus(new BigNumber(monthlyBudget.spent));
-    //     }
-    //
-    //     return new SubCategoryDto(subCategory.id, subCategory.name, assigned.toString(), spent.toString());
-    //   });
-    //
-    //   return new CategoryDto(category.id, category.name, subCategoriesDto);
-    // });
-    //
-    // return await Promise.all(arrayPromises);
-  }
+        const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
 
-  async findOneById(id: string): Promise<Category> {
-    return this.categoryRepository.findOneById(id);
-  }
+        return await this.categoryRepository.matching(criteria);
+    }
 
-  async update(category: Category): Promise<void> {
-    await this.categoryRepository.update(category);
-  }
+    async findOneById(id: string, userId: string): Promise<Category> {
+        const criteria = Criteria.aggregateOwnershipCriteria(id, userId);
+        const categories = await this.categoryRepository.matching(criteria);
 
-  async delete(id: string): Promise<void> {
-    await this.categoryRepository.delete(id);
-  }
+        if (categories.length !== 1) {
+            // TODO: domain exception
+            throw new Error(`Category with id ${id} not found`);
+        }
+
+        return categories[0];
+    }
+
+    async update(category: Category): Promise<void> {
+        const criteria = Criteria.aggregateOwnershipCriteria(category.id, category.userId);
+
+        const oldCategories = await this.categoryRepository.matching(criteria);
+
+        if (oldCategories.length !== 1) {
+            // TODO: domain exception
+            throw new Error(`Category with id ${category.id} not found`);
+        }
+
+        await this.categoryRepository.save(category);
+    }
+
+    async deleteOneById(id: string, userId: string): Promise<void> {
+        const category = await this.findOneById(id, userId);
+
+        await this.categoryRepository.delete([category]);
+    }
 }
