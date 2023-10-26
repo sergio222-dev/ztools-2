@@ -66,6 +66,17 @@ export function SpendingPieChart({ analyticsData }: SpendingPieChartProperties) 
       "{categoryName}:\n[bold]${totalOutflow.formatNumber('#,###.00')}\n[/]{valuePercentTotal.formatNumber('0.00')}% of Total",
     );
 
+    series.children.push(
+      am5.Label.new(root, {
+        text: "All Categories\n${valueAbsoluteSum.formatNumber('#,###.00')}",
+        fontSize: 16,
+        centerX: am5.percent(50),
+        centerY: am5.percent(50),
+        populateText: true,
+        oversizedBehavior: 'fit',
+      }),
+    );
+
     return () => {
       root.dispose();
     };

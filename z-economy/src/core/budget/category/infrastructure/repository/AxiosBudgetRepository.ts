@@ -57,22 +57,22 @@ export class AxiosBudgetRepository implements CategoryRepository {
           {
             categoryName: 'Salamin2',
             totalInflow: '2500000',
-            totalOutflow: '20000000000000000000000000000000',
+            totalOutflow: '200000',
           },
           {
             categoryName: 'Salamin3',
             totalInflow: '2500000',
-            totalOutflow: '1000000000000000000000000000000',
+            totalOutflow: '10000',
           },
           {
             categoryName: 'Salamin4',
             totalInflow: '2500000',
-            totalOutflow: '10000000000000000000000000000000',
+            totalOutflow: '100000',
           },
           {
             categoryName: 'Salamin5',
             totalInflow: '2500000',
-            totalOutflow: '100000000000000000000000000000000',
+            totalOutflow: '1000',
           },
         ],
       });
