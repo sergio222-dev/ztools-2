@@ -15,7 +15,6 @@ import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDele
 import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
 import { SubCategoryUpdate } from '@core/budget/category/application/useCase/SubCategoryUpdate';
 import { CategoryAnalyticsGetAll } from '@core/budget/category/application/useCase/CategoryAnalyticsGetAll';
-import { CategoryAnalytics } from '@core/budget/category/domain/CategoryAnalytics';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
@@ -63,7 +62,6 @@ export const useCategoryHook = (date: Date) => {
   }, [isValidating]);
 
   const createCategory = async (c: Category) => {
-    if (!data) return;
     await categoryCreate.execute(c);
     await mutate(data);
   };
