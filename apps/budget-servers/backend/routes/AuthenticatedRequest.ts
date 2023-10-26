@@ -1,6 +1,7 @@
-import { User } from '@supabase/supabase-js';
 import { Request } from 'express';
 
+import { AuthenticatedUser } from '../model/AuthenticatedUser';
+
 export interface AuthenticatedRequest extends Request {
-  user: User;
+    user: AuthenticatedUser;
 }

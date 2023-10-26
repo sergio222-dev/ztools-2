@@ -94,7 +94,7 @@ export class SubCategoryController {
 
         await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
-        const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(id, user.id);
+        const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(id, user.sub);
 
         const transactions = await this.queryBus.execute<
             TransactionFindAllBySubCategoryIdQuery,
@@ -110,7 +110,7 @@ export class SubCategoryController {
                 transaction.memo,
                 subCategoryId,
                 transaction.date.toISOString(),
-                user.id,
+                user.sub,
                 transaction.cleared,
                 transaction.accountId,
             );
