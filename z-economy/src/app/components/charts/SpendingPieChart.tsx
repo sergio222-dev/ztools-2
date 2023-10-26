@@ -1,27 +1,14 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import * as am5 from '@amcharts/amcharts5';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5percent from '@amcharts/amcharts5/percent';
-import { useCategoryHook } from '@core/budget/category/application/adapter/useCategory.hook';
-import { useSignal } from '@preact/signals-react';
+import { Signal } from '@preact/signals-react';
 import { CategoryAnalytics } from '@core/budget/category/domain/CategoryAnalytics';
 
-export function SpendingPieChart() {
-  const { getAllCategoryAnalytics } = useCategoryHook(new Date());
-  const analyticsData = useSignal<CategoryAnalytics[]>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        analyticsData.value = await getAllCategoryAnalytics();
-      } catch (error) {
-        console.error('Error fetching analytics data:', error);
-      }
-    }
-
-    void fetchData();
-  }, []);
-
+interface SpendingPieChartProperties {
+  analyticsData: Signal<CategoryAnalytics[]>;
+}
+export function SpendingPieChart({ analyticsData }: SpendingPieChartProperties) {
   useLayoutEffect(() => {
     const root = am5.Root.new('SpendingPieChartDiv');
 
