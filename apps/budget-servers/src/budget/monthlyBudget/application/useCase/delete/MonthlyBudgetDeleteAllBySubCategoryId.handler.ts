@@ -5,11 +5,11 @@ import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBud
 
 @CommandHandler(MonthlyBudgetDeleteAllBySubCategoryIdCommand)
 export class MonthlyBudgetDeleteAllBySubCategoryIdHandler
-  implements ICommandHandler<MonthlyBudgetDeleteAllBySubCategoryIdCommand>
+    implements ICommandHandler<MonthlyBudgetDeleteAllBySubCategoryIdCommand>
 {
-  constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
+    constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
 
-  async execute(command: MonthlyBudgetDeleteAllBySubCategoryIdCommand): Promise<void> {
-    await this.monthlyBudgetService.deleteBySubCategoryId(command.subCategoryId);
-  }
+    async execute(command: MonthlyBudgetDeleteAllBySubCategoryIdCommand): Promise<void> {
+        await this.monthlyBudgetService.deleteBySubCategoryId(command.subCategoryId, command.userId);
+    }
 }

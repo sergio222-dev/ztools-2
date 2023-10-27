@@ -120,9 +120,10 @@ export class AccountController {
         description: 'Update an account',
     })
     @ApiBearerAuth('JWT')
-    async update(@Body() bodyCommand: AccountUpdateRequest): Promise<void> {
-        const { id, name, userId } = bodyCommand;
-        const query = new AccountFindOneByIdQuery(id, userId);
+    async update(@Body() body: AccountUpdateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+        const { user } = request;
+        const { id, name } = body;
+        const query = new AccountFindOneByIdQuery(id, user.sub);
 
         const account = await this.queryBus.execute<AccountFindOneByIdQuery, Account>(query);
 
@@ -130,7 +131,7 @@ export class AccountController {
             throw new HttpException(`the account with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
         }
 
-        const command = new AccountUpdateCommand(id, name, userId);
+        const command = new AccountUpdateCommand(id, name, user.sub);
 
         await this.commandBus.execute(command);
     }
