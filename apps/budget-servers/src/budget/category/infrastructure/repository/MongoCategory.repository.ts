@@ -22,7 +22,7 @@ export class MongoCategoryRepository
     }
 
     protected collectionName(): string {
-        return 'Category';
+        return 'categories';
     }
 
     protected getMapperToSchema() {

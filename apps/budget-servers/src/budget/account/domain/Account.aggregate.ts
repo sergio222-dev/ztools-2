@@ -22,7 +22,7 @@ export class Account extends AggregateRootOwnership {
     }
 
     public static CREATE(id: string, name: string, userId: string, balance?: SignedAmount) {
-        return new Account(id, userId, name, new Date(), new Date(), balance);
+        return new Account(id, name, userId, new Date(), new Date(), balance);
     }
 
     public static RETRIEVE(
