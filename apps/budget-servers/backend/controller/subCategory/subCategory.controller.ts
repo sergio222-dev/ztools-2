@@ -1,6 +1,7 @@
 import { Body, Controller, HttpException, HttpStatus, Injectable, Post, Put, Req } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MonthlyBudgetAssignRequest } from '../../dto/MonthlyBudget/MonthlyBudgetAssignRequest';
 
 import { SubCategoryDeleteRequest } from '../../dto/SubCategory/SubCategoryDeleteRequest';
 import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
@@ -62,13 +63,13 @@ export class SubCategoryController {
         status: 201,
         description: 'Assign budget to sub category',
     })
-    async assignBudget(@Body() bodyCommand: MonthlyBudgetAssignOneCommand): Promise<void> {
-        const command = new MonthlyBudgetAssignOneCommand(
-            bodyCommand.amount,
-            bodyCommand.subCategoryId,
-            bodyCommand.month,
-            bodyCommand.year,
-        );
+    async assignBudget(
+        @Body() body: MonthlyBudgetAssignRequest,
+        @Req() request: AuthenticatedRequest,
+    ): Promise<void> {
+        const { user } = request;
+        const { amount, subCategoryId, month, year } = body;
+        const command = new MonthlyBudgetAssignOneCommand(amount, subCategoryId, month, year, user.sub);
 
         await this.commandBus.execute(command);
     }
@@ -76,25 +77,29 @@ export class SubCategoryController {
     @Post('/delete')
     @ApiBearerAuth('JWT')
     async delete(
-        @Body() bodyCommand: SubCategoryDeleteRequest,
+        @Body() body: SubCategoryDeleteRequest,
         @Req() request: AuthenticatedRequest,
     ): Promise<void> {
         const { user } = request;
-        const { id, subCategoryId } = bodyCommand;
+        const { subCategoryId } = body;
 
-        const query = new SubCategoryFindOneByIdQuery(id);
+        const query = new SubCategoryFindOneByIdQuery(subCategoryId);
         const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
 
         if (subCategory.id === '')
-            throw new HttpException(`the subcategory with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+            throw new HttpException(
+                `the subcategory with id ${subCategoryId} doesn't exists`,
+                HttpStatus.NOT_FOUND,
+            );
 
         const commandForDeleteMonthlyBudgetBySubCategoryId = new MonthlyBudgetDeleteAllBySubCategoryIdCommand(
-            id,
+            subCategoryId,
+            user.sub,
         );
 
         await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
-        const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(id, user.sub);
+        const queryForAllTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId, user.sub);
 
         const transactions = await this.queryBus.execute<
             TransactionFindAllBySubCategoryIdQuery,
@@ -118,7 +123,7 @@ export class SubCategoryController {
             await this.commandBus.execute(commandForUpdateTransaction);
         }
 
-        const command = new SubCategoryDeleteCommand(id);
+        const command = new SubCategoryDeleteCommand(subCategoryId);
 
         await this.commandBus.execute(command);
     }

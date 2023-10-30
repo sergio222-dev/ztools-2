@@ -5,14 +5,15 @@ import { MonthlyBudgetAssignOneCommand } from '@budget/monthlyBudget/application
 
 @CommandHandler(MonthlyBudgetAssignOneCommand)
 export class MonthlyBudgetAssignOneHandler implements ICommandHandler<MonthlyBudgetAssignOneCommand> {
-  constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
+    constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
 
-  async execute(command: MonthlyBudgetAssignOneCommand): Promise<void> {
-    await this.monthlyBudgetService.assignBudget(
-      command.amount,
-      command.subCategoryId,
-      command.month,
-      command.year,
-    );
-  }
+    async execute(command: MonthlyBudgetAssignOneCommand): Promise<void> {
+        await this.monthlyBudgetService.assignBudget(
+            command.amount,
+            command.subCategoryId,
+            command.month,
+            command.year,
+            command.userId,
+        );
+    }
 }

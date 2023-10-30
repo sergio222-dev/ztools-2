@@ -6,13 +6,14 @@ import { MonthlyBudget } from '@budget/monthlyBudget/domain/MonthlyBudget.aggreg
 
 @QueryHandler(MonthlyBudgetFindOneQuery)
 export class MonthlyBudgetFindOneHandler implements IQueryHandler {
-  constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
+    constructor(private readonly monthlyBudgetService: MonthlyBudgetService) {}
 
-  async execute(query: MonthlyBudgetFindOneQuery): Promise<MonthlyBudget | undefined> {
-    return await this.monthlyBudgetService.getCurrentMonthlyBudget(
-      query.year,
-      query.month,
-      query.subCategoryId,
-    );
-  }
+    async execute(query: MonthlyBudgetFindOneQuery): Promise<MonthlyBudget | undefined> {
+        return await this.monthlyBudgetService.getCurrentMonthlyBudget(
+            query.year,
+            query.month,
+            query.subCategoryId,
+            query.userId,
+        );
+    }
 }

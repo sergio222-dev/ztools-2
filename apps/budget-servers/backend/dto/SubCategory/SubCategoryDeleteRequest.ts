@@ -1,15 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { createZodDto } from 'nestjs-zod/dto';
+import { z } from 'nestjs-zod/z';
 
-export class SubCategoryDeleteRequest {
-    constructor(private readonly _id: string, private readonly _subCategoryId: string) {}
+const SubCategoryDeleteRequestSchema = z.object({
+    id: z.string().describe('id'),
+    subCategoryId: z.string().describe('subCategoryId'),
+});
 
-    @ApiProperty()
-    get id(): string {
-        return this._id;
-    }
-
-    @ApiProperty()
-    get subCategoryId(): string {
-        return this._subCategoryId;
-    }
-}
+export class SubCategoryDeleteRequest extends createZodDto(SubCategoryDeleteRequestSchema) {}

@@ -69,7 +69,12 @@ export class CategoryController {
             >(new SubCategoryFindAllByCategoryIdQuery(category.id));
             const subCategoriesDtoPromises = subCategories.map<Promise<CategoryFindAllSubCategoryResponse>>(
                 async subCategory => {
-                    const queryMonthlyBudget = new MonthlyBudgetFindOneQuery(year, month, subCategory.id);
+                    const queryMonthlyBudget = new MonthlyBudgetFindOneQuery(
+                        year,
+                        month,
+                        subCategory.id,
+                        user.sub,
+                    );
 
                     const monthlyBudget = await this.queryBus.execute<
                         MonthlyBudgetFindOneQuery,
@@ -159,7 +164,7 @@ export class CategoryController {
 
         for (const subCategoryId of subCategoriesId) {
             const commandForDeleteMonthlyBudgetBySubCategoryId =
-                new MonthlyBudgetDeleteAllBySubCategoryIdCommand(subCategoryId);
+                new MonthlyBudgetDeleteAllBySubCategoryIdCommand(subCategoryId, user.sub);
 
             await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
 
