@@ -45,7 +45,7 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
     void createAccount({
       id: accountId,
       name: newAccountName,
-      balance: newAccountBalance,
+      balance: '',
     });
     void createData(
       new Transaction(

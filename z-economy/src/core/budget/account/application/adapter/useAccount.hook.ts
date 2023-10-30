@@ -17,6 +17,7 @@ export const useAccountHook = () => {
   const { data, error, isLoading, mutate } = useSWR(['accounts'], () => accountGetAll.execute());
 
   const createAccount = async (a: Account) => {
+    if (!data) return;
     await accountCreate.execute(a);
     await mutate(data);
   };

@@ -1,3 +1,4 @@
+import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
 import { Schema } from 'mongoose';
 
@@ -88,8 +89,8 @@ export function mapMonthlyBudgetToDomain(document: MonthlyBudgetSchemaType): Mon
         document.year,
         document.subCategoryId,
         new UnsignedAmount(document.assigned as unknown as string),
-        new UnsignedAmount(document.activity as unknown as string),
-        new UnsignedAmount(document.available as unknown as string),
+        new SignedAmount(document.activity as unknown as string),
+        new SignedAmount(document.available as unknown as string),
         document.userId,
         document.createdAt,
         document.updatedAt,
