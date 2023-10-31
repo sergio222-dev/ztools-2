@@ -2,7 +2,7 @@ import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
-import { MouseEvent, SyntheticEvent, useRef } from 'react';
+import { KeyboardEvent, MouseEvent, SyntheticEvent, useEffect, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
@@ -39,6 +39,7 @@ export function EditCategoryForm({
   // STATE
   const formReference = useRef<HTMLFormElement>(null);
   const tooltipReference = useRef(null);
+  const editCategoryFormInput = useRef<HTMLInputElement>(null);
   const modalIsOpen = useSignal('');
 
   // HANDLERS
@@ -73,11 +74,30 @@ export function EditCategoryForm({
     return;
   };
 
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const saveButton: HTMLElement | null = document.querySelector('#editCategorySaveButton');
+      saveButton?.click();
+    }
+  };
+
   // SIDE EFFECTS
 
   useOutsideClick(tooltipReference, () => {
     isOpen.value = false;
   });
+
+  // useEffect(() => {
+  //   editCategoryFormInput.current?.focus();
+  // }, [editCategoryFormInput]);
+
+  const focusInputOnOpen = () => {
+    if (editCategoryFormInput.current) {
+      editCategoryFormInput.current.focus();
+    }
+  };
 
   return (
     <div className={styles.edit_category_form_container} ref={tooltipReference}>
@@ -86,6 +106,9 @@ export function EditCategoryForm({
         clickable
         className={styles.c_tooltip}
         isOpen={isOpen.value}
+        afterShow={() => {
+          focusInputOnOpen();
+        }}
       >
         <form
           name="edit-category"
@@ -98,15 +121,17 @@ export function EditCategoryForm({
             className={styles.edit_category_input}
             type="text"
             name="name"
+            ref={editCategoryFormInput}
+            onKeyDown={event => {
+              handleInputKeyDown(event);
+            }}
           />
           <div className={styles.form_buttons}>
             <ButtonUnfilled
               variant="delete"
-              // type="reset"
               onClick={event => {
                 handleDelete(event);
               }}
-              // className={styles.edit_category_delete_button}
             >
               <Typography>Delete</Typography>
             </ButtonUnfilled>
@@ -115,7 +140,7 @@ export function EditCategoryForm({
                 {' '}
                 Cancel{' '}
               </ButtonUnfilled>
-              <ButtonFilled type="submit" className={styles.save_button}>
+              <ButtonFilled type="submit" className={styles.save_button} id={'editCategorySaveButton'}>
                 {' '}
                 Save{' '}
               </ButtonFilled>
