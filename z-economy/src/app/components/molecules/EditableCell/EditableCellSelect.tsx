@@ -2,11 +2,11 @@ import { HTMLAttributes } from 'react';
 import currency from 'currency.js';
 import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hook';
 import { Select } from '@atoms/Select/Select';
-import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import styles from '@molecules/EditableCell/EditableCell.module.scss';
 import { Account } from '@core/budget/account/domain/Account';
+import { Category } from '@core/budget/category/domain/Category';
 
-type T = SubCategory[] | Account[];
+type T = Category[] | Account[];
 
 interface EditableCellCategoryProperties extends HTMLAttributes<HTMLSelectElement> {
   isEditable: boolean;
@@ -37,11 +37,19 @@ export function EditableCellSelect(properties: EditableCellCategoryProperties) {
         onBlur={handleOnBlur}
         className={styles.z_input_text}
       >
-        {options?.map(option => (
-          <option key={option.id} value={option.id}>
-            {option.name}
-          </option>
-        ))}
+        {options?.map(option =>
+          'subCategories' in option ? (
+            option.subCategories.map(subCategory => (
+              <option key={subCategory.id} value={subCategory.id}>
+                {option.name + ': ' + subCategory.name}
+              </option>
+            ))
+          ) : (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ),
+        )}
       </Select>
     </div>
   ) : (

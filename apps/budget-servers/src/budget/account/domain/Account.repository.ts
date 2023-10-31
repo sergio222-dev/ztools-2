@@ -1,9 +1,8 @@
 import { Account } from '@budget/account/domain/Account.aggregate';
+import { Criteria } from '@shared/domain/criteria/Criteria';
 
 export interface AccountRepository {
-  createOne(account: Account): Promise<void>;
-  findOneById(id: string): Promise<Account>;
-  findAll(): Promise<Account[]>;
-  update(account: Account): Promise<void>;
-  delete(id: string): Promise<void>;
+    save(account: Account): Promise<void>;
+    delete(accounts: Account[]): Promise<void>;
+    matching(criteria: Criteria): Promise<Account[]>;
 }

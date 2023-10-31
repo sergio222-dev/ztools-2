@@ -6,23 +6,24 @@ import { TransactionCreateCommand } from '@budget/transaction/application/useCas
 
 @CommandHandler(TransactionCreateCommand)
 export class TransactionCreateHandler implements ICommandHandler<TransactionCreateCommand> {
-  constructor(private transactionService: TransactionService) {}
+    constructor(private transactionService: TransactionService) {}
 
-  async execute(command: TransactionCreateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId } = command;
-    const inflowMoney = new UnsignedAmount(inflow);
-    const outflowMoney = new UnsignedAmount(outflow);
+    async execute(command: TransactionCreateCommand): Promise<void> {
+        const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId, userId } = command;
+        const inflowMoney = new UnsignedAmount(inflow);
+        const outflowMoney = new UnsignedAmount(outflow);
 
-    await this.transactionService.createOne(
-      id,
-      inflowMoney,
-      outflowMoney,
-      payee,
-      memo,
-      subCategoryId,
-      new Date(date),
-      cleared,
-      accountId,
-    );
-  }
+        await this.transactionService.createOne(
+            id,
+            inflowMoney,
+            outflowMoney,
+            payee,
+            memo,
+            subCategoryId,
+            new Date(date),
+            cleared,
+            accountId,
+            userId,
+        );
+    }
 }

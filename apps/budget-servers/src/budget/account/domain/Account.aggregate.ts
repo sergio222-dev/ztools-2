@@ -1,46 +1,42 @@
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
-import { AggregateRoot } from '@shared/domain/aggregate/AggregateRoot';
+import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
-export class Account extends AggregateRoot {
-  get id(): string {
-    return this._id;
-  }
+export class Account extends AggregateRootOwnership {
+    get name(): string {
+        return this._name;
+    }
 
-  get name(): string {
-    return this._name;
-  }
+    get balance(): SignedAmount {
+        return this._balance || new SignedAmount(0);
+    }
 
-  get balance(): SignedAmount {
-    return this._balance || new SignedAmount(0);
-  }
+    private constructor(
+        _id: string,
+        private readonly _name: string,
+        _userId: string,
+        _createdAt: Date,
+        _updatedAt: Date,
+        private _balance?: SignedAmount,
+    ) {
+        super(_id, _userId, _createdAt, _updatedAt);
+    }
 
-  get createdAt(): Date {
-    return this._createdAt;
-  }
+    public static CREATE(id: string, name: string, userId: string, balance?: SignedAmount) {
+        return new Account(id, name, userId, new Date(), new Date(), balance);
+    }
 
-  get updatedAt(): Date {
-    return this._updatedAt;
-  }
+    public static RETRIEVE(
+        id: string,
+        name: string,
+        userId: string,
+        balance: SignedAmount,
+        createdAt: Date,
+        updatedAt: Date,
+    ) {
+        return new Account(id, name, userId, createdAt, updatedAt, balance);
+    }
 
-  private constructor(
-    private readonly _id: string,
-    private readonly _name: string,
-    private readonly _createdAt: Date,
-    private readonly _updatedAt: Date,
-    private _balance?: SignedAmount,
-  ) {
-    super();
-  }
-
-  public static CREATE(id: string, name: string, balance?: SignedAmount) {
-    return new Account(id, name, new Date(), new Date(), balance);
-  }
-
-  public static RETRIEVE(id: string, name: string, balance: SignedAmount, createdAt: Date, updatedAt: Date) {
-    return new Account(id, name, createdAt, updatedAt, balance);
-  }
-
-  public static UPDATE(id: string, name: string, balance: SignedAmount, createdAt: Date) {
-    return new Account(id, name, new Date(), new Date(), balance);
-  }
+    public static UPDATE(id: string, name: string, userId: string, balance: SignedAmount, createdAt: Date) {
+        return new Account(id, name, userId, new Date(), new Date(), balance);
+    }
 }

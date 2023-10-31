@@ -1,37 +1,59 @@
 import { Schema } from 'mongoose';
 
 import { DomainEvent } from '@shared/domain/bus/event/DomainEvent';
-import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
+import { convertToSimpleEvent } from '@shared/infrastructure/mongo/convertToSimple';
 
-export const EventSchema = new Schema<ExtendOfDocument<DomainEvent & { data: string }>>(
-  {
-    _id: {
-      type: String,
-      required: true,
-      default: v => v.id,
+export interface DomainEventSchemaType {
+    _id: string;
+    id: string;
+    aggregateId: string;
+    eventId: string;
+    occurredOn: string;
+    data: string;
+}
+
+export const EventSchema = new Schema<DomainEventSchemaType>(
+    {
+        _id: {
+            type: String,
+            required: false,
+            default: v => v.id,
+        },
+        id: {
+            type: String,
+            required: true,
+        },
+        aggregateId: {
+            type: String,
+            required: true,
+        },
+        eventId: {
+            type: String,
+            required: true,
+        },
+        occurredOn: {
+            type: String,
+            required: true,
+        },
+        data: {
+            type: String,
+            required: false,
+        },
     },
-    id: {
-      type: String,
-      required: true,
+    {
+        _id: false,
     },
-    aggregateId: {
-      type: String,
-      required: true,
-    },
-    eventId: {
-      type: String,
-      required: true,
-    },
-    occurredOn: {
-      type: String,
-      required: true,
-    },
-    data: {
-      type: String,
-      required: false,
-    },
-  },
-  {
-    _id: false,
-  },
 );
+
+export function mapToSchema(value: DomainEvent): DomainEventSchemaType {
+    const simpleEvent = convertToSimpleEvent(value);
+
+    return {
+        _id: value.id,
+        id: value.id,
+        aggregateId: simpleEvent.id,
+        eventId: value.eventId,
+        occurredOn: value.occurredOn,
+        data: simpleEvent.data,
+    };
+}

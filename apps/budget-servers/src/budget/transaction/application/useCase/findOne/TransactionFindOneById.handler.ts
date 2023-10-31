@@ -6,11 +6,11 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @QueryHandler(TransactionFindOneByIdQuery)
 export class TransactionFindOneByIdHandler
-  implements IQueryHandler<TransactionFindOneByIdQuery, Transaction>
+    implements IQueryHandler<TransactionFindOneByIdQuery, Transaction>
 {
-  constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService) {}
 
-  async execute(query: TransactionFindOneByIdQuery): Promise<Transaction> {
-    return this.transactionService.findOneById(query.id);
-  }
+    async execute(query: TransactionFindOneByIdQuery): Promise<Transaction> {
+        return this.transactionService.findOneById(query.id, query.userId);
+    }
 }

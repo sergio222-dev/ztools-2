@@ -6,9 +6,9 @@ import { Account } from '@budget/account/domain/Account.aggregate';
 
 @QueryHandler(AccountFindByIdQuery)
 export class AccountFindByIdHandler implements IQueryHandler<AccountFindByIdQuery> {
-  constructor(private readonly accountService: AccountService) {}
+    constructor(private readonly accountService: AccountService) {}
 
-  async execute(query: AccountFindByIdQuery): Promise<Account> {
-    return this.accountService.findOneById(query.id);
-  }
+    async execute(query: AccountFindByIdQuery): Promise<Account> {
+        return this.accountService.findOneById(query.id, query.userId);
+    }
 }

@@ -5,10 +5,10 @@ import { TransactionDeleteBatchCommand } from '@budget/transaction/application/u
 
 @CommandHandler(TransactionDeleteBatchCommand)
 export class TransactionDeleteBatchHandler implements ICommandHandler<TransactionDeleteBatchCommand> {
-  constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService) {}
 
-  async execute(command: TransactionDeleteBatchCommand): Promise<void> {
-    const { ids } = command;
-    await this.transactionService.deleteBatch(ids);
-  }
+    async execute(command: TransactionDeleteBatchCommand): Promise<void> {
+        const { ids, userId } = command;
+        await this.transactionService.deleteBatch(ids, userId);
+    }
 }

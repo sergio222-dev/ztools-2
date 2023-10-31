@@ -5,6 +5,7 @@ import { Category } from '@core/budget/category/domain/Category';
 import { SubCategoryBudget } from '@core/budget/category/domain/SubCategoryBudget';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDeleteRequest';
+import { CategoryAnalytics } from '@core/budget/category/domain/CategoryAnalytics';
 
 @injectable()
 export class AxiosBudgetRepository implements CategoryRepository {
@@ -42,5 +43,40 @@ export class AxiosBudgetRepository implements CategoryRepository {
 
   async deleteCategory(ids: CategoryDeleteRequest) {
     await this.axios.post(`/category/delete`, ids);
+  }
+
+  async getAnalyticsData(): Promise<CategoryAnalytics[]> {
+    const { data } = await new Promise<{ data: CategoryAnalytics[] }>(resolve => {
+      return resolve({
+        data: [
+          {
+            categoryName: 'Salamin',
+            totalInflow: '2500000',
+            totalOutflow: '500000',
+          },
+          {
+            categoryName: 'Salamin2',
+            totalInflow: '2500000',
+            totalOutflow: '200000',
+          },
+          {
+            categoryName: 'Salamin3',
+            totalInflow: '2500000',
+            totalOutflow: '10000',
+          },
+          {
+            categoryName: 'Salamin4',
+            totalInflow: '2500000',
+            totalOutflow: '100000',
+          },
+          {
+            categoryName: 'Salamin5',
+            totalInflow: '2500000',
+            totalOutflow: '1000',
+          },
+        ],
+      });
+    });
+    return data;
   }
 }

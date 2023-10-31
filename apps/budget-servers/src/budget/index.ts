@@ -1,5 +1,4 @@
 /* eslint import/order: 0 */
-import { SubCategoryUpdateHandler } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.handler';
 // services
 import { TransactionService } from '@budget/transaction/application/services/Transaction.service';
 import { MonthlyBudgetService } from '@budget/monthlyBudget/application/service/MonthlyBudget.service';
@@ -20,6 +19,7 @@ import { CategoryUpdateHandler } from '@budget/category/application/useCase/upda
 import { CategoryFindOneHandler } from '@budget/category/application/useCase/findOne/CategoryFindOne.handler';
 import { SubCategoryCreateHandler } from '@budget/subCategory/application/useCase/create/SubCategoryCreate.handler';
 import { SubCategoryFindAllByCategoryIdHandler } from '@budget/subCategory/application/useCase/find/SubCategoryFindAllByCategoryId.handler';
+import { SubCategoryUpdateHandler } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.handler';
 import { MonthlyBudgetAssignOneHandler } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.handler';
 import { SubCategoryDeleteHandler } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.handler';
 import { SubCategoryDeleteBatchHandler } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.handler';
@@ -65,110 +65,110 @@ import { UpdateMonthOnTransactionDeletedListener } from '@budget/monthlyBudget/a
 import { RecordOnEventListener } from '@budget/shared/application/bus/RecordOnEvent.listener';
 
 const budget = {
-  services: [
-    TransactionService,
-    CategoryService,
-    SubCategoryService,
-    MonthlyBudgetService,
-    MonthActivityService,
-    AccountService,
-    EventRecorderService,
-  ],
-  handlers: [
-    TransactionFindAllHandler,
-    TransactionCreateHandler,
-    TransactionUpdateHandler,
-    TransactionFindOneByIdHandler,
-    TransactionDeleteHandler,
-    TransactionDeleteBatchHandler,
-    TransactionFindAllBySubCategoryIdHandler,
-    TransactionFindAllByAccountHandler,
-    CategoryCreateHandler,
-    CategoryFindAllHandler,
-    CategoryUpdateHandler,
-    CategoryFindOneHandler,
-    CategoryDeleteHandler,
-    SubCategoryFindAllByCategoryIdHandler,
-    SubCategoryCreateHandler,
-    MonthlyBudgetAssignOneHandler,
-    MonthlyBudgetFindOneHandler,
-    MonthlyBudgetDeleteAllBySubCategoryIdHandler,
-    SubCategoryFindAllHandler,
-    SubCategoryFindOneByIdHandler,
-    SubCategoryUpdateHandler,
-    SubCategoryDeleteHandler,
-    SubCategoryDeleteBatchHandler,
-    AccountCreateHandler,
-    AccountFindAllHandler,
-    AccountUpdateHandler,
-    AccountDeleteHandler,
-    AccountFindByIdHandler,
-    AccountFindOneByIdHandler,
-  ],
-  schemas: [
-    {
-      name: 'Transaction',
-      schema: TransactionSchema,
-    },
-    {
-      name: 'Category',
-      schema: CategorySchema,
-    },
-    {
-      name: 'SubCategory',
-      schema: SubCategorySchema,
-    },
-    {
-      name: 'MonthlyBudget',
-      schema: MonthlyBudgetSchema,
-    },
-    {
-      name: 'Account',
-      schema: AccountSchema,
-    },
-    {
-      name: 'Event',
-      schema: EventSchema,
-    },
-  ],
-  mongoRepositories: [
-    {
-      provide: 'TransactionRepository',
-      useClass: MongoTransactionRepository,
-    },
-    {
-      provide: 'CategoryRepository',
-      useClass: MongoCategoryRepository,
-    },
-    {
-      provide: 'SubCategoryRepository',
-      useClass: MongoSubCategoryRepository,
-    },
-    {
-      provide: 'MonthlyBudgetRepository',
-      useClass: MongoMonthlyBudgetRepository,
-    },
-    {
-      provide: 'AccountRepository',
-      useClass: MongoAccountRepository,
-    },
-    {
-      provide: 'EventRepository',
-      useClass: MongoEventRepository,
-    },
-  ],
-  bus: [
-    {
-      provide: 'EventBus',
-      useClass: EventEmitter2EventBus,
-    },
-  ],
-  listeners: [
-    UpdateMonthOnTransactionActivityUpdatedListener,
-    UpdateMonthOnTransactionActivityCreatedListener,
-    UpdateMonthOnTransactionDeletedListener,
-    RecordOnEventListener,
-  ],
+    services: [
+        TransactionService,
+        CategoryService,
+        SubCategoryService,
+        MonthlyBudgetService,
+        MonthActivityService,
+        AccountService,
+        EventRecorderService,
+    ],
+    handlers: [
+        TransactionFindAllHandler,
+        TransactionCreateHandler,
+        TransactionUpdateHandler,
+        TransactionFindOneByIdHandler,
+        TransactionDeleteHandler,
+        TransactionDeleteBatchHandler,
+        TransactionFindAllBySubCategoryIdHandler,
+        TransactionFindAllByAccountHandler,
+        CategoryCreateHandler,
+        CategoryFindAllHandler,
+        CategoryUpdateHandler,
+        CategoryFindOneHandler,
+        CategoryDeleteHandler,
+        SubCategoryFindAllByCategoryIdHandler,
+        SubCategoryCreateHandler,
+        MonthlyBudgetAssignOneHandler,
+        MonthlyBudgetFindOneHandler,
+        MonthlyBudgetDeleteAllBySubCategoryIdHandler,
+        SubCategoryFindAllHandler,
+        SubCategoryFindOneByIdHandler,
+        SubCategoryUpdateHandler,
+        SubCategoryDeleteHandler,
+        SubCategoryDeleteBatchHandler,
+        AccountCreateHandler,
+        AccountFindAllHandler,
+        AccountUpdateHandler,
+        AccountDeleteHandler,
+        AccountFindByIdHandler,
+        AccountFindOneByIdHandler,
+    ],
+    schemas: [
+        {
+            name: 'Transaction',
+            schema: TransactionSchema,
+        },
+        {
+            name: 'Category',
+            schema: CategorySchema,
+        },
+        {
+            name: 'SubCategory',
+            schema: SubCategorySchema,
+        },
+        {
+            name: 'MonthlyBudget',
+            schema: MonthlyBudgetSchema,
+        },
+        {
+            name: 'Account',
+            schema: AccountSchema,
+        },
+        {
+            name: 'Event',
+            schema: EventSchema,
+        },
+    ],
+    mongoRepositories: [
+        {
+            provide: 'TransactionRepository',
+            useClass: MongoTransactionRepository,
+        },
+        {
+            provide: 'CategoryRepository',
+            useClass: MongoCategoryRepository,
+        },
+        {
+            provide: 'SubCategoryRepository',
+            useClass: MongoSubCategoryRepository,
+        },
+        {
+            provide: 'MonthlyBudgetRepository',
+            useClass: MongoMonthlyBudgetRepository,
+        },
+        {
+            provide: 'AccountRepository',
+            useClass: MongoAccountRepository,
+        },
+        {
+            provide: 'EventRepository',
+            useClass: MongoEventRepository,
+        },
+    ],
+    bus: [
+        {
+            provide: 'EventBus',
+            useClass: EventEmitter2EventBus,
+        },
+    ],
+    listeners: [
+        UpdateMonthOnTransactionActivityUpdatedListener,
+        UpdateMonthOnTransactionActivityCreatedListener,
+        UpdateMonthOnTransactionDeletedListener,
+        RecordOnEventListener,
+    ],
 };
 
 export default budget;

@@ -1,26 +1,31 @@
-import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
 import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Post,
-  Put,
-  Query,
+    Body,
+    Controller,
+    Get,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    Post,
+    Put,
+    Query,
+    Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CategoryDTO } from '../../dto/CategoryDto';
-import { CategoryDeleteRequest } from '../../dto/CategoryDeleteRequest';
-import { SubCategoryDto } from '../../dto/SubCategoryDto';
+import { CategoryCreateRequest } from '../../dto/Category/CategoryCreateRequest';
+import { CategoryDeleteRequest } from '../../dto/Category/CategoryDeleteRequest';
+import {
+    CategoryFindAllResponse,
+    CategoryFindAllSubCategoryResponse,
+} from '../../dto/Category/CategoryFindAllResponse';
+import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
 import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
 import { CategoryFindAllQuery } from '@budget/category/application/useCase/find/CategoryFindAll.query';
 import { CategoryFindOneQuery } from '@budget/category/application/useCase/findOne/CategoryFindOne.query';
+import { CategoryUpdateCommand } from '@budget/category/application/useCase/update/CategoryUpdate.command';
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
 import { MonthlyBudgetFindOneQuery } from '@budget/monthlyBudget/application/useCase/find/MonthlyBudgetFindOne.query';
@@ -36,134 +41,164 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 @ApiTags('categories')
 @Injectable()
 export class CategoryController {
-  constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
+    constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
 
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get this month categories',
-  })
-  async findAll(@Query('month') month: string, @Query('year') year: string): Promise<CategoryDTO[]> {
-    if (!isValidMonth(month) || !isValidYear(year))
-      throw new HttpException('invalid month or year', HttpStatus.BAD_REQUEST);
+    @Get()
+    @ApiBearerAuth('JWT')
+    @ApiResponse({
+        status: 200,
+        description: 'Get this month categories',
+    })
+    async findAll(
+        @Query('month') month: string,
+        @Query('year') year: string,
+        @Req() request: AuthenticatedRequest,
+    ): Promise<CategoryFindAllResponse> {
+        const { user } = request;
+        if (!isValidMonth(month) || !isValidYear(year))
+            throw new HttpException('invalid month or year', HttpStatus.BAD_REQUEST);
 
-    const query = new CategoryFindAllQuery();
+        const query = new CategoryFindAllQuery(user.sub);
 
-    const categories = await this.queryBus.execute<CategoryFindAllQuery, Category[]>(query);
+        const categories = await this.queryBus.execute<CategoryFindAllQuery, Category[]>(query);
 
-    const categoriesDTO = categories.map(async category => {
-      const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
-        new SubCategoryFindAllByCategoryIdQuery(category.id),
-      );
-      const subCategoriesDtoPromises = subCategories.map(async subCategory => {
-        const queryMonthlyBudget = new MonthlyBudgetFindOneQuery(year, month, subCategory.id);
+        const categoriesResponsePromise = categories.map(async category => {
+            const subCategories = await this.queryBus.execute<
+                SubCategoryFindAllByCategoryIdQuery,
+                SubCategory[]
+            >(new SubCategoryFindAllByCategoryIdQuery(category.id));
+            const subCategoriesDtoPromises = subCategories.map<Promise<CategoryFindAllSubCategoryResponse>>(
+                async subCategory => {
+                    const queryMonthlyBudget = new MonthlyBudgetFindOneQuery(
+                        year,
+                        month,
+                        subCategory.id,
+                        user.sub,
+                    );
 
-        const monthlyBudget = await this.queryBus.execute<
-          MonthlyBudgetFindOneQuery,
-          MonthlyBudget | undefined
-        >(queryMonthlyBudget);
+                    const monthlyBudget = await this.queryBus.execute<
+                        MonthlyBudgetFindOneQuery,
+                        MonthlyBudget | undefined
+                    >(queryMonthlyBudget);
 
-        return new SubCategoryDto(
-          subCategory.id,
-          subCategory.name,
-          subCategory.categoryId,
-          monthlyBudget?.assigned?.amount ?? '0',
-          monthlyBudget?.activity?.amount ?? '0',
-          monthlyBudget?.available?.amount ?? '0',
-        );
-      });
+                    return {
+                        id: subCategory.id,
+                        name: subCategory.name,
+                        categoryId: subCategory.categoryId,
+                        assigned: monthlyBudget?.assigned?.amount ?? '0',
+                        activity: monthlyBudget?.activity?.amount ?? '0',
+                        available: monthlyBudget?.available?.amount ?? '0',
+                    };
+                },
+            );
 
-      const subCategoriesDto = await Promise.all(subCategoriesDtoPromises);
+            const subCategoriesDto = await Promise.all(subCategoriesDtoPromises);
 
-      return new CategoryDTO(category.id, category.name, subCategoriesDto);
-    });
+            return {
+                id: category.id,
+                name: category.name,
+                subCategories: subCategoriesDto,
+            };
+        });
 
-    return await Promise.all(categoriesDTO);
-  }
-
-  @Post()
-  @ApiResponse({
-    status: 201,
-  })
-  async create(@Body() bodyCommand: CategoryCreateCommand) {
-    const command = new CategoryCreateCommand(bodyCommand.id, bodyCommand.name);
-    await this.commandBus.execute(command);
-  }
-
-  @Put()
-  @ApiResponse({
-    status: 201,
-  })
-  async update(@Body() bodyCommand: CategoryCreateCommand): Promise<void> {
-    const { name, id } = bodyCommand;
-    const query = new CategoryFindOneQuery(id);
-
-    const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
-
-    if (category.id === '') {
-      throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+        return await Promise.all(categoriesResponsePromise);
     }
 
-    const command = new CategoryUpdateCommand(id, name);
-
-    await this.commandBus.execute(command);
-  }
-
-  @Post('/delete')
-  async delete(@Body() deleteCategoryRequest: CategoryDeleteRequest): Promise<void> {
-    const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
-    const query = new CategoryFindOneQuery(categoryId);
-
-    const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
-
-    if (category.id === '')
-      throw new HttpException(`the category with id ${categoryId} doesn't exists`, HttpStatus.NOT_FOUND);
-
-    const queryForAllSubCategories = new SubCategoryFindAllByCategoryIdQuery(categoryId);
-
-    const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
-      queryForAllSubCategories,
-    );
-
-    const subCategoriesId = subCategories.map(subCategory => subCategory.id);
-
-    for (const subCategoryId of subCategoriesId) {
-      const commandForDeleteMonthlyBudgetBySubCategoryId = new MonthlyBudgetDeleteAllBySubCategoryIdCommand(
-        subCategoryId,
-      );
-
-      await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
-
-      const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId);
-
-
-      const transactions = await this.queryBus.execute<TransactionFindAllBySubCategoryIdQuery, Transaction[]>(
-        queryForTransactions,
-      );
-
-      for (const transaction of transactions) {
-        const commandForUpdateTransaction = new TransactionUpdateCommand(
-          transaction.id,
-          transaction.inflow.amount,
-          transaction.outflow.amount,
-          transaction.payee,
-          transaction.memo,
-          moveToSubCategoryId,
-          transaction.date.toISOString(),
-          transaction.cleared,
-          transaction.accountId,
-        );
-
-        await this.commandBus.execute(commandForUpdateTransaction);
-      }
+    @Post()
+    @ApiBearerAuth('JWT')
+    @ApiResponse({
+        status: 201,
+    })
+    async create(@Body() body: CategoryCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+        const { user } = request;
+        const command = new CategoryCreateCommand(body.id, body.name, user.sub);
+        await this.commandBus.execute(command);
     }
 
-    const commandForDeleteSubCategories = new SubCategoryDeleteBatchCommand(subCategoriesId);
+    @Put()
+    @ApiBearerAuth('JWT')
+    @ApiResponse({
+        status: 201,
+    })
+    async update(@Body() body: CategoryCreateRequest, @Req() request: AuthenticatedRequest): Promise<void> {
+        const { user } = request;
+        const { name, id } = body;
+        const query = new CategoryFindOneQuery(id, user.sub);
 
-    await this.commandBus.execute(commandForDeleteSubCategories);
+        const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
 
-    const commandForDeleteCategory = new CategoryDeleteCommand(categoryId);
+        if (category.id === '') {
+            throw new HttpException(`the category with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
+        }
 
-    await this.commandBus.execute(commandForDeleteCategory);
-  }
+        const command = new CategoryUpdateCommand(id, name, user.sub);
+
+        await this.commandBus.execute(command);
+    }
+
+    @Post('/delete')
+    @ApiBearerAuth('JWT')
+    async delete(
+        @Body() deleteCategoryRequest: CategoryDeleteRequest,
+        @Req() request: AuthenticatedRequest,
+    ): Promise<void> {
+        const { user } = request;
+        const { id: categoryId, subCategoryId: moveToSubCategoryId } = deleteCategoryRequest;
+        const query = new CategoryFindOneQuery(categoryId, user.sub);
+
+        const category = await this.queryBus.execute<CategoryFindOneQuery, Category>(query);
+
+        if (category.id === '')
+            throw new HttpException(
+                `the category with id ${categoryId} doesn't exists`,
+                HttpStatus.NOT_FOUND,
+            );
+
+        const queryForAllSubCategories = new SubCategoryFindAllByCategoryIdQuery(categoryId);
+
+        const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
+            queryForAllSubCategories,
+        );
+
+        const subCategoriesId = subCategories.map(subCategory => subCategory.id);
+
+        for (const subCategoryId of subCategoriesId) {
+            const commandForDeleteMonthlyBudgetBySubCategoryId =
+                new MonthlyBudgetDeleteAllBySubCategoryIdCommand(subCategoryId, user.sub);
+
+            await this.commandBus.execute(commandForDeleteMonthlyBudgetBySubCategoryId);
+
+            const queryForTransactions = new TransactionFindAllBySubCategoryIdQuery(subCategoryId, user.sub);
+
+            const transactions = await this.queryBus.execute<
+                TransactionFindAllBySubCategoryIdQuery,
+                Transaction[]
+            >(queryForTransactions);
+
+            for (const transaction of transactions) {
+                const commandForUpdateTransaction = new TransactionUpdateCommand(
+                    transaction.id,
+                    transaction.userId,
+                    transaction.inflow.amount,
+                    transaction.outflow.amount,
+                    transaction.payee,
+                    transaction.memo,
+                    moveToSubCategoryId,
+                    transaction.date.toISOString(),
+                    transaction.cleared,
+                    transaction.accountId,
+                );
+
+                await this.commandBus.execute(commandForUpdateTransaction);
+            }
+        }
+
+        const commandForDeleteSubCategories = new SubCategoryDeleteBatchCommand(subCategoriesId);
+
+        await this.commandBus.execute(commandForDeleteSubCategories);
+
+        const commandForDeleteCategory = new CategoryDeleteCommand(categoryId, user.sub);
+
+        await this.commandBus.execute(commandForDeleteCategory);
+    }
 }

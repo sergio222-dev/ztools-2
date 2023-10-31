@@ -255,7 +255,7 @@ export function useCategoryTableHook(budgetDate: Date) {
     },
     {
       id: 'assigned',
-      accessorKey: 'assignedBudget',
+      accessorKey: 'assigned',
       header: () => <Typography size="small">ASSIGNED</Typography>,
       cell: info => {
         return info.row.getIsSelected() &&
@@ -280,7 +280,7 @@ export function useCategoryTableHook(budgetDate: Date) {
             type={new NumericTextType().getType()}
             defaultValue={
               info.row.original.subCategories
-                ? totalCategoryData(info.row.original.id, 'assignedBudget')
+                ? totalCategoryData(info.row.original.id, 'assigned')
                 : info.getValue()
             }
           />

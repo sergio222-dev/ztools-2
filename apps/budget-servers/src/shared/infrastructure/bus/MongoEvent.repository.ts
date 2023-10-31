@@ -1,22 +1,35 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 
 import { DomainEvent } from '@shared/domain/bus/event/DomainEvent';
 import { EventRepository } from '@shared/domain/bus/Event.repository';
-import { convertToSimpleEvent } from '@shared/infrastructure/mongo/convertToSimple';
+import { DomainEventSchemaType, mapToSchema } from '@shared/infrastructure/bus/event/mongo/event.schema';
 import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
 
-export class MongoEventRepository extends MongoRepository implements EventRepository {
-  constructor(
-    @InjectModel('Event')
-    private readonly eventModel: Model<DomainEvent>,
-  ) {
-    super();
-  }
+export class MongoEventRepository
+    extends MongoRepository<DomainEvent, DomainEventSchemaType>
+    implements EventRepository
+{
+    constructor(
+        @InjectConnection()
+        _connection: Connection,
+    ) {
+        super(_connection);
+    }
 
-  async save(event: DomainEvent): Promise<void> {
-    const simpleEvent = convertToSimpleEvent(event);
-    const eventDocument = new this.eventModel(simpleEvent);
-    await eventDocument.save();
-  }
+    protected collectionName(): string {
+        return 'events';
+    }
+
+    protected getMapperToSchema(): (value: DomainEvent) => DomainEventSchemaType {
+        return mapToSchema;
+    }
+
+    protected getMapperToDomain(): (value: DomainEventSchemaType) => DomainEvent {
+        throw new Error('this method should not be used');
+    }
+
+    async save(event: DomainEvent): Promise<void> {
+        await this.persist(event);
+    }
 }

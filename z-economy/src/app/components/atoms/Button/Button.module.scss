@@ -20,6 +20,15 @@
       @include mixin.box-shadow(const.$primary_color);
     }
   }
+
+  &.variant_transparent {
+    background: transparent;
+    padding: functions.spacing(1.5) 0 functions.spacing(1.5);
+
+    &[data-active='true'] {
+      border-bottom: const.$primary-color 0.25rem solid;
+    }
+  }
 }
 
 .variant_primary {

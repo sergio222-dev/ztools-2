@@ -8,6 +8,7 @@ import { Typography } from '@atoms/Typography/Typography';
 import { SearchDebounceInput } from '@molecules/SearchDebounceInput/SearchDebounceInput';
 import { TransactionEditDropdown } from '@molecules/TransactionEditDropdown/TransactionEditDropdown';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
+import { Signal } from '@preact/signals-react';
 
 interface TransactionTableButtonsProperties {
   trigger: (
@@ -23,12 +24,13 @@ interface TransactionTableButtonsProperties {
   editableValue: MutableRefObject<Transaction>;
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
-  handleDelete: () => void;
+  handleDelete: (isOpen: Signal<boolean>) => void;
   disableDelete: boolean;
   selectedQty: number;
   setSelectedQty: Dispatch<SetStateAction<number>>;
   setDisableDelete: Dispatch<SetStateAction<boolean>>;
   subCats: SubCategory[];
+  handleDuplicate: (isOpen: Signal<boolean>) => void;
 }
 export function TransactionTableButtons({
   trigger,
@@ -43,6 +45,7 @@ export function TransactionTableButtons({
   setSelectedQty,
   setDisableDelete,
   subCats,
+  handleDuplicate,
 }: TransactionTableButtonsProperties) {
   const handleAddTransaction = () => {
     if (globalFilter !== '') setGlobalFilter('');
@@ -58,6 +61,7 @@ export function TransactionTableButtons({
         handleDelete={handleDelete}
         disableDelete={disableDelete}
         selectedQty={selectedQty}
+        handleDuplicate={handleDuplicate}
       />
       <SearchDebounceInput
         value={globalFilter ?? ''}
