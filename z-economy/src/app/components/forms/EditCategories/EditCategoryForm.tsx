@@ -2,7 +2,7 @@ import styles from './EditCategoryForm.module.scss';
 import { Input } from '@atoms/Input/Input';
 import { ButtonUnfilled } from '@atoms/Button/ButtonUnfilled';
 import { ButtonFilled } from '@atoms/Button/ButtonFilled';
-import { KeyboardEvent, MouseEvent, SyntheticEvent, useEffect, useRef } from 'react';
+import { KeyboardEvent, MouseEvent, SyntheticEvent, useRef } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { Signal, useSignal } from '@preact/signals-react';
 import { useOutsideClick } from '@utils/mouseUtils';
