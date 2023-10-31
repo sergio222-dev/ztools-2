@@ -53,7 +53,7 @@ export const useCategoryHook = (date: Date) => {
         return currency(total).add(
           // eslint-disable-next-line unicorn/no-array-reduce
           category.subCategories.reduce((subTotal, subCategory) => {
-            return currency(subTotal).add(subCategory.assignedBudget);
+            return currency(subTotal).add(subCategory.assigned);
           }, currency(0)),
         );
       }, currency(0)) || currency(0);
