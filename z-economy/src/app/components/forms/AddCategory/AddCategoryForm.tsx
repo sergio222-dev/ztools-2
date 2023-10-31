@@ -56,7 +56,7 @@ export function AddCategoryForm({
         id: uuidv4(),
         name: newCategoryName,
         categoryId: categoryId,
-        assignedBudget: '',
+        assigned: '',
         activity: '',
         available: '',
       });
