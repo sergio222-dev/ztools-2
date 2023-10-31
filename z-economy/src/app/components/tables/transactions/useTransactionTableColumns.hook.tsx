@@ -9,7 +9,6 @@ import { AiFillCopyrightCircle } from 'react-icons/ai';
 import styles from './renders/Table.module.scss';
 import cls from 'classnames';
 import { EditableCellSelect } from '@molecules/EditableCell/EditableCellSelect';
-import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { EditableCellDatePicker } from '@molecules/EditableCell/EditableCellDatePicker';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { Category } from '@core/budget/category/domain/Category';
