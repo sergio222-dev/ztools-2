@@ -5,11 +5,11 @@ import { AccountCreateCommand } from '@budget/account/application/useCase/create
 
 @CommandHandler(AccountCreateCommand)
 export class AccountCreateHandler implements ICommandHandler<AccountCreateCommand> {
-  constructor(private readonly accountService: AccountService) {}
+    constructor(private readonly accountService: AccountService) {}
 
-  async execute(command: AccountCreateCommand): Promise<void> {
-    const { id, name, userId } = command;
+    async execute(command: AccountCreateCommand): Promise<void> {
+        const { id, name, userId } = command;
 
-    await this.accountService.createOne(id, name, userId);
-  }
+        await this.accountService.createOne(id, name, userId);
+    }
 }

@@ -6,4 +6,8 @@
   @include mixins.remove-default-input;
   border-radius: const.$radius;
   border: 2px solid const.$primary-color;
+
+  &[type='checkbox']:focus-visible {
+    @include mixins.box-shadow(const.$primary_color);
+  }
 }

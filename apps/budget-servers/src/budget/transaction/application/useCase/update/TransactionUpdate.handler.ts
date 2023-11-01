@@ -5,22 +5,22 @@ import { TransactionUpdateCommand } from '@budget/transaction/application/useCas
 
 @CommandHandler(TransactionUpdateCommand)
 export class TransactionUpdateHandler implements ICommandHandler<TransactionUpdateCommand> {
-  constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService) {}
 
-  async execute(command: TransactionUpdateCommand): Promise<void> {
-    const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId, userId } = command;
+    async execute(command: TransactionUpdateCommand): Promise<void> {
+        const { id, inflow, outflow, payee, memo, subCategoryId, date, cleared, accountId, userId } = command;
 
-    await this.transactionService.update(
-      id,
-      userId,
-      inflow,
-      outflow,
-      payee,
-      memo,
-      subCategoryId,
-      date,
-      cleared,
-      accountId,
-    );
-  }
+        await this.transactionService.update(
+            id,
+            userId,
+            inflow,
+            outflow,
+            payee,
+            memo,
+            subCategoryId,
+            date,
+            cleared,
+            accountId,
+        );
+    }
 }

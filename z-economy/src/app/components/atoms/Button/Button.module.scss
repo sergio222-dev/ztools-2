@@ -15,6 +15,10 @@
   &.variant_icon {
     background: none;
     border-radius: const.$radius;
+
+    &:focus-visible {
+      @include mixin.box-shadow(const.$primary_color);
+    }
   }
 
   &.variant_transparent {
@@ -57,9 +61,15 @@
   font-size: 2rem;
   display: inline-flex;
   align-items: center;
+  border-radius: const.$radius;
+  margin: 2px;
 
   &:hover {
     color: const.$secondary-text-color;
+  }
+
+  &:focus-visible {
+    @include mixin.box-shadow(const.$light-primary-color);
   }
 }
 
@@ -235,6 +245,11 @@
   padding: 0;
   margin: 0;
   color: const.$bold-text-color;
+  border-radius: const.$radius;
+
+  &:focus-visible {
+    @include mixin.box-shadow(const.$primary_color);
+  }
 }
 
 .variant_underline {

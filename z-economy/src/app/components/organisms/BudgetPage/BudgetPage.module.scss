@@ -27,6 +27,20 @@
     .bp_date_buttons {
       color: const.$primary-color;
       padding: functions.spacing(0.5);
+      transition: 250ms;
+      border-radius: const.$radius;
+      margin-left: functions.spacing(1);
+
+      &:focus-visible {
+        box-shadow: 0 0 0 2px const.$primary-color;
+      }
+      //&:active {
+      //  @include mixins.box-shadow(const.$primary-color);
+      //}
+
+      &:hover {
+        color: const.$dark-primary-color;
+      }
     }
     .date_input_container {
       display: flex;
@@ -45,6 +59,11 @@
       .date_caret_icon {
         color: const.$primary-color;
         margin-left: -13px;
+        transition: 250ms;
+
+        &:focus-visible {
+          box-shadow: 0 0 0 2px const.$primary-color;
+        }
       }
     }
   }

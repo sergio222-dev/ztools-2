@@ -17,36 +17,36 @@ import { BudgetModule } from '../src/budget.module';
 const controllers = [TransactionController, CategoryController, SubCategoryController, AccountController];
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      ignoreEnvFile: true,
-      isGlobal: true,
-      load: [SUPABASE, MONGO, BUDGET],
-    }),
-    CqrsModule,
-    BudgetModule,
-    JwtModule.registerAsync({
-      global: true,
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
-        await ConfigModule.envVariablesLoaded;
-        return {
-          secret: configService.get<string>('SUPABASE_JWT') || '',
-        };
-      },
-    }),
-  ],
-  controllers: [...controllers],
-  providers: [
-    SupabaseService,
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: SupabaseGuard,
-    },
-  ],
+    imports: [
+        ConfigModule.forRoot({
+            ignoreEnvFile: true,
+            isGlobal: true,
+            load: [SUPABASE, MONGO, BUDGET],
+        }),
+        CqrsModule,
+        BudgetModule,
+        JwtModule.registerAsync({
+            global: true,
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => {
+                await ConfigModule.envVariablesLoaded;
+                return {
+                    secret: configService.get<string>('SUPABASE_JWT') || '',
+                };
+            },
+        }),
+    ],
+    controllers: [...controllers],
+    providers: [
+        SupabaseService,
+        {
+            provide: APP_PIPE,
+            useClass: ZodValidationPipe,
+        },
+        {
+            provide: APP_GUARD,
+            useClass: SupabaseGuard,
+        },
+    ],
 })
 export class AppModule {}

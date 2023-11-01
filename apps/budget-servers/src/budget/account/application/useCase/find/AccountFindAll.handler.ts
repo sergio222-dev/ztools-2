@@ -6,10 +6,10 @@ import { Account } from '@budget/account/domain/Account.aggregate';
 
 @QueryHandler(AccountFindAllQuery)
 export class AccountFindAllHandler implements IQueryHandler {
-  constructor(private readonly accountService: AccountService) {}
+    constructor(private readonly accountService: AccountService) {}
 
-  async execute(query: AccountFindAllQuery): Promise<Account[]> {
-    const { userId } = query;
-    return await this.accountService.findAll(userId);
-  }
+    async execute(query: AccountFindAllQuery): Promise<Account[]> {
+        const { userId } = query;
+        return await this.accountService.findAll(userId);
+    }
 }

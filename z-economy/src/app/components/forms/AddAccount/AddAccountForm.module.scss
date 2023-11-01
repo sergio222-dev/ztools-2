@@ -1,5 +1,6 @@
 @use '../../styles/constants' as const;
 @use '../../styles/functions';
+@use '../../styles/mixins';
 
 .add_account_modal_title {
   display: flex;
@@ -15,6 +16,10 @@
     margin-right: -(functions.spacing(1));
     & > svg {
       height: 1.5rem;
+    }
+
+    &:focus-visible {
+      @include mixins.box-shadow(const.$primary_color);
     }
   }
 

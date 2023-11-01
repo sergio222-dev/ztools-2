@@ -6,11 +6,11 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @QueryHandler(TransactionFindAllBySubCategoryIdQuery)
 export class TransactionFindAllBySubCategoryIdHandler
-  implements IQueryHandler<TransactionFindAllBySubCategoryIdQuery>
+    implements IQueryHandler<TransactionFindAllBySubCategoryIdQuery>
 {
-  constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService) {}
 
-  async execute(query: TransactionFindAllBySubCategoryIdQuery): Promise<Transaction[]> {
-    return this.transactionService.findAllBySubCategoryId(query.subCategoryId, query.userId);
-  }
+    async execute(query: TransactionFindAllBySubCategoryIdQuery): Promise<Transaction[]> {
+        return this.transactionService.findAllBySubCategoryId(query.subCategoryId, query.userId);
+    }
 }

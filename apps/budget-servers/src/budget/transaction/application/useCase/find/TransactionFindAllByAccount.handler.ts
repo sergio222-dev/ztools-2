@@ -6,9 +6,9 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
 @QueryHandler(TransactionFindAllByAccountQuery)
 export class TransactionFindAllByAccountHandler implements IQueryHandler<TransactionFindAllByAccountQuery> {
-  constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService) {}
 
-  async execute(query: TransactionFindAllByAccountQuery): Promise<Transaction[]> {
-    return this.transactionService.findAllByAccountId(query.accountId, query.userId);
-  }
+    async execute(query: TransactionFindAllByAccountQuery): Promise<Transaction[]> {
+        return this.transactionService.findAllByAccountId(query.accountId, query.userId);
+    }
 }

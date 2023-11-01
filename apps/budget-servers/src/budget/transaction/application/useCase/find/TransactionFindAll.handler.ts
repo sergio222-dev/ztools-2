@@ -6,8 +6,8 @@ import { TransactionService } from '@budget/transaction/application/services/Tra
 
 @QueryHandler(TransactionFindAllQuery)
 export class TransactionFindAllHandler implements IQueryHandler<TransactionFindAllQuery, Transaction[]> {
-  constructor(private transactionService: TransactionService) {}
-  async execute(query: TransactionFindAllQuery): Promise<Transaction[]> {
-    return this.transactionService.findAll(query.userId);
-  }
+    constructor(private transactionService: TransactionService) {}
+    async execute(query: TransactionFindAllQuery): Promise<Transaction[]> {
+        return this.transactionService.findAll(query.userId);
+    }
 }

@@ -11,7 +11,7 @@ import { Typography } from '@atoms/Typography/Typography';
 
 export function BudgetPageView() {
   const [model, operators] = useBudgetPageHooks();
-  const { budgetDate, totalAssigned } = model;
+  const { budgetDate, totalAssigned, isOpen } = model;
   const { setBudgetDate, renderMonthContent, addMonthHandler, substractMonthHandler, renderSwitch } =
     operators;
 
@@ -30,11 +30,19 @@ export function BudgetPageView() {
               showMonthYearPicker
               dateFormat="MMM yyyy"
               customInput={<Input className={styles.bp_date_input} />}
-              onKeyDown={event => {
-                event.preventDefault();
+              preventOpenOnFocus={true}
+              open={isOpen.value}
+              onInputClick={() => {
+                isOpen.value = !isOpen.value;
               }}
+              onKeyDown={event => {
+                if (event.key === 'Enter') isOpen.value = true;
+                if (event.key === 'Escape') isOpen.value = false;
+              }}
+              onSelect={() => (isOpen.value = false)}
+              onClickOutside={() => (isOpen.value = false)}
             />
-            <AiFillCaretDown className={styles.date_caret_icon} />
+            <Button variant={'icon'} StartIcon={<AiFillCaretDown />} className={styles.date_caret_icon} />
           </div>
           <IconButton className={styles.bp_date_buttons} onClick={addMonthHandler}>
             <AiOutlineRightCircle />
