@@ -15,6 +15,7 @@ import { CategoryDeleteRequest } from '@core/budget/category/domain/CategoryDele
 import { CategoryUpdate } from '@core/budget/category/application/useCase/CategoryUpdate';
 import { SubCategoryUpdate } from '@core/budget/category/application/useCase/SubCategoryUpdate';
 import { CategoryAnalyticsGetAll } from '@core/budget/category/application/useCase/CategoryAnalyticsGetAll';
+import { CategoryCreateInitials } from '@core/budget/category/application/useCase/CategoryCreateInitials';
 
 export const useCategoryHook = (date: Date) => {
   // SERVICES
@@ -27,6 +28,7 @@ export const useCategoryHook = (date: Date) => {
   const subCategoryUpdate = container.resolve(SubCategoryUpdate);
   const subCategoryDelete = container.resolve(SubCategoryDelete);
   const categoryGetAllAnalytics = container.resolve(CategoryAnalyticsGetAll);
+  const categoryCreateInitials = container.resolve(CategoryCreateInitials);
 
   // SWR
   const { data, error, isLoading, mutate, isValidating } = useSWR(['categories'], () =>
@@ -108,6 +110,10 @@ export const useCategoryHook = (date: Date) => {
 
   const mutateData = async () => {
     void mutate(data, { revalidate: true });
+  };
+
+  const createInitialCategories = async () => {
+    return await categoryCreateInitials.execute();
   };
 
   const findAdjustmentSubcategoryId = () => {

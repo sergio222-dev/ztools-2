@@ -79,4 +79,18 @@ export class AxiosBudgetRepository implements CategoryRepository {
     });
     return data;
   }
+
+  async createInitialCategoriesIfNeeded() {
+    // endpoint: /category/funds
+
+    const { data } = await new Promise<{ data: { categoryId: string; subCategoryId: string } }>(resolve => {
+      return resolve({
+        data: {
+          categoryId: '123123123123',
+          subCategoryId: '123123123123',
+        },
+      });
+    });
+    return data;
+  }
 }

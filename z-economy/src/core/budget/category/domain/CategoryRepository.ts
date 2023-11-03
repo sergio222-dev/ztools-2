@@ -14,4 +14,5 @@ export interface CategoryRepository {
   updateSubCategory(c: SubCategory): Promise<void>;
   deleteSubCategory(ids: CategoryDeleteRequest): Promise<void>;
   getAnalyticsData(): Promise<CategoryAnalytics[]>;
+  createInitialCategoriesIfNeeded(): Promise<{ categoryId: string; subCategoryId: string }>;
 }
