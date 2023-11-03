@@ -157,6 +157,7 @@ export const useCategoryHook = (date: Date) => {
     deleteCategory,
     getAllCategoryAnalytics,
     findAdjustmentSubcategoryId,
+    createInitialCategories,
     subCats,
   };
 };
