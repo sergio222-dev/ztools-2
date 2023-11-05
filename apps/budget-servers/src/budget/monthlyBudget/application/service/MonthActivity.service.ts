@@ -12,166 +12,161 @@ import { Order } from '@shared/domain/criteria/Order';
 import { FilterByUser } from '@shared/domain/filter/FilterByUser';
 
 export class MonthActivityService {
-    constructor(
-        @Inject('MonthlyBudgetRepository')
-        private readonly monthlyBudgetRepository: MonthlyBudgetRepository,
-    ) {}
+  constructor(
+    @Inject('MonthlyBudgetRepository')
+    private readonly monthlyBudgetRepository: MonthlyBudgetRepository,
+  ) {}
 
-    async findOne(
-        subCategoryId: string,
-        month: string,
-        year: string,
-        userId: string,
-    ): Promise<MonthlyBudget> {
-        const filtersArray = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
-        filtersArray.push(FilterByUser.fromValue(userId));
-        const filters = new Filters(filtersArray);
-        const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
+  async findOne(subCategoryId: string, month: string, year: string, userId: string): Promise<MonthlyBudget> {
+    const filtersArray = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
+    filtersArray.push(FilterByUser.fromValue(userId));
+    const filters = new Filters(filtersArray);
+    const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
 
-        const result = await this.monthlyBudgetRepository.matching(criteria);
+    const result = await this.monthlyBudgetRepository.matching(criteria);
 
-        if (result.length === 0) {
-            return MonthlyBudget.RETRIEVE(
-                '',
-                month,
-                year,
-                subCategoryId,
-                new UnsignedAmount(0),
-                new UnsignedAmount(0),
-                new UnsignedAmount(0),
-                userId,
-                new Date(),
-                new Date(),
-            );
-        }
-
-        return result[0];
+    if (result.length === 0) {
+      return MonthlyBudget.RETRIEVE(
+        '',
+        month,
+        year,
+        subCategoryId,
+        new UnsignedAmount(0),
+        new UnsignedAmount(0),
+        new UnsignedAmount(0),
+        userId,
+        new Date(),
+        new Date(),
+      );
     }
 
-    async decrementActivity(amount: SignedAmount, subCategoryId: string, date: string, userId: string) {
-        const month = this.getMonth(date);
-        const year = this.getYear(date);
+    return result[0];
+  }
 
-        const result = await this.findOne(subCategoryId, month, year, userId);
+  async decrementActivity(amount: SignedAmount, subCategoryId: string, date: string, userId: string) {
+    const month = this.getMonth(date);
+    const year = this.getYear(date);
 
-        let monthlyBudget: MonthlyBudget;
+    const result = await this.findOne(subCategoryId, month, year, userId);
 
-        if (result.id === '') {
-            monthlyBudget = MonthlyBudget.CREATE(
-                uuidv4(),
-                month,
-                year,
-                subCategoryId,
-                new UnsignedAmount(0),
-                new UnsignedAmount(0),
-                new SignedAmount(0),
-                userId,
-                new Date(),
-                new Date(),
-            );
+    let monthlyBudget: MonthlyBudget;
 
-            await this.monthlyBudgetRepository.save(monthlyBudget);
-        } else {
-            monthlyBudget = result;
-        }
+    if (result.id === '') {
+      monthlyBudget = MonthlyBudget.CREATE(
+        uuidv4(),
+        month,
+        year,
+        subCategoryId,
+        new UnsignedAmount(0),
+        new SignedAmount(0),
+        new SignedAmount(0),
+        userId,
+        new Date(),
+        new Date(),
+      );
 
-        monthlyBudget.decrementActivity(amount);
-
-        await this.monthlyBudgetRepository.save(monthlyBudget);
+      await this.monthlyBudgetRepository.save(monthlyBudget);
+    } else {
+      monthlyBudget = result;
     }
 
-    async incrementActivity(amount: UnsignedAmount, subCategoryId: string, date: string, userId: string) {
-        const month = this.getMonth(date);
-        const year = this.getYear(date);
+    monthlyBudget.decrementActivity(amount);
 
-        const result = await this.findOne(subCategoryId, month, year, userId);
+    await this.monthlyBudgetRepository.save(monthlyBudget);
+  }
 
-        let monthlyBudget: MonthlyBudget;
+  async incrementActivity(amount: UnsignedAmount, subCategoryId: string, date: string, userId: string) {
+    const month = this.getMonth(date);
+    const year = this.getYear(date);
 
-        if (result.id === '') {
-            monthlyBudget = MonthlyBudget.CREATE(
-                uuidv4(),
-                month,
-                year,
-                subCategoryId,
-                new UnsignedAmount(0),
-                new UnsignedAmount(0),
-                new SignedAmount(0),
-                userId,
-                new Date(),
-                new Date(),
-            );
+    const result = await this.findOne(subCategoryId, month, year, userId);
 
-            await this.monthlyBudgetRepository.save(monthlyBudget);
-        } else {
-            monthlyBudget = result;
-        }
+    let monthlyBudget: MonthlyBudget;
 
-        monthlyBudget.incrementActivity(amount);
+    if (result.id === '') {
+      monthlyBudget = MonthlyBudget.CREATE(
+        uuidv4(),
+        month,
+        year,
+        subCategoryId,
+        new UnsignedAmount(0),
+        new UnsignedAmount(0),
+        new SignedAmount(0),
+        userId,
+        new Date(),
+        new Date(),
+      );
 
-        await this.monthlyBudgetRepository.save(monthlyBudget);
+      await this.monthlyBudgetRepository.save(monthlyBudget);
+    } else {
+      monthlyBudget = result;
     }
 
-    async moveActivity(
-        fromSubCategoryId: string,
-        toSubCategoryId: string,
-        fromDate: string,
-        toDate: string,
-        amountToMove: SignedAmount,
-        userId: string,
-    ) {
-        const fromMonth = this.getMonth(fromDate);
-        const fromYear = this.getYear(fromDate);
+    monthlyBudget.incrementActivity(amount);
 
-        const toMonth = this.getMonth(toDate);
-        const toYear = this.getYear(toDate);
+    await this.monthlyBudgetRepository.save(monthlyBudget);
+  }
 
-        // const monthlyBudget = await this.monthlyBudgetRepository.findOne(fromYear, fromMonth, fromSubCategoryId);
-        const monthlyBudget = await this.findOne(fromSubCategoryId, fromMonth, fromYear, userId);
+  async moveActivity(
+    fromSubCategoryId: string,
+    toSubCategoryId: string,
+    fromDate: string,
+    toDate: string,
+    amountToMove: SignedAmount,
+    userId: string,
+  ) {
+    const fromMonth = this.getMonth(fromDate);
+    const fromYear = this.getYear(fromDate);
 
-        if (monthlyBudget.id !== '') {
-            if (amountToMove.isPositive()) {
-                monthlyBudget.decrementActivity(amountToMove);
-            } else {
-                monthlyBudget.incrementActivity(amountToMove.negated());
-            }
+    const toMonth = this.getMonth(toDate);
+    const toYear = this.getYear(toDate);
 
-            await this.monthlyBudgetRepository.save(monthlyBudget);
-        }
+    // const monthlyBudget = await this.monthlyBudgetRepository.findOne(fromYear, fromMonth, fromSubCategoryId);
+    const monthlyBudget = await this.findOne(fromSubCategoryId, fromMonth, fromYear, userId);
 
-        let newMonthlyBudget = await this.findOne(toSubCategoryId, toMonth, toYear, userId);
+    if (monthlyBudget.id !== '') {
+      if (amountToMove.isPositive()) {
+        monthlyBudget.decrementActivity(amountToMove);
+      } else {
+        monthlyBudget.incrementActivity(amountToMove.negated());
+      }
 
-        if (newMonthlyBudget.id === '') {
-            newMonthlyBudget = MonthlyBudget.CREATE(
-                uuidv4(),
-                toMonth,
-                toYear,
-                toSubCategoryId,
-                new UnsignedAmount(0),
-                new SignedAmount(0),
-                new SignedAmount(0),
-                userId,
-                new Date(),
-                new Date(),
-            );
-
-            await this.monthlyBudgetRepository.save(newMonthlyBudget);
-        }
-
-        if (amountToMove.isPositive()) {
-            newMonthlyBudget.incrementActivity(amountToMove);
-        } else {
-            newMonthlyBudget.decrementActivity(amountToMove.negated());
-        }
-
-        await this.monthlyBudgetRepository.save(newMonthlyBudget);
+      await this.monthlyBudgetRepository.save(monthlyBudget);
     }
 
-    private getMonth(date: string): string {
-        return (new Date(date).getMonth() + 1).toString().padStart(2, '0');
+    let newMonthlyBudget = await this.findOne(toSubCategoryId, toMonth, toYear, userId);
+
+    if (newMonthlyBudget.id === '') {
+      newMonthlyBudget = MonthlyBudget.CREATE(
+        uuidv4(),
+        toMonth,
+        toYear,
+        toSubCategoryId,
+        new UnsignedAmount(0),
+        new SignedAmount(0),
+        new SignedAmount(0),
+        userId,
+        new Date(),
+        new Date(),
+      );
+
+      await this.monthlyBudgetRepository.save(newMonthlyBudget);
     }
 
-    private getYear(date: string): string {
-        return new Date(date).getFullYear().toString().padStart(4, '0');
+    if (amountToMove.isPositive()) {
+      newMonthlyBudget.incrementActivity(amountToMove);
+    } else {
+      newMonthlyBudget.decrementActivity(amountToMove.negated());
     }
+
+    await this.monthlyBudgetRepository.save(newMonthlyBudget);
+  }
+
+  private getMonth(date: string): string {
+    return (new Date(date).getMonth() + 1).toString().padStart(2, '0');
+  }
+
+  private getYear(date: string): string {
+    return new Date(date).getFullYear().toString().padStart(4, '0');
+  }
 }
