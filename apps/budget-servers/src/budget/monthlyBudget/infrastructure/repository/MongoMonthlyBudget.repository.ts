@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
+import { Decimal128 } from 'mongodb';
 import { Connection } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,9 +8,9 @@ import { FindOneMonthlyBudget } from '@budget/monthlyBudget/domain/criteria/Find
 import { MonthlyBudget } from '@budget/monthlyBudget/domain/MonthlyBudget.aggregate';
 import { MonthlyBudgetRepository } from '@budget/monthlyBudget/domain/MonthlyBudget.repository';
 import {
-    mapMonthlyBudgetToDomain,
-    mapMonthlyBudgetToSchema,
-    MonthlyBudgetSchemaType,
+  mapMonthlyBudgetToDomain,
+  mapMonthlyBudgetToSchema,
+  MonthlyBudgetSchemaType,
 } from '@budget/monthlyBudget/infrastructure/mongo/monthlyBudget.schema';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount';
@@ -22,162 +23,356 @@ import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
 
 @Injectable()
 export class MongoMonthlyBudgetRepository
-    extends MongoRepository<MonthlyBudget, MonthlyBudgetSchemaType>
-    implements MonthlyBudgetRepository
+  extends MongoRepository<MonthlyBudget, MonthlyBudgetSchemaType>
+  implements MonthlyBudgetRepository
 {
-    constructor(@InjectConnection() connection: Connection) {
-        super(connection);
-    }
+  constructor(@InjectConnection() connection: Connection) {
+    super(connection);
+  }
 
-    protected collectionName(): string {
-        return 'monthlyBudgets';
-    }
+  protected collectionName(): string {
+    return 'monthlyBudgets';
+  }
 
-    protected getMapperToSchema(): (value: MonthlyBudget) => MonthlyBudgetSchemaType {
-        return mapMonthlyBudgetToSchema;
-    }
+  protected getMapperToSchema(): (value: MonthlyBudget) => MonthlyBudgetSchemaType {
+    return mapMonthlyBudgetToSchema;
+  }
 
-    protected getMapperToDomain(): (value: MonthlyBudgetSchemaType) => MonthlyBudget {
-        return mapMonthlyBudgetToDomain;
-    }
+  protected getMapperToDomain(): (value: MonthlyBudgetSchemaType) => MonthlyBudget {
+    return mapMonthlyBudgetToDomain;
+  }
 
-    async save(monthlyBudget: MonthlyBudget) {
-        await this.persist(monthlyBudget);
-    }
+  async save(monthlyBudget: MonthlyBudget) {
+    await this.persist(monthlyBudget);
+  }
 
-    async delete(monthlyBudgets: MonthlyBudget[]) {
-        await this.remove(monthlyBudgets);
-    }
+  async delete(monthlyBudgets: MonthlyBudget[]) {
+    await this.remove(monthlyBudgets);
+  }
 
-    async matching(criteria: Criteria): Promise<MonthlyBudget[]> {
-        const documents = await this.searchByCriteria(criteria);
-        const mapper = this.getMapperToDomain();
+  async matching(criteria: Criteria): Promise<MonthlyBudget[]> {
+    const documents = await this.searchByCriteria(criteria);
+    const mapper = this.getMapperToDomain();
 
-        return documents.map(element => mapper(element));
-    }
+    return documents.map(element => mapper(element));
+  }
 
-    async findAllAvailableBefore(
-        subCategoryId: string,
-        month: string,
-        year: string,
-        userId: string,
-    ): Promise<MonthlyBudget[]> {
-        const cursor = this.collection<MonthlyBudgetSchemaType>().find({
-            $expr: {
+  async findAllAvailableBefore(
+    subCategoryId: string,
+    month: string,
+    year: string,
+    userId: string,
+  ): Promise<MonthlyBudget[]> {
+    const cursor = this.collection<MonthlyBudgetSchemaType>().find({
+      $expr: {
+        $and: [
+          {
+            $eq: ['$subCategoryId', subCategoryId],
+          },
+          {
+            $or: [
+              {
+                $lt: ['$year', year],
+              },
+              {
                 $and: [
-                    {
-                        $eq: ['$subCategoryId', subCategoryId],
-                    },
-                    {
-                        $or: [
-                            {
-                                $lt: ['$year', year],
-                            },
-                            {
-                                $and: [
-                                    {
-                                        $eq: ['$year', year],
-                                    },
-                                    {
-                                        $lt: ['$month', month],
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    {
-                        $not: {
-                            $regexMatch: {
-                                input: '$available',
-                                regex: '-',
-                            },
-                        },
-                    },
-                    {
-                        $eq: ['$userId', userId],
-                    },
+                  {
+                    $eq: ['$year', year],
+                  },
+                  {
+                    $lt: ['$month', month],
+                  },
                 ],
+              },
+            ],
+          },
+          {
+            $not: {
+              $regexMatch: {
+                input: '$available',
+                regex: '-',
+              },
             },
-        });
+          },
+          {
+            $eq: ['$userId', userId],
+          },
+        ],
+      },
+    });
 
-        // @TODO: look out with this, need improvement
-        const documents = await cursor.toArray();
+    // @TODO: look out with this, need improvement
+    const documents = await cursor.toArray();
 
-        if (documents.length === 0) {
-            return [];
-        }
-
-        const mapper = this.getMapperToDomain();
-
-        return documents.map(element => mapper(element));
+    if (documents.length === 0) {
+      return [];
     }
 
-    // @TODO: move this logic to the application layer
-    async assignBudget(
-        amount: UnsignedAmount,
-        subCategoryId: string,
-        month: string,
-        year: string,
-        userId: string,
-    ): Promise<void> {
-        // find one with criteria
-        const filtersArray = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
-        const byUser = FilterByUser.fromValue(userId);
-        filtersArray.push(byUser);
+    const mapper = this.getMapperToDomain();
 
-        const filters = new Filters(filtersArray);
+    return documents.map(element => mapper(element));
+  }
 
-        const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
+  async findAllByMonthYear(month: string, year: string, userId: string): Promise<MonthlyBudget[]> {
+    const cursor = this.collection<MonthlyBudgetSchemaType>().aggregate<MonthlyBudgetSchemaType>([
+      {
+        $match: {
+          $and: [
+            {
+              userId: {
+                $eq: userId,
+              },
+            },
+            {
+              $or: [
+                {
+                  year: {
+                    $lt: year,
+                  },
+                },
+                {
+                  $and: [
+                    {
+                      year: {
+                        $eq: year,
+                      },
+                    },
+                    {
+                      month: {
+                        $lte: month,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        $sort: {
+          year: -1,
+          month: -1,
+        },
+      },
+      {
+        $group: {
+          _id: {
+            subCategoryId: '$subCategoryId',
+          },
+          assigned: {
+            $first: '$assigned',
+          },
+          activity: {
+            $first: '$activity',
+          },
+          available: {
+            $sum: '$available',
+          },
+          userId: {
+            $first: '$userId',
+          },
+          id: {
+            $first: '$id',
+          },
+          subCategoryId: {
+            $first: '$subCategoryId',
+          },
+          month: {
+            $first: '$month',
+          },
+          year: {
+            $first: '$year',
+          },
+        },
+      },
+      {
+        $set: {
+          id: {
+            $cond: {
+              if: {
+                $or: [
+                  {
+                    $not: {
+                      $eq: ['month', month],
+                    },
+                  },
+                  {
+                    $not: {
+                      $eq: ['$year', year],
+                    },
+                  },
+                ],
+              },
+              // eslint-disable-next-line unicorn/no-thenable
+              then: '',
+              else: '$id',
+            },
+          },
+          _id: '$id',
+          assigned: {
+            $cond: {
+              if: {
+                $or: [
+                  {
+                    $not: {
+                      $eq: ['$month', month],
+                    },
+                  },
+                  {
+                    $not: {
+                      $eq: ['$year', year],
+                    },
+                  },
+                ],
+              },
+              // eslint-disable-next-line unicorn/no-thenable
+              then: new Decimal128('0'),
+              else: '$assigned',
+            },
+          },
+          activity: {
+            $cond: {
+              if: {
+                $or: [
+                  {
+                    $not: {
+                      $eq: ['$month', month],
+                    },
+                  },
+                  {
+                    $not: {
+                      $eq: ['$year', year],
+                    },
+                  },
+                ],
+              },
+              // eslint-disable-next-line unicorn/no-thenable
+              then: new Decimal128('0'),
+              else: '$activity',
+            },
+          },
+          createdAt: {
+            $cond: {
+              if: {
+                $or: [
+                  {
+                    $not: {
+                      $eq: ['$month', month],
+                    },
+                  },
+                  {
+                    $not: {
+                      $eq: ['$year', year],
+                    },
+                  },
+                ],
+              },
+              // eslint-disable-next-line unicorn/no-thenable
+              then: new Date(),
+              else: '$createdAt',
+            },
+          },
+          updatedAt: {
+            $cond: {
+              if: {
+                $or: [
+                  {
+                    $not: {
+                      $eq: ['$month', month],
+                    },
+                  },
+                  {
+                    $not: {
+                      $eq: ['$year', year],
+                    },
+                  },
+                ],
+              },
+              // eslint-disable-next-line unicorn/no-thenable
+              then: new Date(),
+              else: '$updatedAt',
+            },
+          },
+          month: month,
+          year: year,
+        },
+      },
+    ]);
 
-        const documents = await this.searchByCriteria(criteria);
+    const documents = await cursor.toArray();
 
-        if (documents.length === 0) {
-            const newMonthlyBudget = MonthlyBudget.CREATE(
-                uuidv4(),
-                month,
-                year,
-                subCategoryId,
-                amount,
-                new SignedAmount(0),
-                new SignedAmount(0),
-                userId,
-                new Date(),
-                new Date(),
-            );
+    const mapper = this.getMapperToDomain();
 
-            await this.save(newMonthlyBudget);
-            return;
-        }
+    return documents.map(element => mapper(element));
+  }
 
-        const [document] = documents;
-        const monthlyBudgetDomain = this.getMapperToDomain()(document);
+  // @TODO: move this logic to the application layer
+  async assignBudget(
+    amount: UnsignedAmount,
+    subCategoryId: string,
+    month: string,
+    year: string,
+    userId: string,
+  ): Promise<void> {
+    // find one with criteria
+    const filtersArray = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
+    const byUser = FilterByUser.fromValue(userId);
+    filtersArray.push(byUser);
 
-        monthlyBudgetDomain.setAssigned(amount);
+    const filters = new Filters(filtersArray);
 
-        await this.save(monthlyBudgetDomain);
+    const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
+
+    const documents = await this.searchByCriteria(criteria);
+
+    if (documents.length === 0) {
+      const newMonthlyBudget = MonthlyBudget.CREATE(
+        uuidv4(),
+        month,
+        year,
+        subCategoryId,
+        amount,
+        new SignedAmount(0),
+        new SignedAmount(0),
+        userId,
+        new Date(),
+        new Date(),
+      );
+
+      await this.save(newMonthlyBudget);
+      return;
     }
 
-    async deleteBySubCategoryId(monthlyBudget: MonthlyBudget): Promise<void> {
-        const collection = this.collection();
-        const filters: Filter[] = [];
+    const [document] = documents;
+    const monthlyBudgetDomain = this.getMapperToDomain()(document);
 
-        const filtersBySubCategoryId = new Filter(
-            'subCategoryId',
-            FilterOperator.fromValue(Operator.EQUAL),
-            monthlyBudget.subCategoryId,
-        );
+    monthlyBudgetDomain.setAssigned(amount);
 
-        filters.push(filtersBySubCategoryId);
+    await this.save(monthlyBudgetDomain);
+  }
 
-        const byUserId = FilterByUser.fromValue(monthlyBudget.userId);
-        filters.push(byUserId);
+  async deleteBySubCategoryId(monthlyBudget: MonthlyBudget): Promise<void> {
+    const collection = this.collection();
+    const filters: Filter[] = [];
 
-        const filtersObject = new Filters(filters);
+    const filtersBySubCategoryId = new Filter(
+      'subCategoryId',
+      FilterOperator.fromValue(Operator.EQUAL),
+      monthlyBudget.subCategoryId,
+    );
 
-        const criteria = new Criteria(filtersObject, Order.fromValues(), 0, 0);
+    filters.push(filtersBySubCategoryId);
 
-        const query = this._criteriaConverter.convert(criteria);
+    const byUserId = FilterByUser.fromValue(monthlyBudget.userId);
+    filters.push(byUserId);
 
-        await collection.deleteMany(query.filter);
-    }
+    const filtersObject = new Filters(filters);
+
+    const criteria = new Criteria(filtersObject, Order.fromValues(), 0, 0);
+
+    const query = this._criteriaConverter.convert(criteria);
+
+    await collection.deleteMany(query.filter);
+  }
 }
