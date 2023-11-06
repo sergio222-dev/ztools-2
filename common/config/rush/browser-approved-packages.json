@@ -3,6 +3,18 @@
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/approved-packages.schema.json",
   "packages": [
     {
+      "name": "@abraham/reflection",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@amcharts/amcharts5",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@babel/core",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@babel/plugin-proposal-decorators",
       "allowedCategories": [ "production" ]
     },
@@ -83,11 +95,79 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@preact/signals-react",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/addon-actions",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/addon-essentials",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/addon-interactions",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/addon-links",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/addon-styling",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/builder-vite",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/react",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@storybook/testing-library",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@supabase/auth-ui-react",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@supabase/auth-ui-shared",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@supabase/supabase-js",
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@supabase/ui",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@tanstack/react-table",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@testdeck/jest",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@testing-library/dom",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@testing-library/jest-dom",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@testing-library/react",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@testing-library/user-event",
       "allowedCategories": [ "production" ]
     },
     {
@@ -115,11 +195,23 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/react-datepicker",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@types/react-dom",
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@types/react-modal",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@types/supertest",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@types/testing-library__jest-dom",
       "allowedCategories": [ "production" ]
     },
     {
@@ -135,7 +227,19 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@vitejs/plugin-react",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "autoprefixer",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "axios",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "babel-loader",
       "allowedCategories": [ "production" ]
     },
     {
@@ -159,8 +263,20 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "classnames",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "cross-spawn",
       "allowedCategories": [ "tools" ]
+    },
+    {
+      "name": "currency.js",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "date-fns",
+      "allowedCategories": [ "production" ]
     },
     {
       "name": "env-cmd",
@@ -172,6 +288,10 @@
     },
     {
       "name": "eslint-config-next",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "eslint-config-prettier",
       "allowedCategories": [ "production" ]
     },
     {
@@ -192,6 +312,14 @@
     },
     {
       "name": "eslint-plugin-qwik",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "eslint-plugin-react",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "eslint-plugin-react-hooks",
       "allowedCategories": [ "production" ]
     },
     {
@@ -220,6 +348,10 @@
     },
     {
       "name": "jest-mock-extended",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "jsdom",
       "allowedCategories": [ "production" ]
     },
     {
@@ -263,11 +395,39 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "prop-types",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "react",
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "react-datepicker",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "react-dom",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-icons",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-modal",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-router",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-router-dom",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-tooltip",
       "allowedCategories": [ "production" ]
     },
     {
@@ -287,7 +447,19 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "stylelint",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "stylelint-config-standard-scss",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "supertest",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "swr",
       "allowedCategories": [ "production" ]
     },
     {
@@ -340,6 +512,10 @@
     },
     {
       "name": "vite-tsconfig-paths",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "vitest",
       "allowedCategories": [ "production" ]
     },
     {

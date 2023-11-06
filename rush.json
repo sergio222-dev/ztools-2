@@ -446,6 +446,12 @@
       "projectFolder": "tools/ztemplates",
       "tags": ["script"],
       "reviewCategory": "tools"
+    },
+    {
+      "packageName": "@ztools/z-economy",
+      "projectFolder": "z-economy",
+      "tags": ["frontend"],
+      "reviewCategory": "production"
     }
   ]
 }
