@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
-import { Decimal128 } from 'mongodb';
-import { Connection } from 'mongoose';
+import { Connection, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import { FindOneMonthlyBudget } from '@budget/monthlyBudget/domain/criteria/FindOneMonthlyBudget';
@@ -227,7 +226,7 @@ export class MongoMonthlyBudgetRepository
                 ],
               },
               // eslint-disable-next-line unicorn/no-thenable
-              then: new Decimal128('0'),
+              then: new Types.Decimal128('0'),
               else: '$assigned',
             },
           },
@@ -248,7 +247,7 @@ export class MongoMonthlyBudgetRepository
                 ],
               },
               // eslint-disable-next-line unicorn/no-thenable
-              then: new Decimal128('0'),
+              then: new Types.Decimal128('0'),
               else: '$activity',
             },
           },
