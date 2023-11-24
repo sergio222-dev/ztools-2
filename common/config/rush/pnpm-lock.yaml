@@ -296,7 +296,9 @@ importers:
       '@supabase/auth-ui-shared': ^0.1.6
       '@supabase/supabase-js': ~2.23.0
       '@supabase/ui': ^0.36.5
+      '@tanstack/react-query': ~5.8.1
       '@tanstack/react-table': ^8.7.9
+      '@tanstack/react-virtual': ~3.0.0-alpha.0
       '@testing-library/dom': ^9.0.1
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^14.0.0
@@ -355,7 +357,9 @@ importers:
       '@supabase/auth-ui-shared': 0.1.8_@supabase+supabase-js@2.23.0
       '@supabase/supabase-js': 2.23.0
       '@supabase/ui': 0.36.5_react-dom@18.2.0+react@18.2.0
+      '@tanstack/react-query': 5.8.1_react-dom@18.2.0+react@18.2.0
       '@tanstack/react-table': 8.10.7_react-dom@18.2.0+react@18.2.0
+      '@tanstack/react-virtual': 3.0.0-alpha.0_react@18.2.0
       '@types/react-datepicker': 4.19.1_react-dom@18.2.0+react@18.2.0
       axios: 1.6.0
       date-fns: 2.30.0
@@ -3689,6 +3693,10 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
+  /@reach/observe-rect/1.2.0:
+    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
+    dev: false
+
   /@remix-run/router/1.11.0:
     resolution: {integrity: sha512-BHdhcWgeiudl91HvVa2wxqZjSHbheSgIiDvxrF1VjFzBzpTtuDPkOdOi3Iqvc08kXtFkLjhbS+ML9aM8mJS+wQ==}
     engines: {node: '>=14.0.0'}
@@ -5199,6 +5207,27 @@ packages:
       fsevents: 2.3.2
     dev: false
 
+  /@tanstack/query-core/5.8.1:
+    resolution: {integrity: sha512-Y0enatz2zQXBAsd7XmajlCs+WaitdR7dIFkqz9Xd7HL4KV04JOigWVreYseTmNH7YFSBSC/BJ9uuNp1MAf+GfA==}
+    dev: false
+
+  /@tanstack/react-query/5.8.1_react-dom@18.2.0+react@18.2.0:
+    resolution: {integrity: sha512-YMagxS8iNPOLg0pK6WOjdSDlAvWKOf69udLOwQrBVmkC2SRLNLko7elo5Ro3ptlJkXvTVHidxC/h5KGi5bH1XQ==}
+    peerDependencies:
+      react: ^18.0.0
+      react-dom: ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 5.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
   /@tanstack/react-table/8.10.7_react-dom@18.2.0+react@18.2.0:
     resolution: {integrity: sha512-bXhjA7xsTcsW8JPTTYlUg/FuBpn8MNjiEPhkNhIGCUR6iRQM2+WEco4OBpvDeVcR9SE+bmWLzdfiY7bCbCSVuA==}
     engines: {node: '>=12'}
@@ -5209,6 +5238,17 @@ packages:
       '@tanstack/table-core': 8.10.7
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@tanstack/react-virtual/3.0.0-alpha.0_react@18.2.0:
+    resolution: {integrity: sha512-WpHU/dt34NwZZ8qtiE05TF+nX/b1W6qrWZarO+s8jJFpPVicrTbJKp5Bjt4eSJuk7aYw272oEfsH3ABBRgj+3A==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      '@babel/runtime': 7.22.6
+      '@reach/observe-rect': 1.2.0
+      react: 18.2.0
     dev: false
 
   /@tanstack/table-core/8.10.7:

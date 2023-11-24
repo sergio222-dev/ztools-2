@@ -5,6 +5,12 @@
   .z_table {
     flex: 1 1 auto;
     overflow-x: auto;
-    overflow-y: auto;
+    overflow-y: visible;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .z_table::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -48,7 +48,7 @@ export function TransactionTableView() {
         <AllAccountPageTable
           tableReference={tableReference}
           columns={columns}
-          data={data}
+          tdata={data}
           handleSaveEdit={handleSaveEdit}
           handleCancelEdit={handleCancelEdit}
           handleOnEdit={handleOnEdit}
