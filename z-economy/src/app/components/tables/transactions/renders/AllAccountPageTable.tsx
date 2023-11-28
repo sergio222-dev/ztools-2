@@ -16,7 +16,6 @@ import {
   KeyboardEvent,
   MutableRefObject,
   SetStateAction,
-  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -27,9 +26,7 @@ import { AiFillCaretDown, AiFillCaretUp } from 'react-icons/ai';
 import { EditableFooterButtons } from '@molecules/EditableFooterButtons/EditableFooterButtons';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useVirtual } from '@tanstack/react-virtual';
-
+import { useVirtualizer } from '@tanstack/react-virtual';
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   columns: ColumnDef<Transaction, unknown>[];
@@ -50,6 +47,11 @@ export type TransactionApiResponse = {
   };
 };
 
+export type fetchServerPageResponse = {
+  rows: Transaction[];
+  nextOffset: number;
+};
+
 export function AllAccountPageTable({
   columns,
   tdata,
@@ -64,56 +66,8 @@ export function AllAccountPageTable({
 }: TransactionTableProperties) {
   // LOGIC
 
-  const fetchSize = 1;
-
-  const fetchData = (start: number, size: number) => {
-    const databaseData = [...tdata];
-
-    return {
-      data: databaseData.slice(start, start + size),
-      meta: {
-        totalRowCount: databaseData.length,
-      },
-    };
-  };
-
-  const { fetchNextPage, isFetching, isLoading, data } = useInfiniteQuery<TransactionApiResponse>({
-    queryKey: ['table-data', tdata],
-    queryFn: ({ pageParam: pageParameter = 0 }) => {
-      console.log('fetching', pageParameter);
-      const start = (pageParameter as number) * fetchSize;
-      return fetchData(start, fetchSize);
-    },
-    initialPageParam: 0,
-    getNextPageParam: (_lastPage, allPages) => allPages.length,
-    refetchOnWindowFocus: false,
-  });
-
-  const flatData = useMemo(() => data?.pages?.flatMap(page => page.data) ?? [], [data]);
-
-  const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0;
-  const totalFetched = flatData.length;
-
-  const fetchMoreOnBottomReached = useCallback(
-    (containerReferenceElement?: HTMLDivElement | null) => {
-      if (containerReferenceElement) {
-        const { scrollHeight, scrollTop, clientHeight } = containerReferenceElement;
-        console.log(scrollHeight, scrollTop, clientHeight);
-        //once the user has scrolled within 300px of the bottom of the table, fetch more data if there is any
-        if (scrollHeight - scrollTop - clientHeight < 300 && !isFetching && totalFetched < totalDBRowCount) {
-          void fetchNextPage();
-        }
-      }
-    },
-    [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
-  );
-
-  useEffect(() => {
-    fetchMoreOnBottomReached(tableContainerReference.current);
-  }, [fetchMoreOnBottomReached]);
-
   // STATE
-  const memoData = useMemo(() => flatData, [flatData]);
+  const memoData = useMemo(() => tdata, [tdata]);
   const [tableData, setTableData] = useState(memoData);
   const tableContainerReference = useRef<HTMLDivElement>(null);
 
@@ -146,20 +100,30 @@ export function AllAccountPageTable({
 
   if (tableReference) tableReference.current = table;
 
-  const { rows } = table.getRowModel();
-
-  const rowVirtualizer = useVirtual({
-    parentRef: tableContainerReference,
-    size: rows.length,
-    overscan: 10,
+  const rowVirtualizer = useVirtualizer({
+    getScrollElement: () => tableContainerReference.current,
+    count: table.getRowModel().rows.length,
+    estimateSize: () => 40,
+    overscan: 5,
   });
 
-  const { virtualItems: virtualRows, totalSize } = rowVirtualizer;
+  const { getTotalSize, getVirtualItems } = rowVirtualizer;
+
+  const virtualRows = getVirtualItems();
+  const { rows } = table.getRowModel();
+
+  // calculates padding for the table height so the other rows can be seen
+  const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
+  const paddingBottom =
+    virtualRows.length > 0 ? getTotalSize() - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0;
+
+  // console.log(virtualItems);
 
   // SIDE EFFECT
+
   useEffect(() => {
-    setTableData(flatData);
-  }, [flatData]);
+    setTableData(memoData);
+  }, [memoData]);
 
   // LOCAL HANDLERS
   const cellOnClickHandler = (
@@ -174,7 +138,7 @@ export function AllAccountPageTable({
     <div
       className={cls('z_flex z_flex_grow_1', styles.z_table_container)}
       ref={tableContainerReference}
-      onScroll={event => fetchMoreOnBottomReached(event.target as HTMLDivElement)}
+      // onScroll={event => fetchMoreOnBottomReached(event.target as HTMLDivElement)}
     >
       <table className={styles.z_table}>
         <thead>
@@ -235,63 +199,126 @@ export function AllAccountPageTable({
           ))}
         </thead>
         <tbody>
-          {virtualRows.map(virtualRow => {
-            const row = rows[virtualRow.index] as Row<Transaction>;
-            return (
-              <Fragment key={row.id}>
-                <tr
-                  className={
-                    row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected
-                  }
-                  onKeyDown={event => {
-                    handleRowOnKeyDown(event, row);
-                  }}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <td
-                      className={styles.z_table_cell}
-                      data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
-                      key={cell.id}
-                      onClick={() => {
-                        cellOnClickHandler(row, table, cell);
-                      }}
-                      {...{
-                        style: {
-                          width: cell.column.getSize(),
-                        },
-                      }}
-                    >
-                      {flexRender(cell.column.columnDef.cell, {
-                        ...cell.getContext(),
-                        shouldFocus: true,
-                        selectedColumnId,
-                      })}
-                    </td>
-                  ))}
-                </tr>
-                {row.getIsExpanded() && row.getIsSelected() && (
+          {/*{table.getRowModel().rows.map(row => (*/}
+          {/*    <Fragment key={row.id}>*/}
+          {/*      <tr*/}
+          {/*          className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}*/}
+          {/*          onKeyDown={event => {*/}
+          {/*            handleRowOnKeyDown(event, row);*/}
+          {/*          }}*/}
+          {/*      >*/}
+          {/*        {row.getVisibleCells().map(cell => (*/}
+          {/*            <td*/}
+          {/*                className={styles.z_table_cell}*/}
+          {/*                data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}*/}
+          {/*                key={cell.id}*/}
+          {/*                onClick={() => {*/}
+          {/*                  cellOnClickHandler(row, table, cell);*/}
+          {/*                }}*/}
+          {/*                {...{*/}
+          {/*                  style: {*/}
+          {/*                    width: cell.column.getSize(),*/}
+          {/*                  },*/}
+          {/*                }}*/}
+          {/*            >*/}
+          {/*              {flexRender(cell.column.columnDef.cell, {*/}
+          {/*                ...cell.getContext(),*/}
+          {/*                shouldFocus: true,*/}
+          {/*                selectedColumnId,*/}
+          {/*              })}*/}
+          {/*            </td>*/}
+          {/*        ))}*/}
+          {/*      </tr>*/}
+          {/*      {row.getIsExpanded() && row.getIsSelected() && (*/}
+          {/*          <tr*/}
+          {/*              className={styles.z_table_subcomponent_tr}*/}
+          {/*              onKeyDown={event => {*/}
+          {/*                handleRowOnKeyDown(event, row);*/}
+          {/*              }}*/}
+          {/*          >*/}
+          {/*            {}*/}
+          {/*            /!* 2nd row is a custom 1 cell row *!/*/}
+          {/*            <EditableFooterButtons*/}
+          {/*                className={styles.z_table_subcomponent_cell}*/}
+          {/*                onSave={() => {*/}
+          {/*                  handleSaveEdit(row);*/}
+          {/*                }}*/}
+          {/*                onCancel={() => {*/}
+          {/*                  handleCancelEdit(row);*/}
+          {/*                }}*/}
+          {/*            />*/}
+          {/*          </tr>*/}
+          {/*      )}*/}
+          {/*    </Fragment>*/}
+          {/*))}*/}
+          {paddingTop > 0 && (
+            <tr>
+              <td style={{ height: `${paddingTop}px` }} />
+            </tr>
+          )}
+          {rows.length > 0 &&
+            virtualRows.map(virtualRow => {
+              const row = rows[virtualRow.index] as Row<Transaction>;
+              return (
+                <Fragment key={row.id}>
                   <tr
-                    className={styles.z_table_subcomponent_tr}
+                    className={
+                      row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected
+                    }
                     onKeyDown={event => {
                       handleRowOnKeyDown(event, row);
                     }}
                   >
-                    {}
-                    {/* 2nd row is a custom 1 cell row */}
-                    <EditableFooterButtons
-                      className={styles.z_table_subcomponent_cell}
-                      onSave={() => {
-                        handleSaveEdit(row);
-                      }}
-                      onCancel={() => {
-                        handleCancelEdit(row);
-                      }}
-                    />
+                    {row.getVisibleCells().map(cell => (
+                      <td
+                        className={styles.z_table_cell}
+                        data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
+                        key={cell.id}
+                        onClick={() => {
+                          cellOnClickHandler(row, table, cell);
+                        }}
+                        {...{
+                          style: {
+                            width: cell.column.getSize(),
+                          },
+                        }}
+                      >
+                        {flexRender(cell.column.columnDef.cell, {
+                          ...cell.getContext(),
+                          shouldFocus: true,
+                          selectedColumnId,
+                        })}
+                      </td>
+                    ))}
                   </tr>
-                )}
-              </Fragment>
-            );
-          })}
+                  {row.getIsExpanded() && row.getIsSelected() && (
+                    <tr
+                      className={styles.z_table_subcomponent_tr}
+                      onKeyDown={event => {
+                        handleRowOnKeyDown(event, row);
+                      }}
+                    >
+                      {}
+                      {/* 2nd row is a custom 1 cell row */}
+                      <EditableFooterButtons
+                        className={styles.z_table_subcomponent_cell}
+                        onSave={() => {
+                          handleSaveEdit(row);
+                        }}
+                        onCancel={() => {
+                          handleCancelEdit(row);
+                        }}
+                      />
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+          {paddingBottom > 0 && (
+            <tr>
+              <td style={{ height: `${paddingBottom}px` }} />
+            </tr>
+          )}
         </tbody>
         <tfoot>
           {table.getFooterGroups().map(footerGroup => (

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 export const AllAccounts = () => {
   return (
-    <div className={styles.z_table}>
+    <div className={styles.z_table} id="all-accounts-page-container">
       <AllAccountsPage />
     </div>
   );
