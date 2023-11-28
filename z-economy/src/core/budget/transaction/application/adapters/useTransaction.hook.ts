@@ -33,6 +33,7 @@ export const useTransactionHook = () => {
     setSelectedQty: Dispatch<SetStateAction<number>>,
     setDisableDelete: Dispatch<SetStateAction<boolean>>,
     subCats: SubCategory[],
+    accountId: string | undefined,
   ) => {
     void mutate(
       async () => {
@@ -46,7 +47,7 @@ export const useTransactionHook = () => {
           subCats[0].id,
           new Date().toISOString(),
           true,
-          adata.length > 0 ? adata[0].id : '',
+          accountId ?? (adata.length > 0 ? adata[0].id : ''),
         );
         setEditingRow('');
         await tableReference.current?.setRowSelection(() => ({

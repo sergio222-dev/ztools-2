@@ -19,6 +19,7 @@ interface TransactionTableButtonsProperties {
     setSelectedQty: Dispatch<SetStateAction<number>>,
     setDisableDelete: Dispatch<SetStateAction<boolean>>,
     subCats: SubCategory[],
+    accountId: string | undefined,
   ) => void;
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   setEditingRow: Dispatch<SetStateAction<string>>;
@@ -48,12 +49,19 @@ export function TransactionTableButtons({
   subCats,
   handleDuplicate,
 }: TransactionTableButtonsProperties) {
+  const { accountId } = useParams();
   const handleAddTransaction = () => {
     if (globalFilter !== '') setGlobalFilter('');
-    trigger(tableReference, setEditingRow, editableValue, setSelectedQty, setDisableDelete, subCats);
+    trigger(
+      tableReference,
+      setEditingRow,
+      editableValue,
+      setSelectedQty,
+      setDisableDelete,
+      subCats,
+      accountId,
+    );
   };
-
-  const { accountId } = useParams();
 
   return (
     <div className={styles.t_table_buttons_main_div}>
@@ -61,7 +69,7 @@ export function TransactionTableButtons({
         StartIcon={<AiFillPlusCircle />}
         onClick={() => handleAddTransaction()}
         variant={'icon'}
-        disabled={!!accountId}
+        // disabled={!!accountId}
       >
         <Typography>Add Transaction</Typography>
       </UtilityButton>
