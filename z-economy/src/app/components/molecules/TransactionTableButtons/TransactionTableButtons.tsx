@@ -9,6 +9,7 @@ import { SearchDebounceInput } from '@molecules/SearchDebounceInput/SearchDeboun
 import { TransactionEditDropdown } from '@molecules/TransactionEditDropdown/TransactionEditDropdown';
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { Signal } from '@preact/signals-react';
+import { useParams } from 'react-router';
 
 interface TransactionTableButtonsProperties {
   trigger: (
@@ -52,9 +53,16 @@ export function TransactionTableButtons({
     trigger(tableReference, setEditingRow, editableValue, setSelectedQty, setDisableDelete, subCats);
   };
 
+  const { accountId } = useParams();
+
   return (
     <div className={styles.t_table_buttons_main_div}>
-      <UtilityButton StartIcon={<AiFillPlusCircle />} onClick={() => handleAddTransaction()} variant={'icon'}>
+      <UtilityButton
+        StartIcon={<AiFillPlusCircle />}
+        onClick={() => handleAddTransaction()}
+        variant={'icon'}
+        disabled={!!accountId}
+      >
         <Typography>Add Transaction</Typography>
       </UtilityButton>
       <TransactionEditDropdown

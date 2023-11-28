@@ -297,6 +297,7 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
+  // if there's an accountId in the route params, filters the data to show only that account's transactions.
   const data = tdata.filter(transaction => {
     if (!accountId) return transaction;
     return transaction.accountId === accountId;
