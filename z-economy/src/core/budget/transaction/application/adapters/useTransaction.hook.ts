@@ -50,7 +50,7 @@ export const useTransactionHook = () => {
           accountId ?? (adata.length > 0 ? adata[0].id : ''),
         );
         setEditingRow('');
-        await tableReference.current?.setRowSelection(() => ({
+        tableReference.current?.setRowSelection(() => ({
           ['']: true,
         }));
         tableReference.current?.setExpanded(() => ({
