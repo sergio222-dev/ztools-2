@@ -119,8 +119,6 @@ export function AllAccountPageTable({
 
   const tableHeight = (rows.length + 1) * 40;
 
-  console.log(rows.length);
-
   // SIDE EFFECT
 
   useEffect(() => {
@@ -135,6 +133,11 @@ export function AllAccountPageTable({
   ) => {
     handleOnEdit && handleOnEdit(row, table, cell);
   };
+
+  // scrolls to top when Add Transaction button fake row appears
+  if (tableContainerReference.current && tdata[0]?.id === '') {
+    tableContainerReference.current.scrollTop = 0;
+  }
 
   return (
     <div
