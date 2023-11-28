@@ -117,7 +117,9 @@ export function AllAccountPageTable({
   const paddingBottom =
     virtualRows.length > 0 ? getTotalSize() - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0;
 
-  // console.log(virtualItems);
+  const tableHeight = (rows.length + 1) * 40;
+
+  console.log(rows.length);
 
   // SIDE EFFECT
 
@@ -139,6 +141,9 @@ export function AllAccountPageTable({
       className={cls('z_flex z_flex_grow_1', styles.z_table_container)}
       ref={tableContainerReference}
       // onScroll={event => fetchMoreOnBottomReached(event.target as HTMLDivElement)}
+      style={{
+        height: rows.length < 19 ? `${tableHeight}px` : '81vh',
+      }}
     >
       <table className={styles.z_table}>
         <thead>
