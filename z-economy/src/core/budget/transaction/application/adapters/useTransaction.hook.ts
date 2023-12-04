@@ -11,8 +11,10 @@ import { TransactionDeleteBatch } from '@core/budget/transaction/application/use
 import { SubCategory } from '@core/budget/category/domain/SubCategory';
 import { useAccountHook } from '@core/budget/account/application/adapter/useAccount.hook';
 import { TransactionGetAllByCategoryId } from '@core/budget/transaction/application/useCase/TransactionGetAllByCategoryId';
+import useSWRInfinite from 'swr/infinite';
+import { TransactionGetAllPaginated } from '@core/budget/transaction/application/useCase/TransactionGetAllPaginated';
 
-export const useTransactionHook = () => {
+export const useTransactionHook = (pagination?: { index: number; pageSize: number }) => {
   // SERVICES
   const transactionGetAll = container.resolve(TransactionGetAll);
   const transactionUpdate = container.resolve(TransactionUpdate);
@@ -20,11 +22,66 @@ export const useTransactionHook = () => {
   const transactionDelete = container.resolve(TransactionDelete);
   const transactionDeleteBatch = container.resolve(TransactionDeleteBatch);
   const transactionGetAllByCategoryId = container.resolve(TransactionGetAllByCategoryId);
+  const transactionGetAllPaginated = container.resolve(TransactionGetAllPaginated);
 
   const { adata } = useAccountHook();
 
+  // TODO: Fix fetching sorting on (on the api controller)
+  // TODO: Fix account filtered fetching to show the transactions that aren't loaded yet in all accounts
+
   // SWR
-  const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
+  let data: Array<Transaction[]> | Transaction[] | undefined, error, isLoading, mutate: any, size, setSize;
+
+  if (pagination) {
+    const getKey = (pageIndex: number, previousPageData: string | any[]) => {
+      if (previousPageData && !previousPageData.length) return null;
+      return [`transactions`, pageIndex + 1];
+    };
+
+    const {
+      data: infiniteData,
+      error: infiniteError,
+      isLoading: infiniteIsLoading,
+      mutate: infiniteMutate,
+      size: infiniteSize,
+      setSize: infiniteSetSize,
+    } = useSWRInfinite(
+      getKey,
+      tuple =>
+        transactionGetAllPaginated.execute({ index: tuple[1] as number, pageSize: pagination.pageSize }),
+      { revalidateOnFocus: false, revalidateOnMount: true, revalidateOnReconnect: true },
+    );
+    data = infiniteData; // it's possible to flatten the data array directly from here but doing so doesn't allow us to check if there's no more data to load to disable the infinite scroll fetching.
+    error = infiniteError;
+    isLoading = infiniteIsLoading;
+    mutate = infiniteMutate;
+    size = infiniteSize;
+    setSize = infiniteSetSize;
+  } else {
+    const {
+      data: normalData,
+      error: normalError,
+      isLoading: normalIsLoading,
+      mutate: normalMutate,
+    } = useSWR(['transactions'], () => transactionGetAll.execute());
+    data = normalData;
+    error = normalError;
+    isLoading = normalIsLoading;
+    mutate = normalMutate;
+  }
+
+  function isArrayTransactionArray(data: any): data is Array<Transaction[]> {
+    return Array.isArray(data) && data.length > 0 && Array.isArray(data[0]);
+  }
+
+  let isLoadingMore, isEmpty, isReachingEnd;
+
+  if (pagination && data && size) {
+    isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
+    isEmpty = isArrayTransactionArray(data) && data?.[0]?.length === 0;
+    isReachingEnd =
+      isEmpty || (isArrayTransactionArray(data) && data[data.length - 1]?.length < pagination?.pageSize);
+  }
 
   const trigger = async (
     tableReference: MutableRefObject<Table<Transaction> | undefined>,
@@ -37,7 +94,8 @@ export const useTransactionHook = () => {
   ) => {
     void mutate(
       async () => {
-        if (data && data[0]?.id === '') return data ?? [];
+        if (data && isArrayTransactionArray(data) ? data[0][0]?.id === '' : data && data[0]?.id === '')
+          return data ?? [];
         const newTransaction = new Transaction(
           '',
           '',
@@ -71,7 +129,10 @@ export const useTransactionHook = () => {
   const deleteFakeRow = async (revalidate?: boolean) => {
     void mutate(
       async () => {
-        if (data && data[0]?.id === '') return data?.filter(t => t.id !== '');
+        if (data && isArrayTransactionArray(data) && data[0][0]?.id === '')
+          return data[0]?.filter(t => t.id !== '');
+        if (data && !isArrayTransactionArray(data) && data[0]?.id === '')
+          return data?.filter(t => t.id !== '');
         return data;
       },
       {
@@ -83,8 +144,8 @@ export const useTransactionHook = () => {
   // HANDLERS
   const updateTransaction = async (updatedTransaction: Transaction) => {
     if (!data) return;
-
-    const newData = [...data];
+    let newData;
+    newData = isArrayTransactionArray(data) ? [...data.flat()] : [...data];
     const index = newData.findIndex(t => t.id === updatedTransaction.id);
     newData[index] = updatedTransaction;
 
@@ -121,6 +182,10 @@ export const useTransactionHook = () => {
     tdata: data ?? [],
     error: error,
     isLoading,
+    isLoadingMore,
+    isReachingEnd,
+    size,
+    setSize,
     updateData: updateTransaction,
     createData: createTransaction,
     deleteData: deleteTransaction,

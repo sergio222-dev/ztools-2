@@ -423,6 +423,10 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "react-infinite-scroll-component",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "react-modal",
       "allowedCategories": [ "production" ]
     },

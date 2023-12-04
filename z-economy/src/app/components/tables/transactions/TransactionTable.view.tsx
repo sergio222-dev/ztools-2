@@ -25,6 +25,10 @@ export function TransactionTableView() {
     selectedColumnId,
     subCats,
     handleDuplicate,
+    tableContainerReference,
+    fetchMoreTransactions,
+    isLoadingMore,
+    isReachingEnd,
   } = useTransactionTableHook();
 
   return (
@@ -44,7 +48,7 @@ export function TransactionTableView() {
         subCats={subCats}
         handleDuplicate={handleDuplicate}
       ></TransactionTableButtons>
-      <div ref={reference} style={{ display: 'flex' }}>
+      <div ref={reference}>
         <AllAccountPageTable
           tableReference={tableReference}
           columns={columns}
@@ -56,6 +60,10 @@ export function TransactionTableView() {
           globalFilter={globalFilter}
           setGlobalFilter={setGlobalFilter}
           selectedColumnId={selectedColumnId}
+          tableContainerReference={tableContainerReference}
+          fetchMoreTransactions={fetchMoreTransactions}
+          isLoadingMore={isLoadingMore}
+          isReachingEnd={isReachingEnd}
         />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { KeyboardEvent, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,17 +26,32 @@ export const useTransactionTableHook = () => {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Transaction>>();
+  // @ts-ignore
+  const tableContainerReference = useRef<HTMLDivElement>(undefined);
   const selectedColumnId = useRef('date');
 
   // SERVICES
-  const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
-    useTransactionHook();
+  const {
+    tdata,
+    updateData,
+    createData,
+    deleteData,
+    trigger,
+    deleteFakeRow,
+    deleteDataBatch,
+    size,
+    setSize,
+    isLoadingMore,
+    isReachingEnd,
+  } = useTransactionHook({ index: 1, pageSize: 20 });
   const { subCats, cdata } = useCategoryHook(new Date());
   const { mutateAccountData } = useAccountHook();
   const { accountId } = useParams();
 
-  // HANDLERS
+  // we have to flatten the array to be able to use it in react-table with useSWRinfinite
+  const tdataFlat = tdata.flat();
 
+  // HANDLERS
   //Row handlers
   const handleOnEdit = async (
     row: Row<Transaction>,
@@ -176,7 +191,7 @@ export const useTransactionTableHook = () => {
             row.original.payee,
             row.original.memo,
             row.original.subCategoryId,
-            row.original.date,
+            new Date().toISOString(),
             row.original.cleared,
             row.original.accountId,
           ),
@@ -297,8 +312,13 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
+  const fetchMoreTransactions = () => {
+    if (!setSize || !size) return;
+    setSize(size + 1);
+  };
+
   // if there's an accountId in the route params, filters the data to show only that account's transactions.
-  const data = tdata.filter(transaction => {
+  const data = tdataFlat.filter(transaction => {
     if (!accountId) return transaction;
     return transaction.accountId === accountId;
   });
@@ -339,5 +359,9 @@ export const useTransactionTableHook = () => {
     selectedColumnId,
     subCats,
     handleDuplicate,
+    tableContainerReference,
+    fetchMoreTransactions,
+    isLoadingMore,
+    isReachingEnd,
   };
 };

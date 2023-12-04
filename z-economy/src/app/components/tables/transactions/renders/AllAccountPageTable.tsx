@@ -18,7 +18,6 @@ import {
   SetStateAction,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import styles from './Table.module.scss';
@@ -27,9 +26,10 @@ import { EditableFooterButtons } from '@molecules/EditableFooterButtons/Editable
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import InfiniteScroll from 'react-infinite-scroll-component';
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
-  columns: ColumnDef<Transaction, unknown>[];
+  columns: ColumnDef<Transaction>[];
   tdata: Array<Transaction>;
   handleSaveEdit: (row: Row<Transaction>) => void;
   handleCancelEdit: (row: Row<Transaction>) => void;
@@ -38,19 +38,11 @@ interface TransactionTableProperties {
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
   selectedColumnId: MutableRefObject<string>;
+  tableContainerReference: MutableRefObject<HTMLDivElement>;
+  fetchMoreTransactions: () => void;
+  isLoadingMore: any;
+  isReachingEnd: any;
 }
-
-export type TransactionApiResponse = {
-  data: Transaction[];
-  meta: {
-    totalRowCount: number;
-  };
-};
-
-export type fetchServerPageResponse = {
-  rows: Transaction[];
-  nextOffset: number;
-};
 
 export function AllAccountPageTable({
   columns,
@@ -63,13 +55,16 @@ export function AllAccountPageTable({
   globalFilter,
   setGlobalFilter,
   selectedColumnId,
+  tableContainerReference,
+  fetchMoreTransactions,
+  isLoadingMore,
+  isReachingEnd,
 }: TransactionTableProperties) {
   // LOGIC
 
   // STATE
   const memoData = useMemo(() => tdata, [tdata]);
   const [tableData, setTableData] = useState(memoData);
-  const tableContainerReference = useRef<HTMLDivElement>(null);
 
   // TABLE
   const columnResizeMode = 'onChange';
@@ -100,11 +95,16 @@ export function AllAccountPageTable({
 
   if (tableReference) tableReference.current = table;
 
+  const allAccountsPageContainer = document.getElementById('all-accounts-page-container') as HTMLDivElement;
+
+  if (allAccountsPageContainer) tableContainerReference.current = allAccountsPageContainer;
+
   const rowVirtualizer = useVirtualizer({
     getScrollElement: () => tableContainerReference.current,
     count: table.getRowModel().rows.length,
     estimateSize: () => 40,
-    overscan: 5,
+    overscan: 10,
+    // debug: true
   });
 
   const { getTotalSize, getVirtualItems } = rowVirtualizer;
@@ -117,7 +117,11 @@ export function AllAccountPageTable({
   const paddingBottom =
     virtualRows.length > 0 ? getTotalSize() - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0;
 
-  const tableHeight = (rows.length + 1) * 40;
+  // let tableHeight = (rows.length + 1) * 40;
+
+  // if (rows.length === 1 && tdata[0]?.id ==='') {
+  //   tableHeight = 120;
+  // }
 
   // SIDE EFFECT
 
@@ -135,213 +139,170 @@ export function AllAccountPageTable({
   };
 
   // scrolls to top when Add Transaction button fake row appears
-  if (tableContainerReference.current && tdata[0]?.id === '') {
-    tableContainerReference.current.scrollTop = 0;
-  }
+  // if (tableContainerReference.current && tdata[0]?.id === '') {
+  //   tableContainerReference.current.scrollTop = 0;
+  // }
 
   return (
-    <div
-      className={cls('z_flex z_flex_grow_1', styles.z_table_container)}
-      ref={tableContainerReference}
-      // onScroll={event => fetchMoreOnBottomReached(event.target as HTMLDivElement)}
-      style={{
-        height: rows.length < 19 ? `${tableHeight}px` : '81vh',
-      }}
-    >
-      <table className={styles.z_table}>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th
-                  className={styles.z_table_header}
-                  key={header.id}
-                  data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
-                  {...{
-                    colSpan: header.colSpan,
-                    style: {
-                      width:
-                        header.column.columnDef.meta?.type.getType() === 'other'
-                          ? undefined
-                          : header.getSize(),
-                    },
-                  }}
-                >
-                  {header.isPlaceholder ? undefined : (
-                    <>
-                      <div
-                        {...{
-                          // className: header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : '',
-                          className: cls(header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : ''),
-                          onClick: header.id.includes('checkbox')
+    <>
+      <InfiniteScroll
+        next={fetchMoreTransactions}
+        hasMore={!isLoadingMore || !isReachingEnd}
+        loader={<h4>Loading...</h4>}
+        dataLength={virtualRows.length}
+        scrollThreshold={0.9}
+        scrollableTarget="all-accounts-page-container"
+        style={{ display: 'flex', flexDirection: 'column' }}
+        // scrollableTarget="scrollableDiv"
+      >
+        <table className={styles.z_table}>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th
+                    className={styles.z_table_header}
+                    key={header.id}
+                    data-type={header.column.columnDef.meta?.type.getType() ?? 'text'}
+                    {...{
+                      colSpan: header.colSpan,
+                      style: {
+                        width:
+                          header.column.columnDef.meta?.type.getType() === 'other'
                             ? undefined
-                            : header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.id.includes('checkbox')
-                          ? undefined
-                          : {
-                              asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
-                              desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
-                              // eslint-disable-next-line unicorn/no-null
-                            }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                      {header.id.includes('checkbox') || header.id.includes('inflow') ? undefined : (
-                        <div
-                          {...{
-                            onMouseDown: header.getResizeHandler(),
-                            onTouchStart: header.getResizeHandler(),
-                            className: cls(
-                              styles.resizer,
-                              header.column.getIsResizing() ? styles.isResizing : '',
-                            ),
-                          }}
-                        />
-                      )}
-                    </>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {/*{table.getRowModel().rows.map(row => (*/}
-          {/*    <Fragment key={row.id}>*/}
-          {/*      <tr*/}
-          {/*          className={row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected}*/}
-          {/*          onKeyDown={event => {*/}
-          {/*            handleRowOnKeyDown(event, row);*/}
-          {/*          }}*/}
-          {/*      >*/}
-          {/*        {row.getVisibleCells().map(cell => (*/}
-          {/*            <td*/}
-          {/*                className={styles.z_table_cell}*/}
-          {/*                data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}*/}
-          {/*                key={cell.id}*/}
-          {/*                onClick={() => {*/}
-          {/*                  cellOnClickHandler(row, table, cell);*/}
-          {/*                }}*/}
-          {/*                {...{*/}
-          {/*                  style: {*/}
-          {/*                    width: cell.column.getSize(),*/}
-          {/*                  },*/}
-          {/*                }}*/}
-          {/*            >*/}
-          {/*              {flexRender(cell.column.columnDef.cell, {*/}
-          {/*                ...cell.getContext(),*/}
-          {/*                shouldFocus: true,*/}
-          {/*                selectedColumnId,*/}
-          {/*              })}*/}
-          {/*            </td>*/}
-          {/*        ))}*/}
-          {/*      </tr>*/}
-          {/*      {row.getIsExpanded() && row.getIsSelected() && (*/}
-          {/*          <tr*/}
-          {/*              className={styles.z_table_subcomponent_tr}*/}
-          {/*              onKeyDown={event => {*/}
-          {/*                handleRowOnKeyDown(event, row);*/}
-          {/*              }}*/}
-          {/*          >*/}
-          {/*            {}*/}
-          {/*            /!* 2nd row is a custom 1 cell row *!/*/}
-          {/*            <EditableFooterButtons*/}
-          {/*                className={styles.z_table_subcomponent_cell}*/}
-          {/*                onSave={() => {*/}
-          {/*                  handleSaveEdit(row);*/}
-          {/*                }}*/}
-          {/*                onCancel={() => {*/}
-          {/*                  handleCancelEdit(row);*/}
-          {/*                }}*/}
-          {/*            />*/}
-          {/*          </tr>*/}
-          {/*      )}*/}
-          {/*    </Fragment>*/}
-          {/*))}*/}
-          {paddingTop > 0 && (
-            <tr>
-              <td style={{ height: `${paddingTop}px` }} />
-            </tr>
-          )}
-          {rows.length > 0 &&
-            virtualRows.map(virtualRow => {
-              const row = rows[virtualRow.index] as Row<Transaction>;
-              return (
-                <Fragment key={row.id}>
-                  <tr
-                    className={
-                      row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected
-                    }
-                    onKeyDown={event => {
-                      handleRowOnKeyDown(event, row);
+                            : header.getSize(),
+                      },
                     }}
                   >
-                    {row.getVisibleCells().map(cell => (
-                      <td
-                        className={styles.z_table_cell}
-                        data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
-                        key={cell.id}
-                        onClick={() => {
-                          cellOnClickHandler(row, table, cell);
-                        }}
-                        {...{
-                          style: {
-                            width: cell.column.getSize(),
-                          },
-                        }}
-                      >
-                        {flexRender(cell.column.columnDef.cell, {
-                          ...cell.getContext(),
-                          shouldFocus: true,
-                          selectedColumnId,
-                        })}
-                      </td>
-                    ))}
-                  </tr>
-                  {row.getIsExpanded() && row.getIsSelected() && (
+                    {header.isPlaceholder ? undefined : (
+                      <>
+                        <div
+                          {...{
+                            // className: header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : '',
+                            className: cls(
+                              header.column.getCanSort() ? 'z_cursor_pointer z_select_none' : '',
+                            ),
+                            onClick: header.id.includes('checkbox')
+                              ? undefined
+                              : header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.id.includes('checkbox')
+                            ? undefined
+                            : {
+                                asc: <AiFillCaretUp className={styles.z_sorting_icon} />,
+                                desc: <AiFillCaretDown className={styles.z_sorting_icon} />,
+                                // eslint-disable-next-line unicorn/no-null
+                              }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                        {header.id.includes('checkbox') || header.id.includes('inflow') ? undefined : (
+                          <div
+                            {...{
+                              onMouseDown: header.getResizeHandler(),
+                              onTouchStart: header.getResizeHandler(),
+                              className: cls(
+                                styles.resizer,
+                                header.column.getIsResizing() ? styles.isResizing : '',
+                              ),
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {paddingTop > 0 && (
+              <tr>
+                <td style={{ height: `${paddingTop}px` }} />
+              </tr>
+            )}
+            {rows.length > 0 &&
+              virtualRows.map(virtualRow => {
+                const row = rows[virtualRow.index] as Row<Transaction>;
+                // const isLast = virtualRow.index === rows.length-1;
+                // console.log(isLast);
+                return (
+                  <Fragment key={row.id}>
                     <tr
-                      className={styles.z_table_subcomponent_tr}
+                      className={
+                        row.getIsSelected() ? styles.z_table_row_selected : styles.z_table_row_unselected
+                      }
                       onKeyDown={event => {
                         handleRowOnKeyDown(event, row);
                       }}
+                      // ref={virtualRow.index === rows.length-1 ? lastRow : undefined}
                     >
-                      {}
-                      {/* 2nd row is a custom 1 cell row */}
-                      <EditableFooterButtons
-                        className={styles.z_table_subcomponent_cell}
-                        onSave={() => {
-                          handleSaveEdit(row);
-                        }}
-                        onCancel={() => {
-                          handleCancelEdit(row);
-                        }}
-                      />
+                      {row.getVisibleCells().map(cell => (
+                        <td
+                          className={styles.z_table_cell}
+                          data-type={cell.column.columnDef.meta?.type.getType() ?? 'text'}
+                          key={cell.id}
+                          onClick={() => {
+                            cellOnClickHandler(row, table, cell);
+                          }}
+                          {...{
+                            style: {
+                              width: cell.column.getSize(),
+                            },
+                          }}
+                        >
+                          {flexRender(cell.column.columnDef.cell, {
+                            ...cell.getContext(),
+                            shouldFocus: true,
+                            selectedColumnId,
+                          })}
+                        </td>
+                      ))}
                     </tr>
-                  )}
-                </Fragment>
-              );
-            })}
-          {paddingBottom > 0 && (
-            <tr>
-              <td style={{ height: `${paddingBottom}px` }} />
-            </tr>
-          )}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map(footerGroup => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map(header => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? undefined
-                    : flexRender(header.column.columnDef.footer, header.getContext())}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-    </div>
+                    {row.getIsExpanded() && row.getIsSelected() && (
+                      <tr
+                        className={styles.z_table_subcomponent_tr}
+                        onKeyDown={event => {
+                          handleRowOnKeyDown(event, row);
+                        }}
+                      >
+                        {}
+                        {/* 2nd row is a custom 1 cell row */}
+                        <EditableFooterButtons
+                          className={styles.z_table_subcomponent_cell}
+                          onSave={() => {
+                            handleSaveEdit(row);
+                          }}
+                          onCancel={() => {
+                            handleCancelEdit(row);
+                          }}
+                        />
+                      </tr>
+                    )}
+                  </Fragment>
+                );
+              })}
+            {paddingBottom > 0 && (
+              <tr>
+                <td style={{ height: `${paddingBottom}px` }} />
+              </tr>
+            )}
+          </tbody>
+          <tfoot>
+            {table.getFooterGroups().map(footerGroup => (
+              <tr key={footerGroup.id}>
+                {footerGroup.headers.map(header => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? undefined
+                      : flexRender(header.column.columnDef.footer, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </tfoot>
+        </table>
+      </InfiniteScroll>
+    </>
   );
 }

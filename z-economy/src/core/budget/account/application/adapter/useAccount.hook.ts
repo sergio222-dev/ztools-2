@@ -14,7 +14,12 @@ export const useAccountHook = () => {
   const accountDelete = container.resolve(AccountDelete);
 
   // SWR
-  const { data, error, isLoading, mutate } = useSWR(['accounts'], () => accountGetAll.execute());
+  const { data, error, isLoading, mutate } = useSWR(['accounts'], () => accountGetAll.execute(), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+    revalidateOnMount: true,
+  });
 
   const createAccount = async (a: Account) => {
     await accountCreate.execute(a);
