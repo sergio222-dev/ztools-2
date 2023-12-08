@@ -26,6 +26,7 @@ export const useTransactionTableHook = () => {
   // eslint-disable-next-line unicorn/no-useless-undefined
   const reference = useRef<HTMLDivElement>(undefined);
   const tableReference = useRef<Table<Transaction>>();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const tableContainerReference = useRef<HTMLDivElement>(undefined);
   const selectedColumnId = useRef('date');
@@ -47,9 +48,6 @@ export const useTransactionTableHook = () => {
   const { subCats, cdata } = useCategoryHook(new Date());
   const { mutateAccountData } = useAccountHook();
   const { accountId } = useParams();
-
-  // we have to flatten the array to be able to use it in react-table with useSWRinfinite
-  const tdataFlat = tdata.flat();
 
   // HANDLERS
   //Row handlers
@@ -135,6 +133,10 @@ export const useTransactionTableHook = () => {
     }
     // console.log(editableValue.current.subCategoryId);
     void (await updateData(editableValue.current as Transaction));
+    // void globalMutate(unstable_serialize(() => {
+    //   return [`transactions1`, 1]
+    // }));
+
     void mutateAccountData();
     editingRow !== '' && setEditingRow('');
     editableValue.current = createEmptyTransaction();
@@ -318,7 +320,7 @@ export const useTransactionTableHook = () => {
   };
 
   // if there's an accountId in the route params, filters the data to show only that account's transactions.
-  const data = tdataFlat.filter(transaction => {
+  const data = tdata.flat().filter(transaction => {
     if (!accountId) return transaction;
     return transaction.accountId === accountId;
   });

@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR, { KeyedMutator, mutate as swrMutate } from 'swr';
 import { container } from 'tsyringe';
 import { TransactionGetAll } from '@core/budget/transaction/application/useCase/TransactionGetAll';
 import { TransactionUpdate } from '@core/budget/transaction/application/useCase/TransactionUpdate';
@@ -30,12 +30,17 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
   // TODO: Fix account filtered fetching to show the transactions that aren't loaded yet in all accounts
 
   // SWR
-  let data: Array<Transaction[]> | Transaction[] | undefined, error, isLoading, mutate: any, size, setSize;
+  let data: Array<Transaction[]> | Transaction[] | undefined,
+    error,
+    isLoading,
+    mutate: KeyedMutator<any>,
+    size,
+    setSize;
 
   if (pagination) {
     const getKey = (pageIndex: number, previousPageData: string | any[]) => {
-      if (previousPageData && !previousPageData.length) return null;
-      return [`transactions`, pageIndex + 1];
+      if (previousPageData && previousPageData.length === 0) return;
+      return [`transactions${pageIndex}`, pageIndex + 1];
     };
 
     const {
@@ -45,11 +50,17 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
       mutate: infiniteMutate,
       size: infiniteSize,
       setSize: infiniteSetSize,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useSWRInfinite(
       getKey,
       tuple =>
         transactionGetAllPaginated.execute({ index: tuple[1] as number, pageSize: pagination.pageSize }),
-      { revalidateOnFocus: false, revalidateOnMount: true, revalidateOnReconnect: true },
+      {
+        revalidateOnFocus: false,
+        revalidateOnMount: true,
+        revalidateOnReconnect: false,
+        revalidateFirstPage: false,
+      },
     );
     data = infiniteData; // it's possible to flatten the data array directly from here but doing so doesn't allow us to check if there's no more data to load to disable the infinite scroll fetching.
     error = infiniteError;
@@ -63,6 +74,7 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
       error: normalError,
       isLoading: normalIsLoading,
       mutate: normalMutate,
+      // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useSWR(['transactions'], () => transactionGetAll.execute());
     data = normalData;
     error = normalError;
@@ -77,7 +89,7 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
   let isLoadingMore, isEmpty, isReachingEnd;
 
   if (pagination && data && size) {
-    isLoadingMore = isLoading || (size > 0 && data && typeof data[size - 1] === 'undefined');
+    isLoadingMore = isLoading || (size > 0 && data && data[size - 1] === undefined);
     isEmpty = isArrayTransactionArray(data) && data?.[0]?.length === 0;
     isReachingEnd =
       isEmpty || (isArrayTransactionArray(data) && data[data.length - 1]?.length < pagination?.pageSize);
@@ -144,14 +156,26 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
   // HANDLERS
   const updateTransaction = async (updatedTransaction: Transaction) => {
     if (!data) return;
-    let newData;
-    newData = isArrayTransactionArray(data) ? [...data.flat()] : [...data];
+    // if its Transaction[][], we need to know in which index the subArray containing the original transaction is to mutate it after updating.
+    const pageIndex = isArrayTransactionArray(data)
+      ? data.findIndex(subArray => {
+          return subArray.some(t => t.id === updatedTransaction.id);
+        })
+      : -1;
+    // const transactionIndex = isArrayTransactionArray(data) ? data[indexOfTransactionSubarrayInInfiniteData].findIndex((obj) => obj.id === updatedTransaction.id) : -1;
+    const newData = isArrayTransactionArray(data) ? data.flat() : [...data];
     const index = newData.findIndex(t => t.id === updatedTransaction.id);
     newData[index] = updatedTransaction;
 
     await transactionUpdate.execute(updatedTransaction);
 
-    await mutate(data);
+    void swrMutate([`transactions${pageIndex}`, pageIndex + 1], async cachedData => {
+      const index = cachedData.findIndex((t: Transaction) => t.id === updatedTransaction.id);
+      if (index !== -1) {
+        cachedData[index] = updatedTransaction;
+      }
+      return;
+    });
   };
 
   const createTransaction = async (t: Transaction) => {
@@ -164,13 +188,40 @@ export const useTransactionHook = (pagination?: { index: number; pageSize: numbe
   const deleteTransaction = async (t: Transaction) => {
     if (!data) return;
     await transactionDelete.execute(t);
-    await mutate(data);
+    // await mutate(data);
+    const pageIndex = isArrayTransactionArray(data)
+      ? data.findIndex(subArray => {
+          return subArray.some(originalTransaction => originalTransaction.id === t.id);
+        })
+      : -1;
+    void swrMutate([`transactions${pageIndex}`, pageIndex + 1], async cachedData => {
+      // debugger
+      const index = cachedData.findIndex((cachedTransaction: Transaction) => cachedTransaction.id === t.id);
+      if (index !== -1) {
+        delete cachedData[index];
+      }
+      return;
+    });
   };
 
   const deleteTransactionBatch = async (t: { ids: string[] }) => {
     if (!data) return;
     await transactionDeleteBatch.execute(t);
-    await mutate(data);
+    // await mutate(data);
+    t.ids.map(id => {
+      const pageIndex = isArrayTransactionArray(data)
+        ? data.findIndex(subArray => {
+            return subArray.some(originalTransaction => originalTransaction.id === id);
+          })
+        : -1;
+      void swrMutate([`transactions${pageIndex}`, pageIndex + 1], async cachedData => {
+        const index = cachedData.findIndex((cachedTransaction: Transaction) => cachedTransaction?.id === id);
+        if (index !== -1) {
+          delete cachedData[index];
+        }
+        return;
+      });
+    });
   };
 
   const getAllTransactionsByCategoryId = async (accountId: string) => {
