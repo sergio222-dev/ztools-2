@@ -3,117 +3,126 @@ import { UnsignedAmount } from '@budget/shared/domain/valueObject/UnsignedAmount
 import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
 export class MonthlyBudget extends AggregateRootOwnership {
-    get month(): string {
-        return this._month;
-    }
+  get month(): string {
+    return this._month;
+  }
 
-    get year(): string {
-        return this._year;
-    }
+  get year(): string {
+    return this._year;
+  }
 
-    get subCategoryId(): string {
-        return this._subCategoryId;
-    }
+  get subCategoryId(): string {
+    return this._subCategoryId;
+  }
 
-    get assigned(): UnsignedAmount {
-        return this._assigned;
-    }
+  get isAssignBudget(): boolean {
+    return this._isAssignBudget;
+  }
 
-    get activity(): SignedAmount {
-        return this._activity;
-    }
+  get assigned(): UnsignedAmount {
+    return this._assigned;
+  }
 
-    get available(): SignedAmount {
-        return this._available;
-    }
+  get activity(): SignedAmount {
+    return this._activity;
+  }
 
-    private constructor(
-        _id: string,
-        private readonly _month: string,
-        private readonly _year: string,
-        private readonly _subCategoryId: string,
-        private _assigned: UnsignedAmount,
-        private _activity: SignedAmount,
-        private _available: SignedAmount,
-        _userId: string,
-        _createdAt: Date,
-        _updatedAt: Date,
-    ) {
-        super(_id, _userId, _createdAt, _updatedAt);
-    }
+  get available(): SignedAmount {
+    return this._available;
+  }
 
-    public static CREATE(
-        id: string,
-        month: string,
-        year: string,
-        subCategoryId: string,
-        assigned: UnsignedAmount,
-        activity: SignedAmount,
-        available: SignedAmount,
-        userId: string,
-        createdAt: Date,
-        updatedAt: Date,
-    ) {
-        return new MonthlyBudget(
-            id,
-            month,
-            year,
-            subCategoryId,
-            assigned,
-            activity,
-            available,
-            userId,
-            createdAt,
-            updatedAt,
-        );
-    }
+  private constructor(
+    _id: string,
+    private readonly _month: string,
+    private readonly _year: string,
+    private readonly _subCategoryId: string,
+    private readonly _isAssignBudget: boolean,
+    private _assigned: UnsignedAmount,
+    private _activity: SignedAmount,
+    private _available: SignedAmount,
+    _userId: string,
+    _createdAt: Date,
+    _updatedAt: Date,
+  ) {
+    super(_id, _userId, _createdAt, _updatedAt);
+  }
 
-    public static RETRIEVE(
-        id: string,
-        month: string,
-        year: string,
-        subCategoryId: string,
-        assigned: UnsignedAmount,
-        activity: SignedAmount,
-        available: SignedAmount,
-        userId: string,
-        createdAt: Date,
-        updatedAt: Date,
-    ) {
-        return new MonthlyBudget(
-            id,
-            month,
-            year,
-            subCategoryId,
-            assigned,
-            activity,
-            available,
-            userId,
-            createdAt,
-            updatedAt,
-        );
-    }
+  public static CREATE(
+    id: string,
+    month: string,
+    year: string,
+    subCategoryId: string,
+    isAssignBudget: boolean,
+    assigned: UnsignedAmount,
+    activity: SignedAmount,
+    available: SignedAmount,
+    userId: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    return new MonthlyBudget(
+      id,
+      month,
+      year,
+      subCategoryId,
+      isAssignBudget,
+      assigned,
+      activity,
+      available,
+      userId,
+      createdAt,
+      updatedAt,
+    );
+  }
 
-    private recalculateAvailable(): void {
-        this._available = this._assigned.plus(this._activity);
-    }
+  public static RETRIEVE(
+    id: string,
+    month: string,
+    year: string,
+    subCategoryId: string,
+    isAssignBudget: boolean,
+    assigned: UnsignedAmount,
+    activity: SignedAmount,
+    available: SignedAmount,
+    userId: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    return new MonthlyBudget(
+      id,
+      month,
+      year,
+      subCategoryId,
+      isAssignBudget,
+      assigned,
+      activity,
+      available,
+      userId,
+      createdAt,
+      updatedAt,
+    );
+  }
 
-    public setAssigned(amount: UnsignedAmount) {
-        this._assigned = amount;
-        this.recalculateAvailable();
-    }
+  private recalculateAvailable(): void {
+    this._available = this._assigned.plus(this._activity);
+  }
 
-    public setAvailable(amount: UnsignedAmount) {
-        this._available = amount;
-    }
+  public setAssigned(amount: UnsignedAmount) {
+    this._assigned = amount;
+    this.recalculateAvailable();
+  }
 
-    public incrementActivity(amount: UnsignedAmount) {
-        this._activity = this._activity.plus(amount);
-        this.recalculateAvailable();
-    }
+  public setAvailable(amount: UnsignedAmount) {
+    this._available = amount;
+  }
 
-    public decrementActivity(amount: UnsignedAmount) {
-        this._activity = this._activity.minus(amount);
-        this.recalculateAvailable();
-    }
+  public incrementActivity(amount: UnsignedAmount) {
+    this._activity = this._activity.plus(amount);
+    this.recalculateAvailable();
+  }
+
+  public decrementActivity(amount: UnsignedAmount) {
+    this._activity = this._activity.minus(amount);
+    this.recalculateAvailable();
+  }
 }

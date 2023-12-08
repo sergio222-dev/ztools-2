@@ -39,7 +39,8 @@
     "@nestjs/event-emitter": "~2.0.0",
     "@nestjs/jwt": "~10.1.0",
     "nestjs-zod": "~2.3.3",
-    "zod": "~3.21.4"
+    "zod": "~3.21.4",
+    "@types/uuid": "~9.0.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

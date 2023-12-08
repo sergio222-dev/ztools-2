@@ -29,6 +29,7 @@ importers:
       '@types/jsonwebtoken': ~9.0.3
       '@types/node': ^20.3.3
       '@types/supertest': ^2.0.12
+      '@types/uuid': ~9.0.2
       '@typescript-eslint/eslint-plugin': ^5.54.1
       '@typescript-eslint/parser': ^5.54.1
       bignumber.js: ~9.1.1
@@ -71,6 +72,7 @@ importers:
       '@nestjs/platform-express': 9.4.3_adb5556349178ca678c9faf31331c9c2
       '@nestjs/swagger': 6.2.1_8a58faca1c4e4f40738cce46e9e35225
       '@supabase/supabase-js': 2.23.0
+      '@types/uuid': 9.0.2
       bignumber.js: 9.1.1
       mongoose: 7.0.5
       nestjs-zod: 2.3.3_a822547d2c823f301f151b77d42edce7
@@ -5901,7 +5903,6 @@ packages:
 
   /@types/uuid/9.0.2:
     resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
-    dev: true
 
   /@types/validator/13.7.17:
     resolution: {integrity: sha512-aqayTNmeWrZcvnG2MG9eGYI6b7S5fl+yKgPs6bAjOTwPS316R5SxBGKvtSExfyoJU7pIeHJfsHI0Ji41RVMkvQ==}

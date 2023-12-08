@@ -9,6 +9,7 @@ export interface MonthlyBudgetSchemaType extends OwnershipSchema {
   month: string;
   year: string;
   subCategoryId: string;
+  isAssignBudget: boolean;
   assigned: Types.Decimal128;
   activity: Types.Decimal128;
   available: Types.Decimal128;
@@ -38,6 +39,10 @@ export const MonthlyBudgetSchema = new Schema<MonthlyBudgetSchemaType>(
       type: String,
       required: true,
       ref: 'SubCategory',
+    },
+    isAssignBudget: {
+      type: Boolean,
+      required: true,
     },
     assigned: {
       type: Schema.Types.Decimal128,
@@ -72,6 +77,7 @@ export function mapMonthlyBudgetToSchema(entity: MonthlyBudget): MonthlyBudgetSc
     month: entity.month,
     year: entity.year,
     subCategoryId: entity.subCategoryId,
+    isAssignBudget: entity.isAssignBudget,
     assigned: new Types.Decimal128(entity.assigned.amount),
     activity: new Types.Decimal128(entity.activity.amount),
     available: new Types.Decimal128(entity.available.amount),
@@ -87,6 +93,7 @@ export function mapMonthlyBudgetToDomain(document: MonthlyBudgetSchemaType): Mon
     document.month,
     document.year,
     document.subCategoryId,
+    document.isAssignBudget,
     new UnsignedAmount(document.assigned.toString()),
     new SignedAmount(document.activity.toString()),
     new SignedAmount(document.available.toString()),

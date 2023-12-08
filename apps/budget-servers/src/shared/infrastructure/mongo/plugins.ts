@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { Schema, SchemaType } from 'mongoose';
+import { Schema, SchemaType, Types } from 'mongoose';
 
 import { Amount } from '@budget/shared/domain/valueObject/Amount';
 
@@ -8,18 +8,19 @@ export class AmountType extends SchemaType {
     super(key, options);
   }
 
-  cast(value) {
+  cast(value: Types.Decimal128 | Amount) {
+    console.log(value);
     if (value instanceof Amount) {
-      this.validateNumber(value.amount);
-      return BigNumber(value.amount).toString();
+      // this.validateNumber(value.amount);
+      return new Types.Decimal128(value.amount);
     }
 
     this.validateNumber(value);
 
-    return new Amount(value);
+    return new Amount(value.toString());
   }
 
-  private validateNumber(amount) {
+  private validateNumber(amount: Types.Decimal128) {
     if (typeof amount !== 'string') {
       throw new TypeError(`${amount} is not a string`);
     }

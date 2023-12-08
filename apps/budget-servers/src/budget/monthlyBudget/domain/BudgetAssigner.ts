@@ -11,40 +11,41 @@ import { Order } from '@shared/domain/criteria/Order';
 import { FilterByUser } from '@shared/domain/filter/FilterByUser';
 
 export class BudgetAssigner {
-    constructor(private readonly monthlyBudgetRepository: MonthlyBudgetRepository) {}
+  constructor(private readonly monthlyBudgetRepository: MonthlyBudgetRepository) {}
 
-    async assignBudget(
-        amount: UnsignedAmount,
-        subCategoryId: string,
-        month: string,
-        year: string,
-        userId: string,
-    ): Promise<void> {
-        const byOne = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
-        const byUser = FilterByUser.fromValue(userId);
-        byOne.push(byUser);
-        const filters = new Filters(byOne);
-        const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
-        const monthlyBudgets = await this.monthlyBudgetRepository.matching(criteria);
+  async assignBudget(
+    amount: UnsignedAmount,
+    subCategoryId: string,
+    month: string,
+    year: string,
+    userId: string,
+  ): Promise<void> {
+    const byOne = FindOneMonthlyBudget.fromValues(subCategoryId, month, year);
+    const byUser = FilterByUser.fromValue(userId);
+    byOne.push(byUser);
+    const filters = new Filters(byOne);
+    const criteria = new Criteria(filters, Order.fromValues(), 0, 0);
+    const monthlyBudgets = await this.monthlyBudgetRepository.matching(criteria);
 
-        const monthlyBudget =
-            monthlyBudgets.length === 0
-                ? MonthlyBudget.CREATE(
-                      uuid(),
-                      month,
-                      year,
-                      subCategoryId,
-                      amount,
-                      new SignedAmount(0),
-                      new SignedAmount(0),
-                      userId,
-                      new Date(),
-                      new Date(),
-                  )
-                : monthlyBudgets[0];
+    const monthlyBudget =
+      monthlyBudgets.length === 0
+        ? MonthlyBudget.CREATE(
+            uuid(),
+            month,
+            year,
+            subCategoryId,
+            false,
+            amount,
+            new SignedAmount(0),
+            new SignedAmount(0),
+            userId,
+            new Date(),
+            new Date(),
+          )
+        : monthlyBudgets[0];
 
-        monthlyBudget.setAssigned(amount);
+    monthlyBudget.setAssigned(amount);
 
-        await this.monthlyBudgetRepository.save(monthlyBudget);
-    }
+    await this.monthlyBudgetRepository.save(monthlyBudget);
+  }
 }

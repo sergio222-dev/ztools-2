@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 
 import { Account } from '@budget/account/domain/Account.aggregate';
 import { AccountRepository } from '@budget/account/domain/Account.repository';
@@ -7,54 +8,51 @@ import { Criteria } from '@shared/domain/criteria/Criteria';
 
 @Injectable()
 export class AccountService {
-    constructor(
-        @Inject('AccountRepository')
-        private readonly accountRepository: AccountRepository,
-    ) {}
+  constructor(
+    @Inject('AccountRepository')
+    private readonly accountRepository: AccountRepository,
+    private readonly commandBus: CommandBus,
+  ) {}
 
-    async findAll(userId: string): Promise<Account[]> {
-        const criteria = Criteria.aggregateOwnershipCriteria('', userId);
+  async findAll(userId: string): Promise<Account[]> {
+    const criteria = Criteria.aggregateOwnershipCriteria('', userId);
 
-        return await this.accountRepository.matching(criteria);
+    return await this.accountRepository.matching(criteria);
+  }
+
+  async findOneById(id: string, userId: string): Promise<Account> {
+    const criteria = Criteria.aggregateOwnershipCriteria(id, userId);
+
+    const account = await this.accountRepository.matching(criteria);
+
+    if (account.length !== 1) {
+      throw new Error(`Account with id ${id} not found`);
     }
 
-    async findOneById(id: string, userId: string): Promise<Account> {
-        const criteria = Criteria.aggregateOwnershipCriteria(id, userId);
+    return account[0];
+  }
 
-        const account = await this.accountRepository.matching(criteria);
+  async createOne(id: string, name: string, balance: SignedAmount, userId: string): Promise<void> {
+    // create account
+    const account = Account.CREATE(id, name, userId, new SignedAmount(0));
+    await this.accountRepository.save(account);
 
-        if (account.length !== 1) {
-            throw new Error(`Account with id ${id} not found`);
-        }
+    // create initial transaction
+  }
 
-        return account[0];
-    }
+  async update(id: string, name: string, userId: string, balance: SignedAmount): Promise<void> {
+    const oldAccount = await this.findOneById(id, userId);
 
-    async createOne(id: string, name: string, userId: string): Promise<void> {
-        const account = Account.CREATE(id, name, userId);
-        await this.accountRepository.save(account);
-    }
+    // TODO: domain exception
+    if (!oldAccount) throw new Error(`Account with id ${id} not found`);
 
-    async update(id: string, name: string, userId: string): Promise<void> {
-        const oldAccount = await this.findOneById(id, userId);
+    const account = Account.RETRIEVE(oldAccount.id, name, userId, balance, oldAccount.createdAt, new Date());
 
-        // TODO: domain exception
-        if (!oldAccount) throw new Error(`Account with id ${id} not found`);
+    await this.accountRepository.save(account);
+  }
 
-        const account = Account.RETRIEVE(
-            oldAccount.id,
-            name,
-            userId,
-            new SignedAmount(0),
-            oldAccount.createdAt,
-            new Date(),
-        );
-
-        await this.accountRepository.save(account);
-    }
-
-    async delete(id: string, userId: string): Promise<void> {
-        const account = await this.findOneById(id, userId);
-        await this.accountRepository.delete([account]);
-    }
+  async delete(id: string, userId: string): Promise<void> {
+    const account = await this.findOneById(id, userId);
+    await this.accountRepository.delete([account]);
+  }
 }

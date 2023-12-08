@@ -331,6 +331,7 @@ export class MongoMonthlyBudgetRepository
         month,
         year,
         subCategoryId,
+        false,
         amount,
         new SignedAmount(0),
         new SignedAmount(0),
