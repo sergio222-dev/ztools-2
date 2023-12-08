@@ -31,6 +31,7 @@ import { TransactionDeleteHandler } from '@budget/transaction/application/useCas
 import { TransactionDeleteBatchHandler } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.handler';
 import { TransactionFindOneByIdHandler } from '@budget/transaction/application/useCase/findOne/TransactionFindOneById.handler';
 import { TransactionUpdateHandler } from '@budget/transaction/application/useCase/update/TransactionUpdate.handler';
+import { TransactionFindByHandler } from '@budget/transaction/application/useCase/find/TransactionFindBy.handler';
 import { AccountCreateHandler } from '@budget/account/application/useCase/create/AccountCreate.handler';
 import { AccountDeleteHandler } from '@budget/account/application/useCase/delete/AccountDelete.handler';
 import { AccountFindAllHandler } from '@budget/account/application/useCase/find/AccountFindAll.handler';
@@ -84,6 +85,7 @@ const budget = {
     TransactionDeleteBatchHandler,
     TransactionFindAllBySubCategoryIdHandler,
     TransactionFindAllByAccountHandler,
+    TransactionFindByHandler,
     CategoryCreateHandler,
     CategoryFindAllHandler,
     CategoryUpdateHandler,
