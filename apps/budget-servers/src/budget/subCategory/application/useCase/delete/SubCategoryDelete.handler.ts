@@ -1,6 +1,7 @@
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { SubCategoryService } from '@budget/subCategory/application/service/SubCategory.service';
 import { SubCategoryDeleteCommand } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.command';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 @CommandHandler(SubCategoryDeleteCommand)
 export class SubCategoryDeleteHandler implements ICommandHandler<SubCategoryDeleteCommand> {

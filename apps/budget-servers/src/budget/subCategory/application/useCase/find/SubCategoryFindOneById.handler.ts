@@ -1,7 +1,8 @@
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+
 import { SubCategoryService } from '@budget/subCategory/application/service/SubCategory.service';
 import { SubCategoryFindOneByIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.query';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 @QueryHandler(SubCategoryFindOneByIdQuery)
 export class SubCategoryFindOneByIdHandler
