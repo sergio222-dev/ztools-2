@@ -17,6 +17,17 @@ export class AxiosTransactionRepository implements TransactionRepository {
     return data;
   }
 
+  async getAllByAccountIdPaginated(
+    accountId: string,
+    index: number,
+    pageSize: number,
+  ): Promise<Transaction[]> {
+    const { data } = await this.axios.get<Transaction[]>(
+      `/transaction/account/${accountId}?index=${index}&pageSize=${pageSize}`,
+    );
+    return data;
+  }
+
   async getAllByCategoryId(accountId: string): Promise<Transaction[]> {
     const { data } = await this.axios.get<Transaction[]>(`/transaction/${accountId}`);
     return data;
