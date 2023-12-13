@@ -25,7 +25,6 @@
   &.variant_balance {
     @include mixins.font-size-variant(1.1);
 
-    //color: const.$positive-background-color;
     font-weight: bold;
   }
 

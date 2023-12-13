@@ -2,15 +2,15 @@
 @use '../../styles/mixins' as mixin;
 @use '../../styles/functions';
 
-%button_margin {
+%button-margin {
   margin-right: functions.spacing(1);
   margin-top: 1px;
 }
 
 .cancel_button {
-  @extend %button_margin;
+  @extend %button-margin;
 }
 
 .save_button {
-  @extend %button_margin;
+  @extend %button-margin;
 }

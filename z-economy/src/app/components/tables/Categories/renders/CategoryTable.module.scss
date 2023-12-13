@@ -7,9 +7,6 @@
   border-spacing: 0;
   flex: 1 1 auto;
 
-  //font-size: 1rem;
-  //font-weight: 400;
-
   .z_table_head {
     text-transform: uppercase;
     font-weight: unset;
@@ -58,7 +55,7 @@
     background-color: const.$page-darker-background-color;
   }
 
-  %z_table_row {
+  %z-table-row {
     height: 2rem;
     user-select: none;
     cursor: pointer;
@@ -66,11 +63,11 @@
   }
 
   .z_table_row_unselected {
-    @extend %z_table_row;
+    @extend %z-table-row;
   }
 
   .z_table_row_selected {
-    @extend %z_table_row;
+    @extend %z-table-row;
 
     background-color: const.$selection-color;
     cursor: text;

@@ -25,8 +25,6 @@
     margin: functions.spacing(1) 0 0 0;
     display: flex;
 
-    //justify-content: flex-start;
-
     .cancel_save_buttons {
       display: flex;
       flex: 1 1 auto;
@@ -56,6 +54,4 @@
   border-radius: const.$radius;
   outline: none;
   padding: 0;
-
-  //width: 30rem;
 }

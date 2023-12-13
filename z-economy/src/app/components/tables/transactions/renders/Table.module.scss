@@ -2,12 +2,10 @@
 @use '../../../styles/functions';
 
 .z_table_container {
-  //height: 81vh;
   overflow: auto;
 }
 
 .z_table {
-  //width: 100%;
   border-spacing: 0;
   font-size: 0.75rem;
   font-weight: 400;
@@ -56,11 +54,6 @@
       background: const.$light-primary-color;
       opacity: 1;
     }
-
-    // .z_sorting_icon {
-    //  margin: 0;
-    //  font-size: functions.spacing(2);
-    // }
   }
 
   .z_table_cell {
@@ -68,8 +61,6 @@
     border: 1px none;
     border-bottom: 1px solid const.$page-light-border-color;
     text-overflow: ellipsis;
-
-    //white-space: nowrap ;
 
     &[data-type='numeric'] {
       text-align: right;
@@ -81,7 +72,7 @@
     }
   }
 
-  %z_table_row {
+  %z-table-row {
     height: 40px;
     user-select: none;
     cursor: pointer;
@@ -89,11 +80,11 @@
   }
 
   .z_table_row_unselected {
-    @extend %z_table_row;
+    @extend %z-table-row;
   }
 
   .z_table_row_selected {
-    @extend %z_table_row;
+    @extend %z-table-row;
 
     background-color: const.$selection-color;
     cursor: text;
