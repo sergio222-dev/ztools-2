@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react';
+import { ChangeEvent, HTMLAttributes } from 'react';
 import { useEditableCellHook } from '@molecules/EditableCell/useEditableCell.hook';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -27,7 +27,7 @@ export function EditableCellDatePicker(properties: EditableCellDatePicker) {
     <div>
       <DatePicker
         selected={new Date(value as string)}
-        onChange={(date, event) => handleOnChangeDate(date, event)}
+        onChange={(date, event) => handleOnChangeDate(date, event as ChangeEvent<HTMLInputElement>)}
         dateFormat="dd/MM/yyyy"
         customInput={<Input ref={inputReference} />}
       />
