@@ -147,7 +147,15 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@tanstack/react-query",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@tanstack/react-table",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@tanstack/react-virtual",
       "allowedCategories": [ "production" ]
     },
     {

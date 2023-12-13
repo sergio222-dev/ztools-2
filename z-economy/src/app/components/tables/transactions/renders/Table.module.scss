@@ -1,6 +1,11 @@
 @use '../../../styles/constants' as const;
 @use '../../../styles/functions';
 
+.z_table_container {
+  //height: 81vh;
+  overflow: auto;
+}
+
 .z_table {
   //width: 100%;
   border-spacing: 0;
