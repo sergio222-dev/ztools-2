@@ -6,6 +6,7 @@
   width: 100%;
   border-spacing: 0;
   flex: 1 1 auto;
+
   //font-size: 1rem;
   //font-weight: 400;
 
@@ -67,8 +68,10 @@
   .z_table_row_unselected {
     @extend %z_table_row;
   }
+
   .z_table_row_selected {
     @extend %z_table_row;
+
     background-color: const.$selection-color;
     cursor: text;
   }

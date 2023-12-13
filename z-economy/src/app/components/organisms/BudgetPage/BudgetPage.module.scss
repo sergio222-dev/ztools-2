@@ -20,6 +20,7 @@
     .date_picker {
       position: absolute;
       width: 100%;
+
       //height: 100%;
       left: 0;
     }
@@ -34,6 +35,7 @@
       &:focus-visible {
         box-shadow: 0 0 0 2px const.$primary-color;
       }
+
       //&:active {
       //  @include mixins.box-shadow(const.$primary-color);
       //}
@@ -42,6 +44,7 @@
         color: const.$dark-primary-color;
       }
     }
+
     .date_input_container {
       display: flex;
       align-items: center;
@@ -56,6 +59,7 @@
         background: transparent;
         z-index: 1;
       }
+
       .date_caret_icon {
         color: const.$primary-color;
         margin-left: -13px;
@@ -67,6 +71,7 @@
       }
     }
   }
+
   @container bp_header (width < 515px) {
     .global_assigned_neutral {
       margin-left: auto;
@@ -100,11 +105,13 @@
 
 %category_expand_button {
   @include mixins.remove-default-button;
+
   background: none;
 }
 
 .category_expand_button_header {
   @extend %category_expand_button;
+
   font-size: 1rem;
 }
 

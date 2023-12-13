@@ -14,6 +14,7 @@
     color: const.$primary-color;
     padding: 0;
     margin-right: -(functions.spacing(1));
+
     & > svg {
       height: 1.5rem;
     }
@@ -37,10 +38,12 @@
   justify-content: center;
   text-align: left;
   padding: functions.spacing(2);
+
   .add_account_modal_input_header {
     margin-bottom: functions.spacing(1);
     padding-top: functions.spacing(1);
   }
+
   & > div:first-child .add_account_modal_input_header {
     padding-top: 0;
   }
@@ -70,6 +73,7 @@
 
   .add_account_modal_footer_save_button {
     width: 100%;
+
     &:disabled {
       background-color: const.$page-light-border-color;
       box-shadow: 0 0 0 1px const.$page-light-border-color;

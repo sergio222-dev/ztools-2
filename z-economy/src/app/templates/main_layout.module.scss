@@ -4,8 +4,7 @@
 
   .z_table {
     flex: 1 1 auto;
-    overflow-x: auto;
-    overflow-y: visible;
+    overflow: auto visible;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }

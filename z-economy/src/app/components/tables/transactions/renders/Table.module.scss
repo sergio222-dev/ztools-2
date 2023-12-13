@@ -68,6 +68,7 @@
     border: 1px none;
     border-bottom: 1px solid const.$page-light-border-color;
     text-overflow: ellipsis;
+
     //white-space: nowrap ;
 
     &[data-type='numeric'] {
@@ -90,8 +91,10 @@
   .z_table_row_unselected {
     @extend %z_table_row;
   }
+
   .z_table_row_selected {
     @extend %z_table_row;
+
     background-color: const.$selection-color;
     cursor: text;
   }
