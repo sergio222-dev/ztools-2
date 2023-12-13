@@ -43,7 +43,7 @@ export function LeftSidebarCollapsible({ className, Icon, accounts }: Collapsibl
     accountId: string,
     event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
   ) => {
-    if (event.target === overlayReference.current) return;
+    if (event.target === overlayReference.current) return; // to prevent event bubbling
     navigate('/accounts/' + accountId);
   };
 

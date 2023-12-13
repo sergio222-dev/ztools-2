@@ -1,5 +1,5 @@
-import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import currency from 'currency.js';
+import { useParams } from 'react-router';
 interface AllAccountPageModel {
   workingBalance: WorkingBalance;
 }
@@ -16,7 +16,6 @@ export type WorkingBalance = {
 export function useAllAccountPageHooks(): [AllAccountPageModel, AllAccountPageOperators] {
   // const { data, error, isLoading, mutate } = useSWR(['transactions'], () => transactionGetAll.execute());
   // const { tdata } = useTransactionHook();
-
   const tdata = [
     {
       id: '1',

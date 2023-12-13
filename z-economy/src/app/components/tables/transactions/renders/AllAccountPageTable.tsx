@@ -38,10 +38,10 @@ interface TransactionTableProperties {
   globalFilter: string;
   setGlobalFilter: Dispatch<SetStateAction<string>>;
   selectedColumnId: MutableRefObject<string>;
-  tableContainerReference: MutableRefObject<HTMLDivElement>;
+  tableContainerReference: MutableRefObject<HTMLDivElement | null>;
   fetchMoreTransactions: () => void;
-  isLoadingMore: any;
-  isReachingEnd: any;
+  isLoadingMore: boolean;
+  isReachingEnd: boolean;
 }
 
 export function AllAccountPageTable({
@@ -95,8 +95,7 @@ export function AllAccountPageTable({
 
   if (tableReference) tableReference.current = table;
 
-  const allAccountsPageContainer = document.getElementById('all-accounts-page-container') as HTMLDivElement;
-
+  const allAccountsPageContainer = document.querySelector('#all-accounts-page-container') as HTMLDivElement;
   if (allAccountsPageContainer) tableContainerReference.current = allAccountsPageContainer;
 
   const rowVirtualizer = useVirtualizer({
@@ -108,7 +107,6 @@ export function AllAccountPageTable({
   });
 
   const { getTotalSize, getVirtualItems } = rowVirtualizer;
-
   const virtualRows = getVirtualItems();
   const { rows } = table.getRowModel();
 
@@ -116,12 +114,6 @@ export function AllAccountPageTable({
   const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
   const paddingBottom =
     virtualRows.length > 0 ? getTotalSize() - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0;
-
-  // let tableHeight = (rows.length + 1) * 40;
-
-  // if (rows.length === 1 && tdata[0]?.id ==='') {
-  //   tableHeight = 120;
-  // }
 
   // SIDE EFFECT
 
@@ -138,11 +130,6 @@ export function AllAccountPageTable({
     handleOnEdit && handleOnEdit(row, table, cell);
   };
 
-  // scrolls to top when Add Transaction button fake row appears
-  // if (tableContainerReference.current && tdata[0]?.id === '') {
-  //   tableContainerReference.current.scrollTop = 0;
-  // }
-
   return (
     <>
       <InfiniteScroll
@@ -153,7 +140,6 @@ export function AllAccountPageTable({
         scrollThreshold={0.9}
         scrollableTarget="all-accounts-page-container"
         style={{ display: 'flex', flexDirection: 'column' }}
-        // scrollableTarget="scrollableDiv"
       >
         <table className={styles.z_table}>
           <thead>

@@ -18,20 +18,20 @@ export const useTransactionTableHook = () => {
   const [editingRow, setEditingRow] = useState('');
   const [disableDelete, setDisableDelete] = useState(true);
   const [selectedQty, setSelectedQty] = useState(0);
+  const [data, setData] = useState<Transaction[]>([]);
 
   // REFS
   const editableValue = useRef<Transaction>(createEmptyTransaction());
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  const reference = useRef<HTMLDivElement>(undefined);
+  const reference = useRef<HTMLDivElement>(null);
   const tableReference = useRef<Table<Transaction>>();
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const tableContainerReference = useRef<HTMLDivElement>(undefined);
+  const tableContainerReference = useRef<HTMLDivElement>(null);
   const selectedColumnId = useRef('date');
 
   // SERVICES
+  const { subCats, cdata } = useCategoryHook(new Date());
+  const { mutateAccountData } = useAccountHook();
+  const { accountId } = useParams();
+
   const {
     tdata,
     updateData,
@@ -44,10 +44,12 @@ export const useTransactionTableHook = () => {
     setSize,
     isLoadingMore,
     isReachingEnd,
-  } = useTransactionHook({ index: 1, pageSize: 20 });
-  const { subCats, cdata } = useCategoryHook(new Date());
-  const { mutateAccountData } = useAccountHook();
-  const { accountId } = useParams();
+    mutateOnAccountChange,
+  } = useTransactionHook({ index: 1, pageSize: 20 }, accountId ?? undefined);
+
+  useEffect(() => {
+    void mutateOnAccountChange();
+  }, [accountId]);
 
   // HANDLERS
   //Row handlers
@@ -85,8 +87,6 @@ export const useTransactionTableHook = () => {
             ? Object.assign({}, row.original, editableValue.current)
             : Object.assign({}, editableValue.current, row.original);
       }
-      // console.log(editableValue.current.accountId);
-      // if (!adata.some(a => a.id === editableValue.current.accountId)) editableValue.current.accountId = adata[0].id;
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -131,11 +131,7 @@ export const useTransactionTableHook = () => {
       selectedColumnId.current = 'date';
       return;
     }
-    // console.log(editableValue.current.subCategoryId);
     void (await updateData(editableValue.current as Transaction));
-    // void globalMutate(unstable_serialize(() => {
-    //   return [`transactions1`, 1]
-    // }));
 
     void mutateAccountData();
     editingRow !== '' && setEditingRow('');
@@ -320,10 +316,14 @@ export const useTransactionTableHook = () => {
   };
 
   // if there's an accountId in the route params, filters the data to show only that account's transactions.
-  const data = tdata.flat().filter(transaction => {
-    if (!accountId) return transaction;
-    return transaction.accountId === accountId;
-  });
+  useEffect(() => {
+    setData(tdata.flat());
+  }, [tdata]);
+
+  //     .filter(transaction => {
+  //   if (!accountId) return transaction;
+  //   return transaction.accountId === accountId;
+  // });
 
   // COLUMNS
   const columns = useTransactionTableColumnsHook(
