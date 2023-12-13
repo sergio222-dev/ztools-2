@@ -3,8 +3,6 @@ import { Schema } from 'mongoose';
 import { Account } from '@budget/account/domain/Account.aggregate';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { OwnershipSchema } from '@shared/infrastructure/mongo/OwnershipSchema';
-import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
-
 export interface AccountSchemaType extends OwnershipSchema {
   id: string;
   name: string;
