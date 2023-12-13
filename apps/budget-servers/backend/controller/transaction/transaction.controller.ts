@@ -36,33 +36,6 @@ import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 @Injectable()
 export class TransactionController {
   constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) {}
-
-  // @Get()
-  // @ApiBearerAuth('JWT')
-  // @ApiResponse({
-  //     status: 200,
-  //     description: 'Get all transactions',
-  //     type: [TransactionFindAllResponse],
-  // })
-  // async findAll(@Req() request: AuthenticatedRequest): Promise<TransactionFindAllResponse[]> {
-  //     const { user } = request;
-  //     const userId = user.sub;
-  //     const transactions = await this.queryBus.execute<TransactionFindAllQuery, Transaction[]>(
-  //         new TransactionFindAllQuery(userId),
-  //     );
-  //     return transactions.map(t => ({
-  //         id: t.id,
-  //         inflow: t.inflow.amount,
-  //         outflow: t.outflow.amount,
-  //         payee: t.payee,
-  //         memo: t.memo,
-  //         subCategoryId: t.subCategoryId,
-  //         date: t.date.toISOString(),
-  //         cleared: t.cleared,
-  //         accountId: t.accountId,
-  //     }));
-  // }
-
   @Get()
   @ApiBearerAuth('JWT')
   @ApiResponse({
@@ -122,24 +95,48 @@ export class TransactionController {
     description: 'Get all transactions by accountId',
     type: [TransactionFindAllByAccountResponse],
   })
+  @ApiQuery({ name: 'index', type: Number, required: false })
+  @ApiQuery({ name: 'pageSize', type: Number, required: false })
   async findAllByAccountId(
     @Param('accountId') accountId: string,
     @Req() request: AuthenticatedRequest,
+    @Query('index') index?: number,
+    @Query('pageSize') pageSize?: number,
   ): Promise<TransactionFindAllByAccountResponse[]> {
     const { user } = request;
     const query = new TransactionFindAllByAccountQuery(accountId, user.sub);
     const transactions = await this.queryBus.execute<TransactionFindAllByAccountQuery, Transaction[]>(query);
-    return transactions.map(t => ({
-      id: t.id,
-      inflow: t.inflow.amount,
-      outflow: t.outflow.amount,
-      payee: t.payee,
-      memo: t.memo,
-      subCategoryId: t.subCategoryId,
-      date: t.date.toISOString(),
-      cleared: t.cleared,
-      accountId: t.accountId,
-    }));
+
+    if (index && pageSize) {
+      --index; // Adjust to 0-based index
+      const startIndex = index * Number(pageSize);
+      const endIndex = startIndex + Number(pageSize);
+      const paginatedTransactions = transactions.slice(startIndex, endIndex);
+
+      return paginatedTransactions.map(t => ({
+        id: t.id,
+        inflow: t.inflow.amount,
+        outflow: t.outflow.amount,
+        payee: t.payee,
+        memo: t.memo,
+        subCategoryId: t.subCategoryId,
+        date: t.date.toISOString(),
+        cleared: t.cleared,
+        accountId: t.accountId,
+      }));
+    } else {
+      return transactions.map(t => ({
+        id: t.id,
+        inflow: t.inflow.amount,
+        outflow: t.outflow.amount,
+        payee: t.payee,
+        memo: t.memo,
+        subCategoryId: t.subCategoryId,
+        date: t.date.toISOString(),
+        cleared: t.cleared,
+        accountId: t.accountId,
+      }));
+    }
   }
 
   @Get(':id')
