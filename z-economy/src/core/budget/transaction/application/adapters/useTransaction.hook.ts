@@ -14,7 +14,7 @@ import useSWRInfinite from 'swr/infinite';
 import { TransactionGetAllPaginated } from '@core/budget/transaction/application/useCase/TransactionGetAllPaginated';
 import { TransactionGetAllByAccountIdPaginated } from '@core/budget/transaction/application/useCase/TransactionGetAllByAccountIdPaginated';
 
-const getKey = (pageIndex: number, previousPageData: string | any[]) => {
+const getKey = (pageIndex: number, previousPageData: string | never[]) => {
   if (previousPageData && previousPageData.length === 0) return;
   return [`transactions${pageIndex}`, pageIndex + 1];
 };

@@ -2,17 +2,13 @@ import { ButtonUnfilled, ButtonFilled } from '../../atoms';
 import styles from './EditableFooterButtons.module.scss';
 import { MouseEventHandler } from 'react';
 
-interface EditableFooterButtonsProperties<T> {
+interface EditableFooterButtonsProperties {
   onSave: MouseEventHandler<HTMLButtonElement>;
   onCancel: MouseEventHandler<HTMLButtonElement>;
   className: string;
 }
 
-export const EditableFooterButtons = <T,>({
-  onSave,
-  onCancel,
-  className,
-}: EditableFooterButtonsProperties<T>) => {
+export const EditableFooterButtons = ({ onSave, onCancel, className }: EditableFooterButtonsProperties) => {
   return (
     // <div className="z_flex z_flex_jc_right" style={{ height: '10px' }}>
     <td className={className}>

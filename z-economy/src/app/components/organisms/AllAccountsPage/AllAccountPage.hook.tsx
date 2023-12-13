@@ -1,5 +1,4 @@
 import currency from 'currency.js';
-import { useParams } from 'react-router';
 interface AllAccountPageModel {
   workingBalance: WorkingBalance;
 }

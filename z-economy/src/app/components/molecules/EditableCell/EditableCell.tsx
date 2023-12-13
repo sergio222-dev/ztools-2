@@ -22,7 +22,7 @@ export function EditableCell(properties: EditableCellProperties) {
     shouldFocus,
   });
 
-  const { inputReference, value } = models;
+  const { inputReference } = models;
   const { handleOnBlur, handleOnChange, handleOnChangeNumeric, handleOnKeyDown } = operators;
 
   return isEditable ? (
