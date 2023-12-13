@@ -37,7 +37,6 @@ export const useTransactionHook = (pagination: { index: number; pageSize: number
 
   // SWR
   const { cache } = useSWRConfig();
-
   const {
     data,
     error,
