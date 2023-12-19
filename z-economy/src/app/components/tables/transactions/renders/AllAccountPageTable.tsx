@@ -27,6 +27,7 @@ import { Transaction } from '@core/budget/transaction/domain/Transaction';
 import cls from 'classnames';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Typography } from '@atoms/Typography/Typography';
 interface TransactionTableProperties {
   tableReference: MutableRefObject<Table<Transaction> | undefined>;
   columns: ColumnDef<Transaction>[];
@@ -130,14 +131,22 @@ export function AllAccountPageTable({
     handleOnEdit && handleOnEdit(row, table, cell);
   };
 
+  console.log('table', isLoadingMore, isReachingEnd);
+
   return (
     <>
       <InfiniteScroll
         next={fetchMoreTransactions}
         hasMore={!isLoadingMore || !isReachingEnd}
-        loader={<h4>Loading...</h4>}
+        loader={
+          isReachingEnd ? undefined : (
+            <Typography Component={'h3'} variant={'title'}>
+              Loading...
+            </Typography>
+          )
+        }
         dataLength={virtualRows.length}
-        scrollThreshold={0.9}
+        scrollThreshold={0.8}
         scrollableTarget="all-accounts-page-container"
         style={{ display: 'flex', flexDirection: 'column' }}
       >
