@@ -26,7 +26,8 @@ export function AddAccountForm({ isOpen }: AddAccountFormProperties) {
 
   //SERVICES
   const { createAccount } = useAccountHook();
-  const { createData } = useTransactionHook();
+  // TODO: get createData from useTransactionTable.hooks.tsx to here.
+  const { createData } = useTransactionHook({ index: 1, pageSize: 0 }, '');
   const { findAdjustmentSubcategoryId } = useCategoryHook(new Date());
   //HANDLERS
   const handleFormSubmit = (event: SyntheticEvent<HTMLFormElement>) => {

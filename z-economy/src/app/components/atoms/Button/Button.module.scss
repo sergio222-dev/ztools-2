@@ -151,22 +151,28 @@
   }
 }
 
-%edit_buttons_focus-visible_active_hover {
+%edit-buttons-focus-visible-active-hover {
   &:focus-visible {
     background-color: const.$dark-primary-color;
+
     @include mixin.box-shadow(const.$dark-primary-color);
+
     color: const.$secondary-text-color;
   }
 
   &:active {
     background-color: const.$dark-primary-color;
+
     @include mixin.box-shadow(const.$dark-primary-color);
+
     color: const.$secondary-text-color;
   }
 
   &:hover {
     background-color: const.$dark-primary-color;
+
     @include mixin.box-shadow(const.$dark-primary-color);
+
     color: const.$secondary-text-color;
   }
 }
@@ -182,16 +188,16 @@
     color: const.$primary-color;
     width: functions.spacing(10);
 
-    @extend %edit_buttons_focus-visible_active_hover;
+    @extend %edit-buttons-focus-visible-active-hover;
   }
 
   &.variant_delete {
     @include mixin.remove-default-button;
+
     background: none;
     border: none;
     border-radius: const.$radius;
     width: functions.spacing(10);
-
     box-shadow: 0 0 0 1px const.$page-light-border-color;
     color: const.$delete-button-color;
 
@@ -215,12 +221,13 @@
 .z_button_save {
   @include mixin.remove-default-button;
   @include mixin.box-shadow(const.$primary-color);
+
   background-color: const.$primary-color;
   border-radius: const.$radius;
   color: const.$secondary-text-color;
   width: functions.spacing(8);
 
-  @extend %edit_buttons_focus-visible_active_hover;
+  @extend %edit-buttons-focus-visible-active-hover;
 }
 
 .z_utility_button {
@@ -228,7 +235,6 @@
   color: const.$primary-color;
   column-gap: functions.spacing(0.5);
   justify-content: left;
-  //align-items: center;
 
   &:hover {
     color: const.$dark-primary-color;
@@ -241,6 +247,7 @@
 
 .text_button {
   @include mixin.remove-default-button;
+
   background-color: transparent;
   padding: 0;
   margin: 0;

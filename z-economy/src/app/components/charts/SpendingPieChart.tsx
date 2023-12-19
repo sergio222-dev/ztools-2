@@ -50,7 +50,7 @@ export function SpendingPieChart({ analyticsData }: SpendingPieChartProperties) 
     );
 
     // set data
-    const data: any[] = analyticsData.value.map(analytics => {
+    const data: { categoryName: string; totalOutflow: string }[] = analyticsData.value.map(analytics => {
       return {
         categoryName: analytics.categoryName,
         totalOutflow: analytics.totalOutflow,

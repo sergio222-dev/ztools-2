@@ -16,27 +16,24 @@ $starting-hiding-width: 150px;
   overflow: hidden;
   height: 100vh;
   text-overflow: ellipsis;
-  //white-space: nowrap;
 
   .side_bar_header {
     margin-bottom: functions.spacing(1);
+
     .user_menu_button {
       text-overflow: ellipsis;
       white-space: nowrap;
+
       @container sidebar (max-width: #{$starting-hiding-width}) {
         & > *:first-child {
           display: flex;
         }
+
         & > * {
           display: none;
         }
       }
     }
-    //  @container sidebar (max-width: #{$starting-hiding-width}) {
-    //    & > div > div > a > button & > div > p {
-    //      display: none;
-    //  }
-    //}
   }
 
   @include Mixins.media-breakpoint-up('sm') {
@@ -94,6 +91,7 @@ $starting-hiding-width: 150px;
       margin-bottom: functions.spacing(1);
     }
   }
+
   .ReactModal__Content {
     border-radius: 100px;
   }
@@ -101,7 +99,7 @@ $starting-hiding-width: 150px;
   .add_account_modal_overlay {
     position: fixed;
     inset: 0;
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: rgb(255 255 255 / 75%);
   }
 }
 
@@ -116,19 +114,13 @@ $starting-hiding-width: 150px;
 
 .add_account_modal_overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  inset: 0;
+  background-color: rgb(0 0 0 / 10%);
 }
 
 .add_account_modal_content {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
+  inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   border: 1px solid #ccc;
   background: #fff;
@@ -138,3 +130,5 @@ $starting-hiding-width: 150px;
   outline: none;
   padding: 0;
 }
+
+// TODO: fix linter issues

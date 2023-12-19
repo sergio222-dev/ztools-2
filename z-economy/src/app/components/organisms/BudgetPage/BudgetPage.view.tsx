@@ -12,14 +12,14 @@ import { Typography } from '@atoms/Typography/Typography';
 export function BudgetPageView() {
   const [model, operators] = useBudgetPageHooks();
   const { budgetDate, totalAssigned, isOpen } = model;
-  const { setBudgetDate, renderMonthContent, addMonthHandler, substractMonthHandler, renderSwitch } =
+  const { setBudgetDate, renderMonthContent, addMonthHandler, subtractMonthHandler, renderSwitch } =
     operators;
 
   return (
     <div className={cls(styles.budget_page)}>
       <section className={cls('z_flex', styles.budget_page_date)} spellCheck="false">
         <div className={cls(styles.date_picker, 'z_flex')}>
-          <IconButton className={styles.bp_date_buttons} onClick={substractMonthHandler}>
+          <IconButton className={styles.bp_date_buttons} onClick={subtractMonthHandler}>
             <AiOutlineLeftCircle />
           </IconButton>
           <div className={styles.date_input_container}>

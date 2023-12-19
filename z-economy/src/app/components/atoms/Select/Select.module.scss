@@ -4,6 +4,7 @@
 
 .z_select {
   @include mixins.remove-default-select;
+
   border-radius: const.$radius;
   border: 2px solid const.$primary-color;
 }

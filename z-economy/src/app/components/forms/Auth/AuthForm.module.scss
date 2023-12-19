@@ -23,12 +23,9 @@
     }
   }
 }
+
 .submit_button {
   background-color: const.$primary-color;
   width: 80%;
   margin: functions.spacing(1);
-
-  //&:hover {
-  //  background-color: const.$dark-primary-color;
-  //}
 }

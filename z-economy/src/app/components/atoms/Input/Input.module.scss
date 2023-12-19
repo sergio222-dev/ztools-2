@@ -4,6 +4,7 @@
 
 .z_input {
   @include mixins.remove-default-input;
+
   border-radius: const.$radius;
   border: 2px solid const.$primary-color;
 

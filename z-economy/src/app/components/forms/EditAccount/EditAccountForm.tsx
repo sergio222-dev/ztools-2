@@ -27,7 +27,7 @@ export function EditAccountForm({ isOpen, account }: EditAccountFormProperties) 
 
   //SERVICES
   const { updateAccount, deleteAccount } = useAccountHook();
-  const { createData } = useTransactionHook();
+  const { createData } = useTransactionHook({ index: 1, pageSize: 0 }, '');
   const { findAdjustmentSubcategoryId } = useCategoryHook(new Date());
 
   // HANDLERS

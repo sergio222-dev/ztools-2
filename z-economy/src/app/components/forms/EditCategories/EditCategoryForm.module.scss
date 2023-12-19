@@ -6,7 +6,7 @@
   .c_tooltip {
     background-color: white;
     opacity: 1;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 0 rgb(0 0 0 / 20%);
     border-radius: const.$radius;
   }
 }
@@ -24,7 +24,6 @@
   .form_buttons {
     margin: functions.spacing(1) 0 0 0;
     display: flex;
-    //justify-content: flex-start;
 
     .cancel_save_buttons {
       display: flex;
@@ -40,19 +39,13 @@
 
 .delete_subcategory_modal_overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  inset: 0;
+  background-color: rgb(0 0 0 / 10%);
 }
 
 .delete_subcategory_modal_content {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  bottom: auto;
+  inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   border: 1px solid #ccc;
   background: #fff;
@@ -61,5 +54,4 @@
   border-radius: const.$radius;
   outline: none;
   padding: 0;
-  //width: 30rem;
 }

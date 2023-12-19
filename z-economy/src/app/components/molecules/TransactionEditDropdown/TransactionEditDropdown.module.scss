@@ -7,7 +7,7 @@
     width: 10.25rem;
     background-color: white;
     opacity: 1;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px 0 rgb(0 0 0 / 20%);
     border-radius: const.$radius;
     z-index: 999;
     padding: 0;
@@ -20,10 +20,6 @@
       width: 100%;
     }
   }
-
-  //& > ul > li {
-  //  padding: functions.spacing(0.5) functions.spacing(1);
-  //}
 }
 
 .dropdown_buttons {
@@ -37,6 +33,7 @@
       background-color: const.$page-darker-background-color;
     }
   }
+
   &:hover {
     background-color: const.$page-darker-background-color;
     border-radius: 0;

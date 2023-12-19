@@ -21,17 +21,20 @@
   .reports_page_spending {
     display: flex;
     height: 100%;
+
     .spending_container {
       flex: 1;
     }
+
     .spending_header {
       margin: functions.spacing(2) functions.spacing(2) functions.spacing(1.5);
     }
+
     .spending_sub_header {
       margin-left: functions.spacing(2);
     }
+
     .reports_page_spending_aside {
-      //display: block;
       padding: functions.spacing(2);
       flex: 0 1 30%;
       background-color: const.$page-darker-background-color;

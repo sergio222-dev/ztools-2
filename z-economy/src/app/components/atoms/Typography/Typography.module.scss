@@ -14,6 +14,7 @@
 
   &.variant_bold {
     @include mixins.font-size-variant(0.9);
+
     font-weight: bold;
   }
 
@@ -23,12 +24,13 @@
 
   &.variant_balance {
     @include mixins.font-size-variant(1.1);
-    //color: const.$positive-background-color;
+
     font-weight: bold;
   }
 
   &.variant_semi-bold {
     @include mixins.font-size-variant(0.9);
+
     font-weight: 500;
   }
 }

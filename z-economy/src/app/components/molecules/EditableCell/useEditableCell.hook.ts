@@ -26,7 +26,7 @@ interface useEditableCellHookReturnType<T extends HTMLInputElement | HTMLSelectE
     handleOnChange: (event: ChangeEvent<T>) => void;
     handleOnChangeNumeric: (event: ChangeEvent<T>) => void;
     handleOnKeyDown: (event: KeyboardEvent<T>) => void;
-    handleOnChangeDate: any;
+    handleOnChangeDate: (date: Date | null, event: ChangeEvent<T>) => void;
   };
 }
 
@@ -61,13 +61,13 @@ export function useEditableCellHook<T extends HTMLInputElement | HTMLSelectEleme
     setValue(event.target.value);
   };
 
-  const handleOnChangeDate = (date: any, event: ChangeEvent<T>) => {
+  const handleOnChangeDate = (date: Date | null, event: ChangeEvent<T>) => {
     if (event) {
       onChangeValue && onChangeValue(event.target.value);
       setValue(event.target.value);
     }
-    onChangeValue && onChangeValue(date);
-    setValue(date);
+    onChangeValue && onChangeValue(date?.toISOString() ?? '');
+    setValue(date?.toISOString);
   };
   // eslint-disable-next-line unicorn/consistent-function-scoping
   const handleOnKeyDown = (event: KeyboardEvent<T>) => {

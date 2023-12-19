@@ -29,18 +29,20 @@ export const useCategoryHook = (date: Date) => {
   const categoryGetAllAnalytics = container.resolve(CategoryAnalyticsGetAll);
 
   // SWR
-  const { data, error, isLoading, mutate, isValidating } = useSWR(['categories'], () =>
-    categoryGetAll.execute({
-      month: String(date.getMonth() + 1).padStart(2, '0'),
-      year: String(date.getFullYear()),
-    }),
+  const { data, error, isLoading, mutate, isValidating } = useSWR(
+    ['categories'],
+    () =>
+      categoryGetAll.execute({
+        month: String(date.getMonth() + 1).padStart(2, '0'),
+        year: String(date.getFullYear()),
+      }),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+      revalidateOnMount: true,
+    },
   );
-
-  // useEffect(() => {
-  //   return  () => {
-  //    void mutate(data);
-  //   };
-  // }, [date]);
 
   // STATE
   const totalAssigned = useMemo(() => {

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useEffect, useRef } from 'react';
+import { InputHTMLAttributes, useEffect } from 'react';
 import { Checkbox } from '@atoms/Input/Checkbox';
 
 interface IndeterminateCheckboxProperties extends InputHTMLAttributes<HTMLInputElement> {

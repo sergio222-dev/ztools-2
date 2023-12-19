@@ -15,9 +15,19 @@ interface BudgetPageOperators {
   renderMonthContent: (monthIndex: number, shortMonthText: string, fullMonthText: string) => ReactNode;
   setBudgetDate: (date: Date) => void;
   addMonthHandler: () => void;
-  substractMonthHandler: () => void;
+  subtractMonthHandler: () => void;
   renderSwitch: (totalToAssign: string, className?: boolean) => string;
 }
+
+const renderSwitch = (totalToAssign: string, className?: boolean) => {
+  if (Number(currency(totalToAssign).value) > 0) {
+    return className === true ? 'global_assigned_positive' : 'Ready to Assign';
+  }
+  if (Number(currency(totalToAssign).value) < 0) {
+    return className === true ? 'global_assigned_negative' : 'You assigned more than you have';
+  }
+  return className === true ? 'global_assigned_neutral' : 'All Money Assigned';
+};
 
 export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   // MODEL
@@ -27,7 +37,7 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
   const isOpen = useSignal(false);
 
   // SERVICES
-  const { cdata, totalAssigned } = useCategoryHook(budgetDate);
+  const { totalAssigned } = useCategoryHook(budgetDate);
 
   // OPERATORS
   const renderMonthContent = (month: number, shortMonth: string, longMonth: string) => {
@@ -39,22 +49,18 @@ export function useBudgetPageHooks(): [BudgetPageModel, BudgetPageOperators] {
     setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() + 1, 1));
   };
 
-  const substractMonthHandler = () => {
+  const subtractMonthHandler = () => {
     setBudgetDate(new Date(budgetDate.getFullYear(), budgetDate.getMonth() - 1, 1));
-  };
-
-  const renderSwitch = (totalToAssign: string, className?: boolean) => {
-    if (Number(currency(totalToAssign).value) > 0) {
-      return className === true ? 'global_assigned_positive' : 'Ready to Assign';
-    }
-    if (Number(currency(totalToAssign).value) < 0) {
-      return className === true ? 'global_assigned_negative' : 'You assigned more than you have';
-    }
-    return className === true ? 'global_assigned_neutral' : 'All Money Assigned';
   };
 
   return [
     { budgetDate, totalAssigned, isOpen },
-    { renderMonthContent, setBudgetDate, addMonthHandler, substractMonthHandler, renderSwitch },
+    {
+      renderMonthContent,
+      setBudgetDate,
+      addMonthHandler,
+      subtractMonthHandler: subtractMonthHandler,
+      renderSwitch,
+    },
   ];
 }

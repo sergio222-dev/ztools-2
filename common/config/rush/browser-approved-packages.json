@@ -147,7 +147,15 @@
       "allowedCategories": [ "production" ]
     },
     {
+      "name": "@tanstack/react-query",
+      "allowedCategories": [ "production" ]
+    },
+    {
       "name": "@tanstack/react-table",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "@tanstack/react-virtual",
       "allowedCategories": [ "production" ]
     },
     {
@@ -412,6 +420,10 @@
     },
     {
       "name": "react-icons",
+      "allowedCategories": [ "production" ]
+    },
+    {
+      "name": "react-infinite-scroll-component",
       "allowedCategories": [ "production" ]
     },
     {

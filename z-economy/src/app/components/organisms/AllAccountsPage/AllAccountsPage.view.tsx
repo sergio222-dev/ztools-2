@@ -6,7 +6,7 @@ import { TransactionTableView } from '../../tables/transactions/TransactionTable
 import { TotalWorkingBalance } from '@molecules/WorkingBalance/TotalWorkingBalance';
 
 export function AllAccountsPage() {
-  const [model, operators] = useAllAccountPageHooks();
+  const [model] = useAllAccountPageHooks();
   const { workingBalance } = model;
 
   return (

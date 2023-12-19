@@ -1,6 +1,6 @@
 import { Cell, Row, Table } from '@tanstack/react-table';
 import { Transaction } from '@core/budget/transaction/domain/Transaction';
-import { KeyboardEvent, useRef, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { useTransactionHook } from '@core/budget/transaction/application/adapters/useTransaction.hook';
 import { useOutsideClick } from '@utils/mouseUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,25 +18,40 @@ export const useTransactionTableHook = () => {
   const [editingRow, setEditingRow] = useState('');
   const [disableDelete, setDisableDelete] = useState(true);
   const [selectedQty, setSelectedQty] = useState(0);
+  const [data, setData] = useState<Transaction[]>([]);
 
   // REFS
   const editableValue = useRef<Transaction>(createEmptyTransaction());
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line unicorn/no-useless-undefined
-  const reference = useRef<HTMLDivElement>(undefined);
+  const reference = useRef<HTMLDivElement>(null);
   const tableReference = useRef<Table<Transaction>>();
+  const tableContainerReference = useRef<HTMLDivElement>(null);
   const selectedColumnId = useRef('date');
 
   // SERVICES
-  const { tdata, updateData, createData, deleteData, trigger, deleteFakeRow, deleteDataBatch } =
-    useTransactionHook();
   const { subCats, cdata } = useCategoryHook(new Date());
   const { mutateAccountData } = useAccountHook();
   const { accountId } = useParams();
 
-  // HANDLERS
+  const {
+    tdata,
+    updateData,
+    createData,
+    deleteData,
+    trigger,
+    deleteFakeRow,
+    deleteDataBatch,
+    size,
+    setSize,
+    isLoadingMore,
+    isReachingEnd,
+    mutateOnAccountChange,
+  } = useTransactionHook({ index: 1, pageSize: 20 }, accountId ?? undefined);
 
+  useEffect(() => {
+    void mutateOnAccountChange();
+  }, [accountId]);
+
+  // HANDLERS
   //Row handlers
   const handleOnEdit = async (
     row: Row<Transaction>,
@@ -72,8 +87,6 @@ export const useTransactionTableHook = () => {
             ? Object.assign({}, row.original, editableValue.current)
             : Object.assign({}, editableValue.current, row.original);
       }
-      // console.log(editableValue.current.accountId);
-      // if (!adata.some(a => a.id === editableValue.current.accountId)) editableValue.current.accountId = adata[0].id;
       selectedColumnId.current = cell.column.id;
       table.setExpanded(() => ({
         [row.id]: true,
@@ -118,8 +131,8 @@ export const useTransactionTableHook = () => {
       selectedColumnId.current = 'date';
       return;
     }
-    // console.log(editableValue.current.subCategoryId);
     void (await updateData(editableValue.current as Transaction));
+
     void mutateAccountData();
     editingRow !== '' && setEditingRow('');
     editableValue.current = createEmptyTransaction();
@@ -176,7 +189,7 @@ export const useTransactionTableHook = () => {
             row.original.payee,
             row.original.memo,
             row.original.subCategoryId,
-            row.original.date,
+            new Date().toISOString(),
             row.original.cleared,
             row.original.accountId,
           ),
@@ -297,10 +310,20 @@ export const useTransactionTableHook = () => {
     selectedColumnId.current = 'date';
   });
 
-  const data = tdata.filter(transaction => {
-    if (!accountId) return transaction;
-    return transaction.accountId === accountId;
-  });
+  const fetchMoreTransactions = () => {
+    if (!setSize || !size) return;
+    setSize(size + 1);
+  };
+
+  // if there's an accountId in the route params, filters the data to show only that account's transactions.
+  useEffect(() => {
+    setData(tdata.flat());
+  }, [tdata]);
+
+  //     .filter(transaction => {
+  //   if (!accountId) return transaction;
+  //   return transaction.accountId === accountId;
+  // });
 
   // COLUMNS
   const columns = useTransactionTableColumnsHook(
@@ -338,5 +361,9 @@ export const useTransactionTableHook = () => {
     selectedColumnId,
     subCats,
     handleDuplicate,
+    tableContainerReference,
+    fetchMoreTransactions,
+    isLoadingMore,
+    isReachingEnd,
   };
 };
