@@ -26,8 +26,8 @@ services:
       - budget-server
     ports:
       - '${MONGO_PORT}:${MONGO_PORT}'
-    volumes:
-      - './scripts/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
+    #    volumes:
+    #      - './scripts/mongo/init.js:/docker-entrypoint-initdb.d/init.js:ro'
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
