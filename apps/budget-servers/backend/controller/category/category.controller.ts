@@ -1,3 +1,4 @@
+import { CategoryBootstrapCommand } from '@budget/category/application/useCase/bootstrap/CategoryBootstrap.command';
 import {
   Body,
   Controller,
@@ -15,10 +16,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CategoryCreateRequest } from '../../dto/Category/CategoryCreateRequest';
 import { CategoryDeleteRequest } from '../../dto/Category/CategoryDeleteRequest';
-import {
-  CategoryFindAllResponse,
-  CategoryFindAllSubCategoryResponse,
-} from '../../dto/Category/CategoryFindAllResponse';
+import { CategoryFindAllResponse } from '../../dto/Category/CategoryFindAllResponse';
 import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
@@ -94,6 +92,18 @@ export class CategoryController {
     });
 
     return await Promise.all(categoriesResponsePromise);
+  }
+
+  @Post('/bootstrap')
+  @ApiBearerAuth('JWT')
+  @ApiResponse({
+    status: 201,
+  })
+  async bootstrapUser(@Req() request: AuthenticatedRequest): Promise<void> {
+    const { user } = request;
+
+    const command = new CategoryBootstrapCommand(user.sub);
+    await this.commandBus.execute(command);
   }
 
   @Post()

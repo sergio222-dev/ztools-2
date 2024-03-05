@@ -22,10 +22,13 @@ import { SubCategoryFindAllByCategoryIdHandler } from '@budget/subCategory/appli
 import { SubCategoryUpdateHandler } from '@budget/subCategory/application/useCase/update/SubCategoryUpdate.handler';
 import { MonthlyBudgetAssignOneHandler } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.handler';
 import { SubCategoryDeleteHandler } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.handler';
+import { GetSubCategorySystemIdHandler } from '@budget/subCategory/application/useCase/bootstrap/GetSubCategorySystemId.handler';
 import { SubCategoryDeleteBatchHandler } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.handler';
 import { SubCategoryFindOneByIdHandler } from '@budget/subCategory/application/useCase/find/SubCategoryFindOneById.handler';
 import { MonthlyBudgetFindOneHandler } from '@budget/monthlyBudget/application/useCase/find/MonthlyBudgetFindOne.handler';
 import { CategoryCreateHandler } from '@budget/category/application/useCase/create/CategoryCreate.handler';
+import { CategoryBootstrapCommandHandler } from '@budget/category/application/useCase/bootstrap/CategoryBootstrapCommandHandler';
+import { GetCategorySystemIdHandler } from '@budget/category/application/useCase/bootstrap/GetCategorySystemId.handler';
 import { TransactionCreateHandler } from '@budget/transaction/application/useCase/create/TransactionCreate.handler';
 import { TransactionDeleteHandler } from '@budget/transaction/application/useCase/delete/TransactionDelete.handler';
 import { TransactionDeleteBatchHandler } from '@budget/transaction/application/useCase/deleteBatch/TransactionDeleteBatch.handler';
@@ -89,6 +92,7 @@ const budget = {
     CategoryUpdateHandler,
     CategoryFindOneHandler,
     CategoryDeleteHandler,
+    GetCategorySystemIdHandler,
     SubCategoryFindAllByCategoryIdHandler,
     SubCategoryCreateHandler,
     MonthlyBudgetAssignOneHandler,
@@ -100,12 +104,14 @@ const budget = {
     SubCategoryUpdateHandler,
     SubCategoryDeleteHandler,
     SubCategoryDeleteBatchHandler,
+    GetSubCategorySystemIdHandler,
     AccountCreateHandler,
     AccountFindAllHandler,
     AccountUpdateHandler,
     AccountDeleteHandler,
     AccountFindByIdHandler,
     AccountFindOneByIdHandler,
+    CategoryBootstrapCommandHandler,
   ],
   schemas: [
     {

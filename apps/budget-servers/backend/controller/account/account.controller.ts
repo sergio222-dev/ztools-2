@@ -1,3 +1,6 @@
+import { GetSubCategorySystemIdQuery } from '@budget/subCategory/application/useCase/bootstrap/GetSubCategorySystemId.query';
+import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
+import { v4 as uuid } from 'uuid';
 import {
   Body,
   Controller,
@@ -113,6 +116,27 @@ export class AccountController {
     const { user } = request;
     const command = new AccountCreateCommand(body.id, body.name, user.sub, body.balance);
     await this.commandBus.execute(command);
+
+    const query = new GetSubCategorySystemIdQuery(user.sub);
+    const subCategorySystemId = await this.queryBus.execute<GetSubCategorySystemIdQuery, string>(query);
+
+    // create initial transaction
+    const transactionId = uuid();
+
+    const newTransactionCommand = new TransactionCreateCommand(
+      transactionId,
+      body.balance,
+      '0',
+      'Initial Balance',
+      '',
+      subCategorySystemId,
+      new Date().toISOString(),
+      true,
+      body.id,
+      user.sub,
+    );
+
+    await this.commandBus.execute(newTransactionCommand);
   }
 
   @Put()

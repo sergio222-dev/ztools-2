@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { v4 as uuid } from 'uuid';
 
+import { BUDGET } from '../../../../../backend/etc/settings';
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { CategoryRepository } from '@budget/category/domain/Category.repository';
+import { GetSubCategorySystemIdQuery } from '@budget/subCategory/application/useCase/bootstrap/GetSubCategorySystemId.query';
 import { SubCategoryCreateCommand } from '@budget/subCategory/application/useCase/create/SubCategoryCreate.command';
-import { SubCategoryRepository } from '@budget/subCategory/domain/SubCategory.repository';
 import { Criteria } from '@shared/domain/criteria/Criteria';
 import { Filters } from '@shared/domain/criteria/Filters';
 import { Order } from '@shared/domain/criteria/Order';
@@ -17,9 +18,8 @@ export class CategoryService {
   constructor(
     @Inject('CategoryRepository')
     private readonly categoryRepository: CategoryRepository,
-    @Inject('SubCategoryRepository')
-    private readonly subCategoryRepository: SubCategoryRepository,
     private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
     private readonly configService: ConfigService,
   ) {}
 
@@ -78,12 +78,21 @@ export class CategoryService {
     }
 
     const currentSystemCategoryId = await this.categoryRepository.getSystemCategoryId(userId, categoryName);
-    const newCategoryId = uuid();
+
+    console.log(this.commandBus);
+
+    // fetch SYSTEM subs category id if
+    const query = new GetSubCategorySystemIdQuery(userId);
+    const currentSystemSubCategoryId = await this.queryBus.execute<GetSubCategorySystemIdQuery, string>(
+      query,
+    );
 
     // create system category
-    if (currentSystemCategoryId) {
+    if (currentSystemCategoryId && currentSystemSubCategoryId) {
       return;
     }
+
+    const newCategoryId = uuid();
     const newCategory = Category.CREATE(newCategoryId, categoryName, userId, new Date(), new Date());
 
     await this.categoryRepository.save(newCategory);
@@ -96,5 +105,16 @@ export class CategoryService {
     );
 
     await this.commandBus.execute(createSubCategoryCommand);
+  }
+
+  async getSystemCategoryId(userId: string): Promise<string> {
+    const categoryName = this.configService.get<string>(BUDGET().SYSTEM_CATEGORY_NAME);
+
+    if (!categoryName) {
+      // TODO: domain exception
+      throw new Error('Internal configuration error in category name');
+    }
+
+    return this.categoryRepository.getSystemCategoryId(userId, categoryName);
   }
 }

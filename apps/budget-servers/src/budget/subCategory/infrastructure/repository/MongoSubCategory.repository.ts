@@ -83,4 +83,10 @@ export class MongoSubCategoryRepository implements SubCategoryRepository {
       },
     });
   }
+
+  async getSystemSubCategoryId(userId: string, subCategoryName: string): Promise<string | null> {
+    const subCategory = await this.subCategoryModel.findOne({ userId, name: subCategoryName });
+
+    return subCategory?.id;
+  }
 }
