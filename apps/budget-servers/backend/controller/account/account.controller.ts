@@ -1,6 +1,3 @@
-import { GetSubCategorySystemIdQuery } from '@budget/subCategory/application/useCase/bootstrap/GetSubCategorySystemId.query';
-import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
-import { v4 as uuid } from 'uuid';
 import {
   Body,
   Controller,
@@ -16,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { v4 as uuid } from 'uuid';
 
 import { AccountBalanceResponse } from '../../dto/Account/AccountBalanceResponse';
 import { AccountCreateRequest } from '../../dto/Account/AccountCreateRequest';
@@ -30,6 +28,8 @@ import { AccountFindOneByIdQuery } from '@budget/account/application/useCase/fin
 import { AccountUpdateCommand } from '@budget/account/application/useCase/update/AccountUpdate.command';
 import { Account } from '@budget/account/domain/Account.aggregate';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
+import { GetSubCategorySystemIdQuery } from '@budget/subCategory/application/useCase/bootstrap/GetSubCategorySystemId.query';
+import { TransactionCreateCommand } from '@budget/transaction/application/useCase/create/TransactionCreate.command';
 import { TransactionFindAllByAccountQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllByAccount.query';
 import { Transaction } from '@budget/transaction/domain/Transaction.aggregate';
 
@@ -119,6 +119,10 @@ export class AccountController {
 
     const query = new GetSubCategorySystemIdQuery(user.sub);
     const subCategorySystemId = await this.queryBus.execute<GetSubCategorySystemIdQuery, string>(query);
+
+    if (!subCategorySystemId) {
+      throw new HttpException('subCategorySystemId not found', HttpStatus.NOT_FOUND);
+    }
 
     // create initial transaction
     const transactionId = uuid();

@@ -5,9 +5,10 @@ import { Connection, Model } from 'mongoose';
 import { Account } from '@budget/account/domain/Account.aggregate';
 import { AccountRepository } from '@budget/account/domain/Account.repository';
 import {
-    AccountSchemaType,
-    mapToAccountDomain,
-    mapToAccountSchema,
+  AccountSchema,
+  AccountSchemaType,
+  mapToAccountDomain,
+  mapToAccountSchema,
 } from '@budget/account/infrastructure/mongo/account.schema';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
 import { Criteria } from '@shared/domain/criteria/Criteria';
@@ -15,57 +16,61 @@ import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
 
 @Injectable()
 export class MongoAccountRepository
-    extends MongoRepository<Account, AccountSchemaType>
-    implements AccountRepository
+  extends MongoRepository<Account, AccountSchemaType>
+  implements AccountRepository
 {
-    constructor(
-        @InjectModel('Account') private readonly accountModel: Model<Account>,
-        @InjectConnection() connection: Connection,
-    ) {
-        super(connection);
+  constructor(
+    @InjectModel('Account') private readonly accountModel: Model<Account>,
+    @InjectConnection() connection: Connection,
+  ) {
+    super(connection);
+  }
+
+  protected collectionName(): string {
+    return 'accounts';
+  }
+
+  protected getMapperToSchema() {
+    return mapToAccountSchema;
+  }
+
+  protected getMapperToDomain() {
+    return mapToAccountDomain;
+  }
+
+  protected getSchema() {
+    return AccountSchema;
+  }
+
+  async findOneById(id: string): Promise<Account> {
+    const account = await this.accountModel.findOne({ id });
+
+    if (!account) {
+      return Account.RETRIEVE(id, '', '', new SignedAmount(0), new Date(), new Date());
     }
 
-    protected collectionName(): string {
-        return 'accounts';
-    }
+    return Account.RETRIEVE(
+      account.id,
+      account.name,
+      '',
+      new SignedAmount(0),
+      account.createdAt,
+      account.updatedAt,
+    );
+  }
 
-    protected getMapperToSchema() {
-        return mapToAccountSchema;
-    }
+  async matching(criteria: Criteria) {
+    const documents = await this.searchByCriteria(criteria);
+    const mapper = this.getMapperToDomain();
 
-    protected getMapperToDomain() {
-        return mapToAccountDomain;
-    }
+    return documents.map(element => mapper(element));
+  }
 
-    async findOneById(id: string): Promise<Account> {
-        const account = await this.accountModel.findOne({ id });
+  async save(account: Account): Promise<void> {
+    await this.persist(account);
+  }
 
-        if (!account) {
-            return Account.RETRIEVE(id, '', '', new SignedAmount(0), new Date(), new Date());
-        }
-
-        return Account.RETRIEVE(
-            account.id,
-            account.name,
-            '',
-            new SignedAmount(0),
-            account.createdAt,
-            account.updatedAt,
-        );
-    }
-
-    async matching(criteria: Criteria) {
-        const documents = await this.searchByCriteria(criteria);
-        const mapper = this.getMapperToDomain();
-
-        return documents.map(element => mapper(element));
-    }
-
-    async save(account: Account): Promise<void> {
-        await this.persist(account);
-    }
-
-    async delete(accounts: Account[]): Promise<void> {
-        await this.remove(accounts);
-    }
+  async delete(accounts: Account[]): Promise<void> {
+    await this.remove(accounts);
+  }
 }

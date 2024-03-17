@@ -1,4 +1,4 @@
-import { CategoryBootstrapCommand } from '@budget/category/application/useCase/bootstrap/CategoryBootstrap.command';
+import { SubCategoryDeleteCommand } from '@budget/subCategory/application/useCase/delete/SubCategoryDelete.command';
 import {
   Body,
   Controller,
@@ -19,6 +19,7 @@ import { CategoryDeleteRequest } from '../../dto/Category/CategoryDeleteRequest'
 import { CategoryFindAllResponse } from '../../dto/Category/CategoryFindAllResponse';
 import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { isValidMonth, isValidYear } from '../../utils/date.utils';
+import { CategoryBootstrapCommand } from '@budget/category/application/useCase/bootstrap/CategoryBootstrap.command';
 import { CategoryCreateCommand } from '@budget/category/application/useCase/create/CategoryCreate.command';
 import { CategoryDeleteCommand } from '@budget/category/application/useCase/delete/CategoryDelete.command';
 import { CategoryFindAllQuery } from '@budget/category/application/useCase/find/CategoryFindAll.query';
@@ -28,7 +29,7 @@ import { Category } from '@budget/category/domain/Category.aggregate';
 import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
 import { MonthlyBudgetFindByMonthYearQuery } from '@budget/monthlyBudget/application/useCase/find/MonthlyBudgetFindByMonthYear.query';
 import { MonthlyBudget } from '@budget/monthlyBudget/domain/MonthlyBudget.aggregate';
-import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
+// import { SubCategoryDeleteBatchCommand } from '@budget/subCategory/application/useCase/deleteBatch/SubCategoryDeleteBatch.command';
 import { SubCategoryFindAllByCategoryIdQuery } from '@budget/subCategory/application/useCase/find/SubCategoryFindAllByCategoryId.query';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
 import { TransactionFindAllBySubCategoryIdQuery } from '@budget/transaction/application/useCase/find/TransactionFindAllBySubCategoryId.query';
@@ -66,7 +67,7 @@ export class CategoryController {
 
     const categoriesResponsePromise = categories.map(async category => {
       const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
-        new SubCategoryFindAllByCategoryIdQuery(category.id),
+        new SubCategoryFindAllByCategoryIdQuery(category.id, user.sub),
       );
       const subCategoriesDtoPromises = subCategories.map(subCategory => {
         const monthlyBudget = monthlyBudgets.find(
@@ -153,15 +154,15 @@ export class CategoryController {
     if (category.id === '')
       throw new HttpException(`the category with id ${categoryId} doesn't exists`, HttpStatus.NOT_FOUND);
 
-    const queryForAllSubCategories = new SubCategoryFindAllByCategoryIdQuery(categoryId);
+    const queryForAllSubCategories = new SubCategoryFindAllByCategoryIdQuery(categoryId, user.sub);
 
     const subCategories = await this.queryBus.execute<SubCategoryFindAllByCategoryIdQuery, SubCategory[]>(
       queryForAllSubCategories,
     );
 
-    const subCategoriesId = subCategories.map(subCategory => subCategory.id);
+    const subCategoryIds = subCategories.map(subCategory => subCategory.id);
 
-    for (const subCategoryId of subCategoriesId) {
+    for (const subCategoryId of subCategoryIds) {
       const commandForDeleteMonthlyBudgetBySubCategoryId = new MonthlyBudgetDeleteAllBySubCategoryIdCommand(
         subCategoryId,
         user.sub,
@@ -191,11 +192,10 @@ export class CategoryController {
 
         await this.commandBus.execute(commandForUpdateTransaction);
       }
+
+      const commandForDeleteSubCategory = new SubCategoryDeleteCommand(subCategoryId, user.sub);
+      await this.commandBus.execute(commandForDeleteSubCategory);
     }
-
-    const commandForDeleteSubCategories = new SubCategoryDeleteBatchCommand(subCategoriesId);
-
-    await this.commandBus.execute(commandForDeleteSubCategories);
 
     const commandForDeleteCategory = new CategoryDeleteCommand(categoryId, user.sub);
 

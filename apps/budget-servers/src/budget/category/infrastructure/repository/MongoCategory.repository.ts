@@ -1,19 +1,21 @@
+import { Injectable } from '@nestjs/common';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
+
 import { Category } from '@budget/category/domain/Category.aggregate';
 import { CategoryRepository } from '@budget/category/domain/Category.repository';
 import {
+  CategorySchema,
   CategorySchemaType,
   mapToCategoryDomain,
   mapToCategorySchema,
 } from '@budget/category/infrastructure/mongo/category.schema';
-import { Injectable } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
 import { Criteria } from '@shared/domain/criteria/Criteria';
 import { Filter, FilterOperator, Operator } from '@shared/domain/criteria/Filter';
 import { Filters } from '@shared/domain/criteria/Filters';
 import { Order } from '@shared/domain/criteria/Order';
 import { FilterByUser } from '@shared/domain/filter/FilterByUser';
 import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
-import { Connection } from 'mongoose';
 
 @Injectable()
 export class MongoCategoryRepository
@@ -34,6 +36,10 @@ export class MongoCategoryRepository
 
   protected getMapperToDomain() {
     return mapToCategoryDomain;
+  }
+
+  protected getSchema() {
+    return CategorySchema;
   }
 
   async save(category: Category): Promise<void> {

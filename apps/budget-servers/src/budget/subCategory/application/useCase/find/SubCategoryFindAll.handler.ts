@@ -8,7 +8,7 @@ import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
 export class SubCategoryFindAllHandler implements IQueryHandler<SubCategoryFindAllQuery> {
   constructor(private readonly subCategoryService: SubCategoryService) {}
 
-  async execute(): Promise<SubCategory[]> {
-    return await this.subCategoryService.findAll();
+  async execute(query: SubCategoryFindAllQuery): Promise<SubCategory[]> {
+    return await this.subCategoryService.findAll(query.userId);
   }
 }

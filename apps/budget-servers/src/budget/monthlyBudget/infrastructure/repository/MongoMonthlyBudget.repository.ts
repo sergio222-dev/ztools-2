@@ -9,6 +9,7 @@ import { MonthlyBudgetRepository } from '@budget/monthlyBudget/domain/MonthlyBud
 import {
   mapMonthlyBudgetToDomain,
   mapMonthlyBudgetToSchema,
+  MonthlyBudgetSchema,
   MonthlyBudgetSchemaType,
 } from '@budget/monthlyBudget/infrastructure/mongo/monthlyBudget.schema';
 import { SignedAmount } from '@budget/shared/domain/valueObject/SignedAmount';
@@ -39,6 +40,10 @@ export class MongoMonthlyBudgetRepository
 
   protected getMapperToDomain(): (value: MonthlyBudgetSchemaType) => MonthlyBudget {
     return mapMonthlyBudgetToDomain;
+  }
+
+  protected getSchema() {
+    return MonthlyBudgetSchema;
   }
 
   async save(monthlyBudget: MonthlyBudget) {

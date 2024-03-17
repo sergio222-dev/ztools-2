@@ -7,29 +7,33 @@ import { DomainEventSchemaType, mapToSchema } from '@shared/infrastructure/bus/e
 import { MongoRepository } from '@shared/infrastructure/mongo/MongoRepository';
 
 export class MongoEventRepository
-    extends MongoRepository<DomainEvent, DomainEventSchemaType>
-    implements EventRepository
+  extends MongoRepository<DomainEvent, DomainEventSchemaType>
+  implements EventRepository
 {
-    constructor(
-        @InjectConnection()
-        _connection: Connection,
-    ) {
-        super(_connection);
-    }
+  constructor(
+    @InjectConnection()
+    _connection: Connection,
+  ) {
+    super(_connection);
+  }
 
-    protected collectionName(): string {
-        return 'events';
-    }
+  protected collectionName(): string {
+    return 'events';
+  }
 
-    protected getMapperToSchema(): (value: DomainEvent) => DomainEventSchemaType {
-        return mapToSchema;
-    }
+  protected getMapperToSchema(): (value: DomainEvent) => DomainEventSchemaType {
+    return mapToSchema;
+  }
 
-    protected getMapperToDomain(): (value: DomainEventSchemaType) => DomainEvent {
-        throw new Error('this method should not be used');
-    }
+  protected getMapperToDomain(): (value: DomainEventSchemaType) => DomainEvent {
+    throw new Error('this method should not be used');
+  }
 
-    async save(event: DomainEvent): Promise<void> {
-        await this.persist(event);
-    }
+  protected getSchema(): any {
+    throw new Error('this method should not be used');
+  }
+
+  async save(event: DomainEvent): Promise<void> {
+    await this.persist(event);
+  }
 }

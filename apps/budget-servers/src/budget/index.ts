@@ -103,7 +103,7 @@ const budget = {
     SubCategoryFindOneByIdHandler,
     SubCategoryUpdateHandler,
     SubCategoryDeleteHandler,
-    SubCategoryDeleteBatchHandler,
+    // SubCategoryDeleteBatchHandler,
     GetSubCategorySystemIdHandler,
     AccountCreateHandler,
     AccountFindAllHandler,

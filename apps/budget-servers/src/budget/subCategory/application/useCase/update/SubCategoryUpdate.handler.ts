@@ -11,6 +11,7 @@ export class SubCategoryUpdateHandler implements ICommandHandler<SubCategoryUpda
     const subCategory = SubCategory.CREATE(
       command.id,
       command.name,
+      command.userId,
       command.categoryId,
       new Date(),
       new Date(),

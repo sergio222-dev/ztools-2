@@ -1,9 +1,14 @@
 import { Schema } from 'mongoose';
 
-import { ExtendOfDocument } from '@shared/infrastructure/mongo/utils';
 import { SubCategory } from '@budget/subCategory/domain/SubCategory.aggregate';
+import { OwnershipSchema } from '@shared/infrastructure/mongo/OwnershipSchema';
 
-export const SubCategorySchema = new Schema<ExtendOfDocument<SubCategory>>(
+export interface SubCategorySchemaType extends OwnershipSchema {
+  name: string;
+  categoryId: string;
+}
+
+export const SubCategorySchema = new Schema<SubCategorySchemaType>(
   {
     _id: {
       type: String,
@@ -35,3 +40,26 @@ export const SubCategorySchema = new Schema<ExtendOfDocument<SubCategory>>(
     _id: false,
   },
 );
+
+export function mapToSubCategorySchema(subCategory: SubCategory): SubCategorySchemaType {
+  return {
+    _id: subCategory.id,
+    id: subCategory.id,
+    name: subCategory.name,
+    userId: subCategory.userId,
+    categoryId: subCategory.categoryId,
+    createdAt: subCategory.createdAt,
+    updatedAt: subCategory.updatedAt,
+  };
+}
+
+export function mapToSubCategoryDomain(subCategory: SubCategorySchemaType): SubCategory {
+  return SubCategory.RETRIEVE(
+    subCategory._id,
+    subCategory.name,
+    subCategory.userId,
+    subCategory.categoryId,
+    subCategory.createdAt,
+    subCategory.updatedAt,
+  );
+}

@@ -1,19 +1,38 @@
-export class SubCategory {
-  private constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly categoryId: string,
-    public readonly createdAt: Date,
-    public readonly updatedAt: Date,
-  ) {}
+import { AggregateRootOwnership } from '@shared/domain/aggregate/AggregateRootOwnership';
 
-  public static CREATE(id: string, name: string, categoryId: string, createdAt: Date, updatedAt: Date) {
-    console.log(`sub category with id ${id} CREATED`);
-    return new SubCategory(id, name, categoryId, createdAt, updatedAt);
+export class SubCategory extends AggregateRootOwnership {
+  private constructor(
+    id: string,
+    public readonly name: string,
+    userId: string,
+    public readonly categoryId: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    super(id, userId, createdAt, updatedAt);
   }
 
-  public static RETRIEVE(id: string, name: string, categoryId: string, createdAt: Date, updatedAt: Date) {
+  public static CREATE(
+    id: string,
+    name: string,
+    userId: string,
+    categoryId: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    console.log(`sub category with id ${id} CREATED`);
+    return new SubCategory(id, name, userId, categoryId, createdAt, updatedAt);
+  }
+
+  public static RETRIEVE(
+    id: string,
+    name: string,
+    userId: string,
+    categoryId: string,
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
     console.log(`sub category with id ${id} RETRIEVED`);
-    return new SubCategory(id, name, categoryId, createdAt, updatedAt);
+    return new SubCategory(id, name, userId, categoryId, createdAt, updatedAt);
   }
 }

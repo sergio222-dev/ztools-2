@@ -1,10 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
-
 export class SubCategoryDeleteBatchCommand {
-  constructor(private readonly _ids: string[]) {}
-
-  @ApiProperty()
-  get ids(): string[] {
-    return this._ids;
-  }
+  constructor(readonly ids: string[], readonly userId: string) {}
 }

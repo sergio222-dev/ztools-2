@@ -5,6 +5,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import budget from '@budget/index';
 import { Implementation } from '@shared/infrastructure/enum';
 import { ImplementationModule } from '@shared/infrastructure/implementation.module';
+import { initializeAmountType } from '@shared/infrastructure/mongo/plugins';
 
 @Module({
   imports: [

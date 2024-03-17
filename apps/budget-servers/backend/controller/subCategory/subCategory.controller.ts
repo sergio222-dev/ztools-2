@@ -3,7 +3,9 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MonthlyBudgetAssignRequest } from '../../dto/MonthlyBudget/MonthlyBudgetAssignRequest';
+import { SubCategoryCreateRequest } from '../../dto/SubCategory/SubCategoryCreateRequest';
 import { SubCategoryDeleteRequest } from '../../dto/SubCategory/SubCategoryDeleteRequest';
+import { SubCategoryUpdateRequest } from '../../dto/SubCategory/SubCategoryUpdateRequest';
 import { AuthenticatedRequest } from '../../routes/AuthenticatedRequest';
 import { MonthlyBudgetAssignOneCommand } from '@budget/monthlyBudget/application/useCase/assign/MonthlyBudgetAssignOne.command';
 import { MonthlyBudgetDeleteAllBySubCategoryIdCommand } from '@budget/monthlyBudget/application/useCase/delete/MonthlyBudgetDeleteAllBySubCategoryId.command';
@@ -28,8 +30,17 @@ export class SubCategoryController {
     status: 201,
     description: 'Create a sub category',
   })
-  async create(@Body() bodyCommand: SubCategoryCreateCommand): Promise<void> {
-    const command = new SubCategoryCreateCommand(bodyCommand.id, bodyCommand.name, bodyCommand.categoryId);
+  async create(
+    @Body() bodyCommand: SubCategoryCreateRequest,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<void> {
+    const { user } = request;
+    const command = new SubCategoryCreateCommand(
+      bodyCommand.id,
+      bodyCommand.name,
+      bodyCommand.categoryId,
+      user.sub,
+    );
 
     await this.commandBus.execute(command);
   }
@@ -39,16 +50,20 @@ export class SubCategoryController {
   @ApiResponse({
     status: 201,
   })
-  async update(@Body() bodyCommand: SubCategoryCreateCommand): Promise<void> {
+  async update(
+    @Body() bodyCommand: SubCategoryUpdateRequest,
+    @Req() request: AuthenticatedRequest,
+  ): Promise<void> {
+    const { user } = request;
     const { name, id, categoryId } = bodyCommand;
-    const query = new SubCategoryFindOneByIdQuery(id);
+    const query = new SubCategoryFindOneByIdQuery(id, user.sub);
     const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
 
     if (subCategory.id === '') {
       throw new HttpException(`the subcategory with id ${id} doesn't exists`, HttpStatus.NOT_FOUND);
     }
 
-    const command = new SubCategoryUpdateCommand(id, name, categoryId);
+    const command = new SubCategoryUpdateCommand(id, name, categoryId, user.sub);
 
     await this.commandBus.execute(command);
   }
@@ -74,16 +89,29 @@ export class SubCategoryController {
   @ApiBearerAuth('JWT')
   async delete(@Body() body: SubCategoryDeleteRequest, @Req() request: AuthenticatedRequest): Promise<void> {
     const { user } = request;
-    const { subCategoryId } = body;
+    const { newSubCategory, oldSubCategory } = body;
 
-    const query = new SubCategoryFindOneByIdQuery(subCategoryId);
+    const query = new SubCategoryFindOneByIdQuery(oldSubCategory, user.sub);
     const subCategory = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(query);
 
     if (subCategory.id === '')
       throw new HttpException(
-        `the subcategory with id ${subCategoryId} doesn't exists`,
+        `the subcategory with id ${oldSubCategory} doesn't exists`,
         HttpStatus.NOT_FOUND,
       );
+
+    const newSubCategoryQuery = new SubCategoryFindOneByIdQuery(newSubCategory, user.sub);
+    const subCategoryFound = await this.queryBus.execute<SubCategoryFindOneByIdQuery, SubCategory>(
+      newSubCategoryQuery,
+    );
+
+    if (subCategoryFound.id === '')
+      throw new HttpException(
+        `the subcategory with id ${newSubCategory} doesn't exists`,
+        HttpStatus.NOT_FOUND,
+      );
+
+    const subCategoryId = newSubCategoryQuery.id;
 
     const commandForDeleteMonthlyBudgetBySubCategoryId = new MonthlyBudgetDeleteAllBySubCategoryIdCommand(
       subCategoryId,
@@ -101,13 +129,13 @@ export class SubCategoryController {
     for (const transaction of transactions) {
       const commandForUpdateTransaction = new TransactionUpdateCommand(
         transaction.id,
+        user.sub,
         transaction.inflow.amount,
         transaction.outflow.amount,
         transaction.payee,
         transaction.memo,
         subCategoryId,
         transaction.date.toISOString(),
-        user.sub,
         transaction.cleared,
         transaction.accountId,
       );
@@ -115,7 +143,7 @@ export class SubCategoryController {
       await this.commandBus.execute(commandForUpdateTransaction);
     }
 
-    const command = new SubCategoryDeleteCommand(subCategoryId);
+    const command = new SubCategoryDeleteCommand(subCategoryId, user.sub);
 
     await this.commandBus.execute(command);
   }

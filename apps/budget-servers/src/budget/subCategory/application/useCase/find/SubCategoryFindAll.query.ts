@@ -1,1 +1,3 @@
-export class SubCategoryFindAllQuery {}
+export class SubCategoryFindAllQuery {
+  constructor(readonly userId: string) {}
+}

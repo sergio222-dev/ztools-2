@@ -102,6 +102,7 @@ export class CategoryService {
       subCategoryId,
       subCategoryName,
       newCategoryId,
+      userId,
     );
 
     await this.commandBus.execute(createSubCategoryCommand);

@@ -9,15 +9,21 @@ export class AmountType extends SchemaType {
   }
 
   cast(value: Types.Decimal128 | Amount) {
-    console.log(value);
-    if (value instanceof Amount) {
+    console.log(`[QXC] type`, typeof value);
+    console.log('[QXC] instance of value', this.isInstanceOfAmount(value));
+    if (this.isInstanceOfAmount(value)) {
       // this.validateNumber(value.amount);
+      console.log('converting to decimal128', value.amount);
       return new Types.Decimal128(value.amount);
     }
 
     this.validateNumber(value);
 
     return new Amount(value.toString());
+  }
+
+  private isInstanceOfAmount(value: any): value is Amount {
+    return value.amount !== undefined;
   }
 
   private validateNumber(amount: Types.Decimal128) {
@@ -31,6 +37,9 @@ export class AmountType extends SchemaType {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-Schema.Types.AmountType = AmountType;
+export function initializeAmountType() {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  Types.AmountType = Schema.Types.AmountType = AmountType;
+  console.log(`[QXC] custom schema type added`);
+}
